@@ -2,95 +2,147 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ============================================
+   DESIGN SYSTEM - MADVILLE REQUISIÇÕES
+   Tema: Laranja Corporativo + Profissional
+   ============================================ */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Background & Foreground */
+    --background: 30 25% 98%;
+    --foreground: 20 15% 15%;
 
+    /* Card */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 20 15% 15%;
 
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 20 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Laranja Madville */
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Cinza neutro */
+    --secondary: 30 10% 94%;
+    --secondary-foreground: 20 15% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted */
+    --muted: 30 10% 96%;
+    --muted-foreground: 20 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Laranja claro */
+    --accent: 30 80% 95%;
+    --accent-foreground: 24 95% 40%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Success */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    /* Warning */
+    --warning: 45 93% 47%;
+    --warning-foreground: 20 15% 15%;
 
-    --sidebar-background: 0 0% 98%;
+    /* Info */
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Border & Input */
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 24 95% 53%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    --radius: 0.75rem;
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 20 15% 35%;
+    --sidebar-primary: 24 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 80% 96%;
+    --sidebar-accent-foreground: 24 95% 40%;
+    --sidebar-border: 30 15% 92%;
+    --sidebar-ring: 24 95% 53%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    /* Status Colors */
+    --status-pendente: 45 93% 47%;
+    --status-pendente-bg: 45 93% 95%;
+    --status-em-analise: 217 91% 60%;
+    --status-em-analise-bg: 217 91% 95%;
+    --status-aprovado: 142 76% 36%;
+    --status-aprovado-bg: 142 76% 95%;
+    --status-cotando: 262 83% 58%;
+    --status-cotando-bg: 262 83% 95%;
+    --status-comprado: 199 89% 48%;
+    --status-comprado-bg: 199 89% 95%;
+    --status-rejeitado: 0 84% 60%;
+    --status-rejeitado-bg: 0 84% 95%;
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    /* Priority Colors */
+    --priority-alta: 0 84% 60%;
+    --priority-alta-bg: 0 84% 95%;
+    --priority-media: 45 93% 47%;
+    --priority-media-bg: 45 93% 95%;
+    --priority-baixa: 142 76% 36%;
+    --priority-baixa-bg: 142 76% 95%;
 
-    --sidebar-border: 220 13% 91%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(24, 95%, 53%) 0%, hsl(20, 95%, 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(30, 25%, 98%) 0%, hsl(30, 30%, 94%) 100%);
+    --gradient-card-hover: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(30, 30%, 98%) 100%);
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(20 15% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(20 15% 15% / 0.1), 0 2px 4px -2px hsl(20 15% 15% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(20 15% 15% / 0.1), 0 4px 6px -4px hsl(20 15% 15% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(20 15% 15% / 0.1), 0 8px 10px -6px hsl(20 15% 15% / 0.1);
+    --shadow-primary: 0 10px 30px -10px hsl(24 95% 53% / 0.3);
+    --shadow-glow: 0 0 40px hsl(24 95% 53% / 0.15);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 20 15% 8%;
+    --foreground: 30 10% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 20 15% 12%;
+    --card-foreground: 30 10% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 15% 12%;
+    --popover-foreground: 30 10% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 24 95% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 20 15% 18%;
+    --secondary-foreground: 30 10% 90%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 20 15% 18%;
+    --muted-foreground: 30 10% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 24 60% 20%;
+    --accent-foreground: 24 95% 70%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 20 15% 20%;
+    --input: 20 15% 20%;
+    --ring: 24 95% 55%;
+
+    --sidebar-background: 20 15% 10%;
+    --sidebar-foreground: 30 10% 85%;
+    --sidebar-primary: 24 95% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 24 50% 18%;
+    --sidebar-accent-foreground: 24 95% 70%;
+    --sidebar-border: 20 15% 18%;
+    --sidebar-ring: 24 95% 55%;
   }
 }
 
@@ -100,6 +152,169 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Status Badges */
+  .status-badge {
+    @apply inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full border;
+  }
+
+  .status-pendente {
+    @apply bg-[hsl(var(--status-pendente-bg))] text-[hsl(var(--status-pendente))] border-[hsl(var(--status-pendente)/0.3)];
+  }
+
+  .status-em_analise {
+    @apply bg-[hsl(var(--status-em-analise-bg))] text-[hsl(var(--status-em-analise))] border-[hsl(var(--status-em-analise)/0.3)];
+  }
+
+  .status-aprovado {
+    @apply bg-[hsl(var(--status-aprovado-bg))] text-[hsl(var(--status-aprovado))] border-[hsl(var(--status-aprovado)/0.3)];
+  }
+
+  .status-cotando {
+    @apply bg-[hsl(var(--status-cotando-bg))] text-[hsl(var(--status-cotando))] border-[hsl(var(--status-cotando)/0.3)];
+  }
+
+  .status-comprado {
+    @apply bg-[hsl(var(--status-comprado-bg))] text-[hsl(var(--status-comprado))] border-[hsl(var(--status-comprado)/0.3)];
+  }
+
+  .status-rejeitado,
+  .status-cancelado {
+    @apply bg-[hsl(var(--status-rejeitado-bg))] text-[hsl(var(--status-rejeitado))] border-[hsl(var(--status-rejeitado)/0.3)];
+  }
+
+  .status-em_entrega,
+  .status-recebido {
+    @apply bg-[hsl(var(--status-aprovado-bg))] text-[hsl(var(--status-aprovado))] border-[hsl(var(--status-aprovado)/0.3)];
+  }
+
+  /* Priority Badges */
+  .priority-badge {
+    @apply inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full border;
+  }
+
+  .priority-ALTA {
+    @apply bg-[hsl(var(--priority-alta-bg))] text-[hsl(var(--priority-alta))] border-[hsl(var(--priority-alta)/0.3)];
+  }
+
+  .priority-MEDIA {
+    @apply bg-[hsl(var(--priority-media-bg))] text-[hsl(var(--priority-media))] border-[hsl(var(--priority-media)/0.3)];
+  }
+
+  .priority-BAIXA {
+    @apply bg-[hsl(var(--priority-baixa-bg))] text-[hsl(var(--priority-baixa))] border-[hsl(var(--priority-baixa)/0.3)];
+  }
+
+  /* Card Hover Effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(20,95%,45%)];
+  }
+
+  /* Glass Effect */
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50;
+  }
+
+  /* Loading Spinner */
+  .spinner {
+    @apply w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin;
+  }
+
+  /* Page Container */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+  }
+}
+
+@layer utilities {
+  /* Animation Utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Pulse animation for priority */
+  .pulse-urgent {
+    animation: pulseUrgent 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseUrgent {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--priority-alta) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px hsl(var(--priority-alta) / 0);
+    }
   }
 }
