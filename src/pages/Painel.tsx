@@ -10,6 +10,8 @@ import {
   TrendingUp,
   Package,
   AlertTriangle,
+  ExternalLink,
+  Paperclip,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -394,6 +396,23 @@ export default function Painel() {
                 <p className="text-sm text-muted-foreground mb-2">Justificativa</p>
                 <p className="p-3 bg-muted rounded-lg text-sm">{selectedRequisicao.justificativa}</p>
               </div>
+
+              {/* Anexo */}
+              {selectedRequisicao.arquivo_url && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Anexo</p>
+                  <a
+                    href={selectedRequisicao.arquivo_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                    {selectedRequisicao.arquivo_nome || 'Abrir arquivo'}
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              )}
 
               {/* Priority & Date */}
               <div className="grid grid-cols-2 gap-4">
