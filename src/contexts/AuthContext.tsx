@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [rolesLoaded, setRolesLoaded] = useState(false);
 
   const isStaff = roles.some(r => ['admin', 'comprador', 'gerente'].includes(r));
   const isAdmin = roles.includes('admin');
@@ -40,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
+        setRolesLoaded(true);
         return;
       }
 
@@ -58,38 +60,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setRoles(rolesData.map(r => r.role as AppRole));
         }
       }
+      setRolesLoaded(true);
     } catch (error) {
       console.error('Error fetching user data:', error);
+      setRolesLoaded(true);
     }
   };
 
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Defer Supabase calls with setTimeout
         if (session?.user) {
-          setTimeout(() => {
-            fetchUserData(session.user.id);
-          }, 0);
+          // Fetch user data directly (not deferred) to ensure roles are loaded
+          await fetchUserData(session.user.id);
         } else {
           setProfile(null);
           setRoles([]);
+          setRolesLoaded(true);
         }
         setIsLoading(false);
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchUserData(session.user.id);
+        await fetchUserData(session.user.id);
+      } else {
+        setRolesLoaded(true);
       }
       setIsLoading(false);
     });
