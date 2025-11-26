@@ -84,12 +84,19 @@ export default function Requisicao() {
         });
         return;
       }
-      // Validate file type
-      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+      // Validate file type (PDF, images, Excel)
+      const allowedTypes = [
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'image/jpg',
+        'application/vnd.ms-excel', // .xls
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+      ];
       if (!allowedTypes.includes(selectedFile.type)) {
         toast({
           title: 'Tipo de arquivo inválido',
-          description: 'Apenas PDF, JPG e PNG são permitidos',
+          description: 'Apenas PDF, JPG, PNG e Excel (XLS/XLSX) são permitidos',
           variant: 'destructive',
         });
         return;
@@ -118,6 +125,31 @@ export default function Requisicao() {
         return;
       }
 
+      // Upload file if exists
+      let arquivo_url: string | null = null;
+      let arquivo_nome: string | null = null;
+
+      if (file) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('requisicoes-anexos')
+          .upload(fileName, file);
+
+        if (uploadError) {
+          console.error('Error uploading file:', uploadError);
+          throw new Error('Erro ao enviar arquivo');
+        }
+
+        const { data: urlData } = supabase.storage
+          .from('requisicoes-anexos')
+          .getPublicUrl(fileName);
+
+        arquivo_url = urlData.publicUrl;
+        arquivo_nome = file.name;
+      }
+
       // Insert requisition
       const { data, error } = await supabase
         .from('requisicoes')
@@ -134,6 +166,8 @@ export default function Requisicao() {
           motivo_compra: formData.motivo_compra,
           prioridade: formData.prioridade,
           status: 'pendente' as const,
+          arquivo_url,
+          arquivo_nome,
         }])
         .select()
         .single();
@@ -515,11 +549,11 @@ export default function Requisicao() {
                       <Upload className="w-10 h-10 text-muted-foreground mb-3" />
                       <p className="text-sm font-medium">Clique para selecionar</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        PDF, JPG ou PNG (máx. 5MB)
+                        PDF, JPG, PNG ou Excel (máx. 5MB)
                       </p>
                       <input
                         type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
+                        accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx"
                         onChange={handleFileChange}
                         className="sr-only"
                       />
