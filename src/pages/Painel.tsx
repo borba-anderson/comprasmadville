@@ -68,9 +68,10 @@ export default function Painel() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirect if not staff
+  // Redirect if not staff - wait for auth to fully load including roles
   useEffect(() => {
-    if (!authLoading && !isStaff) {
+    // Only redirect after auth is fully loaded (including roles)
+    if (!authLoading && user && !isStaff) {
       toast({
         title: 'Acesso negado',
         description: 'Você não tem permissão para acessar esta página.',
@@ -78,7 +79,11 @@ export default function Painel() {
       });
       navigate('/');
     }
-  }, [authLoading, isStaff, navigate, toast]);
+    // Redirect to login if not authenticated
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [authLoading, user, isStaff, navigate, toast]);
 
   // Fetch requisitions
   const fetchRequisicoes = async () => {
