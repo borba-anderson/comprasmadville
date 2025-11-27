@@ -56,10 +56,30 @@ export default function Requisicao() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
+
+    if (name === 'solicitante_telefone') {
+      const formatted = formatPhone(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: formatted,
+      }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? parseFloat(value) || 0 : value,
