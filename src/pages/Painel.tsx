@@ -66,26 +66,26 @@ export default function Painel() {
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const { user, profile, isStaff, isLoading: authLoading } = useAuth();
+  const { user, profile, isStaff, isLoading: authLoading, rolesLoaded } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  // Redirect if not staff - wait for auth to fully load including roles
+ 
+  // Redirect if not staff - wait for auth and roles to load
   useEffect(() => {
-    // Only redirect after auth is fully loaded (including roles)
-    if (!authLoading && user && !isStaff) {
-      toast({
-        title: 'Acesso negado',
-        description: 'Você não tem permissão para acessar esta página.',
-        variant: 'destructive',
-      });
-      navigate('/');
+    if (!authLoading && rolesLoaded) {
+      if (user && !isStaff) {
+        toast({
+          title: 'Acesso negado',
+          description: 'Você não tem permissão para acessar esta página.',
+          variant: 'destructive',
+        });
+        navigate('/');
+      }
+      if (!user) {
+        navigate('/auth');
+      }
     }
-    // Redirect to login if not authenticated
-    if (!authLoading && !user) {
-      navigate('/auth');
-    }
-  }, [authLoading, user, isStaff, navigate, toast]);
+  }, [authLoading, rolesLoaded, user, isStaff, navigate, toast]);
 
   // Fetch requisitions
   const fetchRequisicoes = async () => {
@@ -209,7 +209,7 @@ export default function Painel() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  if (authLoading || !isStaff) {
+  if (authLoading || !rolesLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="spinner w-8 h-8 border-primary" />

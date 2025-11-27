@@ -9,6 +9,7 @@ interface AuthContextType {
   profile: Profile | null;
   roles: AppRole[];
   isLoading: boolean;
+  rolesLoaded: boolean;
   isStaff: boolean;
   isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -24,12 +25,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [rolesLoaded, setRolesLoaded] = useState(false);
 
   const isStaff = roles.some(r => ['admin', 'comprador', 'gerente'].includes(r));
   const isAdmin = roles.includes('admin');
 
   // Fetch user profile and roles
   const fetchUserData = async (userId: string) => {
+    setRolesLoaded(false);
     try {
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
@@ -60,6 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+    } finally {
+      setRolesLoaded(true);
     }
   };
 
@@ -75,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else {
           setProfile(null);
           setRoles([]);
+          setRolesLoaded(true);
         }
         setIsLoading(false);
       }
@@ -87,6 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (session?.user) {
         await fetchUserData(session.user.id);
+      } else {
+        setRolesLoaded(true);
       }
       setIsLoading(false);
     });
@@ -150,6 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         roles,
         isLoading,
+        rolesLoaded,
         isStaff,
         isAdmin,
         signIn,
