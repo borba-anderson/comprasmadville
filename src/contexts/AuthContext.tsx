@@ -24,7 +24,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [rolesLoaded, setRolesLoaded] = useState(false);
 
   const isStaff = roles.some(r => ['admin', 'comprador', 'gerente'].includes(r));
   const isAdmin = roles.includes('admin');
@@ -41,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
-        setRolesLoaded(true);
         return;
       }
 
@@ -60,10 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setRoles(rolesData.map(r => r.role as AppRole));
         }
       }
-      setRolesLoaded(true);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      setRolesLoaded(true);
     }
   };
 
@@ -75,12 +71,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user data directly (not deferred) to ensure roles are loaded
           await fetchUserData(session.user.id);
         } else {
           setProfile(null);
           setRoles([]);
-          setRolesLoaded(true);
         }
         setIsLoading(false);
       }
@@ -93,8 +87,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (session?.user) {
         await fetchUserData(session.user.id);
-      } else {
-        setRolesLoaded(true);
       }
       setIsLoading(false);
     });
