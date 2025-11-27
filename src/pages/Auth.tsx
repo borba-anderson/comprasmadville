@@ -45,6 +45,28 @@ export default function Auth() {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
+  const withTimeout = async <T,>(
+    promise: Promise<T>,
+    ms: number,
+    timeoutMessage: string
+  ): Promise<T> => {
+    return new Promise<T>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error(timeoutMessage));
+      }, ms);
+
+      promise
+        .then((value) => {
+          clearTimeout(timer);
+          resolve(value);
+        })
+        .catch((error) => {
+          clearTimeout(timer);
+          reject(error);
+        });
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
@@ -65,7 +87,12 @@ export default function Auth() {
           return;
         }
 
-        const { error } = await signIn(formData.email, formData.password);
+        const { error } = await withTimeout(
+          signIn(formData.email, formData.password),
+          15000,
+          'Tempo de resposta excedido. Tente novamente em alguns instantes.'
+        );
+
         if (error) {
           toast({
             title: 'Erro no login',
@@ -99,7 +126,12 @@ export default function Auth() {
           return;
         }
 
-        const { error } = await signUp(formData.email, formData.password, formData.nome);
+        const { error } = await withTimeout(
+          signUp(formData.email, formData.password, formData.nome),
+          20000,
+          'Tempo de resposta excedido ao cadastrar. Tente novamente.'
+        );
+
         if (error) {
           toast({
             title: 'Erro no cadastro',
@@ -122,7 +154,10 @@ export default function Auth() {
     } catch (error) {
       toast({
         title: 'Erro',
-        description: 'Ocorreu um erro inesperado. Tente novamente.',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Ocorreu um erro inesperado. Tente novamente.',
         variant: 'destructive',
       });
     } finally {
