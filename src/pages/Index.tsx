@@ -112,7 +112,7 @@ const Index = () => {
           <p className="text-muted-foreground text-xs mt-2">
             Versão 2.0 | Suporte:{' '}
             <a
-              href="https://wa.me/554797624021"
+              href="https://wa.me/5547992189824"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline font-medium"

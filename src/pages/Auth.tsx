@@ -318,7 +318,7 @@ export default function Auth() {
             <p className="text-sm text-muted-foreground">
               Problemas com acesso?{' '}
               <a
-                href="https://wa.me/554797624021"
+                href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline font-medium"
