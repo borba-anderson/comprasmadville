@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Package,
   AlertTriangle,
-  ExternalLink,
+  Download,
   Paperclip,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -401,16 +401,31 @@ export default function Painel() {
               {selectedRequisicao.arquivo_url && (
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">Anexo</p>
-                  <a
-                    href={selectedRequisicao.arquivo_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(selectedRequisicao.arquivo_url!);
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = selectedRequisicao.arquivo_nome || 'arquivo';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                      } catch (error) {
+                        // Fallback: open in new tab
+                        window.open(selectedRequisicao.arquivo_url!, '_blank', 'noopener,noreferrer');
+                      }
+                    }}
+                    className="inline-flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors cursor-pointer"
                   >
                     <Paperclip className="w-4 h-4" />
-                    {selectedRequisicao.arquivo_nome || 'Abrir arquivo'}
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+                    {selectedRequisicao.arquivo_nome || 'Baixar arquivo'}
+                    <Download className="w-4 h-4" />
+                  </button>
                 </div>
               )}
 
