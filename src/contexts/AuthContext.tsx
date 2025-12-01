@@ -71,32 +71,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        // Only synchronous state updates here - CRITICAL to avoid deadlock
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          await fetchUserData(session.user.id);
+          // Defer Supabase calls with setTimeout to prevent deadlock
+          setTimeout(() => {
+            fetchUserData(session.user.id).finally(() => {
+              setIsLoading(false);
+            });
+          }, 0);
         } else {
           setProfile(null);
           setRoles([]);
           setRolesLoaded(true);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchUserData(session.user.id);
+        // Defer Supabase calls with setTimeout to prevent deadlock
+        setTimeout(() => {
+          fetchUserData(session.user.id).finally(() => {
+            setIsLoading(false);
+          });
+        }, 0);
       } else {
         setRolesLoaded(true);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
