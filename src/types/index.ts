@@ -61,6 +61,7 @@ export interface Requisicao {
   aprovado_em?: string;
   comprado_em?: string;
   recebido_em?: string;
+  valor?: number;
 }
 
 export interface AuditLog {
