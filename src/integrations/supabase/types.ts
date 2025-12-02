@@ -166,6 +166,7 @@ export type Database = {
           status: Database["public"]["Enums"]["requisicao_status"]
           unidade: string
           updated_at: string | null
+          valor: number | null
         }
         Insert: {
           aprovado_em?: string | null
@@ -192,6 +193,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["requisicao_status"]
           unidade?: string
           updated_at?: string | null
+          valor?: number | null
         }
         Update: {
           aprovado_em?: string | null
@@ -218,6 +220,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["requisicao_status"]
           unidade?: string
           updated_at?: string | null
+          valor?: number | null
         }
         Relationships: [
           {

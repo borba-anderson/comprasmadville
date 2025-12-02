@@ -9,9 +9,9 @@ import {
   XCircle,
   TrendingUp,
   Package,
-  AlertTriangle,
   Download,
   Paperclip,
+  DollarSign,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,15 +36,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Header } from '@/components/layout/Header';
 import { StatsCard } from '@/components/StatsCard';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
+import { GastosDashboard } from '@/components/dashboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Requisicao, RequisicaoStatus, RequisicaoStats, STATUS_CONFIG } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 export default function Painel() {
   const [requisicoes, setRequisicoes] = useState<Requisicao[]>([]);
@@ -64,12 +67,13 @@ export default function Painel() {
   const [selectedRequisicao, setSelectedRequisicao] = useState<Requisicao | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
+  const [valorInput, setValorInput] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
   const { user, profile, isStaff, isLoading: authLoading, rolesLoaded } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
- 
+
   // Redirect if not staff - wait for auth and roles to load
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
@@ -159,6 +163,41 @@ export default function Painel() {
     setFilteredRequisicoes(filtered);
   }, [requisicoes, searchTerm, statusFilter]);
 
+  // Set valor input when modal opens
+  useEffect(() => {
+    if (selectedRequisicao) {
+      setValorInput(selectedRequisicao.valor ? formatCurrencyInput(selectedRequisicao.valor) : '');
+    }
+  }, [selectedRequisicao]);
+
+  // Format currency for display
+  const formatCurrency = (value: number | null | undefined) => {
+    if (value == null) return '-';
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
+
+  // Format currency for input
+  const formatCurrencyInput = (value: number) => {
+    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  // Parse currency input
+  const parseCurrencyInput = (value: string): number => {
+    const cleaned = value.replace(/[^\d,]/g, '').replace(',', '.');
+    return parseFloat(cleaned) || 0;
+  };
+
+  // Handle valor input change with mask
+  const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^\d]/g, '');
+    if (value) {
+      const numValue = parseInt(value, 10) / 100;
+      setValorInput(formatCurrencyInput(numValue));
+    } else {
+      setValorInput('');
+    }
+  };
+
   // Update status
   const updateStatus = async (id: string, newStatus: RequisicaoStatus, motivo?: string) => {
     try {
@@ -205,8 +244,43 @@ export default function Painel() {
     }
   };
 
+  // Update valor
+  const updateValor = async (id: string) => {
+    try {
+      setIsUpdating(true);
+      const valor = parseCurrencyInput(valorInput);
+
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ valor, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Sucesso',
+        description: 'Valor atualizado com sucesso.',
+      });
+
+      fetchRequisicoes();
+    } catch (error) {
+      console.error('Error updating valor:', error);
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar valor.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
+  };
+
+  const canEditValor = (status: RequisicaoStatus) => {
+    return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
 
   if (authLoading || !rolesLoaded) {
@@ -233,114 +307,138 @@ export default function Painel() {
           <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
         </div>
 
-        {/* Filters */}
-        <div className="bg-card rounded-xl border p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar por item, solicitante ou protocolo..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Todos os Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Status</SelectItem>
-                {Object.entries(STATUS_CONFIG).map(([key, config]) => (
-                  <SelectItem key={key} value={key}>
-                    {config.icon} {config.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={fetchRequisicoes} variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Atualizar
-            </Button>
-          </div>
-        </div>
+        {/* Tabs: Requisições + Dashboard */}
+        <Tabs defaultValue="requisicoes" className="space-y-6">
+          <TabsList className="bg-card border">
+            <TabsTrigger value="requisicoes" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Requisições
+            </TabsTrigger>
+            <TabsTrigger value="dashboard" className="gap-2">
+              <DollarSign className="w-4 h-4" />
+              Dashboard de Gastos
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Table */}
-        <div className="bg-card rounded-xl border overflow-hidden">
-          {isLoading ? (
-            <div className="p-12 text-center">
-              <div className="spinner w-10 h-10 mx-auto mb-4 border-primary" />
-              <p className="text-muted-foreground">Carregando requisições...</p>
+          <TabsContent value="requisicoes" className="space-y-6">
+            {/* Filters */}
+            <div className="bg-card rounded-xl border p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar por item, solicitante ou protocolo..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="Todos os Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os Status</SelectItem>
+                    {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+                      <SelectItem key={key} value={key}>
+                        {config.icon} {config.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button onClick={fetchRequisicoes} variant="outline">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Atualizar
+                </Button>
+              </div>
             </div>
-          ) : filteredRequisicoes.length === 0 ? (
-            <div className="p-12 text-center">
-              <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-lg font-semibold">Nenhuma requisição encontrada</p>
-              <p className="text-muted-foreground text-sm">
-                {searchTerm || statusFilter !== 'all'
-                  ? 'Tente ajustar os filtros'
-                  : 'As requisições aparecerão aqui'}
-              </p>
+
+            {/* Table */}
+            <div className="bg-card rounded-xl border overflow-hidden">
+              {isLoading ? (
+                <div className="p-12 text-center">
+                  <div className="spinner w-10 h-10 mx-auto mb-4 border-primary" />
+                  <p className="text-muted-foreground">Carregando requisições...</p>
+                </div>
+              ) : filteredRequisicoes.length === 0 ? (
+                <div className="p-12 text-center">
+                  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-lg font-semibold">Nenhuma requisição encontrada</p>
+                  <p className="text-muted-foreground text-sm">
+                    {searchTerm || statusFilter !== 'all'
+                      ? 'Tente ajustar os filtros'
+                      : 'As requisições aparecerão aqui'}
+                  </p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead>Item</TableHead>
+                      <TableHead>Solicitante</TableHead>
+                      <TableHead className="text-center">Qtd</TableHead>
+                      <TableHead className="text-center">Prioridade</TableHead>
+                      <TableHead className="text-center">Status</TableHead>
+                      <TableHead className="text-right">Valor</TableHead>
+                      <TableHead className="text-center">Data</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredRequisicoes.map((req) => (
+                      <TableRow key={req.id} className="hover:bg-muted/30">
+                        <TableCell>
+                          <div>
+                            <p className="font-semibold">{req.item_nome}</p>
+                            <p className="text-xs text-muted-foreground">{req.protocolo}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium">{req.solicitante_nome}</p>
+                            <p className="text-xs text-muted-foreground">{req.solicitante_setor}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <span className="font-semibold">{req.quantidade}</span>
+                          <span className="text-muted-foreground text-sm ml-1">{req.unidade}</span>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <PriorityBadge priority={req.prioridade} />
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <StatusBadge status={req.status} />
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          {formatCurrency(req.valor)}
+                        </TableCell>
+                        <TableCell className="text-center text-sm">
+                          {formatDate(req.created_at)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedRequisicao(req);
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            Ver detalhes →
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead>Item</TableHead>
-                  <TableHead>Solicitante</TableHead>
-                  <TableHead className="text-center">Qtd</TableHead>
-                  <TableHead className="text-center">Prioridade</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-center">Data</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredRequisicoes.map((req) => (
-                  <TableRow key={req.id} className="hover:bg-muted/30">
-                    <TableCell>
-                      <div>
-                        <p className="font-semibold">{req.item_nome}</p>
-                        <p className="text-xs text-muted-foreground">{req.protocolo}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{req.solicitante_nome}</p>
-                        <p className="text-xs text-muted-foreground">{req.solicitante_setor}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <span className="font-semibold">{req.quantidade}</span>
-                      <span className="text-muted-foreground text-sm ml-1">{req.unidade}</span>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <PriorityBadge priority={req.prioridade} />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <StatusBadge status={req.status} />
-                    </TableCell>
-                    <TableCell className="text-center text-sm">
-                      {formatDate(req.created_at)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedRequisicao(req);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        Ver detalhes →
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </div>
+          </TabsContent>
+
+          <TabsContent value="dashboard">
+            <GastosDashboard requisicoes={requisicoes} />
+          </TabsContent>
+        </Tabs>
       </main>
 
       {/* Detail Modal */}
@@ -440,6 +538,47 @@ export default function Painel() {
                   <p className="font-semibold">{formatDate(selectedRequisicao.created_at)}</p>
                 </div>
               </div>
+
+              {/* Valor Section */}
+              {canEditValor(selectedRequisicao.status) && (
+                <div className="border-t pt-4">
+                  <Label htmlFor="valor" className="text-sm font-semibold mb-2 block">
+                    Valor do Pedido (R$)
+                  </Label>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="valor"
+                        value={valorInput}
+                        onChange={handleValorChange}
+                        placeholder="0,00"
+                        className="pl-10"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => updateValor(selectedRequisicao.id)}
+                      isLoading={isUpdating}
+                      disabled={!valorInput}
+                    >
+                      Salvar Valor
+                    </Button>
+                  </div>
+                  {selectedRequisicao.valor != null && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Valor atual: {formatCurrency(selectedRequisicao.valor)}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Display valor for other statuses */}
+              {!canEditValor(selectedRequisicao.status) && selectedRequisicao.valor != null && (
+                <div className="border-t pt-4">
+                  <p className="text-sm text-muted-foreground">Valor do Pedido</p>
+                  <p className="text-xl font-bold text-primary">{formatCurrency(selectedRequisicao.valor)}</p>
+                </div>
+              )}
 
               {/* Reject reason input */}
               {selectedRequisicao.status === 'pendente' && (
