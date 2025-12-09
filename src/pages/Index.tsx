@@ -30,7 +30,7 @@ const Index = () => {
         {/* Cards Section */}
         <section className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Card: Fazer Requisição */}
-          <Link to="/requisicao" className="group">
+          <Link to="/auth?redirect=/requisicao" className="group">
             <div className="bg-card rounded-2xl shadow-lg border p-8 h-full card-hover">
               <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
                 <FileText className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
@@ -43,7 +43,7 @@ const Index = () => {
                 Faça login para continuar.
               </p>
               <div className="flex items-center text-primary font-semibold group-hover:gap-3 transition-all">
-                Acessar formulário
+                Fazer login
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
