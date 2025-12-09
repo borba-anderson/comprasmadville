@@ -1,29 +1,12 @@
 import { useMemo } from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts';
 import { Requisicao } from '@/types';
 
 interface GastosPorSolicitanteProps {
   requisicoes: Requisicao[];
+  totalGasto: number;
 }
 
-const COLORS = [
-  'hsl(var(--primary))',
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
-];
-
-export function GastosPorSolicitante({ requisicoes }: GastosPorSolicitanteProps) {
+export function GastosPorSolicitante({ requisicoes, totalGasto }: GastosPorSolicitanteProps) {
   const data = useMemo(() => {
     const grouped = requisicoes.reduce((acc, req) => {
       const nome = req.solicitante_nome;
@@ -32,39 +15,65 @@ export function GastosPorSolicitante({ requisicoes }: GastosPorSolicitanteProps)
     }, {} as Record<string, number>);
 
     return Object.entries(grouped)
-      .map(([nome, valor]) => ({ nome: nome.split(' ')[0], valorTotal: valor, nomeCompleto: nome }))
-      .sort((a, b) => b.valorTotal - a.valorTotal)
-      .slice(0, 10);
-  }, [requisicoes]);
+      .map(([nome, valor]) => ({
+        nome,
+        nomeAbreviado: nome.split(' ').slice(0, 2).join(' '),
+        valor,
+        percent: (valor / totalGasto) * 100,
+      }))
+      .sort((a, b) => b.valor - a.valor)
+      .slice(0, 6);
+  }, [requisicoes, totalGasto]);
 
   const formatCurrency = (value: number) => {
+    if (value >= 1000) {
+      return `R$ ${(value / 1000).toFixed(1).replace('.', ',')}k`;
+    }
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
 
+  const maxPercent = data.length > 0 ? Math.max(...data.map(d => d.percent)) : 100;
+
   return (
-    <div className="bg-card rounded-xl border p-4">
-      <h3 className="font-semibold mb-4">Top 10 - Gastos por Solicitante</h3>
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ left: 20, right: 20 }}>
-            <XAxis type="number" tickFormatter={(v) => `R$ ${(v / 1000).toFixed(0)}k`} />
-            <YAxis type="category" dataKey="nome" width={60} fontSize={12} />
-            <Tooltip
-              formatter={(value: number) => [formatCurrency(value), 'Valor']}
-              labelFormatter={(label, payload) => payload?.[0]?.payload?.nomeCompleto || label}
-              contentStyle={{
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px',
-              }}
-            />
-            <Bar dataKey="valorTotal" radius={[0, 4, 4, 0]}>
-              {data.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+    <div className="bg-card rounded-2xl border border-border/50 p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h4 className="font-medium">Por Solicitante</h4>
+        <span className="text-xs text-muted-foreground">Top 6</span>
+      </div>
+      
+      <div className="space-y-4">
+        {data.map((item, index) => (
+          <div key={item.nome} className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground w-4">{index + 1}.</span>
+                <span className="font-medium truncate max-w-[140px]" title={item.nome}>
+                  {item.nomeAbreviado}
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-muted-foreground text-xs">
+                  {item.percent.toFixed(1)}%
+                </span>
+                <span className="font-semibold tabular-nums w-20 text-right">
+                  {formatCurrency(item.valor)}
+                </span>
+              </div>
+            </div>
+            <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full transition-all duration-700 ease-out"
+                style={{ width: `${(item.percent / maxPercent) * 100}%` }}
+              />
+            </div>
+          </div>
+        ))}
+        
+        {data.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-8">
+            Nenhum dado disponível
+          </p>
+        )}
       </div>
     </div>
   );
