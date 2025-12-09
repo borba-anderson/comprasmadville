@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,9 +35,13 @@ export default function Auth() {
     confirmPassword: '',
   });
 
-  const { signIn, signUp, isStaff } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  
+  // Get redirect URL from query params, default to /painel
+  const redirectUrl = searchParams.get('redirect') || '/painel';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -108,9 +112,9 @@ export default function Auth() {
           description: 'Bem-vindo de volta.',
         });
 
-        // Redirect based on role
+        // Redirect to the specified URL or default to /painel
         setTimeout(() => {
-          navigate('/painel');
+          navigate(redirectUrl);
         }, 500);
       } else {
         const result = signupSchema.safeParse(formData);
@@ -148,7 +152,7 @@ export default function Auth() {
         });
 
         setTimeout(() => {
-          navigate('/painel');
+          navigate(redirectUrl);
         }, 500);
       }
     } catch (error) {
