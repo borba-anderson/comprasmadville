@@ -34,7 +34,7 @@ const formSchema = z.object({
 });
 
 export default function Requisicao() {
-  const { user, profile, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading, rolesLoaded } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [protocolo, setProtocolo] = useState('');
@@ -58,9 +58,9 @@ export default function Requisicao() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Redirect to auth if not logged in
+  // Redirect to auth if not logged in - wait for auth to fully load
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && rolesLoaded && !user) {
       toast({
         title: 'Acesso restrito',
         description: 'Faça login para criar uma requisição.',
@@ -68,7 +68,7 @@ export default function Requisicao() {
       });
       navigate('/auth');
     }
-  }, [authLoading, user, navigate, toast]);
+  }, [authLoading, rolesLoaded, user, navigate, toast]);
 
   // Pre-fill form with user profile data
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function Requisicao() {
   }, [profile]);
 
   // Show loading while checking auth
-  if (authLoading) {
+  if (authLoading || !rolesLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
