@@ -40,7 +40,7 @@ const Index = () => {
               </h3>
               <p className="text-muted-foreground mb-6">
                 Envie sua solicitação de compra de forma rápida e simples. 
-                Não é necessário login.
+                Faça login para continuar.
               </p>
               <div className="flex items-center text-primary font-semibold group-hover:gap-3 transition-all">
                 Acessar formulário

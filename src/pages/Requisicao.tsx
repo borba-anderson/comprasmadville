@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, Upload, FileText, X } from 'lucide-react';
+import { ArrowLeft, Send, Upload, FileText, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { SETORES, UNIDADES, MOTIVOS_COMPRA, RequisicaoPrioridade } from '@/types';
 import { z } from 'zod';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   solicitante_nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres').max(100),
@@ -33,6 +34,7 @@ const formSchema = z.object({
 });
 
 export default function Requisicao() {
+  const { user, profile, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [protocolo, setProtocolo] = useState('');
@@ -55,6 +57,45 @@ export default function Requisicao() {
 
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast({
+        title: 'Acesso restrito',
+        description: 'Faça login para criar uma requisição.',
+        variant: 'destructive',
+      });
+      navigate('/auth');
+    }
+  }, [authLoading, user, navigate, toast]);
+
+  // Pre-fill form with user profile data
+  useEffect(() => {
+    if (profile) {
+      setFormData(prev => ({
+        ...prev,
+        solicitante_nome: profile.nome || '',
+        solicitante_email: profile.email || '',
+        solicitante_telefone: profile.telefone || '',
+        solicitante_setor: profile.setor || '',
+      }));
+    }
+  }, [profile]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
 
   const formatPhone = (value: string) => {
     const digits = value.replace(/\D/g, '').slice(0, 10);
