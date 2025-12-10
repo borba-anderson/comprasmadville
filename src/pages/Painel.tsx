@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -12,6 +12,10 @@ import {
   Download,
   Paperclip,
   DollarSign,
+  ShoppingCart,
+  Users,
+  CalendarDays,
+  Truck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,12 +46,28 @@ import { StatsCard } from '@/components/StatsCard';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { GastosDashboard } from '@/components/dashboard';
+import { 
+  RequisicaoTimeline, 
+  BuyerSelector, 
+  DeliveryDatePicker,
+  ValueHistoryList 
+} from '@/components/requisicao';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Requisicao, RequisicaoStatus, RequisicaoStats, STATUS_CONFIG } from '@/types';
+import { 
+  Requisicao, 
+  RequisicaoStatus, 
+  RequisicaoStats, 
+  STATUS_CONFIG, 
+  COMPRADORES,
+  ValorHistorico 
+} from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+
+const AUTO_REFRESH_INTERVAL = 15000; // 15 seconds
 
 export default function Painel() {
   const [requisicoes, setRequisicoes] = useState<Requisicao[]>([]);
@@ -64,17 +84,20 @@ export default function Painel() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [compradorFilter, setCompradorFilter] = useState<string>('all');
   const [selectedRequisicao, setSelectedRequisicao] = useState<Requisicao | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
   const [valorInput, setValorInput] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [valorHistory, setValorHistory] = useState<ValorHistorico[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { user, profile, isStaff, isLoading: authLoading, rolesLoaded } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirect if not staff - wait for auth and roles to load
+  // Redirect if not staff
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
       if (user && !isStaff) {
@@ -92,9 +115,11 @@ export default function Painel() {
   }, [authLoading, rolesLoaded, user, isStaff, navigate, toast]);
 
   // Fetch requisitions
-  const fetchRequisicoes = async () => {
+  const fetchRequisicoes = useCallback(async (silent = false) => {
     try {
-      setIsLoading(true);
+      if (!silent) setIsLoading(true);
+      setIsRefreshing(true);
+      
       const { data, error } = await supabase
         .from('requisicoes')
         .select('*')
@@ -125,21 +150,57 @@ export default function Painel() {
       setStats(newStats);
     } catch (error) {
       console.error('Error fetching requisitions:', error);
-      toast({
-        title: 'Erro',
-        description: 'Falha ao carregar requisições.',
-        variant: 'destructive',
-      });
+      if (!silent) {
+        toast({
+          title: 'Erro',
+          description: 'Falha ao carregar requisições.',
+          variant: 'destructive',
+        });
+      }
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
-  };
+  }, [toast]);
 
+  // Initial fetch
   useEffect(() => {
     if (isStaff) {
       fetchRequisicoes();
     }
-  }, [isStaff]);
+  }, [isStaff, fetchRequisicoes]);
+
+  // Auto-refresh every 15 seconds
+  useEffect(() => {
+    if (!isStaff) return;
+    
+    const interval = setInterval(() => {
+      fetchRequisicoes(true);
+    }, AUTO_REFRESH_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, [isStaff, fetchRequisicoes]);
+
+  // Fetch valor history when modal opens
+  useEffect(() => {
+    const fetchValorHistory = async () => {
+      if (!selectedRequisicao) return;
+      
+      const { data, error } = await supabase
+        .from('valor_historico')
+        .select('*')
+        .eq('requisicao_id', selectedRequisicao.id)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setValorHistory(data as ValorHistorico[]);
+      }
+    };
+
+    if (isModalOpen && selectedRequisicao) {
+      fetchValorHistory();
+    }
+  }, [isModalOpen, selectedRequisicao]);
 
   // Filter requisitions
   useEffect(() => {
@@ -160,8 +221,12 @@ export default function Painel() {
       filtered = filtered.filter((req) => req.status === statusFilter);
     }
 
+    if (compradorFilter && compradorFilter !== 'all') {
+      filtered = filtered.filter((req) => req.comprador_nome === compradorFilter);
+    }
+
     setFilteredRequisicoes(filtered);
-  }, [requisicoes, searchTerm, statusFilter]);
+  }, [requisicoes, searchTerm, statusFilter, compradorFilter]);
 
   // Set valor input when modal opens
   useEffect(() => {
@@ -198,6 +263,30 @@ export default function Painel() {
     }
   };
 
+  // Send notification email
+  const sendNotification = async (req: Requisicao, newStatus: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('send-notification', {
+        body: {
+          to: req.solicitante_email,
+          solicitante_nome: req.solicitante_nome,
+          item_nome: req.item_nome,
+          protocolo: req.protocolo,
+          status: newStatus,
+          comprador_nome: req.comprador_nome,
+          previsao_entrega: req.previsao_entrega,
+          motivo_rejeicao: req.motivo_rejeicao,
+        },
+      });
+
+      if (error) {
+        console.error('Failed to send notification:', error);
+      }
+    } catch (err) {
+      console.error('Error sending notification:', err);
+    }
+  };
+
   // Update status
   const updateStatus = async (id: string, newStatus: RequisicaoStatus, motivo?: string) => {
     try {
@@ -217,6 +306,16 @@ export default function Painel() {
         updateData.aprovado_por = profile?.id;
       }
 
+      if (newStatus === 'comprado') {
+        updateData.comprado_em = new Date().toISOString();
+        updateData.comprador_id = profile?.id;
+      }
+
+      if (newStatus === 'recebido') {
+        updateData.recebido_em = new Date().toISOString();
+        updateData.entregue_em = new Date().toISOString();
+      }
+
       const { error } = await supabase
         .from('requisicoes')
         .update(updateData)
@@ -228,6 +327,11 @@ export default function Painel() {
         title: 'Sucesso',
         description: `Status atualizado para ${STATUS_CONFIG[newStatus].label}`,
       });
+
+      // Send notification
+      if (selectedRequisicao) {
+        await sendNotification({ ...selectedRequisicao, ...updateData } as Requisicao, newStatus);
+      }
 
       setIsModalOpen(false);
       setMotivoRejeicao('');
@@ -244,25 +348,105 @@ export default function Painel() {
     }
   };
 
-  // Update valor
-  const updateValor = async (id: string) => {
+  // Update comprador
+  const updateComprador = async (id: string, compradorNome: string) => {
     try {
-      setIsUpdating(true);
-      const valor = parseCurrencyInput(valorInput);
-
       const { error } = await supabase
         .from('requisicoes')
-        .update({ valor, updated_at: new Date().toISOString() })
+        .update({ 
+          comprador_nome: compradorNome,
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', id);
 
       if (error) throw error;
 
-      toast({
-        title: 'Sucesso',
-        description: 'Valor atualizado com sucesso.',
-      });
+      toast({ title: 'Comprador atualizado' });
+      
+      if (selectedRequisicao) {
+        setSelectedRequisicao({ ...selectedRequisicao, comprador_nome: compradorNome });
+      }
+      
+      fetchRequisicoes(true);
+    } catch (error) {
+      console.error('Error updating comprador:', error);
+      toast({ title: 'Erro ao atualizar comprador', variant: 'destructive' });
+    }
+  };
 
-      fetchRequisicoes();
+  // Update previsao entrega
+  const updatePrevisaoEntrega = async (id: string, date: string) => {
+    try {
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          previsao_entrega: date,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({ title: 'Previsão atualizada' });
+      
+      if (selectedRequisicao) {
+        setSelectedRequisicao({ ...selectedRequisicao, previsao_entrega: date });
+      }
+      
+      fetchRequisicoes(true);
+    } catch (error) {
+      console.error('Error updating previsao:', error);
+      toast({ title: 'Erro ao atualizar previsão', variant: 'destructive' });
+    }
+  };
+
+  // Update valor with history tracking
+  const updateValor = async (id: string) => {
+    try {
+      setIsUpdating(true);
+      const valor = parseCurrencyInput(valorInput);
+      const valorAnterior = selectedRequisicao?.valor;
+
+      // Update requisicao
+      const { error: updateError } = await supabase
+        .from('requisicoes')
+        .update({ valor, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (updateError) throw updateError;
+
+      // Record history
+      const { error: historyError } = await supabase
+        .from('valor_historico')
+        .insert({
+          requisicao_id: id,
+          valor_anterior: valorAnterior,
+          valor_novo: valor,
+          alterado_por: profile?.nome || 'Sistema',
+        });
+
+      if (historyError) {
+        console.error('Failed to record valor history:', historyError);
+      }
+
+      toast({ title: 'Valor atualizado' });
+      
+      // Refresh history
+      const { data: historyData } = await supabase
+        .from('valor_historico')
+        .select('*')
+        .eq('requisicao_id', id)
+        .order('created_at', { ascending: false });
+      
+      if (historyData) {
+        setValorHistory(historyData as ValorHistorico[]);
+      }
+      
+      if (selectedRequisicao) {
+        setSelectedRequisicao({ ...selectedRequisicao, valor });
+      }
+      
+      fetchRequisicoes(true);
     } catch (error) {
       console.error('Error updating valor:', error);
       toast({
@@ -283,6 +467,19 @@ export default function Painel() {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
 
+  const getDeliveryStatus = (previsao: string | undefined) => {
+    if (!previsao) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const delivery = new Date(previsao);
+    delivery.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((delivery.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diff < 0) return 'overdue';
+    if (diff <= 3) return 'warning';
+    return 'ontime';
+  };
+
   if (authLoading || !rolesLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -296,18 +493,53 @@ export default function Painel() {
       <Header />
 
       <main className="page-container">
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
-          <StatsCard title="Total" value={stats.total} icon={FileText} />
-          <StatsCard title="Pendentes" value={stats.pendente} variant="warning" icon={Clock} />
-          <StatsCard title="Em Análise" value={stats.em_analise} variant="info" icon={TrendingUp} />
-          <StatsCard title="Aprovados" value={stats.aprovado} variant="success" icon={CheckCircle} />
-          <StatsCard title="Cotando" value={stats.cotando} variant="primary" icon={Package} />
-          <StatsCard title="Comprados" value={stats.comprado} variant="success" icon={CheckCircle} />
-          <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
+        {/* Stats - Redesigned */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
+          <StatsCard 
+            title="Total" 
+            value={stats.total} 
+            icon={FileText}
+            className="col-span-1"
+          />
+          <StatsCard 
+            title="Pendentes" 
+            value={stats.pendente} 
+            variant="warning" 
+            icon={Clock}
+          />
+          <StatsCard 
+            title="Em Análise" 
+            value={stats.em_analise} 
+            variant="info" 
+            icon={TrendingUp}
+          />
+          <StatsCard 
+            title="Aprovados" 
+            value={stats.aprovado} 
+            variant="success" 
+            icon={CheckCircle}
+          />
+          <StatsCard 
+            title="Cotando" 
+            value={stats.cotando} 
+            variant="primary" 
+            icon={Package}
+          />
+          <StatsCard 
+            title="Comprados" 
+            value={stats.comprado} 
+            variant="success" 
+            icon={ShoppingCart}
+          />
+          <StatsCard 
+            title="Rejeitados" 
+            value={stats.rejeitado} 
+            variant="danger" 
+            icon={XCircle}
+          />
         </div>
 
-        {/* Tabs: Requisições + Dashboard */}
+        {/* Tabs */}
         <Tabs defaultValue="requisicoes" className="space-y-6">
           <TabsList className="bg-card border">
             <TabsTrigger value="requisicoes" className="gap-2">
@@ -323,7 +555,7 @@ export default function Painel() {
           <TabsContent value="requisicoes" className="space-y-6">
             {/* Filters */}
             <div className="bg-card rounded-xl border p-4">
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -334,20 +566,43 @@ export default function Painel() {
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full md:w-48">
+                  <SelectTrigger className="w-full lg:w-44">
                     <SelectValue placeholder="Todos os Status" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-popover border shadow-lg">
                     <SelectItem value="all">Todos os Status</SelectItem>
                     {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                       <SelectItem key={key} value={key}>
-                        {config.icon} {config.label}
+                        <span className="flex items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full ${config.dotColor}`} />
+                          {config.label}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <Button onClick={fetchRequisicoes} variant="outline">
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                <Select value={compradorFilter} onValueChange={setCompradorFilter}>
+                  <SelectTrigger className="w-full lg:w-44">
+                    <SelectValue placeholder="Todos Compradores" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border shadow-lg">
+                    <SelectItem value="all">Todos Compradores</SelectItem>
+                    {COMPRADORES.map((c) => (
+                      <SelectItem key={c.id} value={c.nome}>
+                        <span className="flex items-center gap-2">
+                          <Users className="w-3 h-3" />
+                          {c.nome}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button 
+                  onClick={() => fetchRequisicoes()} 
+                  variant="outline"
+                  className="gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Atualizar
                 </Button>
               </div>
@@ -365,72 +620,116 @@ export default function Painel() {
                   <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-lg font-semibold">Nenhuma requisição encontrada</p>
                   <p className="text-muted-foreground text-sm">
-                    {searchTerm || statusFilter !== 'all'
+                    {searchTerm || statusFilter !== 'all' || compradorFilter !== 'all'
                       ? 'Tente ajustar os filtros'
                       : 'As requisições aparecerão aqui'}
                   </p>
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead>Item</TableHead>
-                      <TableHead>Solicitante</TableHead>
-                      <TableHead className="text-center">Qtd</TableHead>
-                      <TableHead className="text-center">Prioridade</TableHead>
-                      <TableHead className="text-center">Status</TableHead>
-                      <TableHead className="text-right">Valor</TableHead>
-                      <TableHead className="text-center">Data</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredRequisicoes.map((req) => (
-                      <TableRow key={req.id} className="hover:bg-muted/30">
-                        <TableCell>
-                          <div>
-                            <p className="font-semibold">{req.item_nome}</p>
-                            <p className="text-xs text-muted-foreground">{req.protocolo}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{req.solicitante_nome}</p>
-                            <p className="text-xs text-muted-foreground">{req.solicitante_setor}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <span className="font-semibold">{req.quantidade}</span>
-                          <span className="text-muted-foreground text-sm ml-1">{req.unidade}</span>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <PriorityBadge priority={req.prioridade} />
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <StatusBadge status={req.status} />
-                        </TableCell>
-                        <TableCell className="text-right font-medium">
-                          {formatCurrency(req.valor)}
-                        </TableCell>
-                        <TableCell className="text-center text-sm">
-                          {formatDate(req.created_at)}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-muted/50 hover:bg-muted/50">
+                        <TableHead>Item</TableHead>
+                        <TableHead>Solicitante</TableHead>
+                        <TableHead className="text-center">Qtd</TableHead>
+                        <TableHead className="text-center">Prioridade</TableHead>
+                        <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="text-center">Comprador</TableHead>
+                        <TableHead className="text-center">Previsão</TableHead>
+                        <TableHead className="text-right">Valor</TableHead>
+                        <TableHead className="text-center">Data</TableHead>
+                        <TableHead className="text-right">Ações</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredRequisicoes.map((req) => {
+                        const deliveryStatus = getDeliveryStatus(req.previsao_entrega);
+                        
+                        return (
+                          <TableRow 
+                            key={req.id} 
+                            className="hover:bg-primary/5 transition-colors cursor-pointer group"
                             onClick={() => {
                               setSelectedRequisicao(req);
                               setIsModalOpen(true);
                             }}
                           >
-                            Ver detalhes →
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                            <TableCell>
+                              <div>
+                                <p className="font-semibold group-hover:text-primary transition-colors">
+                                  {req.item_nome}
+                                </p>
+                                <p className="text-xs text-muted-foreground font-mono">
+                                  {req.protocolo}
+                                </p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{req.solicitante_nome}</p>
+                                <p className="text-xs text-muted-foreground">{req.solicitante_setor}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <span className="font-semibold">{req.quantidade}</span>
+                              <span className="text-muted-foreground text-xs ml-1">{req.unidade}</span>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <PriorityBadge priority={req.prioridade} />
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                <span className={`w-2 h-2 rounded-full ${STATUS_CONFIG[req.status].dotColor}`} />
+                                <StatusBadge status={req.status} />
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {req.comprador_nome ? (
+                                <span className="text-sm font-medium">{req.comprador_nome}</span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {req.previsao_entrega ? (
+                                <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                                  deliveryStatus === 'overdue' ? 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400' :
+                                  deliveryStatus === 'warning' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400' :
+                                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
+                                }`}>
+                                  {formatDate(req.previsao_entrega)}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              {formatCurrency(req.valor)}
+                            </TableCell>
+                            <TableCell className="text-center text-sm text-muted-foreground">
+                              {formatDate(req.created_at)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedRequisicao(req);
+                                  setIsModalOpen(true);
+                                }}
+                              >
+                                Ver →
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
             </div>
           </TabsContent>
@@ -441,9 +740,9 @@ export default function Painel() {
         </Tabs>
       </main>
 
-      {/* Detail Modal */}
+      {/* Enhanced Detail Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
@@ -453,14 +752,22 @@ export default function Painel() {
 
           {selectedRequisicao && (
             <div className="space-y-6">
-              {/* Protocol & Status */}
-              <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              {/* Protocol & Status Header */}
+              <div className="flex items-center justify-between p-4 bg-muted rounded-xl">
                 <div>
                   <p className="text-sm text-muted-foreground">Protocolo</p>
                   <p className="text-xl font-bold font-mono">{selectedRequisicao.protocolo}</p>
                 </div>
-                <StatusBadge status={selectedRequisicao.status} />
+                <div className="flex items-center gap-2">
+                  <span className={`w-3 h-3 rounded-full ${STATUS_CONFIG[selectedRequisicao.status].dotColor}`} />
+                  <StatusBadge status={selectedRequisicao.status} />
+                </div>
               </div>
+
+              {/* Timeline */}
+              <RequisicaoTimeline requisicao={selectedRequisicao} />
+
+              <Separator />
 
               {/* Item Info */}
               <div className="grid grid-cols-2 gap-4">
@@ -514,7 +821,6 @@ export default function Painel() {
                         document.body.removeChild(link);
                         window.URL.revokeObjectURL(url);
                       } catch (error) {
-                        // Fallback: open in new tab
                         window.open(selectedRequisicao.arquivo_url!, '_blank', 'noopener,noreferrer');
                       }
                     }}
@@ -534,20 +840,37 @@ export default function Painel() {
                   <PriorityBadge priority={selectedRequisicao.prioridade} />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Data</p>
+                  <p className="text-sm text-muted-foreground">Criada em</p>
                   <p className="font-semibold">{formatDate(selectedRequisicao.created_at)}</p>
                 </div>
               </div>
 
+              <Separator />
+
+              {/* Comprador & Previsão - Only for approved+ statuses */}
+              {!['pendente', 'rejeitado', 'cancelado'].includes(selectedRequisicao.status) && (
+                <div className="grid grid-cols-2 gap-4">
+                  <BuyerSelector
+                    value={selectedRequisicao.comprador_nome}
+                    onChange={(value) => updateComprador(selectedRequisicao.id, value)}
+                  />
+                  <DeliveryDatePicker
+                    value={selectedRequisicao.previsao_entrega}
+                    onChange={(value) => updatePrevisaoEntrega(selectedRequisicao.id, value)}
+                  />
+                </div>
+              )}
+
               {/* Valor Section */}
               {canEditValor(selectedRequisicao.status) && (
-                <div className="border-t pt-4">
-                  <Label htmlFor="valor" className="text-sm font-semibold mb-2 block">
+                <div className="border-t pt-4 space-y-4">
+                  <Label htmlFor="valor" className="text-sm font-semibold flex items-center gap-2">
+                    <DollarSign className="w-4 h-4" />
                     Valor do Pedido (R$)
                   </Label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
                       <Input
                         id="valor"
                         value={valorInput}
@@ -561,14 +884,17 @@ export default function Painel() {
                       isLoading={isUpdating}
                       disabled={!valorInput}
                     >
-                      Salvar Valor
+                      Salvar
                     </Button>
                   </div>
-                  {selectedRequisicao.valor != null && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                  {selectedRequisicao.valor != null && valorInput !== formatCurrencyInput(selectedRequisicao.valor) && (
+                    <p className="text-xs text-muted-foreground">
                       Valor atual: {formatCurrency(selectedRequisicao.valor)}
                     </p>
                   )}
+                  
+                  {/* Valor History */}
+                  <ValueHistoryList history={valorHistory} />
                 </div>
               )}
 
@@ -634,6 +960,7 @@ export default function Painel() {
                     onClick={() => updateStatus(selectedRequisicao.id, 'cotando')}
                     isLoading={isUpdating}
                   >
+                    <Package className="w-4 h-4 mr-2" />
                     Iniciar Cotação
                   </Button>
                 </div>
@@ -647,7 +974,35 @@ export default function Painel() {
                     onClick={() => updateStatus(selectedRequisicao.id, 'comprado')}
                     isLoading={isUpdating}
                   >
+                    <ShoppingCart className="w-4 h-4 mr-2" />
                     Marcar como Comprado
+                  </Button>
+                </div>
+              )}
+
+              {selectedRequisicao.status === 'comprado' && (
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    className="flex-1"
+                    onClick={() => updateStatus(selectedRequisicao.id, 'em_entrega')}
+                    isLoading={isUpdating}
+                  >
+                    <Truck className="w-4 h-4 mr-2" />
+                    Marcar em Entrega
+                  </Button>
+                </div>
+              )}
+
+              {selectedRequisicao.status === 'em_entrega' && (
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    className="flex-1"
+                    variant="success"
+                    onClick={() => updateStatus(selectedRequisicao.id, 'recebido')}
+                    isLoading={isUpdating}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Confirmar Entrega
                   </Button>
                 </div>
               )}
