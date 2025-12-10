@@ -1,10 +1,31 @@
-import { Link } from 'react-router-dom';
-import { FileText, Shield, ArrowRight, CheckCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Link, useNavigate } from 'react-router-dom';
+import { FileText, Shield, ArrowRight } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Logo } from '@/components/layout/Logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRequisicaoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      navigate('/requisicao');
+    } else {
+      navigate('/auth?redirect=/requisicao');
+    }
+  };
+
+  const handlePainelClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      navigate('/painel');
+    } else {
+      navigate('/auth');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
       <Header />
@@ -30,7 +51,7 @@ const Index = () => {
         {/* Cards Section */}
         <section className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Card: Fazer Requisição */}
-          <Link to="/auth?redirect=/requisicao" className="group">
+          <a href="#" onClick={handleRequisicaoClick} className="group">
             <div className="bg-card rounded-2xl shadow-lg border p-8 h-full card-hover">
               <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
                 <FileText className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
@@ -39,18 +60,18 @@ const Index = () => {
                 Fazer Requisição
               </h3>
               <p className="text-muted-foreground mb-6">
-                Envie sua solicitação de compra de forma rápida e simples. 
-                Faça login para continuar.
+                Envie sua solicitação de compra de forma rápida e simples.
+                {!user && ' Faça login para continuar.'}
               </p>
               <div className="flex items-center text-primary font-semibold group-hover:gap-3 transition-all">
-                Fazer login
+                {user ? 'Acessar' : 'Fazer login'}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
-          </Link>
+          </a>
 
           {/* Card: Painel Admin */}
-          <Link to="/auth" className="group">
+          <a href="#" onClick={handlePainelClick} className="group">
             <div className="bg-card rounded-2xl shadow-lg border p-8 h-full card-hover">
               <div className="w-16 h-16 bg-info/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-info transition-colors">
                 <Shield className="w-8 h-8 text-info group-hover:text-info-foreground transition-colors" />
@@ -63,11 +84,11 @@ const Index = () => {
                 acompanhar o status.
               </p>
               <div className="flex items-center text-info font-semibold group-hover:gap-3 transition-all">
-                Fazer login
+                {user ? 'Acessar' : 'Fazer login'}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
-          </Link>
+          </a>
         </section>
 
         {/* Features Section */}
