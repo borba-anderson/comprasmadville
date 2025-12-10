@@ -54,6 +54,7 @@ export interface Requisicao {
   motivo_rejeicao?: string;
   aprovado_por?: string;
   comprador_id?: string;
+  comprador_nome?: string;
   arquivo_url?: string;
   arquivo_nome?: string;
   created_at: string;
@@ -61,7 +62,18 @@ export interface Requisicao {
   aprovado_em?: string;
   comprado_em?: string;
   recebido_em?: string;
+  entregue_em?: string;
+  previsao_entrega?: string;
   valor?: number;
+}
+
+export interface ValorHistorico {
+  id: string;
+  requisicao_id: string;
+  valor_anterior: number | null;
+  valor_novo: number;
+  alterado_por: string;
+  created_at: string;
 }
 
 export interface AuditLog {
@@ -118,6 +130,15 @@ export interface AuthUser {
   roles: AppRole[];
 }
 
+// Compradores fixos
+export const COMPRADORES = [
+  { id: 'anderson', nome: 'Anderson' },
+  { id: 'mariana', nome: 'Mariana' },
+  { id: 'geovani', nome: 'Geovani' },
+] as const;
+
+export type CompradorId = typeof COMPRADORES[number]['id'];
+
 // Constants
 export const SETORES = [
   'Administrativo',
@@ -160,16 +181,16 @@ export const MOTIVOS_COMPRA = [
   'Outros',
 ] as const;
 
-export const STATUS_CONFIG: Record<RequisicaoStatus, { label: string; icon: string; color: string }> = {
-  pendente: { label: 'Pendente', icon: '⏳', color: 'yellow' },
-  em_analise: { label: 'Em Análise', icon: '🔍', color: 'blue' },
-  aprovado: { label: 'Aprovado', icon: '✅', color: 'green' },
-  cotando: { label: 'Cotando', icon: '💰', color: 'purple' },
-  comprado: { label: 'Comprado', icon: '🛒', color: 'cyan' },
-  em_entrega: { label: 'Em Entrega', icon: '🚚', color: 'blue' },
-  recebido: { label: 'Recebido', icon: '📦', color: 'green' },
-  rejeitado: { label: 'Rejeitado', icon: '❌', color: 'red' },
-  cancelado: { label: 'Cancelado', icon: '🚫', color: 'gray' },
+export const STATUS_CONFIG: Record<RequisicaoStatus, { label: string; icon: string; color: string; dotColor: string }> = {
+  pendente: { label: 'Pendente', icon: '⏳', color: 'yellow', dotColor: 'bg-amber-500' },
+  em_analise: { label: 'Em Análise', icon: '🔍', color: 'blue', dotColor: 'bg-blue-500' },
+  aprovado: { label: 'Aprovado', icon: '✅', color: 'green', dotColor: 'bg-emerald-500' },
+  cotando: { label: 'Cotando', icon: '💰', color: 'purple', dotColor: 'bg-violet-500' },
+  comprado: { label: 'Comprado', icon: '🛒', color: 'cyan', dotColor: 'bg-cyan-500' },
+  em_entrega: { label: 'Em Entrega', icon: '🚚', color: 'blue', dotColor: 'bg-blue-500' },
+  recebido: { label: 'Recebido', icon: '📦', color: 'green', dotColor: 'bg-emerald-500' },
+  rejeitado: { label: 'Rejeitado', icon: '❌', color: 'red', dotColor: 'bg-red-500' },
+  cancelado: { label: 'Cancelado', icon: '🚫', color: 'gray', dotColor: 'bg-gray-500' },
 };
 
 export const PRIORIDADE_CONFIG: Record<RequisicaoPrioridade, { label: string; icon: string; prazo: string }> = {
