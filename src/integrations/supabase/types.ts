@@ -148,13 +148,16 @@ export type Database = {
           arquivo_url: string | null
           comprado_em: string | null
           comprador_id: string | null
+          comprador_nome: string | null
           created_at: string | null
+          entregue_em: string | null
           especificacoes: string | null
           id: string
           item_nome: string
           justificativa: string
           motivo_compra: string | null
           motivo_rejeicao: string | null
+          previsao_entrega: string | null
           prioridade: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo: string | null
           quantidade: number
@@ -175,13 +178,16 @@ export type Database = {
           arquivo_url?: string | null
           comprado_em?: string | null
           comprador_id?: string | null
+          comprador_nome?: string | null
           created_at?: string | null
+          entregue_em?: string | null
           especificacoes?: string | null
           id?: string
           item_nome: string
           justificativa: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          previsao_entrega?: string | null
           prioridade?: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo?: string | null
           quantidade?: number
@@ -202,13 +208,16 @@ export type Database = {
           arquivo_url?: string | null
           comprado_em?: string | null
           comprador_id?: string | null
+          comprador_nome?: string | null
           created_at?: string | null
+          entregue_em?: string | null
           especificacoes?: string | null
           id?: string
           item_nome?: string
           justificativa?: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          previsao_entrega?: string | null
           prioridade?: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo?: string | null
           quantidade?: number
@@ -264,6 +273,41 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      valor_historico: {
+        Row: {
+          alterado_por: string | null
+          created_at: string
+          id: string
+          requisicao_id: string
+          valor_anterior: number | null
+          valor_novo: number
+        }
+        Insert: {
+          alterado_por?: string | null
+          created_at?: string
+          id?: string
+          requisicao_id: string
+          valor_anterior?: number | null
+          valor_novo: number
+        }
+        Update: {
+          alterado_por?: string | null
+          created_at?: string
+          id?: string
+          requisicao_id?: string
+          valor_anterior?: number | null
+          valor_novo?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "valor_historico_requisicao_id_fkey"
+            columns: ["requisicao_id"]
+            isOneToOne: false
+            referencedRelation: "requisicoes"
             referencedColumns: ["id"]
           },
         ]
