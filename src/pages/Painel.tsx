@@ -377,10 +377,13 @@ export default function Painel() {
   // Update previsao entrega
   const updatePrevisaoEntrega = async (id: string, date: string) => {
     try {
+      // Convert empty string to null for database
+      const previsaoValue = date && date.trim() !== '' ? date : null;
+      
       const { error } = await supabase
         .from('requisicoes')
         .update({ 
-          previsao_entrega: date,
+          previsao_entrega: previsaoValue,
           updated_at: new Date().toISOString() 
         })
         .eq('id', id);
@@ -390,7 +393,7 @@ export default function Painel() {
       toast({ title: 'Previsão atualizada' });
       
       if (selectedRequisicao) {
-        setSelectedRequisicao({ ...selectedRequisicao, previsao_entrega: date });
+        setSelectedRequisicao({ ...selectedRequisicao, previsao_entrega: previsaoValue });
       }
       
       fetchRequisicoes(true);
@@ -801,6 +804,14 @@ export default function Painel() {
                 <p className="text-sm text-muted-foreground mb-2">Justificativa</p>
                 <p className="p-3 bg-muted rounded-lg text-sm">{selectedRequisicao.justificativa}</p>
               </div>
+
+              {/* Especificações Técnicas */}
+              {selectedRequisicao.especificacoes && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Especificações Técnicas</p>
+                  <p className="p-3 bg-muted rounded-lg text-sm whitespace-pre-wrap">{selectedRequisicao.especificacoes}</p>
+                </div>
+              )}
 
               {/* Anexo */}
               {selectedRequisicao.arquivo_url && (
