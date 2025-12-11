@@ -4,106 +4,108 @@
 
 /* ============================================
    DESIGN SYSTEM - MADVILLE REQUISIÇÕES
-   Tema: Laranja Corporativo + Profissional
+   Tema: Enterprise Dashboard Premium
+   Estilo: Notion / Stripe / Monday
    ============================================ */
 
 @layer base {
   :root {
-    /* Background & Foreground */
-    --background: 30 25% 98%;
-    --foreground: 20 15% 15%;
+    /* Background & Foreground - Clean white base */
+    --background: 220 14% 97%;
+    --foreground: 220 20% 12%;
 
-    /* Card */
+    /* Card - Pure white cards */
     --card: 0 0% 100%;
-    --card-foreground: 20 15% 15%;
+    --card-foreground: 220 20% 12%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 20 15% 15%;
+    --popover-foreground: 220 20% 12%;
 
-    /* Primary - Laranja Madville */
-    --primary: 24 95% 53%;
+    /* Primary - Enterprise Blue */
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Cinza neutro */
-    --secondary: 30 10% 94%;
-    --secondary-foreground: 20 15% 25%;
+    /* Secondary - Soft gray */
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 220 20% 25%;
 
     /* Muted */
-    --muted: 30 10% 96%;
-    --muted-foreground: 20 10% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
 
-    /* Accent - Laranja claro */
-    --accent: 30 80% 95%;
-    --accent-foreground: 24 95% 40%;
+    /* Accent - Light blue tint */
+    --accent: 217 80% 96%;
+    --accent-foreground: 217 91% 50%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Success */
-    --success: 142 76% 36%;
+    /* Success - Enterprise green */
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
-    /* Warning */
-    --warning: 45 93% 47%;
-    --warning-foreground: 20 15% 15%;
+    /* Warning - Soft amber */
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 20% 12%;
 
-    /* Info */
+    /* Info - Primary blue */
     --info: 217 91% 60%;
     --info-foreground: 0 0% 100%;
 
-    /* Border & Input */
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 24 95% 53%;
+    /* Border & Input - Very subtle */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 20 15% 35%;
-    --sidebar-primary: 24 95% 53%;
+    --sidebar-foreground: 220 15% 35%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 80% 96%;
-    --sidebar-accent-foreground: 24 95% 40%;
-    --sidebar-border: 30 15% 92%;
-    --sidebar-ring: 24 95% 53%;
+    --sidebar-accent: 217 80% 97%;
+    --sidebar-accent-foreground: 217 91% 50%;
+    --sidebar-border: 220 13% 93%;
+    --sidebar-ring: 217 91% 60%;
 
-    /* Status Colors */
-    --status-pendente: 45 93% 47%;
-    --status-pendente-bg: 45 93% 95%;
+    /* Enterprise Status Colors */
+    --status-pendente: 38 92% 50%;
+    --status-pendente-bg: 38 92% 96%;
     --status-em-analise: 217 91% 60%;
-    --status-em-analise-bg: 217 91% 95%;
-    --status-aprovado: 142 76% 36%;
-    --status-aprovado-bg: 142 76% 95%;
+    --status-em-analise-bg: 217 91% 96%;
+    --status-aprovado: 142 71% 45%;
+    --status-aprovado-bg: 142 71% 96%;
     --status-cotando: 262 83% 58%;
-    --status-cotando-bg: 262 83% 95%;
+    --status-cotando-bg: 262 83% 96%;
     --status-comprado: 199 89% 48%;
-    --status-comprado-bg: 199 89% 95%;
+    --status-comprado-bg: 199 89% 96%;
     --status-rejeitado: 0 84% 60%;
-    --status-rejeitado-bg: 0 84% 95%;
+    --status-rejeitado-bg: 0 84% 96%;
 
     /* Priority Colors */
     --priority-alta: 0 84% 60%;
-    --priority-alta-bg: 0 84% 95%;
-    --priority-media: 45 93% 47%;
-    --priority-media-bg: 45 93% 95%;
-    --priority-baixa: 142 76% 36%;
-    --priority-baixa-bg: 142 76% 95%;
+    --priority-alta-bg: 0 84% 96%;
+    --priority-media: 38 92% 50%;
+    --priority-media-bg: 38 92% 96%;
+    --priority-baixa: 142 71% 45%;
+    --priority-baixa-bg: 142 71% 96%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(24, 95%, 53%) 0%, hsl(20, 95%, 45%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(30, 25%, 98%) 0%, hsl(30, 30%, 94%) 100%);
-    --gradient-card-hover: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(30, 30%, 98%) 100%);
+    /* Enterprise Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(217, 91%, 50%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220, 14%, 97%) 0%, hsl(220, 14%, 100%) 100%);
+    --gradient-card-hover: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 99%) 100%);
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(20 15% 15% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(20 15% 15% / 0.1), 0 2px 4px -2px hsl(20 15% 15% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(20 15% 15% / 0.1), 0 4px 6px -4px hsl(20 15% 15% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(20 15% 15% / 0.1), 0 8px 10px -6px hsl(20 15% 15% / 0.1);
-    --shadow-primary: 0 10px 30px -10px hsl(24 95% 53% / 0.3);
-    --shadow-glow: 0 0 40px hsl(24 95% 53% / 0.15);
+    /* Enterprise Shadows - Minimal and soft */
+    --shadow-xs: 0 1px 2px 0 hsl(220 20% 12% / 0.03);
+    --shadow-sm: 0 1px 3px 0 hsl(220 20% 12% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(220 20% 12% / 0.05), 0 2px 4px -2px hsl(220 20% 12% / 0.03);
+    --shadow-lg: 0 10px 15px -3px hsl(220 20% 12% / 0.05), 0 4px 6px -4px hsl(220 20% 12% / 0.03);
+    --shadow-xl: 0 20px 25px -5px hsl(220 20% 12% / 0.05), 0 8px 10px -6px hsl(220 20% 12% / 0.03);
+    --shadow-primary: 0 4px 14px -3px hsl(217 91% 60% / 0.25);
+    --shadow-glow: 0 0 20px hsl(217 91% 60% / 0.1);
   }
 
   .dark {
