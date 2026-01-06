@@ -1,129 +1,45 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { FileText, Shield, ArrowRight } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Logo } from '@/components/layout/Logo';
 import { useAuth } from '@/contexts/AuthContext';
+import { UserGreeting, QuickStats, ActionCards, HowItWorks } from '@/components/home';
 
 const Index = () => {
-  const { user, isLoading } = useAuth();
-  const navigate = useNavigate();
-
-  const handleRequisicaoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (user) {
-      navigate('/requisicao');
-    } else {
-      navigate('/auth?redirect=/requisicao');
-    }
-  };
-
-  const handlePainelClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (user) {
-      navigate('/painel');
-    } else {
-      navigate('/auth');
-    }
-  };
+  const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
+    <div className="min-h-screen bg-background">
       <Header />
       
       <main className="page-container">
         {/* Hero Section */}
-        <section className="py-12 md:py-20 text-center animate-fade-in">
-          <div className="flex justify-center mb-8">
+        <section className="py-10 md:py-16 text-center animate-fade-in">
+          <div className="flex justify-center mb-6">
             <Logo size="xl" showText={false} />
           </div>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3 tracking-tight">
             Madville
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground font-medium mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground font-medium mb-2">
             Sistema de Requisições de Compras
           </p>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-10">
-            Solicite materiais, equipamentos e serviços de forma rápida e organizada.
-            Acompanhe suas requisições em tempo real.
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm">
+            Governança e controle para suas solicitações de compras corporativas.
           </p>
         </section>
 
-        {/* Cards Section */}
-        <section className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Card: Fazer Requisição */}
-          <a href="#" onClick={handleRequisicaoClick} className="group">
-            <div className="bg-card rounded-2xl shadow-lg border p-8 h-full card-hover">
-              <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
-                <FileText className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-card-foreground mb-3">
-                Fazer Requisição
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Envie sua solicitação de compra de forma rápida e simples.
-                {!user && ' Faça login para continuar.'}
-              </p>
-              <div className="flex items-center text-primary font-semibold group-hover:gap-3 transition-all">
-                {user ? 'Acessar' : 'Fazer login'}
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
-              </div>
-            </div>
-          </a>
+        {/* User Context (quando logado) */}
+        {user && (
+          <section className="animate-fade-in">
+            <UserGreeting />
+            <QuickStats />
+          </section>
+        )}
 
-          {/* Card: Painel Admin */}
-          <a href="#" onClick={handlePainelClick} className="group">
-            <div className="bg-card rounded-2xl shadow-lg border p-8 h-full card-hover">
-              <div className="w-16 h-16 bg-info/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-info transition-colors">
-                <Shield className="w-8 h-8 text-info group-hover:text-info-foreground transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-card-foreground mb-3">
-                Painel Administrativo
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Acesso restrito para gerenciar requisições, aprovar compras e 
-                acompanhar o status.
-              </p>
-              <div className="flex items-center text-info font-semibold group-hover:gap-3 transition-all">
-                {user ? 'Acessar' : 'Fazer login'}
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
-              </div>
-            </div>
-          </a>
-        </section>
+        {/* Action Cards */}
+        <ActionCards />
 
-        {/* Features Section */}
-        <section className="py-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-10">Como funciona</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-primary">1</span>
-              </div>
-              <h3 className="font-semibold mb-2">Preencha o formulário</h3>
-              <p className="text-sm text-muted-foreground">
-                Informe os dados do item que precisa e a justificativa
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-primary">2</span>
-              </div>
-              <h3 className="font-semibold mb-2">Aguarde aprovação</h3>
-              <p className="text-sm text-muted-foreground">
-                Sua requisição será analisada pela equipe de compras
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-primary">3</span>
-              </div>
-              <h3 className="font-semibold mb-2">Receba o material</h3>
-              <p className="text-sm text-muted-foreground">
-                Após aprovação e compra, você será notificado
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Como Funciona */}
+        <HowItWorks />
 
         {/* Footer */}
         <footer className="py-8 text-center border-t mt-8">
