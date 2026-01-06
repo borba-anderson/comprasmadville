@@ -1,25 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, Upload, FileText, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Send, FileText, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Header } from '@/components/layout/Header';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { SETORES, UNIDADES, MOTIVOS_COMPRA, RequisicaoPrioridade } from '@/types';
+import { RequisicaoPrioridade } from '@/types';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
+import {
+  FormStepper,
+  StepSolicitante,
+  StepItem,
+  StepJustificativa,
+  StepAnexo,
+  StepRevisao,
+} from '@/components/requisicao';
 
-const formSchema = z.object({
+const STEPS = [
+  { id: 1, title: 'Solicitante', description: 'Seus dados' },
+  { id: 2, title: 'Item', description: 'O que precisa' },
+  { id: 3, title: 'Justificativa', description: 'Por que precisa' },
+  { id: 4, title: 'Anexo', description: 'Documentos' },
+  { id: 5, title: 'Revisão', description: 'Confirmar envio' },
+];
+
+const createFormSchema = (isHighPriority: boolean) => z.object({
   solicitante_nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres').max(100),
   solicitante_email: z.string().email('Email inválido'),
   solicitante_telefone: z.string().optional(),
@@ -28,13 +34,18 @@ const formSchema = z.object({
   quantidade: z.number().min(0.01, 'Quantidade deve ser maior que 0'),
   unidade: z.string().min(1, 'Selecione uma unidade'),
   especificacoes: z.string().optional(),
-  justificativa: z.string().min(10, 'Justificativa deve ter pelo menos 10 caracteres').max(2000),
+  justificativa: z.string()
+    .min(isHighPriority ? 50 : 10, isHighPriority 
+      ? 'Para alta prioridade, justificativa deve ter pelo menos 50 caracteres' 
+      : 'Justificativa deve ter pelo menos 10 caracteres')
+    .max(2000),
   motivo_compra: z.string().min(1, 'Selecione um motivo'),
   prioridade: z.enum(['ALTA', 'MEDIA', 'BAIXA']),
 });
 
 export default function Requisicao() {
   const { user, profile, isLoading: authLoading, rolesLoaded } = useAuth();
+  const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [protocolo, setProtocolo] = useState('');
@@ -58,7 +69,7 @@ export default function Requisicao() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Redirect to auth if not logged in - wait for auth to fully load
+  // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && rolesLoaded && !user) {
       toast({
@@ -86,37 +97,27 @@ export default function Requisicao() {
   // Show loading while checking auth
   if (authLoading || !rolesLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  // Don't render if not authenticated
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   const formatPhone = (value: string) => {
     const digits = value.replace(/\D/g, '').slice(0, 10);
-
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
 
     if (name === 'solicitante_telefone') {
       const formatted = formatPhone(value);
-      setFormData(prev => ({
-        ...prev,
-        [name]: formatted,
-      }));
+      setFormData(prev => ({ ...prev, [name]: formatted }));
       setErrors(prev => ({ ...prev, [name]: '' }));
       return;
     }
@@ -136,7 +137,6 @@ export default function Requisicao() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      // Validate file size (5MB max)
       if (selectedFile.size > 5 * 1024 * 1024) {
         toast({
           title: 'Arquivo muito grande',
@@ -145,24 +145,87 @@ export default function Requisicao() {
         });
         return;
       }
-      // Validate file type (PDF, images, Excel)
       const allowedTypes = [
         'application/pdf',
         'image/jpeg',
         'image/png',
         'image/jpg',
-        'application/vnd.ms-excel', // .xls
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       ];
       if (!allowedTypes.includes(selectedFile.type)) {
         toast({
           title: 'Tipo de arquivo inválido',
-          description: 'Apenas PDF, JPG, PNG e Excel (XLS/XLSX) são permitidos',
+          description: 'Apenas PDF, JPG, PNG e Excel são permitidos',
           variant: 'destructive',
         });
         return;
       }
       setFile(selectedFile);
+    }
+  };
+
+  const validateStep = (step: number): boolean => {
+    const isHighPriority = formData.prioridade === 'ALTA';
+    const schema = createFormSchema(isHighPriority);
+    
+    type FormDataKey = keyof typeof formData;
+    let fieldsToValidate: FormDataKey[] = [];
+    
+    switch (step) {
+      case 1:
+        fieldsToValidate = ['solicitante_nome', 'solicitante_email', 'solicitante_setor'];
+        break;
+      case 2:
+        fieldsToValidate = ['item_nome', 'quantidade', 'unidade'];
+        break;
+      case 3:
+        fieldsToValidate = ['justificativa', 'motivo_compra', 'prioridade'];
+        break;
+      case 4:
+        return true; // Anexo é opcional
+      case 5:
+        return true; // Revisão não precisa validar
+    }
+
+    const partialData: Record<string, unknown> = {};
+    fieldsToValidate.forEach(field => {
+      partialData[field] = formData[field];
+    });
+
+    const result = schema.safeParse(formData);
+    
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach(err => {
+        const fieldName = err.path[0] as string;
+        if (fieldName && fieldsToValidate.includes(fieldName as FormDataKey)) {
+          fieldErrors[fieldName] = err.message;
+        }
+      });
+      if (Object.keys(fieldErrors).length > 0) {
+        setErrors(fieldErrors);
+        return false;
+      }
+    }
+    
+    setErrors({});
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
+    }
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleStepClick = (step: number) => {
+    if (step < currentStep) {
+      setCurrentStep(step);
     }
   };
 
@@ -172,8 +235,10 @@ export default function Requisicao() {
     setIsLoading(true);
 
     try {
-      // Validate form
-      const result = formSchema.safeParse(formData);
+      const isHighPriority = formData.prioridade === 'ALTA';
+      const schema = createFormSchema(isHighPriority);
+      const result = schema.safeParse(formData);
+      
       if (!result.success) {
         const fieldErrors: Record<string, string> = {};
         result.error.errors.forEach(err => {
@@ -183,10 +248,14 @@ export default function Requisicao() {
         });
         setErrors(fieldErrors);
         setIsLoading(false);
+        toast({
+          title: 'Erro de validação',
+          description: 'Verifique os campos destacados.',
+          variant: 'destructive',
+        });
         return;
       }
 
-      // Upload file if exists
       let arquivo_url: string | null = null;
       let arquivo_nome: string | null = null;
 
@@ -211,7 +280,6 @@ export default function Requisicao() {
         arquivo_nome = file.name;
       }
 
-      // Insert requisition
       const { data, error } = await supabase
         .from('requisicoes')
         .insert([{
@@ -238,7 +306,6 @@ export default function Requisicao() {
         throw error;
       }
 
-      // Success
       setProtocolo(data.protocolo);
       setIsSuccess(true);
 
@@ -260,7 +327,7 @@ export default function Requisicao() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
+      <div className="min-h-screen bg-background">
         <Header />
         <main className="page-container">
           <div className="max-w-2xl mx-auto">
@@ -274,7 +341,7 @@ export default function Requisicao() {
               <p className="text-muted-foreground mb-4">
                 Sua requisição foi recebida e está aguardando análise.
               </p>
-              <div className="bg-card rounded-lg p-4 mb-6">
+              <div className="bg-card rounded-lg p-4 mb-6 border">
                 <p className="text-sm text-muted-foreground">Protocolo</p>
                 <p className="text-2xl font-bold font-mono text-primary">{protocolo}</p>
               </div>
@@ -297,11 +364,62 @@ export default function Requisicao() {
     );
   }
 
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <StepSolicitante
+            formData={formData}
+            errors={errors}
+            onChange={handleChange}
+            onSelectChange={handleSelectChange}
+          />
+        );
+      case 2:
+        return (
+          <StepItem
+            formData={formData}
+            errors={errors}
+            onChange={handleChange}
+            onSelectChange={handleSelectChange}
+          />
+        );
+      case 3:
+        return (
+          <StepJustificativa
+            formData={formData}
+            errors={errors}
+            onChange={handleChange}
+            onSelectChange={handleSelectChange}
+          />
+        );
+      case 4:
+        return (
+          <StepAnexo
+            file={file}
+            onFileChange={handleFileChange}
+            onFileRemove={() => setFile(null)}
+            formData={formData}
+          />
+        );
+      case 5:
+        return (
+          <StepRevisao
+            formData={formData}
+            file={file}
+            onEditStep={(step) => setCurrentStep(step)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
+    <div className="min-h-screen bg-background">
       <Header />
       <main className="page-container">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           {/* Back link */}
           <Link
             to="/"
@@ -311,325 +429,61 @@ export default function Requisicao() {
             Voltar ao início
           </Link>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit}>
-            <div className="bg-card rounded-2xl shadow-lg border overflow-hidden">
-              {/* Section 1: Solicitante */}
-              <div className="p-8 border-b">
-                <h2 className="text-xl font-bold flex items-center gap-3 mb-6">
-                  <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold">
-                    1
-                  </span>
-                  Dados do Solicitante
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <Label htmlFor="solicitante_nome">
-                      Nome Completo <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="solicitante_nome"
-                      name="solicitante_nome"
-                      value={formData.solicitante_nome}
-                      onChange={handleChange}
-                      placeholder="Seu nome completo"
-                      className="mt-1.5"
-                    />
-                    {errors.solicitante_nome && (
-                      <p className="text-xs text-destructive mt-1">{errors.solicitante_nome}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="solicitante_email">
-                      Email <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="solicitante_email"
-                      name="solicitante_email"
-                      type="email"
-                      value={formData.solicitante_email}
-                      onChange={handleChange}
-                      placeholder="seu.email@empresa.com"
-                      className="mt-1.5"
-                    />
-                    {errors.solicitante_email && (
-                      <p className="text-xs text-destructive mt-1">{errors.solicitante_email}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="solicitante_telefone">Telefone</Label>
-                    <Input
-                      id="solicitante_telefone"
-                      name="solicitante_telefone"
-                      value={formData.solicitante_telefone}
-                      onChange={handleChange}
-                      placeholder="(00) 00000-0000"
-                      className="mt-1.5"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="solicitante_setor">
-                      Setor <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={formData.solicitante_setor}
-                      onValueChange={(value) => handleSelectChange('solicitante_setor', value)}
-                    >
-                      <SelectTrigger className="mt-1.5">
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SETORES.map((setor) => (
-                          <SelectItem key={setor} value={setor}>
-                            {setor}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.solicitante_setor && (
-                      <p className="text-xs text-destructive mt-1">{errors.solicitante_setor}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 2: Item */}
-              <div className="p-8 border-b">
-                <h2 className="text-xl font-bold flex items-center gap-3 mb-6">
-                  <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold">
-                    2
-                  </span>
-                  Detalhes do Item
-                </h2>
-
-                <div className="space-y-5">
-                  <div>
-                    <Label htmlFor="item_nome">
-                      Nome do Item <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="item_nome"
-                      name="item_nome"
-                      value={formData.item_nome}
-                      onChange={handleChange}
-                      placeholder="Ex: Notebook Dell Inspiron 15"
-                      className="mt-1.5"
-                    />
-                    {errors.item_nome && (
-                      <p className="text-xs text-destructive mt-1">{errors.item_nome}</p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                      <Label htmlFor="quantidade">
-                        Quantidade <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        id="quantidade"
-                        name="quantidade"
-                        type="number"
-                        min="0.01"
-                        step="0.01"
-                        value={formData.quantidade}
-                        onChange={handleChange}
-                        className="mt-1.5"
-                      />
-                      {errors.quantidade && (
-                        <p className="text-xs text-destructive mt-1">{errors.quantidade}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="unidade">
-                        Unidade <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={formData.unidade}
-                        onValueChange={(value) => handleSelectChange('unidade', value)}
-                      >
-                        <SelectTrigger className="mt-1.5">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {UNIDADES.map((unidade) => (
-                            <SelectItem key={unidade} value={unidade}>
-                              {unidade}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="especificacoes">Especificações Técnicas</Label>
-                    <Textarea
-                      id="especificacoes"
-                      name="especificacoes"
-                      value={formData.especificacoes}
-                      onChange={handleChange}
-                      placeholder="Modelo, cor, tamanho, características específicas..."
-                      rows={3}
-                      className="mt-1.5"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 3: Justificativa */}
-              <div className="p-8 border-b">
-                <h2 className="text-xl font-bold flex items-center gap-3 mb-6">
-                  <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold">
-                    3
-                  </span>
-                  Justificativa e Prioridade
-                </h2>
-
-                <div className="space-y-5">
-                  <div>
-                    <Label htmlFor="justificativa">
-                      Justificativa <span className="text-destructive">*</span>
-                    </Label>
-                    <Textarea
-                      id="justificativa"
-                      name="justificativa"
-                      value={formData.justificativa}
-                      onChange={handleChange}
-                      placeholder="Explique por que este item é necessário..."
-                      rows={4}
-                      className="mt-1.5"
-                    />
-                    {errors.justificativa && (
-                      <p className="text-xs text-destructive mt-1">{errors.justificativa}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label>
-                      Motivo da Compra <span className="text-destructive">*</span>
-                    </Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                      {MOTIVOS_COMPRA.map((motivo) => (
-                        <label
-                          key={motivo}
-                          className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                            formData.motivo_compra === motivo
-                              ? 'border-primary bg-primary/5'
-                              : 'border-border hover:border-primary/50'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="motivo_compra"
-                            value={motivo}
-                            checked={formData.motivo_compra === motivo}
-                            onChange={handleChange}
-                            className="sr-only"
-                          />
-                          <span className="text-sm font-medium">{motivo}</span>
-                        </label>
-                      ))}
-                    </div>
-                    {errors.motivo_compra && (
-                      <p className="text-xs text-destructive mt-1">{errors.motivo_compra}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label>
-                      Prioridade <span className="text-destructive">*</span>
-                    </Label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                      {[
-                        { value: 'ALTA', label: 'Alta', desc: 'Máximo 24h', color: 'destructive' },
-                        { value: 'MEDIA', label: 'Média', desc: 'Até 3 dias', color: 'warning' },
-                        { value: 'BAIXA', label: 'Baixa', desc: 'Planejamento', color: 'success' },
-                      ].map((prio) => (
-                        <label
-                          key={prio.value}
-                          className={`flex flex-col p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                            formData.prioridade === prio.value
-                              ? `border-${prio.color} bg-${prio.color}/10`
-                              : 'border-border hover:border-muted-foreground/50'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="prioridade"
-                            value={prio.value}
-                            checked={formData.prioridade === prio.value}
-                            onChange={handleChange}
-                            className="sr-only"
-                          />
-                          <span className={`priority-badge priority-${prio.value} mb-1`}>
-                            {prio.label}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{prio.desc}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 4: Anexo */}
-              <div className="p-8">
-                <h2 className="text-xl font-bold flex items-center gap-3 mb-6">
-                  <span className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold">
-                    4
-                  </span>
-                  Anexo (Opcional)
-                </h2>
-
-                <div className="relative">
-                  {file ? (
-                    <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
-                      <FileText className="w-8 h-8 text-primary" />
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{file.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {(file.size / 1024 / 1024).toFixed(2)} MB
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setFile(null)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-colors">
-                      <Upload className="w-10 h-10 text-muted-foreground mb-3" />
-                      <p className="text-sm font-medium">Clique para selecionar</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        PDF, JPG, PNG ou Excel (máx. 5MB)
-                      </p>
-                      <input
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx"
-                        onChange={handleFileChange}
-                        className="sr-only"
-                      />
-                    </label>
-                  )}
-                </div>
-
-                {/* Submit */}
-                <Button type="submit" size="xl" className="w-full mt-8" isLoading={isLoading}>
-                  <Send className="w-5 h-5" />
-                  Enviar Requisição
-                </Button>
-              </div>
+          {/* Stepper */}
+          <div className="bg-card rounded-2xl shadow-lg border overflow-hidden">
+            <div className="p-6 border-b bg-muted/30">
+              <FormStepper
+                steps={STEPS}
+                currentStep={currentStep}
+                onStepClick={handleStepClick}
+              />
             </div>
-          </form>
+
+            {/* Form Content */}
+            <form onSubmit={handleSubmit}>
+              <div className="p-8">
+                {renderStep()}
+              </div>
+
+              {/* Navigation */}
+              <div className="p-6 border-t bg-muted/20 flex justify-between items-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handlePrevious}
+                  disabled={currentStep === 1}
+                  className="gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Anterior
+                </Button>
+
+                <span className="text-sm text-muted-foreground">
+                  Etapa {currentStep} de {STEPS.length}
+                </span>
+
+                {currentStep < STEPS.length ? (
+                  <Button
+                    type="button"
+                    onClick={handleNext}
+                    className="gap-2"
+                  >
+                    Próximo
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    isLoading={isLoading}
+                    className="gap-2 bg-success hover:bg-success/90"
+                  >
+                    <Send className="w-4 h-4" />
+                    Enviar Requisição
+                  </Button>
+                )}
+              </div>
+            </form>
+          </div>
         </div>
       </main>
     </div>
