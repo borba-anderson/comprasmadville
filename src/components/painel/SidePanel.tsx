@@ -295,7 +295,11 @@ export function SidePanel({
         <ScrollArea className="flex-1">
           <div className="p-6 space-y-6">
             {/* Timeline */}
-            <RequisicaoTimeline requisicao={requisicao} />
+            <RequisicaoTimeline 
+              requisicao={requisicao} 
+              onRevertStatus={updateStatus}
+              isUpdating={isUpdating}
+            />
 
             <Separator />
 
