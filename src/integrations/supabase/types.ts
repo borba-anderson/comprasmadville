@@ -157,6 +157,8 @@ export type Database = {
           justificativa: string
           motivo_compra: string | null
           motivo_rejeicao: string | null
+          orcamento_nome: string | null
+          orcamento_url: string | null
           previsao_entrega: string | null
           prioridade: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo: string | null
@@ -187,6 +189,8 @@ export type Database = {
           justificativa: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          orcamento_nome?: string | null
+          orcamento_url?: string | null
           previsao_entrega?: string | null
           prioridade?: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo?: string | null
@@ -217,6 +221,8 @@ export type Database = {
           justificativa?: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          orcamento_nome?: string | null
+          orcamento_url?: string | null
           previsao_entrega?: string | null
           prioridade?: Database["public"]["Enums"]["requisicao_prioridade"]
           protocolo?: string | null
