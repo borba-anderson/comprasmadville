@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2 } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -313,6 +313,43 @@ export function SidePanel({
     toast({ title: 'E-mail enviado ao solicitante' });
   };
 
+  const sendWhatsAppToSolicitante = () => {
+    if (!requisicao || !requisicao.solicitante_telefone) {
+      toast({ title: 'Telefone não cadastrado', variant: 'destructive' });
+      return;
+    }
+    
+    const phone = requisicao.solicitante_telefone.replace(/\D/g, '');
+    const phoneWithCountry = phone.startsWith('55') ? phone : `55${phone}`;
+    
+    const statusLabel = STATUS_CONFIG[requisicao.status]?.label || requisicao.status;
+    const previsao = requisicao.previsao_entrega 
+      ? `\n📅 Previsão de entrega: ${formatDate(requisicao.previsao_entrega)}` 
+      : '';
+    const comprador = requisicao.comprador_nome 
+      ? `\n👤 Comprador: ${requisicao.comprador_nome}` 
+      : '';
+    const valor = requisicao.valor 
+      ? `\n💰 Valor: ${formatCurrency(requisicao.valor)}` 
+      : '';
+    
+    const message = `Olá ${requisicao.solicitante_nome}! 👋
+
+Atualização da sua requisição:
+
+📋 *Protocolo:* ${requisicao.protocolo}
+📦 *Item:* ${requisicao.item_nome}
+📊 *Status:* ${statusLabel}${comprador}${previsao}${valor}
+
+Qualquer dúvida, estamos à disposição!`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneWithCountry}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+    toast({ title: 'WhatsApp aberto' });
+  };
+
   if (!requisicao) return null;
 
   return (
@@ -378,10 +415,21 @@ export function SidePanel({
                 )}
                 <p className="text-sm text-muted-foreground">Setor: {requisicao.solicitante_setor}</p>
               </div>
-              <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
-                <Mail className="w-4 h-4" />
-                Enviar e-mail
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
+                  <Mail className="w-4 h-4" />
+                  Enviar e-mail
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 text-green-600 border-green-600 hover:bg-green-50 hover:text-green-700" 
+                  onClick={sendWhatsAppToSolicitante}
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </Button>
+              </div>
             </div>
 
             <Separator />
