@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2 } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -41,6 +41,8 @@ export function SidePanel({
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
   const [valorHistory, setValorHistory] = useState<ValorHistorico[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [orcamentoFile, setOrcamentoFile] = useState<File | null>(null);
+  const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
   const { toast } = useToast();
 
   // Fetch valor history
@@ -261,6 +263,46 @@ export function SidePanel({
     }
   };
 
+  const handleOrcamentoUpload = async () => {
+    if (!orcamentoFile || !requisicao) return;
+
+    try {
+      setIsUploadingOrcamento(true);
+      const fileExt = orcamentoFile.name.split('.').pop();
+      const fileName = `orcamentos/${requisicao.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('requisicoes-anexos')
+        .upload(fileName, orcamentoFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrl } = supabase.storage
+        .from('requisicoes-anexos')
+        .getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
+        .from('requisicoes')
+        .update({
+          orcamento_url: publicUrl.publicUrl,
+          orcamento_nome: orcamentoFile.name,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', requisicao.id);
+
+      if (updateError) throw updateError;
+
+      toast({ title: 'Orçamento anexado com sucesso' });
+      setOrcamentoFile(null);
+      onUpdate();
+    } catch (error) {
+      console.error('Error uploading orcamento:', error);
+      toast({ title: 'Erro ao anexar orçamento', variant: 'destructive' });
+    } finally {
+      setIsUploadingOrcamento(false);
+    }
+  };
+
   const canEditValor = (status: RequisicaoStatus) => {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
@@ -425,6 +467,77 @@ export function SidePanel({
                     {isUpdating ? 'Salvando...' : 'Salvar'}
                   </Button>
                 </div>
+
+                {/* Anexo de Orçamento */}
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground uppercase flex items-center gap-2">
+                    <Upload className="w-3 h-3" />
+                    Anexar Orçamento/Cotação
+                  </Label>
+                  
+                  {(requisicao as any).orcamento_url ? (
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch((requisicao as any).orcamento_url);
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = (requisicao as any).orcamento_nome || 'orcamento';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+                        } catch {
+                          window.open((requisicao as any).orcamento_url, '_blank');
+                        }
+                      }}
+                      className="flex items-center gap-2 p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg text-sm font-medium text-emerald-600 transition-colors w-full"
+                    >
+                      <Paperclip className="w-4 h-4" />
+                      {(requisicao as any).orcamento_nome || 'Baixar orçamento'}
+                      <Download className="w-4 h-4 ml-auto" />
+                    </button>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <label className="flex-1">
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept=".pdf,.png,.jpg,.jpeg,.xlsx,.xls,.doc,.docx"
+                            onChange={(e) => setOrcamentoFile(e.target.files?.[0] || null)}
+                          />
+                          <div className="flex items-center gap-2 p-3 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                            <Upload className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">
+                              {orcamentoFile ? orcamentoFile.name : 'Selecionar arquivo...'}
+                            </span>
+                          </div>
+                        </label>
+                        {orcamentoFile && (
+                          <Button 
+                            onClick={handleOrcamentoUpload} 
+                            disabled={isUploadingOrcamento}
+                            size="sm"
+                            className="h-auto"
+                          >
+                            {isUploadingOrcamento ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              'Enviar'
+                            )}
+                          </Button>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        PDF, Imagens, Excel ou Word (máx. 5MB)
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 <ValueHistoryList history={valorHistory} />
               </div>
             )}
