@@ -109,42 +109,79 @@
   }
 
   .dark {
-    --background: 20 15% 8%;
+    --background: 150 15% 8%;
     --foreground: 30 10% 95%;
 
-    --card: 20 15% 12%;
+    --card: 150 15% 12%;
     --card-foreground: 30 10% 95%;
 
-    --popover: 20 15% 12%;
+    --popover: 150 15% 12%;
     --popover-foreground: 30 10% 95%;
 
-    --primary: 24 95% 55%;
+    /* Primary - Dark Green (lighter for dark mode) */
+    --primary: 152 60% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 20 15% 18%;
+    --secondary: 150 15% 18%;
     --secondary-foreground: 30 10% 90%;
 
-    --muted: 20 15% 18%;
+    --muted: 150 15% 18%;
     --muted-foreground: 30 10% 60%;
 
+    /* Accent - Orange */
     --accent: 24 60% 20%;
-    --accent-foreground: 24 95% 70%;
+    --accent-foreground: 24 95% 65%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 20 15% 20%;
-    --input: 20 15% 20%;
-    --ring: 24 95% 55%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --sidebar-background: 20 15% 10%;
+    --warning: 24 95% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 152 60% 42%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 150 15% 20%;
+    --input: 150 15% 20%;
+    --ring: 152 60% 42%;
+
+    --sidebar-background: 150 15% 10%;
     --sidebar-foreground: 30 10% 85%;
-    --sidebar-primary: 24 95% 55%;
+    --sidebar-primary: 152 60% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 24 50% 18%;
-    --sidebar-accent-foreground: 24 95% 70%;
-    --sidebar-border: 20 15% 18%;
-    --sidebar-ring: 24 95% 55%;
+    --sidebar-accent-foreground: 24 95% 65%;
+    --sidebar-border: 150 15% 18%;
+    --sidebar-ring: 152 60% 42%;
+
+    /* Status Colors - Dark Mode */
+    --status-pendente: 24 95% 55%;
+    --status-pendente-bg: 24 95% 15%;
+    --status-em-analise: 152 60% 45%;
+    --status-em-analise-bg: 152 60% 15%;
+    --status-aprovado: 142 71% 50%;
+    --status-aprovado-bg: 142 71% 15%;
+    --status-cotando: 262 83% 60%;
+    --status-cotando-bg: 262 83% 15%;
+    --status-comprado: 199 89% 55%;
+    --status-comprado-bg: 199 89% 15%;
+    --status-rejeitado: 0 84% 55%;
+    --status-rejeitado-bg: 0 84% 15%;
+
+    /* Priority Colors - Dark Mode */
+    --priority-alta: 0 84% 55%;
+    --priority-alta-bg: 0 84% 15%;
+    --priority-media: 24 95% 55%;
+    --priority-media-bg: 24 95% 15%;
+    --priority-baixa: 142 71% 50%;
+    --priority-baixa-bg: 142 71% 15%;
+
+    /* Shadows - Dark Mode */
+    --shadow-primary: 0 4px 14px -3px hsl(152 60% 42% / 0.3);
+    --shadow-glow: 0 0 20px hsl(152 60% 42% / 0.15);
   }
 }
 
