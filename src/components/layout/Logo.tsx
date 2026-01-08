@@ -1,4 +1,4 @@
-import { FileText } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
@@ -37,7 +37,7 @@ export function Logo({ className, size = 'md', showText = true }: LogoProps) {
           sizes[size]
         )}
       >
-        <FileText className={cn('text-primary-foreground', iconSizes[size])} />
+        <ShoppingCart className={cn('text-primary-foreground', iconSizes[size])} />
       </div>
       {showText && (
         <div>
