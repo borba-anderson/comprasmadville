@@ -22,8 +22,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 12%;
 
-    /* Primary - Enterprise Blue */
-    --primary: 217 91% 60%;
+    /* Primary - Dark Green */
+    --primary: 152 69% 28%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary - Soft gray */
@@ -34,9 +34,9 @@
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent - Light blue tint */
-    --accent: 217 80% 96%;
-    --accent-foreground: 217 91% 50%;
+    /* Accent - Orange */
+    --accent: 24 95% 94%;
+    --accent-foreground: 24 95% 45%;
 
     /* Destructive */
     --destructive: 0 84% 60%;
@@ -50,32 +50,32 @@
     --warning: 38 92% 50%;
     --warning-foreground: 220 20% 12%;
 
-    /* Info - Primary blue */
-    --info: 217 91% 60%;
+    /* Info - Dark Green */
+    --info: 152 69% 28%;
     --info-foreground: 0 0% 100%;
 
     /* Border & Input - Very subtle */
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --ring: 152 69% 28%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 15% 35%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 152 69% 28%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 80% 97%;
-    --sidebar-accent-foreground: 217 91% 50%;
+    --sidebar-accent: 24 95% 97%;
+    --sidebar-accent-foreground: 24 95% 45%;
     --sidebar-border: 220 13% 93%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-ring: 152 69% 28%;
 
     /* Enterprise Status Colors */
-    --status-pendente: 38 92% 50%;
-    --status-pendente-bg: 38 92% 96%;
-    --status-em-analise: 217 91% 60%;
-    --status-em-analise-bg: 217 91% 96%;
+    --status-pendente: 24 95% 50%;
+    --status-pendente-bg: 24 95% 96%;
+    --status-em-analise: 152 69% 35%;
+    --status-em-analise-bg: 152 69% 96%;
     --status-aprovado: 142 71% 45%;
     --status-aprovado-bg: 142 71% 96%;
     --status-cotando: 262 83% 58%;
@@ -94,7 +94,7 @@
     --priority-baixa-bg: 142 71% 96%;
 
     /* Enterprise Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(217, 91%, 50%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(152, 69%, 28%) 0%, hsl(152, 69%, 22%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(220, 14%, 97%) 0%, hsl(220, 14%, 100%) 100%);
     --gradient-card-hover: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 99%) 100%);
 
@@ -104,8 +104,8 @@
     --shadow-md: 0 4px 6px -1px hsl(220 20% 12% / 0.05), 0 2px 4px -2px hsl(220 20% 12% / 0.03);
     --shadow-lg: 0 10px 15px -3px hsl(220 20% 12% / 0.05), 0 4px 6px -4px hsl(220 20% 12% / 0.03);
     --shadow-xl: 0 20px 25px -5px hsl(220 20% 12% / 0.05), 0 8px 10px -6px hsl(220 20% 12% / 0.03);
-    --shadow-primary: 0 4px 14px -3px hsl(217 91% 60% / 0.25);
-    --shadow-glow: 0 0 20px hsl(217 91% 60% / 0.1);
+    --shadow-primary: 0 4px 14px -3px hsl(152 69% 28% / 0.25);
+    --shadow-glow: 0 0 20px hsl(152 69% 28% / 0.1);
   }
 
   .dark {
@@ -228,7 +228,7 @@
 
   /* Gradient Text */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(20,95%,45%)];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(24,95%,50%)];
   }
 
   /* Glass Effect */
