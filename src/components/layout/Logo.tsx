@@ -33,7 +33,7 @@ export function Logo({
         <ShoppingCart className={cn('text-primary-foreground', iconSizes[size])} />
       </div>
       {showText && <div>
-          <h1 className={cn('font-extrabold text-foreground', textSizes[size])}>Central de Compras GMAD (Joinville/Curitiba)</h1>
+          <h1 className={cn('font-extrabold text-foreground', textSizes[size])}>Central de Compras (GMAD Joinville/Curitiba)</h1>
           {size !== 'sm' && <p className="text-xs text-muted-foreground font-medium">
               Sistema de Requisições
             </p>}
