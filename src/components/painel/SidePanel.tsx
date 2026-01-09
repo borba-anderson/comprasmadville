@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -43,6 +43,8 @@ export function SidePanel({
   const [isUpdating, setIsUpdating] = useState(false);
   const [orcamentoFile, setOrcamentoFile] = useState<File | null>(null);
   const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
+  const [observacaoComprador, setObservacaoComprador] = useState('');
+  const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const { toast } = useToast();
 
   // Fetch valor history
@@ -65,6 +67,7 @@ export function SidePanel({
       fetchValorHistory();
       setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
       setMotivoRejeicao('');
+      setObservacaoComprador(requisicao.observacao_comprador || '');
     }
   }, [isOpen, requisicao]);
 
@@ -303,6 +306,66 @@ export function SidePanel({
     }
   };
 
+  const updateObservacaoComprador = async () => {
+    if (!requisicao) return;
+    
+    try {
+      setIsUpdating(true);
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          observacao_comprador: observacaoComprador || null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Observação atualizada' });
+      onUpdate();
+    } catch (error) {
+      console.error('Error updating observacao:', error);
+      toast({ title: 'Erro ao atualizar observação', variant: 'destructive' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const deleteAnexo = async () => {
+    if (!requisicao || !requisicao.arquivo_url) return;
+    
+    try {
+      setIsDeletingAnexo(true);
+      
+      // Extract filename from URL
+      const urlParts = requisicao.arquivo_url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      
+      // Delete from storage
+      await supabase.storage
+        .from('requisicoes-anexos')
+        .remove([fileName]);
+      
+      // Update requisicao
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          arquivo_url: null,
+          arquivo_nome: null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Anexo excluído com sucesso' });
+      onUpdate();
+    } catch (error) {
+      console.error('Error deleting anexo:', error);
+      toast({ title: 'Erro ao excluir anexo', variant: 'destructive' });
+    } finally {
+      setIsDeletingAnexo(false);
+    }
+  };
+
   const canEditValor = (status: RequisicaoStatus) => {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
@@ -414,6 +477,9 @@ Qualquer dúvida, estamos à disposição!`;
                   <p className="text-sm text-muted-foreground">{requisicao.solicitante_telefone}</p>
                 )}
                 <p className="text-sm text-muted-foreground">Setor: {requisicao.solicitante_setor}</p>
+                {requisicao.solicitante_empresa && (
+                  <p className="text-sm text-muted-foreground font-medium">Empresa: {requisicao.solicitante_empresa}</p>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
@@ -452,29 +518,70 @@ Qualquer dúvida, estamos à disposição!`;
             {requisicao.arquivo_url && (
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground uppercase">Anexo</Label>
-                <button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(requisicao.arquivo_url!);
-                      const blob = await response.blob();
-                      const url = window.URL.createObjectURL(blob);
-                      const link = document.createElement('a');
-                      link.href = url;
-                      link.download = requisicao.arquivo_nome || 'arquivo';
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      window.URL.revokeObjectURL(url);
-                    } catch {
-                      window.open(requisicao.arquivo_url!, '_blank');
-                    }
-                  }}
-                  className="flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors w-full"
+                <div className="flex gap-2">
+                  <button
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(requisicao.arquivo_url!);
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = requisicao.arquivo_nome || 'arquivo';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                      } catch {
+                        window.open(requisicao.arquivo_url!, '_blank');
+                      }
+                    }}
+                    className="flex-1 flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                    {requisicao.arquivo_nome || 'Baixar arquivo'}
+                    <Download className="w-4 h-4 ml-auto" />
+                  </button>
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    onClick={deleteAnexo}
+                    disabled={isDeletingAnexo}
+                    title="Excluir anexo"
+                  >
+                    {isDeletingAnexo ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* Observação do Comprador */}
+            {!['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold flex items-center gap-2">
+                  <StickyNote className="w-4 h-4" />
+                  Observação do Comprador
+                </Label>
+                <Textarea
+                  value={observacaoComprador}
+                  onChange={(e) => setObservacaoComprador(e.target.value)}
+                  placeholder="Adicione observações sobre a compra..."
+                  rows={3}
+                />
+                <Button 
+                  onClick={updateObservacaoComprador} 
+                  disabled={isUpdating}
+                  size="sm"
+                  className="w-full"
                 >
-                  <Paperclip className="w-4 h-4" />
-                  {requisicao.arquivo_nome || 'Baixar arquivo'}
-                  <Download className="w-4 h-4 ml-auto" />
-                </button>
+                  {isUpdating ? 'Salvando...' : 'Salvar Observação'}
+                </Button>
               </div>
             )}
 
