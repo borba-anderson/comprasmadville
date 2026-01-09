@@ -28,8 +28,9 @@ const STEPS = [
 const createFormSchema = (isHighPriority: boolean) => z.object({
   solicitante_nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres').max(100),
   solicitante_email: z.string().email('Email inválido'),
-  solicitante_telefone: z.string().optional(),
+  solicitante_telefone: z.string().min(8, 'Telefone é obrigatório'),
   solicitante_setor: z.string().min(1, 'Selecione um setor'),
+  solicitante_empresa: z.string().min(1, 'Selecione uma empresa'),
   item_nome: z.string().min(3, 'Nome do item deve ter pelo menos 3 caracteres').max(200),
   quantidade: z.number().min(0.01, 'Quantidade deve ser maior que 0'),
   unidade: z.string().min(1, 'Selecione uma unidade'),
@@ -57,6 +58,7 @@ export default function Requisicao() {
     solicitante_email: '',
     solicitante_telefone: '',
     solicitante_setor: '',
+    solicitante_empresa: '',
     item_nome: '',
     quantidade: 1,
     unidade: 'unidade',
@@ -174,7 +176,7 @@ export default function Requisicao() {
     
     switch (step) {
       case 1:
-        fieldsToValidate = ['solicitante_nome', 'solicitante_email', 'solicitante_setor'];
+        fieldsToValidate = ['solicitante_nome', 'solicitante_email', 'solicitante_setor', 'solicitante_telefone', 'solicitante_empresa'];
         break;
       case 2:
         fieldsToValidate = ['item_nome', 'quantidade', 'unidade'];
@@ -285,8 +287,9 @@ export default function Requisicao() {
         .insert([{
           solicitante_nome: formData.solicitante_nome,
           solicitante_email: formData.solicitante_email,
-          solicitante_telefone: formData.solicitante_telefone || null,
+          solicitante_telefone: formData.solicitante_telefone,
           solicitante_setor: formData.solicitante_setor,
+          solicitante_empresa: formData.solicitante_empresa,
           item_nome: formData.item_nome,
           quantidade: formData.quantidade,
           unidade: formData.unidade,

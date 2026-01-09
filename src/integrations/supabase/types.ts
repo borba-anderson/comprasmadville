@@ -157,6 +157,7 @@ export type Database = {
           justificativa: string
           motivo_compra: string | null
           motivo_rejeicao: string | null
+          observacao_comprador: string | null
           orcamento_nome: string | null
           orcamento_url: string | null
           previsao_entrega: string | null
@@ -165,6 +166,7 @@ export type Database = {
           quantidade: number
           recebido_em: string | null
           solicitante_email: string
+          solicitante_empresa: string | null
           solicitante_nome: string
           solicitante_setor: string
           solicitante_telefone: string | null
@@ -189,6 +191,7 @@ export type Database = {
           justificativa: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          observacao_comprador?: string | null
           orcamento_nome?: string | null
           orcamento_url?: string | null
           previsao_entrega?: string | null
@@ -197,6 +200,7 @@ export type Database = {
           quantidade?: number
           recebido_em?: string | null
           solicitante_email: string
+          solicitante_empresa?: string | null
           solicitante_nome: string
           solicitante_setor: string
           solicitante_telefone?: string | null
@@ -221,6 +225,7 @@ export type Database = {
           justificativa?: string
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
+          observacao_comprador?: string | null
           orcamento_nome?: string | null
           orcamento_url?: string | null
           previsao_entrega?: string | null
@@ -229,6 +234,7 @@ export type Database = {
           quantidade?: number
           recebido_em?: string | null
           solicitante_email?: string
+          solicitante_empresa?: string | null
           solicitante_nome?: string
           solicitante_setor?: string
           solicitante_telefone?: string | null

@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SETORES } from '@/types';
-import { User, Mail, Phone, Building2 } from 'lucide-react';
+import { SETORES, EMPRESAS } from '@/types';
+import { User, Mail, Phone, Building2, Building } from 'lucide-react';
 
 interface StepSolicitanteProps {
   formData: {
@@ -16,6 +16,7 @@ interface StepSolicitanteProps {
     solicitante_email: string;
     solicitante_telefone: string;
     solicitante_setor: string;
+    solicitante_empresa: string;
   };
   errors: Record<string, string>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -33,6 +34,31 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <Label htmlFor="solicitante_empresa" className="flex items-center gap-2">
+            <Building className="w-4 h-4 text-muted-foreground" />
+            Empresa <span className="text-destructive">*</span>
+          </Label>
+          <Select
+            value={formData.solicitante_empresa}
+            onValueChange={(value) => onSelectChange('solicitante_empresa', value)}
+          >
+            <SelectTrigger className="mt-1.5">
+              <SelectValue placeholder="Selecione a empresa..." />
+            </SelectTrigger>
+            <SelectContent>
+              {EMPRESAS.map((empresa) => (
+                <SelectItem key={empresa} value={empresa}>
+                  {empresa}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.solicitante_empresa && (
+            <p className="text-xs text-destructive mt-1">{errors.solicitante_empresa}</p>
+          )}
+        </div>
+
         <div>
           <Label htmlFor="solicitante_nome" className="flex items-center gap-2">
             <User className="w-4 h-4 text-muted-foreground" />
@@ -73,7 +99,7 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
         <div>
           <Label htmlFor="solicitante_telefone" className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-muted-foreground" />
-            Telefone / Ramal
+            Telefone / Ramal <span className="text-destructive">*</span>
           </Label>
           <Input
             id="solicitante_telefone"
@@ -83,6 +109,9 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             placeholder="(00) 0000-0000"
             className="mt-1.5"
           />
+          {errors.solicitante_telefone && (
+            <p className="text-xs text-destructive mt-1">{errors.solicitante_telefone}</p>
+          )}
         </div>
 
         <div>

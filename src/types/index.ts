@@ -43,6 +43,7 @@ export interface Requisicao {
   solicitante_email: string;
   solicitante_telefone?: string;
   solicitante_setor: string;
+  solicitante_empresa?: string;
   item_nome: string;
   quantidade: number;
   unidade: string;
@@ -52,6 +53,7 @@ export interface Requisicao {
   prioridade: RequisicaoPrioridade;
   status: RequisicaoStatus;
   motivo_rejeicao?: string;
+  observacao_comprador?: string;
   aprovado_por?: string;
   comprador_id?: string;
   comprador_nome?: string;
@@ -100,8 +102,9 @@ export interface Comentario {
 export interface RequisicaoFormData {
   solicitante_nome: string;
   solicitante_email: string;
-  solicitante_telefone?: string;
+  solicitante_telefone: string;
   solicitante_setor: string;
+  solicitante_empresa: string;
   item_nome: string;
   quantidade: number;
   unidade: string;
@@ -140,6 +143,11 @@ export const COMPRADORES = [
 export type CompradorId = typeof COMPRADORES[number]['id'];
 
 // Constants
+export const EMPRESAS = [
+  'GMAD Madville',
+  'GMAD Curitiba',
+] as const;
+
 export const SETORES = [
   'Administrativo',
   'Compras',
