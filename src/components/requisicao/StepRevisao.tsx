@@ -23,6 +23,7 @@ interface StepRevisaoProps {
     solicitante_email: string;
     solicitante_telefone: string;
     solicitante_setor: string;
+    solicitante_empresa: string;
     item_nome: string;
     quantidade: number;
     unidade: string;
@@ -31,7 +32,7 @@ interface StepRevisaoProps {
     motivo_compra: string;
     prioridade: RequisicaoPrioridade;
   };
-  file: File | null;
+  files: File[];
   onEditStep: (step: number) => void;
 }
 
@@ -41,7 +42,7 @@ const prioridadeLabels: Record<RequisicaoPrioridade, { label: string; class: str
   BAIXA: { label: 'Planejada', class: 'bg-success/10 text-success border-success/30' },
 };
 
-export const StepRevisao = ({ formData, file, onEditStep }: StepRevisaoProps) => {
+export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) => {
   const prioridadeConfig = prioridadeLabels[formData.prioridade];
   
   return (
@@ -90,13 +91,16 @@ export const StepRevisao = ({ formData, file, onEditStep }: StepRevisaoProps) =>
             <span className="text-muted-foreground">Email:</span>
             <span className="font-medium">{formData.solicitante_email}</span>
           </div>
-          {formData.solicitante_telefone && (
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Telefone:</span>
-              <span className="font-medium">{formData.solicitante_telefone}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <Phone className="w-4 h-4 text-muted-foreground" />
+            <span className="text-muted-foreground">Telefone:</span>
+            <span className="font-medium">{formData.solicitante_telefone}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-muted-foreground" />
+            <span className="text-muted-foreground">Empresa:</span>
+            <span className="font-medium">{formData.solicitante_empresa}</span>
+          </div>
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-muted-foreground" />
             <span className="text-muted-foreground">Setor:</span>
@@ -190,13 +194,13 @@ export const StepRevisao = ({ formData, file, onEditStep }: StepRevisaoProps) =>
         </div>
       </div>
 
-      {/* Section: Anexo */}
-      {file && (
+      {/* Section: Anexos */}
+      {files.length > 0 && (
         <div className="bg-muted/30 rounded-xl p-5 border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-foreground flex items-center gap-2">
               <Paperclip className="w-4 h-4 text-primary" />
-              Anexo
+              Anexos ({files.length})
             </h3>
             <Button 
               type="button" 
@@ -209,14 +213,18 @@ export const StepRevisao = ({ formData, file, onEditStep }: StepRevisaoProps) =>
               Alterar
             </Button>
           </div>
-          <div className="flex items-center gap-3 text-sm">
-            <FileText className="w-5 h-5 text-primary" />
-            <div>
-              <p className="font-medium">{file.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
-              </p>
-            </div>
+          <div className="space-y-2">
+            {files.map((file, index) => (
+              <div key={`${file.name}-${index}`} className="flex items-center gap-3 text-sm">
+                <FileText className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="font-medium">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
