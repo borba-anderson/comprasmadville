@@ -45,6 +45,7 @@ export function SidePanel({
   const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
   const [observacaoComprador, setObservacaoComprador] = useState('');
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
+  const [isDeletingOrcamento, setIsDeletingOrcamento] = useState(false);
   const { toast } = useToast();
 
   // Fetch valor history
@@ -366,6 +367,43 @@ export function SidePanel({
     }
   };
 
+  const deleteOrcamento = async () => {
+    if (!requisicao || !(requisicao as any).orcamento_url) return;
+    
+    try {
+      setIsDeletingOrcamento(true);
+      
+      // Extract path from URL for storage deletion
+      const url = (requisicao as any).orcamento_url;
+      const urlParts = url.split('/requisicoes-anexos/');
+      if (urlParts.length > 1) {
+        const filePath = urlParts[1];
+        await supabase.storage
+          .from('requisicoes-anexos')
+          .remove([filePath]);
+      }
+      
+      // Update requisicao
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          orcamento_url: null,
+          orcamento_nome: null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Orçamento excluído com sucesso' });
+      onUpdate();
+    } catch (error) {
+      console.error('Error deleting orcamento:', error);
+      toast({ title: 'Erro ao excluir orçamento', variant: 'destructive' });
+    } finally {
+      setIsDeletingOrcamento(false);
+    }
+  };
+
   const canEditValor = (status: RequisicaoStatus) => {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
@@ -631,29 +669,44 @@ Qualquer dúvida, estamos à disposição!`;
                   </Label>
                   
                   {(requisicao as any).orcamento_url ? (
-                    <button
-                      onClick={async () => {
-                        try {
-                          const response = await fetch((requisicao as any).orcamento_url);
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          const link = document.createElement('a');
-                          link.href = url;
-                          link.download = (requisicao as any).orcamento_nome || 'orcamento';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                          window.URL.revokeObjectURL(url);
-                        } catch {
-                          window.open((requisicao as any).orcamento_url, '_blank');
-                        }
-                      }}
-                      className="flex items-center gap-2 p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg text-sm font-medium text-emerald-600 transition-colors w-full"
-                    >
-                      <Paperclip className="w-4 h-4" />
-                      {(requisicao as any).orcamento_nome || 'Baixar orçamento'}
-                      <Download className="w-4 h-4 ml-auto" />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response = await fetch((requisicao as any).orcamento_url);
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = (requisicao as any).orcamento_nome || 'orcamento';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                          } catch {
+                            window.open((requisicao as any).orcamento_url, '_blank');
+                          }
+                        }}
+                        className="flex-1 flex items-center gap-2 p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg text-sm font-medium text-emerald-600 transition-colors"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        {(requisicao as any).orcamento_nome || 'Baixar orçamento'}
+                        <Download className="w-4 h-4 ml-auto" />
+                      </button>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={deleteOrcamento}
+                        disabled={isDeletingOrcamento}
+                        title="Excluir orçamento"
+                      >
+                        {isDeletingOrcamento ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       <div className="flex gap-2">
