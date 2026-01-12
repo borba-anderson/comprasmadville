@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote, Ban } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -46,6 +46,8 @@ export function SidePanel({
   const [observacaoComprador, setObservacaoComprador] = useState('');
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const [isDeletingOrcamento, setIsDeletingOrcamento] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
   // Fetch valor history
@@ -401,6 +403,80 @@ export function SidePanel({
       toast({ title: 'Erro ao excluir orçamento', variant: 'destructive' });
     } finally {
       setIsDeletingOrcamento(false);
+    }
+  };
+
+  const cancelRequisicao = async () => {
+    if (!requisicao) return;
+    
+    try {
+      setIsCanceling(true);
+      
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          status: 'cancelado',
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Requisição cancelada com sucesso' });
+      await sendNotification({ ...requisicao, status: 'cancelado' } as Requisicao, 'cancelado');
+      onUpdate();
+      onClose();
+    } catch (error) {
+      console.error('Error canceling requisicao:', error);
+      toast({ title: 'Erro ao cancelar requisição', variant: 'destructive' });
+    } finally {
+      setIsCanceling(false);
+    }
+  };
+
+  const deleteRequisicao = async () => {
+    if (!requisicao) return;
+    
+    const confirmed = window.confirm('Tem certeza que deseja excluir permanentemente esta requisição? Esta ação não pode ser desfeita.');
+    if (!confirmed) return;
+    
+    try {
+      setIsDeleting(true);
+      
+      // Delete related records first
+      await supabase.from('valor_historico').delete().eq('requisicao_id', requisicao.id);
+      await supabase.from('comentarios').delete().eq('requisicao_id', requisicao.id);
+      await supabase.from('audit_logs').delete().eq('requisicao_id', requisicao.id);
+      
+      // Delete files from storage if they exist
+      if (requisicao.arquivo_url) {
+        const urlParts = requisicao.arquivo_url.split('/requisicoes-anexos/');
+        if (urlParts.length > 1) {
+          await supabase.storage.from('requisicoes-anexos').remove([urlParts[1]]);
+        }
+      }
+      
+      if ((requisicao as any).orcamento_url) {
+        const urlParts = (requisicao as any).orcamento_url.split('/requisicoes-anexos/');
+        if (urlParts.length > 1) {
+          await supabase.storage.from('requisicoes-anexos').remove([urlParts[1]]);
+        }
+      }
+      
+      // Delete the requisicao
+      const { error } = await supabase
+        .from('requisicoes')
+        .delete()
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Requisição excluída com sucesso' });
+      onUpdate();
+      onClose();
+    } catch (error) {
+      console.error('Error deleting requisicao:', error);
+      toast({ title: 'Erro ao excluir requisição', variant: 'destructive' });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -766,7 +842,7 @@ Qualquer dúvida, estamos à disposição!`;
         </ScrollArea>
 
         {/* Actions Footer */}
-        <div className="p-4 border-t bg-muted/30">
+        <div className="p-4 border-t bg-muted/30 space-y-2">
           {requisicao.status === 'pendente' && (
             <div className="flex gap-2">
               <Button
@@ -821,6 +897,55 @@ Qualquer dúvida, estamos à disposição!`;
             <Button className="w-full" variant="success" onClick={() => updateStatus('recebido')} disabled={isUpdating}>
               <CheckCircle className="w-4 h-4 mr-2" />
               Confirmar Entrega
+            </Button>
+          )}
+
+          {/* Ações de Cancelar e Excluir - disponíveis em todos os status exceto recebido, rejeitado e cancelado */}
+          {!['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+            <div className="flex gap-2 pt-2 border-t mt-2">
+              <Button
+                className="flex-1"
+                variant="outline"
+                onClick={cancelRequisicao}
+                disabled={isCanceling || isDeleting}
+              >
+                {isCanceling ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Ban className="w-4 h-4 mr-2" />
+                )}
+                Cancelar
+              </Button>
+              <Button
+                className="flex-1"
+                variant="destructive"
+                onClick={deleteRequisicao}
+                disabled={isCanceling || isDeleting}
+              >
+                {isDeleting ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4 mr-2" />
+                )}
+                Excluir
+              </Button>
+            </div>
+          )}
+
+          {/* Para status cancelado ou rejeitado, apenas opção de excluir */}
+          {['rejeitado', 'cancelado'].includes(requisicao.status) && (
+            <Button
+              className="w-full"
+              variant="destructive"
+              onClick={deleteRequisicao}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 mr-2" />
+              )}
+              Excluir Requisição
             </Button>
           )}
         </div>

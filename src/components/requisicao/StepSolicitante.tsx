@@ -106,7 +106,8 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             name="solicitante_telefone"
             value={formData.solicitante_telefone}
             onChange={onChange}
-            placeholder="(00) 0000-0000"
+            placeholder="(00) 00000-0000"
+            maxLength={15}
             className="mt-1.5"
           />
           {errors.solicitante_telefone && (
