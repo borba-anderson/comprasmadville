@@ -138,6 +138,7 @@ export const COMPRADORES = [
   { id: 'anderson', nome: 'Anderson' },
   { id: 'mariana', nome: 'Mariana' },
   { id: 'geovani', nome: 'Geovani' },
+  { id: 'ruan', nome: 'Ruan' },
 ] as const;
 
 export type CompradorId = typeof COMPRADORES[number]['id'];
@@ -149,19 +150,13 @@ export const EMPRESAS = [
 ] as const;
 
 export const SETORES = [
-  'Administrativo',
-  'Compras',
+  'Almoxarifado',
+  'Logística CD',
+  'Soluções',
   'Financeiro',
-  'Marketing',
-  'Operações',
-  'Produção',
-  'Qualidade',
+  'Comercial',
   'RH',
   'TI',
-  'Vendas',
-  'Logística',
-  'Manutenção',
-  'Outros',
 ] as const;
 
 export const UNIDADES = [
