@@ -51,7 +51,8 @@ export default function Requisicao() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [protocolo, setProtocolo] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileSizeError, setFileSizeError] = useState<string>('');
 
   const [formData, setFormData] = useState({
     solicitante_nome: '',
@@ -136,35 +137,68 @@ export default function Requisicao() {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        toast({
-          title: 'Arquivo muito grande',
-          description: 'O arquivo deve ter no máximo 5MB',
-          variant: 'destructive',
-        });
-        return;
+  const MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
+
+    const allowedTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/jpg',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ];
+
+    // Filter invalid file types
+    const validFiles: File[] = [];
+    const invalidFiles: string[] = [];
+
+    selectedFiles.forEach(file => {
+      if (allowedTypes.includes(file.type)) {
+        validFiles.push(file);
+      } else {
+        invalidFiles.push(file.name);
       }
-      const allowedTypes = [
-        'application/pdf',
-        'image/jpeg',
-        'image/png',
-        'image/jpg',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      ];
-      if (!allowedTypes.includes(selectedFile.type)) {
-        toast({
-          title: 'Tipo de arquivo inválido',
-          description: 'Apenas PDF, JPG, PNG e Excel são permitidos',
-          variant: 'destructive',
-        });
-        return;
-      }
-      setFile(selectedFile);
+    });
+
+    if (invalidFiles.length > 0) {
+      toast({
+        title: 'Arquivos inválidos ignorados',
+        description: `Apenas PDF, JPG, PNG e Excel são permitidos. Ignorados: ${invalidFiles.join(', ')}`,
+        variant: 'destructive',
+      });
     }
+
+    if (validFiles.length === 0) return;
+
+    // Calculate new total size
+    const currentTotalSize = files.reduce((acc, f) => acc + f.size, 0);
+    const newFilesSize = validFiles.reduce((acc, f) => acc + f.size, 0);
+    const newTotalSize = currentTotalSize + newFilesSize;
+
+    if (newTotalSize > MAX_TOTAL_SIZE) {
+      setFileSizeError(`O limite total de 50MB seria excedido. Espaço disponível: ${((MAX_TOTAL_SIZE - currentTotalSize) / (1024 * 1024)).toFixed(2)}MB`);
+      toast({
+        title: 'Limite de tamanho excedido',
+        description: 'O total de arquivos não pode ultrapassar 50MB',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setFileSizeError('');
+    setFiles(prev => [...prev, ...validFiles]);
+    
+    // Reset input to allow selecting the same file again
+    e.target.value = '';
+  };
+
+  const handleFileRemove = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+    setFileSizeError('');
   };
 
   const validateStep = (step: number): boolean => {
@@ -261,25 +295,35 @@ export default function Requisicao() {
       let arquivo_url: string | null = null;
       let arquivo_nome: string | null = null;
 
-      if (file) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-        
-        const { error: uploadError } = await supabase.storage
-          .from('requisicoes-anexos')
-          .upload(fileName, file);
+      // Upload multiple files
+      if (files.length > 0) {
+        const uploadedUrls: string[] = [];
+        const uploadedNames: string[] = [];
 
-        if (uploadError) {
-          console.error('Error uploading file:', uploadError);
-          throw new Error('Erro ao enviar arquivo');
+        for (const file of files) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('requisicoes-anexos')
+            .upload(fileName, file);
+
+          if (uploadError) {
+            console.error('Error uploading file:', uploadError);
+            throw new Error(`Erro ao enviar arquivo: ${file.name}`);
+          }
+
+          const { data: urlData } = supabase.storage
+            .from('requisicoes-anexos')
+            .getPublicUrl(fileName);
+
+          uploadedUrls.push(urlData.publicUrl);
+          uploadedNames.push(file.name);
         }
 
-        const { data: urlData } = supabase.storage
-          .from('requisicoes-anexos')
-          .getPublicUrl(fileName);
-
-        arquivo_url = urlData.publicUrl;
-        arquivo_nome = file.name;
+        // Store as comma-separated for backwards compatibility
+        arquivo_url = uploadedUrls.join(',');
+        arquivo_nome = uploadedNames.join(',');
       }
 
       const { data, error } = await supabase
@@ -399,17 +443,18 @@ export default function Requisicao() {
       case 4:
         return (
           <StepAnexo
-            file={file}
-            onFileChange={handleFileChange}
-            onFileRemove={() => setFile(null)}
+            files={files}
+            onFilesChange={handleFilesChange}
+            onFileRemove={handleFileRemove}
             formData={formData}
+            totalSizeError={fileSizeError}
           />
         );
       case 5:
         return (
           <StepRevisao
             formData={formData}
-            file={file}
+            files={files}
             onEditStep={(step) => setCurrentStep(step)}
           />
         );
