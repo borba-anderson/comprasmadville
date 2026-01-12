@@ -157,6 +157,9 @@ export const SETORES = [
   'Comercial',
   'RH',
   'TI',
+  'Manutenção Predial',
+  'Manutenção/Garantia',
+  'Administrativo - Diretoria',
 ] as const;
 
 export const UNIDADES = [
