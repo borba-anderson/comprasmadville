@@ -174,6 +174,7 @@ export type Database = {
           unidade: string
           updated_at: string | null
           valor: number | null
+          valor_orcado: number | null
         }
         Insert: {
           aprovado_em?: string | null
@@ -208,6 +209,7 @@ export type Database = {
           unidade?: string
           updated_at?: string | null
           valor?: number | null
+          valor_orcado?: number | null
         }
         Update: {
           aprovado_em?: string | null
@@ -242,6 +244,7 @@ export type Database = {
           unidade?: string
           updated_at?: string | null
           valor?: number | null
+          valor_orcado?: number | null
         }
         Relationships: [
           {

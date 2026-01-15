@@ -15,6 +15,7 @@ import { GastosPorSolicitanteBars } from './GastosPorSolicitanteBars';
 import { StatusPainel } from './StatusPainel';
 import { AlertasInteligentes } from './AlertasInteligentes';
 import { AcoesRapidas } from './AcoesRapidas';
+import { EconomiaSummary } from './EconomiaSummary';
 
 interface GastosDashboardProps {
   requisicoes: Requisicao[];
@@ -117,15 +118,33 @@ export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
     const concluidas = filteredRequisicoes.filter(r => r.status === 'recebido' || r.status === 'comprado').length;
     const percentConcluidas = total > 0 ? (concluidas / total) * 100 : 0;
 
+    // Calculate real savings from valor_orcado vs valor
+    const reqComEconomia = filteredRequisicoes.filter(
+      r => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0
+    );
+    const totalOrcado = reqComEconomia.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
+    const totalNegociado = reqComEconomia.reduce((sum, r) => sum + (r.valor || 0), 0);
+    const economiaReal = totalOrcado - totalNegociado;
+    const economiaPercentual = totalOrcado > 0 ? (economiaReal / totalOrcado) * 100 : 0;
+
     const prevWithValue = previousPeriodRequisicoes.filter(r => r.valor && r.valor > 0);
     const prevTotalGasto = prevWithValue.reduce((sum, r) => sum + (r.valor || 0), 0);
     const prevTotal = previousPeriodRequisicoes.length;
 
     const tendenciaGasto = prevTotalGasto > 0 ? ((totalGasto - prevTotalGasto) / prevTotalGasto) * 100 : 0;
     const tendenciaRequisicoes = prevTotal > 0 ? ((total - prevTotal) / prevTotal) * 100 : 0;
-    const economia = tendenciaGasto < 0 ? Math.abs(tendenciaGasto) : 0;
 
-    return { totalGasto, totalRequisicoes: total, ticketMedio, percentConcluidas, tendenciaGasto, tendenciaRequisicoes, economia };
+    return { 
+      totalGasto, 
+      totalRequisicoes: total, 
+      ticketMedio, 
+      percentConcluidas, 
+      tendenciaGasto, 
+      tendenciaRequisicoes, 
+      economiaReal,
+      economiaPercentual,
+      totalOrcado,
+    };
   }, [filteredRequisicoes, previousPeriodRequisicoes]);
 
   if (requisicoes.length === 0) {
@@ -186,6 +205,9 @@ export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
 
       <AcoesRapidas />
       <HeroKPIs {...kpis} />
+
+      {/* Economia Summary */}
+      <EconomiaSummary requisicoes={filteredRequisicoes} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GastosLineChart requisicoes={filteredRequisicoes} />

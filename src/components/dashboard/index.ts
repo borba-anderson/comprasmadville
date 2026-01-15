@@ -6,6 +6,7 @@ export { GastosPorSolicitanteBars } from './GastosPorSolicitanteBars';
 export { StatusPainel } from './StatusPainel';
 export { AlertasInteligentes } from './AlertasInteligentes';
 export { AcoesRapidas } from './AcoesRapidas';
+export { EconomiaSummary } from './EconomiaSummary';
 
 // Legacy exports for compatibility
 export { OverviewCards } from './OverviewCards';

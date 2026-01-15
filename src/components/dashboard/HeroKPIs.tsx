@@ -14,7 +14,9 @@ interface HeroKPIsProps {
   totalRequisicoes: number;
   ticketMedio: number;
   percentConcluidas: number;
-  economia: number;
+  economiaReal: number;
+  economiaPercentual: number;
+  totalOrcado: number;
   tendenciaGasto: number;
   tendenciaRequisicoes: number;
 }
@@ -24,7 +26,9 @@ export function HeroKPIs({
   totalRequisicoes,
   ticketMedio,
   percentConcluidas,
-  economia,
+  economiaReal,
+  economiaPercentual,
+  totalOrcado,
   tendenciaGasto,
   tendenciaRequisicoes,
 }: HeroKPIsProps) {
@@ -101,12 +105,17 @@ export function HeroKPIs({
       progressValue: percentConcluidas,
     },
     {
-      title: 'Economia',
-      value: economia > 0 ? `${economia.toFixed(1)}%` : '—',
+      title: 'Economia Gerada',
+      value: economiaReal !== 0 ? formatCurrency(Math.abs(economiaReal)) : '—',
+      fullValue: economiaReal !== 0 ? formatFullCurrency(Math.abs(economiaReal)) : undefined,
       icon: PiggyBank,
-      iconBg: economia > 0 ? 'bg-emerald-50' : 'bg-gray-50',
-      iconColor: economia > 0 ? 'text-emerald-600' : 'text-gray-400',
-      description: economia > 0 ? 'vs. período anterior' : 'sem variação',
+      iconBg: economiaReal > 0 ? 'bg-emerald-50' : economiaReal < 0 ? 'bg-red-50' : 'bg-gray-50',
+      iconColor: economiaReal > 0 ? 'text-emerald-600' : economiaReal < 0 ? 'text-red-600' : 'text-gray-400',
+      description: economiaReal > 0 
+        ? `${economiaPercentual.toFixed(1)}% de economia vs orçado`
+        : economiaReal < 0 
+          ? `${Math.abs(economiaPercentual).toFixed(1)}% de acréscimo vs orçado`
+          : 'sem valores comparativos',
     },
   ];
 
