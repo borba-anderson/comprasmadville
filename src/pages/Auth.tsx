@@ -8,74 +8,72 @@ import { Logo } from '@/components/layout/Logo';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres')
 });
-
 const signupSchema = loginSchema.extend({
   nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
   message: 'As senhas não conferem',
-  path: ['confirmPassword'],
+  path: ['confirmPassword']
 });
-
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
-
-  const { signIn, signUp } = useAuth();
+  const {
+    signIn,
+    signUp
+  } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [searchParams] = useSearchParams();
-  
+
   // Get redirect URL from query params, default to /painel
   const redirectUrl = searchParams.get('redirect') || '/painel';
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setErrors(prev => ({ ...prev, [name]: '' }));
+    const {
+      name,
+      value
+    } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
   };
-
-  const withTimeout = async <T,>(
-    promise: Promise<T>,
-    ms: number,
-    timeoutMessage: string
-  ): Promise<T> => {
+  const withTimeout = async <T,>(promise: Promise<T>, ms: number, timeoutMessage: string): Promise<T> => {
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error(timeoutMessage));
       }, ms);
-
-      promise
-        .then((value) => {
-          clearTimeout(timer);
-          resolve(value);
-        })
-        .catch((error) => {
-          clearTimeout(timer);
-          reject(error);
-        });
+      promise.then(value => {
+        clearTimeout(timer);
+        resolve(value);
+      }).catch(error => {
+        clearTimeout(timer);
+        reject(error);
+      });
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setIsLoading(true);
-
     try {
       if (isLogin) {
         const result = loginSchema.safeParse(formData);
@@ -90,26 +88,21 @@ export default function Auth() {
           setIsLoading(false);
           return;
         }
-
-        const { error } = await withTimeout(
-          signIn(formData.email, formData.password),
-          15000,
-          'Tempo de resposta excedido. Tente novamente em alguns instantes.'
-        );
-
+        const {
+          error
+        } = await withTimeout(signIn(formData.email, formData.password), 15000, 'Tempo de resposta excedido. Tente novamente em alguns instantes.');
         if (error) {
           toast({
             title: 'Erro no login',
             description: error.message,
-            variant: 'destructive',
+            variant: 'destructive'
           });
           setIsLoading(false);
           return;
         }
-
         toast({
           title: 'Login realizado!',
-          description: 'Bem-vindo de volta.',
+          description: 'Bem-vindo de volta.'
         });
 
         // Redirect to the specified URL or default to /painel
@@ -129,28 +122,22 @@ export default function Auth() {
           setIsLoading(false);
           return;
         }
-
-        const { error } = await withTimeout(
-          signUp(formData.email, formData.password, formData.nome),
-          20000,
-          'Tempo de resposta excedido ao cadastrar. Tente novamente.'
-        );
-
+        const {
+          error
+        } = await withTimeout(signUp(formData.email, formData.password, formData.nome), 20000, 'Tempo de resposta excedido ao cadastrar. Tente novamente.');
         if (error) {
           toast({
             title: 'Erro no cadastro',
             description: error.message,
-            variant: 'destructive',
+            variant: 'destructive'
           });
           setIsLoading(false);
           return;
         }
-
         toast({
           title: 'Conta criada!',
-          description: 'Você já pode acessar o sistema.',
+          description: 'Você já pode acessar o sistema.'
         });
-
         setTimeout(() => {
           navigate(redirectUrl);
         }, 500);
@@ -158,19 +145,14 @@ export default function Auth() {
     } catch (error) {
       toast({
         title: 'Erro',
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Ocorreu um erro inesperado. Tente novamente.',
-        variant: 'destructive',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro inesperado. Tente novamente.',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Card */}
         <div className="bg-card rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
@@ -181,7 +163,7 @@ export default function Auth() {
                 <Logo size="md" showText={false} />
               </div>
             </div>
-            <h1 className="text-3xl font-extrabold text-primary-foreground">Madville</h1>
+            <h1 className="text-3xl font-extrabold text-primary-foreground">Central de Compras</h1>
             <p className="text-primary-foreground/80 mt-2 text-sm font-medium">
               Sistema de Requisições de Compras
             </p>
@@ -191,67 +173,29 @@ export default function Auth() {
           <div className="px-8 py-8">
             {/* Tabs */}
             <div className="flex mb-6 bg-muted rounded-lg p-1">
-              <button
-                type="button"
-                onClick={() => setIsLogin(true)}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                  isLogin
-                    ? 'bg-card text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+              <button type="button" onClick={() => setIsLogin(true)} className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${isLogin ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                 Entrar
               </button>
-              <button
-                type="button"
-                onClick={() => setIsLogin(false)}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                  !isLogin
-                    ? 'bg-card text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
+              <button type="button" onClick={() => setIsLogin(false)} className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${!isLogin ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
                 Cadastrar
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {!isLogin && (
-                <div>
+              {!isLogin && <div>
                   <Label htmlFor="nome" className="text-sm font-semibold">
                     Nome Completo
                   </Label>
-                  <Input
-                    id="nome"
-                    name="nome"
-                    type="text"
-                    value={formData.nome}
-                    onChange={handleChange}
-                    placeholder="Seu nome completo"
-                    className="mt-1.5"
-                  />
-                  {errors.nome && (
-                    <p className="text-xs text-destructive mt-1">{errors.nome}</p>
-                  )}
-                </div>
-              )}
+                  <Input id="nome" name="nome" type="text" value={formData.nome} onChange={handleChange} placeholder="Seu nome completo" className="mt-1.5" />
+                  {errors.nome && <p className="text-xs text-destructive mt-1">{errors.nome}</p>}
+                </div>}
 
               <div>
                 <Label htmlFor="email" className="text-sm font-semibold">
                   Email Corporativo
                 </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="seu.email@empresa.com"
-                  className="mt-1.5"
-                />
-                {errors.email && (
-                  <p className="text-xs text-destructive mt-1">{errors.email}</p>
-                )}
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="seu.email@empresa.com" className="mt-1.5" />
+                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -259,60 +203,30 @@ export default function Auth() {
                   Senha
                 </Label>
                 <div className="relative mt-1.5">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
+                  <Input id="password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} placeholder="••••••••" className="pr-10" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                {errors.password && (
-                  <p className="text-xs text-destructive mt-1">{errors.password}</p>
-                )}
+                {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
               </div>
 
-              {!isLogin && (
-                <div>
+              {!isLogin && <div>
                   <Label htmlFor="confirmPassword" className="text-sm font-semibold">
                     Confirmar Senha
                   </Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="mt-1.5"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>
-                  )}
-                </div>
-              )}
+                  <Input id="confirmPassword" name="confirmPassword" type={showPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••" className="mt-1.5" />
+                  {errors.confirmPassword && <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>}
+                </div>}
 
               <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
-                {isLogin ? (
-                  <>
+                {isLogin ? <>
                     <LogIn className="w-5 h-5" />
                     Entrar no Sistema
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <UserPlus className="w-5 h-5" />
                     Criar Conta
-                  </>
-                )}
+                  </>}
               </Button>
             </form>
           </div>
@@ -321,12 +235,7 @@ export default function Auth() {
           <div className="px-8 py-5 bg-muted/50 border-t text-center">
             <p className="text-sm text-muted-foreground">
               Problemas com acesso?{' '}
-              <a
-                href="https://wa.me/5547992189824"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline font-medium"
-              >
+              <a href="https://wa.me/5547992189824" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
                 Contate o suporte
               </a>
             </p>
@@ -335,15 +244,11 @@ export default function Auth() {
 
         {/* Back link */}
         <div className="mt-6 text-center">
-          <Link
-            to="/"
-            className="inline-flex items-center text-primary-foreground/90 hover:text-primary-foreground text-sm"
-          >
+          <Link to="/" className="inline-flex items-center text-primary-foreground/90 hover:text-primary-foreground text-sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar ao início
           </Link>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
