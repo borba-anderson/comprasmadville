@@ -333,32 +333,63 @@ export function SidePanel({
     }
   };
 
-  const deleteAnexo = async () => {
+  const deleteAnexo = async (indexToDelete?: number) => {
     if (!requisicao || !requisicao.arquivo_url) return;
     
     try {
       setIsDeletingAnexo(true);
       
-      // Extract filename from URL
-      const urlParts = requisicao.arquivo_url.split('/');
-      const fileName = urlParts[urlParts.length - 1];
+      const urls = requisicao.arquivo_url.split(',');
+      const nomes = requisicao.arquivo_nome?.split(',') || [];
       
-      // Delete from storage
-      await supabase.storage
-        .from('requisicoes-anexos')
-        .remove([fileName]);
-      
-      // Update requisicao
-      const { error } = await supabase
-        .from('requisicoes')
-        .update({ 
-          arquivo_url: null,
-          arquivo_nome: null,
-          updated_at: new Date().toISOString() 
-        })
-        .eq('id', requisicao.id);
+      if (indexToDelete !== undefined && urls.length > 1) {
+        // Delete single file from multiple
+        const urlToDelete = urls[indexToDelete];
+        const urlParts = urlToDelete.split('/requisicoes-anexos/');
+        if (urlParts.length > 1) {
+          await supabase.storage
+            .from('requisicoes-anexos')
+            .remove([urlParts[1]]);
+        }
+        
+        // Update with remaining files
+        const remainingUrls = urls.filter((_, i) => i !== indexToDelete);
+        const remainingNomes = nomes.filter((_, i) => i !== indexToDelete);
+        
+        const { error } = await supabase
+          .from('requisicoes')
+          .update({ 
+            arquivo_url: remainingUrls.length > 0 ? remainingUrls.join(',') : null,
+            arquivo_nome: remainingNomes.length > 0 ? remainingNomes.join(',') : null,
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', requisicao.id);
 
-      if (error) throw error;
+        if (error) throw error;
+      } else {
+        // Delete all files
+        for (const url of urls) {
+          const urlParts = url.split('/requisicoes-anexos/');
+          if (urlParts.length > 1) {
+            await supabase.storage
+              .from('requisicoes-anexos')
+              .remove([urlParts[1]]);
+          }
+        }
+        
+        // Update requisicao
+        const { error } = await supabase
+          .from('requisicoes')
+          .update({ 
+            arquivo_url: null,
+            arquivo_nome: null,
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', requisicao.id);
+
+        if (error) throw error;
+      }
+      
       toast({ title: 'Anexo excluído com sucesso' });
       onUpdate();
     } catch (error) {
@@ -447,11 +478,14 @@ export function SidePanel({
       await supabase.from('comentarios').delete().eq('requisicao_id', requisicao.id);
       await supabase.from('audit_logs').delete().eq('requisicao_id', requisicao.id);
       
-      // Delete files from storage if they exist
+      // Delete files from storage if they exist (multiple files support)
       if (requisicao.arquivo_url) {
-        const urlParts = requisicao.arquivo_url.split('/requisicoes-anexos/');
-        if (urlParts.length > 1) {
-          await supabase.storage.from('requisicoes-anexos').remove([urlParts[1]]);
+        const urls = requisicao.arquivo_url.split(',');
+        for (const url of urls) {
+          const urlParts = url.trim().split('/requisicoes-anexos/');
+          if (urlParts.length > 1) {
+            await supabase.storage.from('requisicoes-anexos').remove([urlParts[1]]);
+          }
         }
       }
       
@@ -628,47 +662,58 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {/* Anexo */}
+            {/* Anexos */}
             {requisicao.arquivo_url && (
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground uppercase">Anexo</Label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={async () => {
-                      try {
-                        const response = await fetch(requisicao.arquivo_url!);
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = requisicao.arquivo_nome || 'arquivo';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        window.URL.revokeObjectURL(url);
-                      } catch {
-                        window.open(requisicao.arquivo_url!, '_blank');
-                      }
-                    }}
-                    className="flex-1 flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                    {requisicao.arquivo_nome || 'Baixar arquivo'}
-                    <Download className="w-4 h-4 ml-auto" />
-                  </button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={deleteAnexo}
-                    disabled={isDeletingAnexo}
-                    title="Excluir anexo"
-                  >
-                    {isDeletingAnexo ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-4 h-4" />
-                    )}
-                  </Button>
+                <Label className="text-xs text-muted-foreground uppercase">
+                  Anexos ({requisicao.arquivo_url.split(',').length} {requisicao.arquivo_url.split(',').length === 1 ? 'arquivo' : 'arquivos'})
+                </Label>
+                <div className="space-y-2">
+                  {requisicao.arquivo_url.split(',').map((url, index) => {
+                    const nomes = requisicao.arquivo_nome?.split(',') || [];
+                    const nome = nomes[index] || `arquivo-${index + 1}`;
+                    
+                    return (
+                      <div key={index} className="flex gap-2">
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(url.trim());
+                              const blob = await response.blob();
+                              const downloadUrl = window.URL.createObjectURL(blob);
+                              const link = document.createElement('a');
+                              link.href = downloadUrl;
+                              link.download = nome;
+                              document.body.appendChild(link);
+                              link.click();
+                              document.body.removeChild(link);
+                              window.URL.revokeObjectURL(downloadUrl);
+                            } catch {
+                              window.open(url.trim(), '_blank');
+                            }
+                          }}
+                          className="flex-1 flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
+                        >
+                          <Paperclip className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{nome}</span>
+                          <Download className="w-4 h-4 ml-auto flex-shrink-0" />
+                        </button>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => deleteAnexo(index)}
+                          disabled={isDeletingAnexo}
+                          title="Excluir anexo"
+                        >
+                          {isDeletingAnexo ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
