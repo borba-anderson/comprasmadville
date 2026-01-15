@@ -67,6 +67,7 @@ export interface Requisicao {
   entregue_em?: string;
   previsao_entrega?: string;
   valor?: number;
+  valor_orcado?: number;
 }
 
 export interface ValorHistorico {

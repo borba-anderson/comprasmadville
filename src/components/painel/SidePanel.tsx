@@ -38,6 +38,7 @@ export function SidePanel({
   profileId,
 }: SidePanelProps) {
   const [valorInput, setValorInput] = useState('');
+  const [valorOrcadoInput, setValorOrcadoInput] = useState('');
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
   const [valorHistory, setValorHistory] = useState<ValorHistorico[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -69,6 +70,7 @@ export function SidePanel({
     if (isOpen && requisicao) {
       fetchValorHistory();
       setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
+      setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
     }
@@ -96,6 +98,23 @@ export function SidePanel({
     } else {
       setValorInput('');
     }
+  };
+
+  const handleValorOrcadoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^\d]/g, '');
+    if (value) {
+      const numValue = parseInt(value, 10) / 100;
+      setValorOrcadoInput(formatCurrencyInput(numValue));
+    } else {
+      setValorOrcadoInput('');
+    }
+  };
+
+  const calculateEconomia = (valorOrcado: number | null | undefined, valorFinal: number | null | undefined) => {
+    if (!valorOrcado || valorOrcado <= 0 || !valorFinal) return null;
+    const economia = valorOrcado - valorFinal;
+    const percentual = (economia / valorOrcado) * 100;
+    return { valor: economia, percentual };
   };
 
   const formatDate = (dateString: string) => {
@@ -228,11 +247,16 @@ export function SidePanel({
     try {
       setIsUpdating(true);
       const valor = parseCurrencyInput(valorInput);
+      const valorOrcado = valorOrcadoInput ? parseCurrencyInput(valorOrcadoInput) : null;
       const valorAnterior = requisicao.valor;
 
       const { error: updateError } = await supabase
         .from('requisicoes')
-        .update({ valor, updated_at: new Date().toISOString() })
+        .update({ 
+          valor, 
+          valor_orcado: valorOrcado,
+          updated_at: new Date().toISOString() 
+        })
         .eq('id', requisicao.id);
 
       if (updateError) throw updateError;
@@ -244,7 +268,7 @@ export function SidePanel({
         alterado_por: profileNome || 'Sistema',
       });
 
-      toast({ title: 'Valor atualizado' });
+      toast({ title: 'Valores atualizados' });
       
       const { data: historyData } = await supabase
         .from('valor_historico')
@@ -261,7 +285,7 @@ export function SidePanel({
       console.error('Error updating valor:', error);
       toast({
         title: 'Erro',
-        description: 'Falha ao atualizar valor.',
+        description: 'Falha ao atualizar valores.',
         variant: 'destructive',
       });
     } finally {
@@ -760,15 +784,32 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {/* Valor */}
+            {/* Valores */}
             {canEditValor(requisicao.status) && (
               <div className="space-y-4 pt-4 border-t">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <DollarSign className="w-4 h-4" />
-                  Valor do Pedido (R$)
+                  Valores da Compra
                 </Label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
+                
+                {/* Valor Orçado */}
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground uppercase">Valor Orçado (Estimado)</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                    <Input
+                      value={valorOrcadoInput}
+                      onChange={handleValorOrcadoChange}
+                      placeholder="0,00"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
+                {/* Valor Negociado (Final) */}
+                <div className="space-y-2">
+                  <Label className="text-xs text-muted-foreground uppercase">Valor Negociado (Final)</Label>
+                  <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
                     <Input
                       value={valorInput}
@@ -777,13 +818,45 @@ Qualquer dúvida, estamos à disposição!`;
                       className="pl-10"
                     />
                   </div>
-                  <Button onClick={updateValor} disabled={!valorInput || isUpdating}>
-                    {isUpdating ? 'Salvando...' : 'Salvar'}
-                  </Button>
                 </div>
 
+                {/* Economia Calculada */}
+                {(() => {
+                  const economia = calculateEconomia(
+                    valorOrcadoInput ? parseCurrencyInput(valorOrcadoInput) : requisicao.valor_orcado,
+                    valorInput ? parseCurrencyInput(valorInput) : requisicao.valor
+                  );
+                  if (!economia) return null;
+                  
+                  const isPositive = economia.valor >= 0;
+                  return (
+                    <div className={cn(
+                      "p-3 rounded-lg border",
+                      isPositive ? "bg-emerald-50 border-emerald-200" : "bg-red-50 border-red-200"
+                    )}>
+                      <div className="flex items-center justify-between">
+                        <span className={cn("text-sm font-medium", isPositive ? "text-emerald-700" : "text-red-700")}>
+                          {isPositive ? '💰 Economia:' : '⚠️ Acréscimo:'}
+                        </span>
+                        <div className="text-right">
+                          <span className={cn("font-bold", isPositive ? "text-emerald-700" : "text-red-700")}>
+                            {formatCurrency(Math.abs(economia.valor))}
+                          </span>
+                          <span className={cn("text-sm ml-2", isPositive ? "text-emerald-600" : "text-red-600")}>
+                            ({Math.abs(economia.percentual).toFixed(1)}%)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <Button onClick={updateValor} disabled={!valorInput || isUpdating} className="w-full">
+                  {isUpdating ? 'Salvando...' : 'Salvar Valores'}
+                </Button>
+
                 {/* Anexo de Orçamento */}
-                <div className="space-y-2">
+                <div className="space-y-2 pt-2">
                   <Label className="text-xs text-muted-foreground uppercase flex items-center gap-2">
                     <Upload className="w-3 h-3" />
                     Anexar Orçamento/Cotação
