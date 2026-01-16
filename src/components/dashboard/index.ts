@@ -7,6 +7,13 @@ export { StatusPainel } from './StatusPainel';
 export { AlertasInteligentes } from './AlertasInteligentes';
 export { AcoesRapidas } from './AcoesRapidas';
 export { EconomiaSummary } from './EconomiaSummary';
+export { DashboardFilters, DEFAULT_DASHBOARD_FILTERS } from './DashboardFilters';
+export type { DashboardFiltersState, SavedDashboardFilter } from './DashboardFilters';
+export { GastosPorEmpresa } from './GastosPorEmpresa';
+export { LeadTimeAnalysis } from './LeadTimeAnalysis';
+export { ProcessFunnel } from './ProcessFunnel';
+export { EfficiencyKPIs } from './EfficiencyKPIs';
+export { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 
 // Legacy exports for compatibility
 export { OverviewCards } from './OverviewCards';

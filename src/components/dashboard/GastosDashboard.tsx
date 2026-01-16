@@ -1,13 +1,6 @@
-import { useState, useMemo } from 'react';
-import { Calendar, Building2, Users, FileText } from 'lucide-react';
-import { Requisicao } from '@/types';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { useState, useMemo, useEffect } from 'react';
+import { FileText } from 'lucide-react';
+import { Requisicao, RequisicaoStatus } from '@/types';
 import { HeroKPIs } from './HeroKPIs';
 import { GastosLineChart } from './GastosLineChart';
 import { GastosPorSetorBars } from './GastosPorSetorBars';
@@ -16,35 +9,59 @@ import { StatusPainel } from './StatusPainel';
 import { AlertasInteligentes } from './AlertasInteligentes';
 import { AcoesRapidas } from './AcoesRapidas';
 import { EconomiaSummary } from './EconomiaSummary';
+import { DashboardFilters, DashboardFiltersState, SavedDashboardFilter, DEFAULT_DASHBOARD_FILTERS } from './DashboardFilters';
+import { GastosPorEmpresa } from './GastosPorEmpresa';
+import { LeadTimeAnalysis } from './LeadTimeAnalysis';
+import { ProcessFunnel } from './ProcessFunnel';
+import { EfficiencyKPIs } from './EfficiencyKPIs';
+import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 
 interface GastosDashboardProps {
   requisicoes: Requisicao[];
+  onDrillDown?: (filters: { empresa?: string; status?: RequisicaoStatus }) => void;
 }
 
-type PeriodoFilter = '7d' | '30d' | 'mes' | '3m' | '6m' | '1y' | 'all';
+const STORAGE_KEY = 'madville_dashboard_filters';
 
-const PERIODO_LABELS: Record<PeriodoFilter, string> = {
-  '7d': 'Últimos 7 dias',
-  '30d': 'Últimos 30 dias',
-  'mes': 'Este mês',
-  '3m': 'Últimos 3 meses',
-  '6m': 'Últimos 6 meses',
-  '1y': 'Último ano',
-  'all': 'Todo período',
-};
+export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardProps) {
+  const [filters, setFilters] = useState<DashboardFiltersState>(DEFAULT_DASHBOARD_FILTERS);
+  const [savedFilters, setSavedFilters] = useState<SavedDashboardFilter[]>([]);
 
-export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
-  const [periodo, setPeriodo] = useState<PeriodoFilter>('30d');
-  const [setorFilter, setSetorFilter] = useState<string>('all');
-  const [solicitanteFilter, setSolicitanteFilter] = useState<string>('all');
+  // Load saved filters
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        setSavedFilters(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse saved filters:', e);
+      }
+    }
+  }, []);
 
-  const setores = useMemo(() => {
-    return [...new Set(requisicoes.map(r => r.solicitante_setor))].sort();
-  }, [requisicoes]);
+  const saveFilter = (name: string) => {
+    const newFilter: SavedDashboardFilter = {
+      id: Date.now().toString(),
+      name,
+      filters: { ...filters },
+    };
+    const updated = [...savedFilters, newFilter];
+    setSavedFilters(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  };
 
-  const solicitantes = useMemo(() => {
-    return [...new Set(requisicoes.map(r => r.solicitante_nome))].sort();
-  }, [requisicoes]);
+  const loadFilter = (id: string) => {
+    const filter = savedFilters.find((f) => f.id === id);
+    if (filter) setFilters(filter.filters);
+  };
+
+  const deleteFilter = (id: string) => {
+    const updated = savedFilters.filter((f) => f.id !== id);
+    setSavedFilters(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  };
+
+  const resetFilters = () => setFilters(DEFAULT_DASHBOARD_FILTERS);
 
   const { filteredRequisicoes, previousPeriodRequisicoes } = useMemo(() => {
     const now = new Date();
@@ -52,7 +69,7 @@ export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
     let previousStartDate: Date;
     let previousEndDate: Date;
 
-    switch (periodo) {
+    switch (filters.periodo) {
       case '7d':
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         previousStartDate = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
@@ -89,63 +106,66 @@ export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
         previousEndDate = new Date(0);
     }
 
-    let filtered = requisicoes.filter(req => new Date(req.created_at) >= startDate);
-    let previous = periodo !== 'all' 
-      ? requisicoes.filter(req => {
+    let filtered = requisicoes.filter((req) => new Date(req.created_at) >= startDate);
+    let previous = filters.periodo !== 'all'
+      ? requisicoes.filter((req) => {
           const date = new Date(req.created_at);
           return date >= previousStartDate && date < previousEndDate;
         })
       : [];
 
-    if (setorFilter !== 'all') {
-      filtered = filtered.filter(r => r.solicitante_setor === setorFilter);
-      previous = previous.filter(r => r.solicitante_setor === setorFilter);
+    // Apply empresa filter
+    if (filters.empresas.length > 0) {
+      filtered = filtered.filter((r) => r.solicitante_empresa && filters.empresas.includes(r.solicitante_empresa));
+      previous = previous.filter((r) => r.solicitante_empresa && filters.empresas.includes(r.solicitante_empresa));
     }
 
-    if (solicitanteFilter !== 'all') {
-      filtered = filtered.filter(r => r.solicitante_nome === solicitanteFilter);
-      previous = previous.filter(r => r.solicitante_nome === solicitanteFilter);
+    // Apply setor filter
+    if (filters.setores.length > 0) {
+      filtered = filtered.filter((r) => filters.setores.includes(r.solicitante_setor));
+      previous = previous.filter((r) => filters.setores.includes(r.solicitante_setor));
+    }
+
+    // Apply status filter
+    if (filters.status.length > 0) {
+      filtered = filtered.filter((r) => filters.status.includes(r.status));
+      previous = previous.filter((r) => filters.status.includes(r.status));
     }
 
     return { filteredRequisicoes: filtered, previousPeriodRequisicoes: previous };
-  }, [requisicoes, periodo, setorFilter, solicitanteFilter]);
+  }, [requisicoes, filters]);
 
   const kpis = useMemo(() => {
     const total = filteredRequisicoes.length;
-    const withValue = filteredRequisicoes.filter(r => r.valor && r.valor > 0);
+    const withValue = filteredRequisicoes.filter((r) => r.valor && r.valor > 0);
     const totalGasto = withValue.reduce((sum, r) => sum + (r.valor || 0), 0);
     const ticketMedio = withValue.length > 0 ? totalGasto / withValue.length : 0;
-    const concluidas = filteredRequisicoes.filter(r => r.status === 'recebido' || r.status === 'comprado').length;
+    const concluidas = filteredRequisicoes.filter((r) => r.status === 'recebido' || r.status === 'comprado').length;
     const percentConcluidas = total > 0 ? (concluidas / total) * 100 : 0;
 
-    // Calculate real savings from valor_orcado vs valor
-    const reqComEconomia = filteredRequisicoes.filter(
-      r => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0
-    );
+    const reqComEconomia = filteredRequisicoes.filter((r) => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0);
     const totalOrcado = reqComEconomia.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
     const totalNegociado = reqComEconomia.reduce((sum, r) => sum + (r.valor || 0), 0);
     const economiaReal = totalOrcado - totalNegociado;
     const economiaPercentual = totalOrcado > 0 ? (economiaReal / totalOrcado) * 100 : 0;
 
-    const prevWithValue = previousPeriodRequisicoes.filter(r => r.valor && r.valor > 0);
+    const prevWithValue = previousPeriodRequisicoes.filter((r) => r.valor && r.valor > 0);
     const prevTotalGasto = prevWithValue.reduce((sum, r) => sum + (r.valor || 0), 0);
     const prevTotal = previousPeriodRequisicoes.length;
 
     const tendenciaGasto = prevTotalGasto > 0 ? ((totalGasto - prevTotalGasto) / prevTotalGasto) * 100 : 0;
     const tendenciaRequisicoes = prevTotal > 0 ? ((total - prevTotal) / prevTotal) * 100 : 0;
 
-    return { 
-      totalGasto, 
-      totalRequisicoes: total, 
-      ticketMedio, 
-      percentConcluidas, 
-      tendenciaGasto, 
-      tendenciaRequisicoes, 
-      economiaReal,
-      economiaPercentual,
-      totalOrcado,
-    };
+    return { totalGasto, totalRequisicoes: total, ticketMedio, percentConcluidas, tendenciaGasto, tendenciaRequisicoes, economiaReal, economiaPercentual, totalOrcado };
   }, [filteredRequisicoes, previousPeriodRequisicoes]);
+
+  const handleDrillDownEmpresa = (empresa: string) => {
+    onDrillDown?.({ empresa });
+  };
+
+  const handleDrillDownStatus = (status: RequisicaoStatus) => {
+    onDrillDown?.({ status });
+  };
 
   if (requisicoes.length === 0) {
     return (
@@ -162,53 +182,45 @@ export function GastosDashboard({ requisicoes }: GastosDashboardProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight">Dashboard de Compras</h2>
-          <p className="text-muted-foreground text-sm mt-1">Visão geral da operação</p>
+          <p className="text-muted-foreground text-sm mt-1">Visão analítica e gerencial</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Select value={periodo} onValueChange={(v) => setPeriodo(v as PeriodoFilter)}>
-            <SelectTrigger className="w-[180px] h-10 bg-card border-border/60 rounded-xl">
-              <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(PERIODO_LABELS).map(([key, label]) => (
-                <SelectItem key={key} value={key}>{label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={setorFilter} onValueChange={setSetorFilter}>
-            <SelectTrigger className="w-[160px] h-10 bg-card border-border/60 rounded-xl">
-              <Building2 className="w-4 h-4 mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Setor" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos setores</SelectItem>
-              {setores.map(setor => (<SelectItem key={setor} value={setor}>{setor}</SelectItem>))}
-            </SelectContent>
-          </Select>
-          <Select value={solicitanteFilter} onValueChange={setSolicitanteFilter}>
-            <SelectTrigger className="w-[180px] h-10 bg-card border-border/60 rounded-xl">
-              <Users className="w-4 h-4 mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Solicitante" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              {solicitantes.map(sol => (<SelectItem key={sol} value={sol}>{sol.split(' ').slice(0, 2).join(' ')}</SelectItem>))}
-            </SelectContent>
-          </Select>
-        </div>
+        <DashboardFilters
+          filters={filters}
+          onChange={setFilters}
+          savedFilters={savedFilters}
+          onSaveFilter={saveFilter}
+          onLoadFilter={loadFilter}
+          onDeleteFilter={deleteFilter}
+          onReset={resetFilters}
+        />
       </div>
 
       <AcoesRapidas />
       <HeroKPIs {...kpis} />
 
-      {/* Economia Summary */}
-      <EconomiaSummary requisicoes={filteredRequisicoes} />
+      {/* Row 1: Gastos por Empresa + Lead Time */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <GastosPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownEmpresa} />
+        <LeadTimeAnalysis requisicoes={filteredRequisicoes} />
+      </div>
 
+      {/* Row 2: Funnel + Efficiency KPIs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ProcessFunnel requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownStatus} />
+        <EfficiencyKPIs requisicoes={filteredRequisicoes} />
+      </div>
+
+      {/* Row 3: Economia */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <EconomiaSummary requisicoes={filteredRequisicoes} />
+        <EconomiaPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownEmpresa} />
+      </div>
+
+      {/* Row 4: Gastos por Setor + Evolução */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GastosLineChart requisicoes={filteredRequisicoes} />
         <GastosPorSetorBars requisicoes={filteredRequisicoes} />
