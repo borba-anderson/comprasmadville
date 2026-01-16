@@ -6,13 +6,17 @@ export type DeliveryFilterType = 'all' | 'ontime' | 'today' | 'overdue';
 
 export interface PainelFilters {
   search: string;
-  status: string;
+  status: string[];
   comprador: string;
   setor: string;
-  prioridade: string;
+  prioridade: string[];
+  empresa: string[];
   dateFrom: string;
   dateTo: string;
+  deliveryDateFrom: string;
+  deliveryDateTo: string;
   deliveryFilter: DeliveryFilterType;
+  quickView: string;
 }
 
 export interface SavedFilter {
@@ -37,13 +41,17 @@ export interface DeliveryStatus {
 
 export const DEFAULT_FILTERS: PainelFilters = {
   search: '',
-  status: 'all',
+  status: [],
   comprador: 'all',
   setor: 'all',
-  prioridade: 'all',
+  prioridade: [],
+  empresa: [],
   dateFrom: '',
   dateTo: '',
+  deliveryDateFrom: '',
+  deliveryDateTo: '',
   deliveryFilter: 'all',
+  quickView: '',
 };
 
 // SLA Limits in days

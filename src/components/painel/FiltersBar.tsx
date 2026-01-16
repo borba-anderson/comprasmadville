@@ -10,6 +10,12 @@ import {
   LayoutList,
   LayoutGrid,
   Trash2,
+  Building,
+  Truck,
+  Check,
+  ClipboardList,
+  Clock,
+  CheckCircle2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,11 +39,15 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { 
   STATUS_CONFIG, 
   COMPRADORES, 
   SETORES,
-  PRIORIDADE_CONFIG 
+  PRIORIDADE_CONFIG,
+  EMPRESAS,
+  QUICK_VIEWS,
 } from '@/types';
 import { PainelFilters, SavedFilter, ViewMode, DEFAULT_FILTERS } from './types';
 import { cn } from '@/lib/utils';
@@ -56,6 +66,90 @@ interface FiltersBarProps {
   onViewModeChange: (mode: ViewMode) => void;
   resultCount: number;
   totalCount: number;
+  onQuickView: (viewId: string) => void;
+}
+
+// Multi-select dropdown component
+function MultiSelectFilter({
+  label,
+  icon: Icon,
+  options,
+  value,
+  onChange,
+  renderOption,
+}: {
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  options: { value: string; label: string; dotColor?: string; icon?: string }[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  renderOption?: (option: { value: string; label: string; dotColor?: string; icon?: string }) => React.ReactNode;
+}) {
+  const handleToggle = (optionValue: string) => {
+    if (value.includes(optionValue)) {
+      onChange(value.filter((v) => v !== optionValue));
+    } else {
+      onChange([...value, optionValue]);
+    }
+  };
+
+  const selectedCount = value.length;
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="h-9 gap-1.5 min-w-[100px]">
+          {Icon && <Icon className="w-3.5 h-3.5" />}
+          {label}
+          {selectedCount > 0 && (
+            <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
+              {selectedCount}
+            </Badge>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-56 p-2" align="start">
+        <div className="space-y-1 max-h-64 overflow-y-auto">
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className="flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer"
+              onClick={() => handleToggle(option.value)}
+            >
+              <Checkbox
+                checked={value.includes(option.value)}
+                onCheckedChange={() => handleToggle(option.value)}
+              />
+              {renderOption ? (
+                renderOption(option)
+              ) : (
+                <span className="text-sm flex items-center gap-2">
+                  {option.dotColor && (
+                    <span className={cn('w-2 h-2 rounded-full', option.dotColor)} />
+                  )}
+                  {option.icon && <span>{option.icon}</span>}
+                  {option.label}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+        {selectedCount > 0 && (
+          <div className="pt-2 mt-2 border-t">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-muted-foreground"
+              onClick={() => onChange([])}
+            >
+              <X className="w-3.5 h-3.5 mr-2" />
+              Limpar seleção
+            </Button>
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 export function FiltersBar({
@@ -72,15 +166,24 @@ export function FiltersBar({
   onViewModeChange,
   resultCount,
   totalCount,
+  onQuickView,
 }: FiltersBarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
-    if (key === 'search') return value !== '';
-    return value !== 'all' && value !== '';
-  });
+  const hasActiveFilters = 
+    filters.search !== '' ||
+    filters.status.length > 0 ||
+    filters.comprador !== 'all' ||
+    filters.setor !== 'all' ||
+    filters.prioridade.length > 0 ||
+    filters.empresa.length > 0 ||
+    filters.dateFrom !== '' ||
+    filters.dateTo !== '' ||
+    filters.deliveryDateFrom !== '' ||
+    filters.deliveryDateTo !== '' ||
+    filters.deliveryFilter !== 'all';
 
   const handleSave = () => {
     if (filterName.trim()) {
@@ -90,9 +193,61 @@ export function FiltersBar({
     }
   };
 
+  const statusOptions = Object.entries(STATUS_CONFIG).map(([key, config]) => ({
+    value: key,
+    label: config.label,
+    dotColor: config.dotColor,
+  }));
+
+  const prioridadeOptions = Object.entries(PRIORIDADE_CONFIG).map(([key, config]) => ({
+    value: key,
+    label: config.label,
+    icon: config.icon,
+  }));
+
+  const empresaOptions = EMPRESAS.map((empresa) => ({
+    value: empresa,
+    label: empresa,
+  }));
+
+  const quickViewButtons = [
+    { id: 'minhasPendencias', icon: ClipboardList, color: 'text-amber-600' },
+    { id: 'aguardandoFornecedor', icon: Truck, color: 'text-blue-600' },
+    { id: 'finalizados', icon: CheckCircle2, color: 'text-emerald-600' },
+  ];
+
   return (
     <div className="sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b">
       <div className="p-3 space-y-3">
+        {/* Quick View Buttons */}
+        <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
+          <span className="text-xs font-medium text-muted-foreground mr-2">Visões rápidas:</span>
+          {quickViewButtons.map((btn) => {
+            const view = QUICK_VIEWS[btn.id as keyof typeof QUICK_VIEWS];
+            const isActive = filters.quickView === btn.id;
+            return (
+              <Button
+                key={btn.id}
+                variant={isActive ? 'default' : 'outline'}
+                size="sm"
+                className={cn('gap-1.5 h-8', isActive && 'shadow-md')}
+                onClick={() => onQuickView(isActive ? '' : btn.id)}
+              >
+                <btn.icon className={cn('w-3.5 h-3.5', !isActive && btn.color)} />
+                {view.label}
+              </Button>
+            );
+          })}
+          
+          <div className="flex-1" />
+          
+          {/* Result count */}
+          <span className="text-sm font-medium">
+            <span className="text-primary">{resultCount}</span>
+            <span className="text-muted-foreground"> de {totalCount}</span>
+          </span>
+        </div>
+
         {/* Primary Filters Row */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Search */}
@@ -106,26 +261,42 @@ export function FiltersBar({
             />
           </div>
 
-          {/* Status Filter */}
-          <Select 
-            value={filters.status} 
-            onValueChange={(value) => onFilterChange('status', value)}
-          >
-            <SelectTrigger className="w-[140px] h-9">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos Status</SelectItem>
-              {Object.entries(STATUS_CONFIG).map(([key, config]) => (
-                <SelectItem key={key} value={key}>
-                  <span className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${config.dotColor}`} />
-                    {config.label}
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {/* Empresa Filter (Multi-select) */}
+          <MultiSelectFilter
+            label="Empresa"
+            icon={Building}
+            options={empresaOptions}
+            value={filters.empresa}
+            onChange={(value) => onFilterChange('empresa', value)}
+          />
+
+          {/* Status Filter (Multi-select) */}
+          <MultiSelectFilter
+            label="Status"
+            options={statusOptions}
+            value={filters.status}
+            onChange={(value) => onFilterChange('status', value)}
+            renderOption={(option) => (
+              <span className="flex items-center gap-2 text-sm">
+                <span className={cn('w-2 h-2 rounded-full', option.dotColor)} />
+                {option.label}
+              </span>
+            )}
+          />
+
+          {/* Prioridade Filter (Multi-select) */}
+          <MultiSelectFilter
+            label="Prioridade"
+            options={prioridadeOptions}
+            value={filters.prioridade}
+            onChange={(value) => onFilterChange('prioridade', value)}
+            renderOption={(option) => (
+              <span className="flex items-center gap-2 text-sm">
+                <span>{option.icon}</span>
+                {option.label}
+              </span>
+            )}
+          />
 
           {/* Comprador Filter */}
           <Select 
@@ -151,7 +322,7 @@ export function FiltersBar({
             className="gap-1.5"
           >
             <Filter className="w-3.5 h-3.5" />
-            Filtros
+            Mais filtros
             {hasActiveFilters && (
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
             )}
@@ -235,7 +406,7 @@ export function FiltersBar({
               value={filters.setor} 
               onValueChange={(value) => onFilterChange('setor', value)}
             >
-              <SelectTrigger className="w-[130px] h-9">
+              <SelectTrigger className="w-[150px] h-9">
                 <SelectValue placeholder="Setor" />
               </SelectTrigger>
               <SelectContent>
@@ -246,30 +417,10 @@ export function FiltersBar({
               </SelectContent>
             </Select>
 
-            {/* Prioridade Filter */}
-            <Select 
-              value={filters.prioridade} 
-              onValueChange={(value) => onFilterChange('prioridade', value)}
-            >
-              <SelectTrigger className="w-[130px] h-9">
-                <SelectValue placeholder="Prioridade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                {Object.entries(PRIORIDADE_CONFIG).map(([key, config]) => (
-                  <SelectItem key={key} value={key}>
-                    <span className="flex items-center gap-2">
-                      <span>{config.icon}</span>
-                      {config.label}
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Date Range */}
+            {/* Date Range - Requisição */}
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Requisição:</span>
               <Input
                 type="date"
                 value={filters.dateFrom}
@@ -281,6 +432,25 @@ export function FiltersBar({
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => onFilterChange('dateTo', e.target.value)}
+                className="w-[130px] h-9"
+              />
+            </div>
+
+            {/* Date Range - Previsão de Entrega */}
+            <div className="flex items-center gap-1">
+              <Truck className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Entrega:</span>
+              <Input
+                type="date"
+                value={filters.deliveryDateFrom}
+                onChange={(e) => onFilterChange('deliveryDateFrom', e.target.value)}
+                className="w-[130px] h-9"
+              />
+              <span className="text-muted-foreground">→</span>
+              <Input
+                type="date"
+                value={filters.deliveryDateTo}
+                onChange={(e) => onFilterChange('deliveryDateTo', e.target.value)}
                 className="w-[130px] h-9"
               />
             </div>
@@ -339,13 +509,6 @@ export function FiltersBar({
                 </Button>
               </>
             )}
-
-            <div className="flex-1" />
-
-            {/* Result count */}
-            <span className="text-xs text-muted-foreground">
-              {resultCount} de {totalCount} requisições
-            </span>
           </div>
         )}
       </div>
@@ -362,7 +525,7 @@ export function FiltersBar({
               id="filter-name"
               value={filterName}
               onChange={(e) => setFilterName(e.target.value)}
-              placeholder="Ex: Pendentes do setor TI"
+              placeholder="Ex: Curitiba – Pendentes"
               className="mt-2"
             />
           </div>
