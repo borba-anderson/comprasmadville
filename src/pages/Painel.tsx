@@ -52,6 +52,7 @@ export default function Painel() {
     resetFilters,
     viewMode,
     setViewMode,
+    applyQuickView,
   } = usePainelFilters(requisicoes);
 
   // Redirect if not staff
@@ -135,10 +136,16 @@ export default function Painel() {
     setIsPanelOpen(true);
   };
 
-  const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
-    if (key === 'search') return value !== '';
-    return value !== 'all' && value !== '';
-  });
+  const hasActiveFilters = 
+    filters.search !== '' ||
+    filters.status.length > 0 ||
+    filters.comprador !== 'all' ||
+    filters.setor !== 'all' ||
+    filters.prioridade.length > 0 ||
+    filters.empresa.length > 0 ||
+    filters.dateFrom !== '' ||
+    filters.dateTo !== '' ||
+    filters.deliveryFilter !== 'all';
 
   if (authLoading || !rolesLoaded) {
     return (
@@ -192,6 +199,7 @@ export default function Painel() {
                 onViewModeChange={setViewMode}
                 resultCount={filteredRequisicoes.length}
                 totalCount={requisicoes.length}
+                onQuickView={applyQuickView}
               />
 
               <RequisicaoTable

@@ -146,9 +146,30 @@ export type CompradorId = typeof COMPRADORES[number]['id'];
 
 // Constants
 export const EMPRESAS = [
-  'GMAD Madville',
+  'GMAD Joinville',
   'GMAD Curitiba',
+  'GMAD Soluções',
+  'GMAD CD',
 ] as const;
+
+// Quick view presets
+export const QUICK_VIEWS = {
+  minhasPendencias: {
+    label: 'Minhas Pendências',
+    icon: '📋',
+    statuses: ['pendente', 'em_analise', 'cotando'] as RequisicaoStatus[],
+  },
+  aguardandoFornecedor: {
+    label: 'Aguardando Fornecedor',
+    icon: '🚚',
+    statuses: ['comprado', 'em_entrega'] as RequisicaoStatus[],
+  },
+  finalizados: {
+    label: 'Finalizados',
+    icon: '✅',
+    statuses: ['recebido', 'cancelado', 'rejeitado'] as RequisicaoStatus[],
+  },
+} as const;
 
 export const SETORES = [
   'Almoxarifado',

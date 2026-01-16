@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Requisicao, SETORES } from '@/types';
+import { Requisicao, SETORES, QUICK_VIEWS } from '@/types';
 import { 
   PainelFilters, 
   SavedFilter, 
@@ -55,6 +55,23 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
     return 'ontime';
   };
 
+  // Apply quick view preset
+  const applyQuickView = (viewId: string) => {
+    const view = QUICK_VIEWS[viewId as keyof typeof QUICK_VIEWS];
+    if (view) {
+      setFilters({
+        ...DEFAULT_FILTERS,
+        status: view.statuses as unknown as string[],
+        quickView: viewId,
+      });
+    } else {
+      setFilters({
+        ...filters,
+        quickView: '',
+      });
+    }
+  };
+
   // Apply all filters
   const filteredRequisicoes = useMemo(() => {
     let result = [...requisicoes];
@@ -71,9 +88,9 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
       );
     }
 
-    // Status filter
-    if (filters.status && filters.status !== 'all') {
-      result = result.filter((req) => req.status === filters.status);
+    // Status filter (multi-select)
+    if (filters.status.length > 0) {
+      result = result.filter((req) => filters.status.includes(req.status));
     }
 
     // Comprador filter
@@ -86,12 +103,19 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
       result = result.filter((req) => req.solicitante_setor === filters.setor);
     }
 
-    // Prioridade filter
-    if (filters.prioridade && filters.prioridade !== 'all') {
-      result = result.filter((req) => req.prioridade === filters.prioridade);
+    // Prioridade filter (multi-select)
+    if (filters.prioridade.length > 0) {
+      result = result.filter((req) => filters.prioridade.includes(req.prioridade));
     }
 
-    // Date range filter
+    // Empresa filter (multi-select)
+    if (filters.empresa.length > 0) {
+      result = result.filter((req) => 
+        req.solicitante_empresa && filters.empresa.includes(req.solicitante_empresa)
+      );
+    }
+
+    // Date range filter (created_at)
     if (filters.dateFrom) {
       const fromDate = new Date(filters.dateFrom);
       fromDate.setHours(0, 0, 0, 0);
@@ -102,6 +126,23 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
       const toDate = new Date(filters.dateTo);
       toDate.setHours(23, 59, 59, 999);
       result = result.filter((req) => new Date(req.created_at) <= toDate);
+    }
+
+    // Delivery date range filter
+    if (filters.deliveryDateFrom) {
+      const fromDate = new Date(filters.deliveryDateFrom);
+      fromDate.setHours(0, 0, 0, 0);
+      result = result.filter((req) => 
+        req.previsao_entrega && new Date(req.previsao_entrega) >= fromDate
+      );
+    }
+
+    if (filters.deliveryDateTo) {
+      const toDate = new Date(filters.deliveryDateTo);
+      toDate.setHours(23, 59, 59, 999);
+      result = result.filter((req) => 
+        req.previsao_entrega && new Date(req.previsao_entrega) <= toDate
+      );
     }
 
     // Delivery status filter
@@ -149,7 +190,7 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
 
   // Update a single filter
   const updateFilter = <K extends keyof PainelFilters>(key: K, value: PainelFilters[K]) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value, quickView: '' }));
   };
 
   return {
@@ -164,5 +205,6 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
     resetFilters,
     viewMode,
     setViewMode: updateViewMode,
+    applyQuickView,
   };
 }
