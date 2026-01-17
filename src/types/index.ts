@@ -146,10 +146,10 @@ export type CompradorId = typeof COMPRADORES[number]['id'];
 
 // Constants
 export const EMPRESAS = [
-  'GMAD Joinville',
+  'GMAD Madville',
+  'GMAD Madville (CD)',
+  'GMAD Madville (Soluções)',
   'GMAD Curitiba',
-  'GMAD Soluções',
-  'GMAD CD',
 ] as const;
 
 // Quick view presets
