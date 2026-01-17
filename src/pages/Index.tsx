@@ -17,7 +17,7 @@ const Index = () => {
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3 tracking-tight">Central de Requisições de Compras </h1>
           
-          <p className="text-muted-foreground max-w-xl mx-auto text-sm">Governança e controle para suas solicitações de compras corporativas. </p>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm">Sistema de controle para suas solicitações de compras corporativas. </p>
         </section>
 
         {/* User Context (quando logado) */}
