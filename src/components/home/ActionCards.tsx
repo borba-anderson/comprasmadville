@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { FileText, Shield, ArrowRight, Sparkles, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-
 export const ActionCards = () => {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
   const handleRequisicaoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (user) {
@@ -15,7 +15,6 @@ export const ActionCards = () => {
       navigate('/auth?redirect=/requisicao');
     }
   };
-
   const handlePainelClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (user) {
@@ -24,15 +23,9 @@ export const ActionCards = () => {
       navigate('/auth');
     }
   };
-
-  return (
-    <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+  return <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
       {/* Card Primário: Fazer Requisição */}
-      <a
-        href="#"
-        onClick={handleRequisicaoClick}
-        className="group relative"
-      >
+      <a href="#" onClick={handleRequisicaoClick} className="group relative">
         <div className="relative bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-1">
           {/* Badge "Mais utilizado" */}
           <Badge className="absolute -top-3 left-6 bg-success text-success-foreground border-0 shadow-lg">
@@ -45,7 +38,7 @@ export const ActionCards = () => {
           </div>
           
           <h3 className="text-2xl font-bold text-white mb-3">
-            Fazer Requisição
+            Fazer requisição
           </h3>
           
           <p className="text-white/80 mb-6 leading-relaxed">
@@ -60,11 +53,7 @@ export const ActionCards = () => {
       </a>
 
       {/* Card Secundário: Painel Administrativo */}
-      <a
-        href="#"
-        onClick={handlePainelClick}
-        className="group"
-      >
+      <a href="#" onClick={handlePainelClick} className="group">
         <div className="bg-card rounded-2xl border border-border/60 p-8 h-full transition-all duration-300 hover:border-muted-foreground/30 hover:shadow-lg hover:-translate-y-1">
           <div className="flex items-start justify-between mb-6">
             <div className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center group-hover:bg-muted/80 transition-colors">
@@ -90,6 +79,5 @@ export const ActionCards = () => {
           </div>
         </div>
       </a>
-    </section>
-  );
+    </section>;
 };
