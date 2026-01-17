@@ -176,12 +176,13 @@ export const SETORES = [
   'Assistência/Garantia',
   'Comercial',
   'Compras',
+  'Diretoria',
   'Financeiro',
   'Limpeza',
   'Logística',
   'Manutenção Predial',
   'Marketing',
-  'Recursos Humanos',
+  'RH',
   'TI',
 ] as const;
 
