@@ -65,9 +65,7 @@ export const ActionCards = () => {
             </Badge>
           </div>
           
-          <h3 className="text-xl font-bold text-card-foreground mb-3">
-            Painel Administrativo
-          </h3>
+          <h3 className="text-xl font-bold text-card-foreground mb-3">Painel administrativo</h3>
           
           <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
             Acesso exclusivo para equipe de Compras. Gerencie requisições, aprove pedidos e acompanhe indicadores.
