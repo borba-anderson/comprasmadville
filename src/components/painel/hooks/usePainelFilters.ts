@@ -14,7 +14,14 @@ const STORAGE_KEYS = {
 };
 
 export function usePainelFilters(requisicoes: Requisicao[]) {
-  const [filters, setFilters] = useState<PainelFilters>(DEFAULT_FILTERS);
+  // Initialize with "Minhas Pendências" filter as default
+  const initialFilters: PainelFilters = {
+    ...DEFAULT_FILTERS,
+    status: QUICK_VIEWS.minhasPendencias.statuses as unknown as string[],
+    quickView: 'minhasPendencias',
+  };
+  
+  const [filters, setFilters] = useState<PainelFilters>(initialFilters);
   const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('detailed');
 

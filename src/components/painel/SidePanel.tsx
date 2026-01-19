@@ -1018,54 +1018,25 @@ Qualquer dúvida, estamos à disposição!`;
             </Button>
           )}
 
-          {/* Ações de Cancelar e Excluir - disponíveis em todos os status exceto recebido, rejeitado e cancelado */}
+          {/* Ação de Cancelar - disponível em todos os status exceto recebido, rejeitado e cancelado */}
           {!['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
-            <div className="flex gap-2 pt-2 border-t mt-2">
+            <div className="pt-2 border-t mt-2">
               <Button
-                className="flex-1"
+                className="w-full"
                 variant="outline"
                 onClick={cancelRequisicao}
-                disabled={isCanceling || isDeleting}
+                disabled={isCanceling}
               >
                 {isCanceling ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
                   <Ban className="w-4 h-4 mr-2" />
                 )}
-                Cancelar
-              </Button>
-              <Button
-                className="flex-1"
-                variant="destructive"
-                onClick={deleteRequisicao}
-                disabled={isCanceling || isDeleting}
-              >
-                {isDeleting ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4 mr-2" />
-                )}
-                Excluir
+                Cancelar Requisição
               </Button>
             </div>
           )}
 
-          {/* Para status cancelado ou rejeitado, apenas opção de excluir */}
-          {['rejeitado', 'cancelado'].includes(requisicao.status) && (
-            <Button
-              className="w-full"
-              variant="destructive"
-              onClick={deleteRequisicao}
-              disabled={isDeleting}
-            >
-              {isDeleting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Trash2 className="w-4 h-4 mr-2" />
-              )}
-              Excluir Requisição
-            </Button>
-          )}
         </div>
       </SheetContent>
     </Sheet>

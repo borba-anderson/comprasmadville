@@ -21,8 +21,13 @@ export function DeliveryBadge({ previsao, className }: DeliveryBadgeProps) {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const deliveryDate = new Date(previsao);
+  
+  // Parse the date value correctly - if it's a date string like "2025-01-20", 
+  // add timezone offset to avoid UTC conversion issues
+  const [year, month, day] = previsao.split('-').map(Number);
+  const deliveryDate = new Date(year, month - 1, day);
   deliveryDate.setHours(0, 0, 0, 0);
+  
   const diff = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
   let status: 'ontime' | 'today' | 'overdue';
