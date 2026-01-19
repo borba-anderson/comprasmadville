@@ -1,5 +1,6 @@
 export { RequisicaoTimeline } from './RequisicaoTimeline';
 export { BuyerSelector } from './BuyerSelector';
+export { FornecedorSelector } from './FornecedorSelector';
 export { DeliveryDatePicker } from './DeliveryDatePicker';
 export { ValueHistoryList } from './ValueHistoryList';
 export { FormStepper } from './FormStepper';

@@ -74,6 +74,7 @@ export function RequisicaoTable({
             <TableHead className="text-center w-24">Prioridade</TableHead>
             <TableHead className="text-center w-28">Status</TableHead>
             <TableHead className="text-center w-24">Comprador</TableHead>
+            <TableHead className="text-center w-28">Fornecedor</TableHead>
             <TableHead className="text-center w-28">Previsão</TableHead>
             <TableHead className="text-center w-24">SLA</TableHead>
             <TableHead className="text-right w-28">Valor</TableHead>

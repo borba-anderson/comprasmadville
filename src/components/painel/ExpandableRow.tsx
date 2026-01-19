@@ -35,8 +35,19 @@ export function ExpandableRow({
 }: ExpandableRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Parse date string correctly to avoid timezone issues
+  const parseDateString = (dateString: string): Date => {
+    // If it's a date-only string like "2025-01-20", parse without timezone
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    // Otherwise parse as is (for timestamps)
+    return new Date(dateString);
+  };
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
+    return parseDateString(dateString).toLocaleDateString('pt-BR');
   };
 
   const isCompact = viewMode === 'compact';
@@ -48,7 +59,7 @@ export function ExpandableRow({
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const delivery = new Date(requisicao.previsao_entrega);
+    const delivery = parseDateString(requisicao.previsao_entrega);
     delivery.setHours(0, 0, 0, 0);
     
     return delivery < today;
@@ -162,6 +173,15 @@ export function ExpandableRow({
             )}
           </td>
 
+          {/* Fornecedor */}
+          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
+            {requisicao.fornecedor_nome ? (
+              <span className="text-sm font-medium">{requisicao.fornecedor_nome}</span>
+            ) : (
+              <span className="text-xs text-muted-foreground">—</span>
+            )}
+          </td>
+
           {/* Previsão */}
           <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
             <DeliveryBadge previsao={requisicao.previsao_entrega} />
@@ -196,7 +216,7 @@ export function ExpandableRow({
         {/* Expanded Content */}
         {isExpanded && (
           <tr className="bg-muted/30">
-            <td colSpan={12} className="p-0">
+            <td colSpan={14} className="p-0">
               <div className="p-4 space-y-4 animate-fade-in border-b border-border/50">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Descrição / Justificativa */}

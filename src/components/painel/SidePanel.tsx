@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
-import { RequisicaoTimeline, BuyerSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
+import { RequisicaoTimeline, BuyerSelector, FornecedorSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
 import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -117,8 +117,19 @@ export function SidePanel({
     return { valor: economia, percentual };
   };
 
+  // Parse date string correctly to avoid timezone issues
+  const parseDateString = (dateString: string): Date => {
+    // If it's a date-only string like "2025-01-20", parse without timezone
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    // Otherwise parse as is (for timestamps)
+    return new Date(dateString);
+  };
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
+    return parseDateString(dateString).toLocaleDateString('pt-BR');
   };
 
   const sendNotification = async (req: Requisicao, newStatus: string) => {
@@ -215,6 +226,27 @@ export function SidePanel({
     } catch (error) {
       console.error('Error updating comprador:', error);
       toast({ title: 'Erro ao atualizar comprador', variant: 'destructive' });
+    }
+  };
+
+  const updateFornecedor = async (fornecedorNome: string) => {
+    if (!requisicao) return;
+    
+    try {
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          fornecedor_nome: fornecedorNome || null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Fornecedor atualizado' });
+      onUpdate();
+    } catch (error) {
+      console.error('Error updating fornecedor:', error);
+      toast({ title: 'Erro ao atualizar fornecedor', variant: 'destructive' });
     }
   };
 
@@ -770,16 +802,22 @@ Qualquer dúvida, estamos à disposição!`;
 
             <Separator />
 
-            {/* Comprador & Previsão */}
+            {/* Comprador, Fornecedor & Previsão */}
             {!['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
-              <div className="grid grid-cols-2 gap-4">
-                <BuyerSelector
-                  value={requisicao.comprador_nome}
-                  onChange={updateComprador}
-                />
-                <DeliveryDatePicker
-                  value={requisicao.previsao_entrega}
-                  onChange={updatePrevisaoEntrega}
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <BuyerSelector
+                    value={requisicao.comprador_nome}
+                    onChange={updateComprador}
+                  />
+                  <DeliveryDatePicker
+                    value={requisicao.previsao_entrega}
+                    onChange={updatePrevisaoEntrega}
+                  />
+                </div>
+                <FornecedorSelector
+                  value={requisicao.fornecedor_nome}
+                  onChange={updateFornecedor}
                 />
               </div>
             )}
