@@ -176,6 +176,7 @@ export function FiltersBar({
     filters.search !== '' ||
     filters.status.length > 0 ||
     filters.comprador !== 'all' ||
+    filters.fornecedor !== 'all' ||
     filters.setor !== 'all' ||
     filters.prioridade.length > 0 ||
     filters.empresa.length > 0 ||
@@ -416,6 +417,16 @@ export function FiltersBar({
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Fornecedor Filter */}
+            <div className="flex items-center gap-1">
+              <Input
+                placeholder="Filtrar por fornecedor..."
+                value={filters.fornecedor === 'all' ? '' : filters.fornecedor}
+                onChange={(e) => onFilterChange('fornecedor', e.target.value || 'all')}
+                className="w-[180px] h-9"
+              />
+            </div>
 
             {/* Date Range - Requisição */}
             <div className="flex items-center gap-1">

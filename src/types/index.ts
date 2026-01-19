@@ -57,6 +57,7 @@ export interface Requisicao {
   aprovado_por?: string;
   comprador_id?: string;
   comprador_nome?: string;
+  fornecedor_nome?: string;
   arquivo_url?: string;
   arquivo_nome?: string;
   created_at: string;

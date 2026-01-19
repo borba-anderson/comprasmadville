@@ -48,12 +48,23 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
     localStorage.setItem(STORAGE_KEYS.viewMode, mode);
   };
 
+  // Parse date string correctly to avoid timezone issues
+  const parseDateString = (dateString: string): Date => {
+    // If it's a date-only string like "2025-01-20", parse without timezone
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    // Otherwise parse as is (for timestamps)
+    return new Date(dateString);
+  };
+
   // Calculate delivery status for filtering
   const getDeliveryStatus = (previsao: string | undefined): 'ontime' | 'today' | 'overdue' | null => {
     if (!previsao) return null;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const delivery = new Date(previsao);
+    const delivery = parseDateString(previsao);
     delivery.setHours(0, 0, 0, 0);
     const diff = Math.ceil((delivery.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     
@@ -103,6 +114,11 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
     // Comprador filter
     if (filters.comprador && filters.comprador !== 'all') {
       result = result.filter((req) => req.comprador_nome === filters.comprador);
+    }
+
+    // Fornecedor filter
+    if (filters.fornecedor && filters.fornecedor !== 'all') {
+      result = result.filter((req) => req.fornecedor_nome === filters.fornecedor);
     }
 
     // Setor filter

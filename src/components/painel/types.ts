@@ -8,6 +8,7 @@ export interface PainelFilters {
   search: string;
   status: string[];
   comprador: string;
+  fornecedor: string;
   setor: string;
   prioridade: string[];
   empresa: string[];
@@ -43,6 +44,7 @@ export const DEFAULT_FILTERS: PainelFilters = {
   search: '',
   status: [],
   comprador: 'all',
+  fornecedor: 'all',
   setor: 'all',
   prioridade: [],
   empresa: [],
