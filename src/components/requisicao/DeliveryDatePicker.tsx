@@ -13,7 +13,12 @@ export function DeliveryDatePicker({ value, onChange, disabled, className }: Del
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const deliveryDate = value ? new Date(value) : null;
+  // Parse the date value correctly - if it's a date string like "2025-01-20", 
+  // add timezone offset to avoid UTC conversion issues
+  const deliveryDate = value ? (() => {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  })() : null;
   
   let status: 'ontime' | 'warning' | 'overdue' | null = null;
   let daysLeft = 0;
