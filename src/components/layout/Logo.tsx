@@ -25,7 +25,7 @@ export function Logo({
   return <div className={cn('flex items-center gap-3', className)}>
       <img alt="GMAD Logo" className={cn('object-contain', sizes[size])} src="/lovable-uploads/90e07f8d-0f0d-44f4-b552-1973a3a1c498.png" />
       {showText && <div>
-          <h1 className={cn("text-foreground font-bold text-base", textSizes[size])}>Central de Compras GMAD Madville | Curitiba</h1>
+          <h1 className={cn("text-foreground font-bold text-sm", textSizes[size])}>Central de Compras GMAD Madville | Curitiba</h1>
           {size !== 'sm' && <p className="text-xs text-muted-foreground font-medium">
               Sistema de Requisições
             </p>}
