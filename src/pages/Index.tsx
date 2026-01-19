@@ -15,7 +15,7 @@ const Index = () => {
           <div className="flex justify-center mb-6">
             <Logo size="xl" showText={false} />
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3 tracking-tight">Central de Requisições de Compras </h1>
+          <h1 className="text-3xl text-foreground mb-3 tracking-tight font-extrabold md:text-4xl">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
           
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">Sistema de controle para suas solicitações de compras corporativas. </p>
         </section>
@@ -34,7 +34,7 @@ const Index = () => {
 
         {/* Footer */}
         <footer className="py-8 text-center border-t mt-8">
-          <p className="text-muted-foreground text-sm">© 2026 GMAD - Sistema de Requisições de Compras</p>
+          <p className="text-muted-foreground text-sm">© 2026 GMAD Madville | Curitiba - Sistema de Requisições de Compras</p>
           <p className="text-muted-foreground text-xs mt-2">
             Versão 2.0 | Suporte:{' '}
             <a href="https://wa.me/5547992189824" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">

@@ -37,11 +37,11 @@ export const ActionCards = () => {
             <FileText className="w-7 h-7 text-white" />
           </div>
           
-          <h3 className="text-2xl font-bold text-white mb-3">
+          <h3 className="font-bold text-white mb-3 text-xl">
             Fazer requisição
           </h3>
           
-          <p className="text-white/80 mb-6 leading-relaxed">
+          <p className="text-white/80 mb-6 leading-relaxed text-sm">
             Solicite materiais, equipamentos ou serviços de forma rápida e organizada.
           </p>
           
