@@ -15,7 +15,7 @@ const Index = () => {
           <div className="flex justify-center mb-6">
             <Logo size="xl" showText={false} />
           </div>
-          <h1 className="text-3xl text-foreground mb-3 tracking-tight font-extrabold md:text-4xl">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
+          <h1 className="text-3xl mb-3 tracking-tight bg-[sidebar-primary-foreground] font-sans md:text-5xl bg-primary-foreground text-primary font-bold text-center py-0">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
           
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">Sistema de controle para suas solicitações de compras corporativas. </p>
         </section>
