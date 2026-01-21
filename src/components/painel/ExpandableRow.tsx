@@ -119,7 +119,7 @@ export function ExpandableRow({
           <td className={cn('px-2', isCompact ? 'py-1' : 'py-1.5')}>
             <div className="min-w-0">
               <p className={cn(
-                'font-medium text-foreground group-hover:text-primary transition-colors truncate',
+                'font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-tight',
                 isCompact ? 'text-xs' : 'text-sm'
               )} title={requisicao.item_nome}>
                 {requisicao.item_nome}
