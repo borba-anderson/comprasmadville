@@ -8,27 +8,27 @@ export const HeroFlowDiagram = () => {
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Linhas de conexão (laranja - #F97316) */}
+        {/* Linhas de conexão (laranja - mais finas) */}
         <path 
           d="M12 12L5.5 5.5M12 12L18.5 5.5M12 12L5.5 18.5M12 12L18.5 18.5M12 12V3M12 12V21" 
           stroke="#F97316" 
-          strokeWidth="2" 
+          strokeWidth="1.5" 
           strokeLinecap="round"
         />
         
-        {/* Nó central (verde - #22915A) */}
+        {/* Nó central (verde - maior) */}
         <rect 
-          x="9" y="9" width="6" height="6" rx="1" 
+          x="8" y="8" width="8" height="8" rx="1.5" 
           fill="#22915A" 
         />
         
-        {/* Nós externos (verde - #22915A) */}
-        <rect x="3" y="3" width="5" height="5" rx="1" fill="#22915A" />
-        <rect x="16" y="3" width="5" height="5" rx="1" fill="#22915A" />
-        <rect x="3" y="16" width="5" height="5" rx="1" fill="#22915A" />
-        <rect x="16" y="16" width="5" height="5" rx="1" fill="#22915A" />
-        <rect x="9.5" y="0" width="5" height="5" rx="1" fill="#22915A" />
-        <rect x="9.5" y="19" width="5" height="5" rx="1" fill="#22915A" />
+        {/* Nós externos (verde - maiores) */}
+        <rect x="1" y="1" width="7" height="7" rx="1.5" fill="#22915A" />
+        <rect x="16" y="1" width="7" height="7" rx="1.5" fill="#22915A" />
+        <rect x="1" y="16" width="7" height="7" rx="1.5" fill="#22915A" />
+        <rect x="16" y="16" width="7" height="7" rx="1.5" fill="#22915A" />
+        <rect x="8.5" y="-1" width="7" height="7" rx="1.5" fill="#22915A" />
+        <rect x="8.5" y="18" width="7" height="7" rx="1.5" fill="#22915A" />
       </svg>
     </div>
   );
