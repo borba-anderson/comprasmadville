@@ -15,6 +15,7 @@ import { LeadTimeAnalysis } from './LeadTimeAnalysis';
 import { ProcessFunnel } from './ProcessFunnel';
 import { EfficiencyKPIs } from './EfficiencyKPIs';
 import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
+import { GastosPorCentroCusto } from './GastosPorCentroCusto';
 
 interface GastosDashboardProps {
   requisicoes: Requisicao[];
@@ -220,11 +221,14 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
         <EconomiaPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownEmpresa} />
       </div>
 
-      {/* Row 4: Gastos por Setor + Evolução */}
+      {/* Row 4: Gastos por Setor + Centro de Custo */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <GastosLineChart requisicoes={filteredRequisicoes} />
         <GastosPorSetorBars requisicoes={filteredRequisicoes} />
+        <GastosPorCentroCusto requisicoes={filteredRequisicoes} />
       </div>
+
+      {/* Row 5: Evolução Temporal */}
+      <GastosLineChart requisicoes={filteredRequisicoes} />
 
       <GastosPorSolicitanteBars requisicoes={filteredRequisicoes} />
       <StatusPainel requisicoes={filteredRequisicoes} />
