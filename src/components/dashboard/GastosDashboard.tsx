@@ -16,6 +16,7 @@ import { ProcessFunnel } from './ProcessFunnel';
 import { EfficiencyKPIs } from './EfficiencyKPIs';
 import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 import { GastosPorCentroCusto } from './GastosPorCentroCusto';
+import { TrendChart } from './TrendChart';
 
 interface GastosDashboardProps {
   requisicoes: Requisicao[];
@@ -202,6 +203,9 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
 
       <AcoesRapidas />
       <HeroKPIs {...kpis} />
+
+      {/* Trend Chart - Full width */}
+      <TrendChart requisicoes={filteredRequisicoes} />
 
       {/* Row 1: Gastos por Empresa + Lead Time */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

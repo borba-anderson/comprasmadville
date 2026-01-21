@@ -15,6 +15,7 @@ export { ProcessFunnel } from './ProcessFunnel';
 export { EfficiencyKPIs } from './EfficiencyKPIs';
 export { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 export { GastosPorCentroCusto } from './GastosPorCentroCusto';
+export { TrendChart } from './TrendChart';
 
 // Legacy exports for compatibility
 export { OverviewCards } from './OverviewCards';
