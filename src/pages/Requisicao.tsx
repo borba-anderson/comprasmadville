@@ -93,6 +93,7 @@ export default function Requisicao() {
         solicitante_email: profile.email || '',
         solicitante_telefone: profile.telefone || '',
         solicitante_setor: profile.setor || '',
+        solicitante_empresa: profile.empresa || '',
       }));
     }
   }, [profile]);

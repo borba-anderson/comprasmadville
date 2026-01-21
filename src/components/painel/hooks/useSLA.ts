@@ -6,16 +6,19 @@ export function useSLA(requisicao: Requisicao): SLAInfo {
   return useMemo(() => {
     const now = new Date();
     
+    // If already received, no need to track SLA
+    const isFinalStatus = ['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status);
+    
     // Days since approval
     let sinceApproval: number | null = null;
-    if (requisicao.aprovado_em) {
+    if (requisicao.aprovado_em && !isFinalStatus) {
       const approvalDate = new Date(requisicao.aprovado_em);
       sinceApproval = Math.floor((now.getTime() - approvalDate.getTime()) / (1000 * 60 * 60 * 24));
     }
 
     // Days since started quoting
     let sinceQuoting: number | null = null;
-    if (requisicao.status === 'cotando' || requisicao.status === 'comprado') {
+    if ((requisicao.status === 'cotando' || requisicao.status === 'comprado') && !isFinalStatus) {
       // Approximate: use approval date as start of quoting
       if (requisicao.aprovado_em) {
         const quotingStart = new Date(requisicao.aprovado_em);
@@ -28,7 +31,8 @@ export function useSLA(requisicao: Requisicao): SLAInfo {
     let isOverdue = false;
     let overdueBy: number | null = null;
     
-    if (requisicao.previsao_entrega) {
+    // Only calculate delivery SLA if not in final status
+    if (requisicao.previsao_entrega && !isFinalStatus) {
       const deliveryDate = new Date(requisicao.previsao_entrega);
       deliveryDate.setHours(23, 59, 59, 999);
       untilDelivery = Math.ceil((deliveryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
