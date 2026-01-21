@@ -88,7 +88,7 @@ export function ExpandableRow({
             isSelected && 'bg-primary/8 ring-1 ring-primary/20',
             !isSelected && 'hover:bg-muted/40',
             isOverdue && 'bg-red-50/60 dark:bg-red-950/30 border-l-[3px] border-l-red-500',
-            isCompact ? 'h-12' : 'h-14'
+            isCompact ? 'h-12' : 'h-20'
           )}
           onClick={onViewDetails}
         >
