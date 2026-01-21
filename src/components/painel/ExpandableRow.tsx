@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ChevronDown, Paperclip, Download, History, FileText, User, Package, AlertTriangle, Building } from 'lucide-react';
-import { Requisicao, STATUS_CONFIG, ValorHistorico } from '@/types';
+import { Requisicao, STATUS_CONFIG, ValorHistorico, getUnidadeSigla } from '@/types';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { DeliveryBadge } from './DeliveryBadge';
@@ -141,16 +141,16 @@ export function ExpandableRow({
             <div className="min-w-0">
               <p className={cn(
                 'font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug',
-                isCompact ? 'text-sm' : 'text-base'
+                isCompact ? 'text-sm' : 'text-[15px]'
               )} title={requisicao.item_nome}>
                 {requisicao.item_nome}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
-                <p className={cn('text-muted-foreground font-mono truncate', isCompact ? 'text-xs' : 'text-sm')}>
+                <p className={cn('text-muted-foreground font-mono truncate', isCompact ? 'text-xs' : 'text-xs')}>
                   {requisicao.protocolo}
                 </p>
                 {empresaShort && (
-                  <span className={cn('px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground whitespace-nowrap', isCompact ? 'text-xs' : 'text-sm')}>
+                  <span className={cn('px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground whitespace-nowrap', isCompact ? 'text-xs' : 'text-xs')}>
                     {empresaShort}
                   </span>
                 )}
@@ -161,19 +161,21 @@ export function ExpandableRow({
           {/* Solicitante */}
           <td className={cn('px-3', isCompact ? 'py-2' : 'py-3')}>
             <div className="min-w-0">
-              <p className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.solicitante_nome}>
+              <p className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-[15px]')} title={requisicao.solicitante_nome}>
                 {requisicao.solicitante_nome}
               </p>
-              <p className={cn('text-muted-foreground truncate', isCompact ? 'text-xs' : 'text-sm')}>{requisicao.solicitante_setor}</p>
+              <p className={cn('text-muted-foreground truncate', isCompact ? 'text-xs' : 'text-xs')}>{requisicao.solicitante_setor}</p>
             </div>
           </td>
 
           {/* Quantidade */}
           <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
-            <span className={cn('font-semibold', isCompact ? 'text-sm' : 'text-base')}>
+            <span className={cn('font-semibold', isCompact ? 'text-sm' : 'text-[15px]')}>
               {requisicao.quantidade}
             </span>
-            <span className={cn('text-muted-foreground ml-1', isCompact ? 'text-xs' : 'text-sm')}>{requisicao.unidade}</span>
+            <span className={cn('text-muted-foreground ml-1', isCompact ? 'text-xs' : 'text-xs')} title={requisicao.unidade}>
+              {getUnidadeSigla(requisicao.unidade)}
+            </span>
           </td>
 
           {/* Prioridade */}
@@ -189,7 +191,7 @@ export function ExpandableRow({
           {/* Comprador */}
           <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
             {requisicao.comprador_nome ? (
-              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.comprador_nome}>{requisicao.comprador_nome}</span>
+              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-[15px]')} title={requisicao.comprador_nome}>{requisicao.comprador_nome}</span>
             ) : (
               <span className={cn('text-muted-foreground', isCompact ? 'text-xs' : 'text-sm')}>—</span>
             )}
@@ -198,7 +200,7 @@ export function ExpandableRow({
           {/* Fornecedor */}
           <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
             {requisicao.fornecedor_nome ? (
-              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.fornecedor_nome}>{requisicao.fornecedor_nome}</span>
+              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-[15px]')} title={requisicao.fornecedor_nome}>{requisicao.fornecedor_nome}</span>
             ) : (
               <span className={cn('text-muted-foreground', isCompact ? 'text-xs' : 'text-sm')}>—</span>
             )}
@@ -216,7 +218,7 @@ export function ExpandableRow({
 
           {/* Valor */}
           <td className={cn('px-3 text-right', isCompact ? 'py-2' : 'py-3')}>
-            <span className={cn('font-semibold tabular-nums', isCompact ? 'text-sm' : 'text-base')}>{formatCurrency(requisicao.valor)}</span>
+            <span className={cn('font-semibold tabular-nums', isCompact ? 'text-sm' : 'text-[15px]')}>{formatCurrency(requisicao.valor)}</span>
           </td>
 
           {/* Data */}

@@ -91,8 +91,8 @@ export const StepItem = ({ formData, errors, onChange, onSelectChange }: StepIte
               </SelectTrigger>
               <SelectContent>
                 {UNIDADES.map((unidade) => (
-                  <SelectItem key={unidade} value={unidade}>
-                    {unidade}
+                  <SelectItem key={unidade.value} value={unidade.value}>
+                    {unidade.label} ({unidade.sigla})
                   </SelectItem>
                 ))}
               </SelectContent>

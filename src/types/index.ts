@@ -194,7 +194,24 @@ export const SETORES = [
   "Uso/Consumo",
 ] as const;
 
-export const UNIDADES = ["unidade", "peça", "kit", "litro", "metro", "kg", "par", "rolo"] as const;
+export const UNIDADES = [
+  { value: "unidade", label: "Unidade", sigla: "un" },
+  { value: "peça", label: "Peça", sigla: "pç" },
+  { value: "kit", label: "Kit", sigla: "kit" },
+  { value: "litro", label: "Litro", sigla: "L" },
+  { value: "metro", label: "Metro", sigla: "m" },
+  { value: "kg", label: "Quilograma", sigla: "kg" },
+  { value: "par", label: "Par", sigla: "par" },
+  { value: "rolo", label: "Rolo", sigla: "rl" },
+  { value: "caixa", label: "Caixa", sigla: "cx" },
+  { value: "pacote", label: "Pacote", sigla: "pct" },
+] as const;
+
+// Helper to get sigla from value
+export const getUnidadeSigla = (value: string): string => {
+  const unidade = UNIDADES.find((u) => u.value === value);
+  return unidade?.sigla || value;
+};
 
 export const MOTIVOS_COMPRA = [
   "Reposição de estoque",
