@@ -25,6 +25,7 @@ export interface Profile {
   telefone?: string;
   setor?: string;
   empresa?: string;
+  gestor_id?: string;
   ativo: boolean;
   created_at: string;
   updated_at: string;
