@@ -36,7 +36,7 @@ const Index = () => {
             
             {/* Lado Direito - Logo GMAD */}
             <div className="flex-shrink-0 animate-fade-in">
-              <Logo size="2xl" showText={false} />
+              <Logo size="3xl" showText={false} />
             </div>
           </div>
           
