@@ -8,7 +8,7 @@ const Index = () => {
   return <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="page-container rounded-2xl shadow">
+      <main className="page-container rounded-none shadow-none">
         {/* Hero Section - Layout lado a lado */}
         <section className="py-10 md:py-16">
           {/* Container flex com título à esquerda e logo à direita */}
@@ -16,12 +16,11 @@ const Index = () => {
             
             {/* Lado Esquerdo - Título e subtítulo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
-              <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-                Central de Requisições
-                <span className="block text-primary">de Compras</span>
+              <h1 className="mb-4 text-4xl md:text-5xl font-bold tracking-tight text-foreground text-left lg:text-5xl pb-0 my-0">CENTRAL DE REQUISIÇÕES
+DE COMPRAS<span className="block text-primary text-left text-6xl">DE COMPRAS</span>
               </h1>
 
-              <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin text-left mx-0 mb-[10px]">
+              <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-[10px] text-left">
                 Gerencie suas solicitações de compras corporativas de forma simples, rápida e eficiente.
               </p>
             </div>

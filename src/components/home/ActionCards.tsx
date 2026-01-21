@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { FileText, Shield, ArrowRight, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
-
 export const ActionCards = () => {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
   const handleRequisicaoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (user) {
@@ -15,7 +15,6 @@ export const ActionCards = () => {
       navigate('/auth?redirect=/requisicao');
     }
   };
-
   const handlePainelClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (user) {
@@ -24,24 +23,16 @@ export const ActionCards = () => {
       navigate('/auth');
     }
   };
-
-  return (
-    <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+  return <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
       {/* Card Primário: Fazer Requisição - Cinza escuro */}
-      <a 
-        href="#" 
-        onClick={handleRequisicaoClick} 
-        className="group relative animate-stagger-1"
-      >
+      <a href="#" onClick={handleRequisicaoClick} className="group relative animate-stagger-1">
         <div className="relative bg-gradient-to-br from-zinc-700 to-zinc-800 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:shadow-zinc-700/30 hover:-translate-y-2 overflow-hidden">
           {/* Ícone com flutuação */}
           <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <FileText className="w-7 h-7 text-white animate-float" />
           </div>
           
-          <h3 className="font-bold text-white mb-3 text-xl">
-            Fazer requisição
-          </h3>
+          <h3 className="font-bold text-white mb-3 text-xl">Fazer Requisição</h3>
           
           <p className="text-white/80 mb-6 leading-relaxed text-sm">
             Solicite materiais, equipamentos ou serviços de forma rápida e organizada.
@@ -55,11 +46,7 @@ export const ActionCards = () => {
       </a>
 
       {/* Card Secundário: Painel Administrativo - Com hover melhorado */}
-      <a 
-        href="#" 
-        onClick={handlePainelClick} 
-        className="group animate-stagger-2"
-      >
+      <a href="#" onClick={handlePainelClick} className="group animate-stagger-2">
         <div className="bg-card rounded-2xl border-2 border-border/60 p-8 h-full transition-all duration-300 hover:border-info/40 hover:shadow-lg hover:shadow-info/10 hover:-translate-y-2">
           <div className="flex items-start justify-between mb-6">
             <div className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center group-hover:bg-info/10 transition-colors">
@@ -71,13 +58,9 @@ export const ActionCards = () => {
             </Badge>
           </div>
           
-          <h3 className="text-xl font-bold text-card-foreground mb-3 group-hover:text-info transition-colors">
-            Painel administrativo
-          </h3>
+          <h3 className="text-xl font-bold text-card-foreground mb-3 group-hover:text-info transition-colors">Painel Administrativo</h3>
           
-          <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-            Acesso exclusivo para equipe de Compras. Gerencie requisições, aprove pedidos e acompanhe indicadores.
-          </p>
+          <p className="text-muted-foreground mb-6 text-sm leading-relaxed">Painel de Controle de pedidos e KPIs. Gerencie as requisições e acompanhe suas solicitações.</p>
           
           <div className="flex items-center text-muted-foreground font-medium group-hover:text-info group-hover:gap-3 transition-all">
             {user ? 'Acessar painel' : 'Entrar como gestor'}
@@ -85,6 +68,5 @@ export const ActionCards = () => {
           </div>
         </div>
       </a>
-    </section>
-  );
+    </section>;
 };
