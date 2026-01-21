@@ -16,6 +16,7 @@ import {
   ClipboardList,
   Clock,
   CheckCircle2,
+  Wallet,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -178,6 +179,7 @@ export function FiltersBar({
     filters.comprador !== 'all' ||
     filters.fornecedor !== 'all' ||
     filters.setor !== 'all' ||
+    filters.centroCusto !== 'all' ||
     filters.prioridade.length > 0 ||
     filters.empresa.length > 0 ||
     filters.dateFrom !== '' ||
@@ -425,6 +427,17 @@ export function FiltersBar({
                 value={filters.fornecedor === 'all' ? '' : filters.fornecedor}
                 onChange={(e) => onFilterChange('fornecedor', e.target.value || 'all')}
                 className="w-[180px] h-9"
+              />
+            </div>
+
+            {/* Centro de Custo Filter */}
+            <div className="flex items-center gap-1">
+              <Wallet className="w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Centro de Custo..."
+                value={filters.centroCusto === 'all' ? '' : filters.centroCusto}
+                onChange={(e) => onFilterChange('centroCusto', e.target.value || 'all')}
+                className="w-[150px] h-9"
               />
             </div>
 

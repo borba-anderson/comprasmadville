@@ -10,6 +10,7 @@ export interface PainelFilters {
   comprador: string;
   fornecedor: string;
   setor: string;
+  centroCusto: string;
   prioridade: string[];
   empresa: string[];
   dateFrom: string;
@@ -46,6 +47,7 @@ export const DEFAULT_FILTERS: PainelFilters = {
   comprador: 'all',
   fornecedor: 'all',
   setor: 'all',
+  centroCusto: 'all',
   prioridade: [],
   empresa: [],
   dateFrom: '',
