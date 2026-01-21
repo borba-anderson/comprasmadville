@@ -2,14 +2,15 @@ import { cn } from '@/lib/utils';
 import gmadLogo from '@/assets/gmad-logo.png';
 interface LogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   showText?: boolean;
 }
 const sizes = {
   sm: 'w-10 h-10',
   md: 'w-14 h-14',
   lg: 'w-20 h-20',
-  xl: 'w-28 h-28'
+  xl: 'w-28 h-28',
+  '2xl': 'w-36 h-36'
 };
 const textSizes = {
   sm: 'text-lg',
