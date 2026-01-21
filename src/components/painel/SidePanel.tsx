@@ -27,6 +27,7 @@ interface SidePanelProps {
   onUpdate: () => void;
   profileNome?: string;
   profileId?: string;
+  readOnly?: boolean;
 }
 
 export function SidePanel({
@@ -36,6 +37,7 @@ export function SidePanel({
   onUpdate,
   profileNome,
   profileId,
+  readOnly = false,
 }: SidePanelProps) {
   const [valorInput, setValorInput] = useState('');
   const [valorOrcadoInput, setValorOrcadoInput] = useState('');
@@ -640,10 +642,10 @@ Qualquer dúvida, estamos à disposição!`;
 
         <ScrollArea className="flex-1">
           <div className="p-6 space-y-6">
-            {/* Timeline */}
+            {/* Timeline - disable revert for read-only */}
             <RequisicaoTimeline 
               requisicao={requisicao} 
-              onRevertStatus={updateStatus}
+              onRevertStatus={readOnly ? undefined : updateStatus}
               isUpdating={isUpdating}
             />
 
@@ -690,21 +692,23 @@ Qualquer dúvida, estamos à disposição!`;
                   </p>
                 )}
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
-                  <Mail className="w-4 h-4" />
-                  Enviar e-mail
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="gap-2 text-green-600 border-green-600 hover:bg-green-50 hover:text-green-700" 
-                  onClick={sendWhatsAppToSolicitante}
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  WhatsApp
-                </Button>
-              </div>
+              {!readOnly && (
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
+                    <Mail className="w-4 h-4" />
+                    Enviar e-mail
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="gap-2 text-green-600 border-green-600 hover:bg-green-50 hover:text-green-700" 
+                    onClick={sendWhatsAppToSolicitante}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    WhatsApp
+                  </Button>
+                </div>
+              )}
             </div>
 
             <Separator />
@@ -781,8 +785,18 @@ Qualquer dúvida, estamos à disposição!`;
 
             <Separator />
 
-            {/* Observação do Comprador */}
-            {!['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+            {/* Observação do comprador - read-only display or editable */}
+            {requisicao.observacao_comprador && readOnly && (
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground uppercase flex items-center gap-1.5">
+                  <StickyNote className="w-4 h-4" />
+                  Observação do Comprador
+                </Label>
+                <p className="text-sm bg-muted/50 rounded-lg p-3">{requisicao.observacao_comprador}</p>
+              </div>
+            )}
+
+            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
               <div className="space-y-2">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <StickyNote className="w-4 h-4" />
@@ -807,8 +821,8 @@ Qualquer dúvida, estamos à disposição!`;
 
             <Separator />
 
-            {/* Comprador, Fornecedor & Previsão */}
-            {!['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+            {/* Comprador, Fornecedor & Previsão - only for staff */}
+            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <BuyerSelector
@@ -827,8 +841,56 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {/* Valores */}
-            {canEditValor(requisicao.status) && (
+            {/* Read-only view of comprador/fornecedor/previsao */}
+            {readOnly && (requisicao.comprador_nome || requisicao.fornecedor_nome || requisicao.previsao_entrega) && (
+              <div className="space-y-3">
+                {requisicao.comprador_nome && (
+                  <div>
+                    <Label className="text-xs text-muted-foreground uppercase">Comprador</Label>
+                    <p className="font-medium">{requisicao.comprador_nome}</p>
+                  </div>
+                )}
+                {requisicao.fornecedor_nome && (
+                  <div>
+                    <Label className="text-xs text-muted-foreground uppercase">Fornecedor</Label>
+                    <p className="font-medium">{requisicao.fornecedor_nome}</p>
+                  </div>
+                )}
+                {requisicao.previsao_entrega && (
+                  <div>
+                    <Label className="text-xs text-muted-foreground uppercase">Previsão de Entrega</Label>
+                    <p className="font-medium">{new Date(requisicao.previsao_entrega + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Valores - read-only for solicitantes */}
+            {readOnly && (requisicao.valor || requisicao.valor_orcado) && (
+              <div className="space-y-3 pt-4 border-t">
+                <Label className="text-sm font-semibold flex items-center gap-2">
+                  <DollarSign className="w-4 h-4" />
+                  Valores
+                </Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {requisicao.valor_orcado && (
+                    <div>
+                      <Label className="text-xs text-muted-foreground uppercase">Valor Orçado</Label>
+                      <p className="font-semibold">{formatCurrency(requisicao.valor_orcado)}</p>
+                    </div>
+                  )}
+                  {requisicao.valor && (
+                    <div>
+                      <Label className="text-xs text-muted-foreground uppercase">Valor Final</Label>
+                      <p className="font-semibold">{formatCurrency(requisicao.valor)}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Valores - editable for staff */}
+            {!readOnly && canEditValor(requisicao.status) && (
               <div className="space-y-4 pt-4 border-t">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <DollarSign className="w-4 h-4" />
@@ -987,8 +1049,8 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {/* Rejeição */}
-            {requisicao.status === 'pendente' && (
+            {/* Rejeição - only for staff */}
+            {!readOnly && requisicao.status === 'pendente' && (
               <div className="space-y-2 pt-4 border-t">
                 <Label className="text-sm font-medium">Motivo da Rejeição (se aplicável)</Label>
                 <Textarea
@@ -1002,85 +1064,87 @@ Qualquer dúvida, estamos à disposição!`;
           </div>
         </ScrollArea>
 
-        {/* Actions Footer */}
-        <div className="p-4 border-t bg-muted/30 space-y-2">
-          {requisicao.status === 'pendente' && (
-            <div className="flex gap-2">
-              <Button
-                className="flex-1"
-                variant="success"
-                onClick={() => updateStatus('aprovado')}
-                disabled={isUpdating}
-              >
+        {/* Actions Footer - only for staff */}
+        {!readOnly && (
+          <div className="p-4 border-t bg-muted/30 space-y-2">
+            {requisicao.status === 'pendente' && (
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1"
+                  variant="success"
+                  onClick={() => updateStatus('aprovado')}
+                  disabled={isUpdating}
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Aprovar
+                </Button>
+                <Button
+                  className="flex-1"
+                  variant="destructive"
+                  onClick={() => {
+                    if (!motivoRejeicao.trim()) {
+                      toast({ title: 'Informe o motivo da rejeição', variant: 'destructive' });
+                      return;
+                    }
+                    updateStatus('rejeitado', motivoRejeicao);
+                  }}
+                  disabled={isUpdating}
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Rejeitar
+                </Button>
+              </div>
+            )}
+
+            {requisicao.status === 'aprovado' && (
+              <Button className="w-full" onClick={() => updateStatus('cotando')} disabled={isUpdating}>
+                <Package className="w-4 h-4 mr-2" />
+                Iniciar Cotação
+              </Button>
+            )}
+
+            {requisicao.status === 'cotando' && (
+              <Button className="w-full" variant="success" onClick={() => updateStatus('comprado')} disabled={isUpdating}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Marcar como Comprado
+              </Button>
+            )}
+
+            {requisicao.status === 'comprado' && (
+              <Button className="w-full" onClick={() => updateStatus('em_entrega')} disabled={isUpdating}>
+                <Truck className="w-4 h-4 mr-2" />
+                Marcar em Entrega
+              </Button>
+            )}
+
+            {requisicao.status === 'em_entrega' && (
+              <Button className="w-full" variant="success" onClick={() => updateStatus('recebido')} disabled={isUpdating}>
                 <CheckCircle className="w-4 h-4 mr-2" />
-                Aprovar
+                Confirmar Entrega
               </Button>
-              <Button
-                className="flex-1"
-                variant="destructive"
-                onClick={() => {
-                  if (!motivoRejeicao.trim()) {
-                    toast({ title: 'Informe o motivo da rejeição', variant: 'destructive' });
-                    return;
-                  }
-                  updateStatus('rejeitado', motivoRejeicao);
-                }}
-                disabled={isUpdating}
-              >
-                <XCircle className="w-4 h-4 mr-2" />
-                Rejeitar
-              </Button>
-            </div>
-          )}
+            )}
 
-          {requisicao.status === 'aprovado' && (
-            <Button className="w-full" onClick={() => updateStatus('cotando')} disabled={isUpdating}>
-              <Package className="w-4 h-4 mr-2" />
-              Iniciar Cotação
-            </Button>
-          )}
+            {/* Ação de Cancelar - disponível em todos os status exceto recebido, rejeitado e cancelado */}
+            {!['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+              <div className="pt-2 border-t mt-2">
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={cancelRequisicao}
+                  disabled={isCanceling}
+                >
+                  {isCanceling ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Ban className="w-4 h-4 mr-2" />
+                  )}
+                  Cancelar Requisição
+                </Button>
+              </div>
+            )}
 
-          {requisicao.status === 'cotando' && (
-            <Button className="w-full" variant="success" onClick={() => updateStatus('comprado')} disabled={isUpdating}>
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Marcar como Comprado
-            </Button>
-          )}
-
-          {requisicao.status === 'comprado' && (
-            <Button className="w-full" onClick={() => updateStatus('em_entrega')} disabled={isUpdating}>
-              <Truck className="w-4 h-4 mr-2" />
-              Marcar em Entrega
-            </Button>
-          )}
-
-          {requisicao.status === 'em_entrega' && (
-            <Button className="w-full" variant="success" onClick={() => updateStatus('recebido')} disabled={isUpdating}>
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Confirmar Entrega
-            </Button>
-          )}
-
-          {/* Ação de Cancelar - disponível em todos os status exceto recebido, rejeitado e cancelado */}
-          {!['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
-            <div className="pt-2 border-t mt-2">
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={cancelRequisicao}
-                disabled={isCanceling}
-              >
-                {isCanceling ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Ban className="w-4 h-4 mr-2" />
-                )}
-                Cancelar Requisição
-              </Button>
-            </div>
-          )}
-
-        </div>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

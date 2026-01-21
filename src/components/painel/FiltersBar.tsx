@@ -71,6 +71,7 @@ interface FiltersBarProps {
   totalCount: number;
   onQuickView: (viewId: string) => void;
   exportRequisicoes?: Requisicao[];
+  readOnly?: boolean;
 }
 
 // Multi-select dropdown component
@@ -172,6 +173,7 @@ export function FiltersBar({
   totalCount,
   onQuickView,
   exportRequisicoes,
+  readOnly = false,
 }: FiltersBarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -226,34 +228,49 @@ export function FiltersBar({
   return (
     <div className="sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b">
       <div className="p-3 space-y-3">
-        {/* Quick View Buttons */}
-        <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
-          <span className="text-xs font-medium text-muted-foreground mr-2">Visões rápidas:</span>
-          {quickViewButtons.map((btn) => {
-            const view = QUICK_VIEWS[btn.id as keyof typeof QUICK_VIEWS];
-            const isActive = filters.quickView === btn.id;
-            return (
-              <Button
-                key={btn.id}
-                variant={isActive ? 'default' : 'outline'}
-                size="sm"
-                className={cn('gap-1.5 h-8', isActive && 'shadow-md')}
-                onClick={() => onQuickView(isActive ? '' : btn.id)}
-              >
-                <btn.icon className={cn('w-3.5 h-3.5', !isActive && btn.color)} />
-                {view.label}
-              </Button>
-            );
-          })}
-          
-          <div className="flex-1" />
-          
-          {/* Result count */}
-          <span className="text-sm font-medium">
-            <span className="text-primary">{resultCount}</span>
-            <span className="text-muted-foreground"> de {totalCount}</span>
-          </span>
-        </div>
+        {/* Quick View Buttons - only for staff */}
+        {!readOnly && (
+          <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
+            <span className="text-xs font-medium text-muted-foreground mr-2">Visões rápidas:</span>
+            {quickViewButtons.map((btn) => {
+              const view = QUICK_VIEWS[btn.id as keyof typeof QUICK_VIEWS];
+              const isActive = filters.quickView === btn.id;
+              return (
+                <Button
+                  key={btn.id}
+                  variant={isActive ? 'default' : 'outline'}
+                  size="sm"
+                  className={cn('gap-1.5 h-8', isActive && 'shadow-md')}
+                  onClick={() => onQuickView(isActive ? '' : btn.id)}
+                >
+                  <btn.icon className={cn('w-3.5 h-3.5', !isActive && btn.color)} />
+                  {view.label}
+                </Button>
+              );
+            })}
+            
+            <div className="flex-1" />
+            
+            {/* Result count */}
+            <span className="text-sm font-medium">
+              <span className="text-primary">{resultCount}</span>
+              <span className="text-muted-foreground"> de {totalCount}</span>
+            </span>
+          </div>
+        )}
+
+        {/* Read-only header for solicitantes */}
+        {readOnly && (
+          <div className="flex items-center justify-between pb-2 border-b">
+            <span className="text-sm font-medium text-muted-foreground">
+              Acompanhe o status das suas requisições
+            </span>
+            <span className="text-sm font-medium">
+              <span className="text-primary">{resultCount}</span>
+              <span className="text-muted-foreground"> requisições</span>
+            </span>
+          </div>
+        )}
 
         {/* Primary Filters Row */}
         <div className="flex flex-wrap items-center gap-2">
@@ -305,21 +322,23 @@ export function FiltersBar({
             )}
           />
 
-          {/* Comprador Filter */}
-          <Select 
-            value={filters.comprador} 
-            onValueChange={(value) => onFilterChange('comprador', value)}
-          >
-            <SelectTrigger className="w-[130px] h-9">
-              <SelectValue placeholder="Comprador" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              {COMPRADORES.map((c) => (
-                <SelectItem key={c.id} value={c.nome}>{c.nome}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {/* Comprador Filter - only for staff */}
+          {!readOnly && (
+            <Select 
+              value={filters.comprador} 
+              onValueChange={(value) => onFilterChange('comprador', value)}
+            >
+              <SelectTrigger className="w-[130px] h-9">
+                <SelectValue placeholder="Comprador" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {COMPRADORES.map((c) => (
+                  <SelectItem key={c.id} value={c.nome}>{c.nome}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
 
           {/* Advanced Filters Toggle */}
           <Button
