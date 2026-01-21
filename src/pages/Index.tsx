@@ -1,7 +1,6 @@
 import { Header } from '@/components/layout/Header';
-import { Logo } from '@/components/layout/Logo';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserGreeting, QuickStats, ActionCards, LogoMarquee, WorkflowTimeline } from '@/components/home';
+import { UserGreeting, QuickStats, ActionCards, LogoMarquee, WorkflowTimeline, HeroFlowDiagram } from '@/components/home';
 const Index = () => {
   const {
     user
@@ -27,9 +26,9 @@ const Index = () => {
               </p>
             </div>
             
-        {/* Lado Direito - Logo GMAD */}
+    {/* Lado Direito - Fluxo Visual */}
             <div className="flex-shrink-0 animate-fade-in flex items-center justify-center">
-              <Logo size="3xl" showText={false} />
+              <HeroFlowDiagram />
             </div>
           </div>
           
