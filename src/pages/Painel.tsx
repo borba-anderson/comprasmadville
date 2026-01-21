@@ -206,6 +206,7 @@ export default function Painel() {
                 resultCount={filteredRequisicoes.length}
                 totalCount={requisicoes.length}
                 onQuickView={applyQuickView}
+                exportRequisicoes={sortedRequisicoes}
               />
 
               <RequisicaoTable
