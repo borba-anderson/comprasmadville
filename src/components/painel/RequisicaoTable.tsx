@@ -105,81 +105,81 @@ export function RequisicaoTable({
         <TableHeader>
           <TableRow className={cn(
             'bg-muted/50 hover:bg-muted/50 border-b-2 border-border/80',
-            isCompact ? 'text-[11px]' : 'text-xs'
+            isCompact ? 'text-xs' : 'text-sm'
           )}>
-            <TableHead className="w-9 px-1" />
+            <TableHead className="w-10 px-2" />
             <SortableHeader 
               field="item_nome" 
               label="Item" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="w-[180px] !justify-start"
+              className="w-[220px] !justify-start"
             />
             <SortableHeader 
               field="solicitante_nome" 
               label="Solicitante" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="w-[130px] !justify-start"
+              className="w-[150px] !justify-start"
             />
             <SortableHeader 
               field="quantidade" 
               label="Qtd" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-16"
+              className="text-center w-20"
             />
             <SortableHeader 
               field="prioridade" 
               label="Prioridade" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-20"
+              className="text-center w-24"
             />
             <SortableHeader 
               field="status" 
               label="Status" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-24"
+              className="text-center w-28"
             />
             <SortableHeader 
               field="comprador_nome" 
               label="Comprador" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-20"
+              className="text-center w-24"
             />
             <SortableHeader 
               field="fornecedor_nome" 
               label="Fornecedor" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-24"
+              className="text-center w-28"
             />
             <SortableHeader 
               field="previsao_entrega" 
               label="Previsão" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-20"
+              className="text-center w-24"
             />
-            <TableHead className="text-center w-16 font-semibold text-foreground/80">SLA</TableHead>
+            <TableHead className="text-center w-20 font-semibold text-foreground/80">SLA</TableHead>
             <SortableHeader 
               field="valor" 
               label="Valor" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-right w-24"
+              className="text-right w-28"
             />
             <SortableHeader 
               field="created_at" 
               label="Data" 
               sortConfig={sortConfig} 
               onSort={onSort}
-              className="text-center w-20"
+              className="text-center w-24"
             />
-            <TableHead className="text-right w-12 font-semibold text-foreground/80">Ações</TableHead>
+            <TableHead className="text-right w-14 font-semibold text-foreground/80">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="text-sm">
