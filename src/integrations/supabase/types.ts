@@ -111,6 +111,7 @@ export type Database = {
           created_at: string | null
           email: string
           empresa: string | null
+          gestor_id: string | null
           id: string
           nome: string
           setor: string | null
@@ -123,6 +124,7 @@ export type Database = {
           created_at?: string | null
           email: string
           empresa?: string | null
+          gestor_id?: string | null
           id?: string
           nome: string
           setor?: string | null
@@ -135,13 +137,22 @@ export type Database = {
           created_at?: string | null
           email?: string
           empresa?: string | null
+          gestor_id?: string | null
           id?: string
           nome?: string
           setor?: string | null
           telefone?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_gestor_id_fkey"
+            columns: ["gestor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       requisicoes: {
         Row: {
@@ -338,6 +349,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_view_requisicao: { Args: { req_email: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
