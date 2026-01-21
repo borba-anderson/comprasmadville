@@ -24,12 +24,20 @@ const Index = () => {
             <Logo size="2xl" showText={false} />
           </div>
           
-          <h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-sans text-white font-bold bg-zinc-800 rounded-lg shadow-lg animate-fade-in">
-            CENTRAL DE REQUISIÇÕES DE COMPRAS
+          {/* Badge/Pill no topo */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-primary/10 border border-primary/20 rounded-full animate-fade-in">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+            <span className="text-sm font-medium text-primary">Sistema Corporativo GMAD</span>
+          </div>
+
+          {/* Título principal - estilo limpo */}
+          <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground animate-fade-in">
+            Central de Requisições
+            <span className="block text-primary">de Compras.</span>
           </h1>
-          
-          <p className="text-muted-foreground max-w-xl mx-auto text-sm animate-stagger-1">
-            Sistema de controle para suas solicitações de compras corporativas.
+
+          <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg animate-stagger-1">
+            Gerencie suas solicitações de compras corporativas de forma simples, rápida e eficiente.
           </p>
           
           {/* Logo Marquee - Única faixa */}
