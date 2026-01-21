@@ -1,94 +1,159 @@
 
 
-# Plano de Ajuste Visual do Hero Section
+# Plano: Fluxo Visual Não-Linear com Setas Curvas
 
-## Problema Identificado
-A logo GMAD à direita está desproporcional em relação ao título grande, e o espaçamento da seção pode ser otimizado.
+## Objetivo
+Criar um diagrama de fluxo com layout orgânico no hero section, usando **ícone de equipe (Users)** para "Central" e setas curvas conectando os elementos.
 
 ---
 
-## Alterações Propostas
+## Novo Componente: `HeroFlowDiagram.tsx`
 
-### 1. Aumentar o Tamanho da Logo GMAD
-
-**Arquivo:** `src/components/layout/Logo.tsx`
-
-Adicionar um novo tamanho `3xl` para a logo:
+**Arquivo:** `src/components/home/HeroFlowDiagram.tsx`
 
 ```tsx
-const sizes = {
-  sm: 'w-10 h-10',
-  md: 'w-14 h-14',
-  lg: 'w-20 h-20',
-  xl: 'w-28 h-28',
-  '2xl': 'w-36 h-36',
-  '3xl': 'w-48 h-48'  // Novo: 192px
+import { Building, Users, Package } from 'lucide-react';
+
+// Componente de seta curva customizada
+const CurvedArrow = ({ direction = 'down' }: { direction?: 'down' | 'up' }) => (
+  <svg 
+    width="40" 
+    height="50" 
+    viewBox="0 0 40 50" 
+    className="text-primary/60 flex-shrink-0"
+  >
+    <path
+      d={direction === 'down' 
+        ? "M5 5 Q20 25, 35 45" 
+        : "M5 45 Q20 25, 35 5"
+      }
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      markerEnd="url(#arrowhead)"
+    />
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+        refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="currentColor" />
+      </marker>
+    </defs>
+  </svg>
+);
+
+export const HeroFlowDiagram = () => {
+  return (
+    <div className="flex items-center gap-2 md:gap-3">
+      {/* Circulo 1: Estabelecimento */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-zinc-800 border-2 border-primary/30 flex items-center justify-center shadow-lg">
+          <Building className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+        </div>
+        <span className="text-xs text-muted-foreground font-medium">Estabelecimento</span>
+      </div>
+      
+      {/* Seta Curva 1 (para baixo) */}
+      <CurvedArrow direction="down" />
+      
+      {/* Circulo 2: Central (equipe, maior, destaque) */}
+      <div className="flex flex-col items-center gap-2 -mt-4 md:-mt-6">
+        <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-zinc-800 border-2 border-primary flex items-center justify-center shadow-xl">
+          <Users className="w-10 h-10 md:w-14 md:h-14 text-primary" />
+        </div>
+        <span className="text-xs text-primary font-semibold">Central</span>
+      </div>
+      
+      {/* Seta Curva 2 (para cima) */}
+      <CurvedArrow direction="up" />
+      
+      {/* Circulo 3: Compra */}
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-zinc-800 border-2 border-primary/30 flex items-center justify-center shadow-lg">
+          <Package className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+        </div>
+        <span className="text-xs text-muted-foreground font-medium">Compra</span>
+      </div>
+    </div>
+  );
 };
 ```
 
-E atualizar o type:
-```tsx
-size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-```
-
 ---
 
-### 2. Usar o Novo Tamanho no Hero
-
-**Arquivo:** `src/pages/Index.tsx`
-
-**De (linha 39):**
-```tsx
-<Logo size="2xl" showText={false} />
-```
-
-**Para:**
-```tsx
-<Logo size="3xl" showText={false} />
-```
-
----
-
-### 3. Melhorar o Espaçamento do Logo Marquee
-
-**Arquivo:** `src/components/home/LogoMarquee.tsx`
-
-**De (linha 16):**
-```tsx
-<div className="w-full overflow-hidden py-8">
-```
-
-**Para:**
-```tsx
-<div className="w-full overflow-hidden py-6 mt-8 border-t border-border/30">
-```
-
-Isso adiciona uma linha divisória sutil e melhora a separação visual.
-
----
-
-## Resultado Visual Esperado
+## Layout Visual
 
 ```text
-+------------------------------------------------------------+
-|                                                            |
-|  Central de Requisições              [LOGO GMAD]           |
-|  de Compras.                             MAIOR             |
-|                                          (192px)           |
-|  Gerencie suas solicitações...                             |
-|                                                            |
-|  --------------------------------------------------------  |  <- linha sutil
-|  [====== logos rolando ======]                             |
-+------------------------------------------------------------+
+     [Building]                    [Package]
+    Estabelecimento                 Compra
+              ↘                    ↗
+                   [Users]
+                   Central
 ```
+
+O circulo central fica deslocado para baixo (`-mt-4`) criando um efeito de "onda" organico.
 
 ---
 
-## Arquivos a Modificar
+## Alteracoes Necessarias
 
-| Arquivo | Alteração |
-|---------|-----------|
-| `src/components/layout/Logo.tsx` | Adicionar tamanho `3xl` (192px) |
-| `src/pages/Index.tsx` | Usar `size="3xl"` na logo do hero |
-| `src/components/home/LogoMarquee.tsx` | Adicionar borda superior sutil e ajustar espaçamento |
+### 1. Criar o componente
+**Arquivo:** `src/components/home/HeroFlowDiagram.tsx`
+- Criar novo arquivo com o codigo acima
+
+### 2. Adicionar export
+**Arquivo:** `src/components/home/index.ts`
+
+Adicionar linha:
+```tsx
+export { HeroFlowDiagram } from './HeroFlowDiagram';
+```
+
+### 3. Usar no Hero
+**Arquivo:** `src/pages/Index.tsx`
+
+**Importar** (linha 5):
+```tsx
+import { UserGreeting, QuickStats, ActionCards, LogoMarquee, WorkflowTimeline, HeroFlowDiagram } from '@/components/home';
+```
+
+**Substituir** (linhas 30-33):
+De:
+```tsx
+{/* Lado Direito - Logo GMAD */}
+<div className="flex-shrink-0 animate-fade-in flex items-center justify-center">
+  <Logo size="3xl" showText={false} />
+</div>
+```
+
+Para:
+```tsx
+{/* Lado Direito - Fluxo Visual */}
+<div className="flex-shrink-0 animate-fade-in flex items-center justify-center">
+  <HeroFlowDiagram />
+</div>
+```
+
+**Remover import do Logo** (linha 2) se nao for mais usado na pagina.
+
+---
+
+## Resumo dos Arquivos
+
+| Arquivo | Acao |
+|---------|------|
+| `src/components/home/HeroFlowDiagram.tsx` | Criar novo |
+| `src/components/home/index.ts` | Adicionar export |
+| `src/pages/Index.tsx` | Substituir Logo pelo HeroFlowDiagram |
+
+---
+
+## Especificacoes Visuais
+
+| Elemento | Icone | Tamanho | Estilo |
+|----------|-------|---------|--------|
+| Estabelecimento | `Building` | 64-80px | Borda sutil (primary/30) |
+| Central | `Users` | 80-112px | Borda solida + sombra XL |
+| Compra | `Package` | 64-80px | Borda sutil (primary/30) |
+| Setas | SVG Bezier | 40x50px | Curvas organicas |
 
