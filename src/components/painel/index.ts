@@ -7,6 +7,7 @@ export * from './SLAIndicator';
 export * from './QuickActionsMenu';
 export * from './ExpandableRow';
 export * from './PaginationControls';
+export * from './ExportButton';
 export * from './hooks/usePainelFilters';
 export * from './hooks/useSLA';
 export * from './hooks/useSorting';

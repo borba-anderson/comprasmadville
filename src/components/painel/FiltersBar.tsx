@@ -49,8 +49,10 @@ import {
   PRIORIDADE_CONFIG,
   EMPRESAS,
   QUICK_VIEWS,
+  Requisicao,
 } from '@/types';
 import { PainelFilters, SavedFilter, ViewMode, DEFAULT_FILTERS } from './types';
+import { ExportButton } from './ExportButton';
 import { cn } from '@/lib/utils';
 
 interface FiltersBarProps {
@@ -68,6 +70,7 @@ interface FiltersBarProps {
   resultCount: number;
   totalCount: number;
   onQuickView: (viewId: string) => void;
+  exportRequisicoes?: Requisicao[];
 }
 
 // Multi-select dropdown component
@@ -168,6 +171,7 @@ export function FiltersBar({
   resultCount,
   totalCount,
   onQuickView,
+  exportRequisicoes,
 }: FiltersBarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -389,6 +393,11 @@ export function FiltersBar({
               <LayoutGrid className="w-4 h-4" />
             </Button>
           </div>
+
+          {/* Export Button */}
+          {exportRequisicoes && (
+            <ExportButton requisicoes={exportRequisicoes} disabled={isRefreshing} />
+          )}
 
           {/* Refresh */}
           <Button
