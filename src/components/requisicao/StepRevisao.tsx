@@ -11,7 +11,8 @@ import {
   AlertTriangle,
   Paperclip,
   Edit3,
-  CheckCircle2
+  CheckCircle2,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RequisicaoPrioridade } from '@/types';
@@ -24,6 +25,7 @@ interface StepRevisaoProps {
     solicitante_telefone: string;
     solicitante_setor: string;
     solicitante_empresa: string;
+    centro_custo: string;
     item_nome: string;
     quantidade: number;
     unidade: string;
@@ -106,6 +108,13 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
             <span className="text-muted-foreground">Setor:</span>
             <span className="font-medium">{formData.solicitante_setor}</span>
           </div>
+          {formData.centro_custo && (
+            <div className="flex items-center gap-2">
+              <Wallet className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Centro de Custo:</span>
+              <span className="font-medium">{formData.centro_custo}</span>
+            </div>
+          )}
         </div>
       </div>
 
