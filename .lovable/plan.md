@@ -1,93 +1,97 @@
 
 
-# Plano de Ajustes Visuais - Logo e Titulo Principal
+# Plano de Ajuste do Título Principal
 
 ## Objetivo
-Aumentar a logo GMAD principal, diminuir as logos do marquee, e destacar o titulo "CENTRAL DE REQUISICOES DE COMPRAS" com um visual mais impactante (sem badge).
+Colocar o título "CENTRAL DE REQUISIÇÕES DE COMPRAS" em uma única linha, com fonte diferenciada e fundo em destaque.
 
 ---
 
-## 1. Aumentar Logo GMAD Principal
+## Alterações no Arquivo: `src/pages/Index.tsx`
 
-### Arquivo: `src/components/layout/Logo.tsx`
-
-**Alteracao:**
-Adicionar um novo tamanho `2xl` maior para a hero section:
-
-```typescript
-const sizes = {
-  sm: 'w-10 h-10',
-  md: 'w-14 h-14',
-  lg: 'w-20 h-20',
-  xl: 'w-28 h-28',
-  '2xl': 'w-36 h-36'  // 144px - novo tamanho
-};
-```
-
-### Arquivo: `src/pages/Index.tsx`
-
-**Alteracao:**
-- DE: `<Logo size="lg" showText={false} />`
-- PARA: `<Logo size="2xl" showText={false} />`
-
----
-
-## 2. Diminuir Logos do Marquee
-
-### Arquivo: `src/components/home/LogoMarquee.tsx`
-
-**Alteracoes:**
-- Altura das logos: DE `h-16 md:h-24` PARA `h-10 md:h-14` (40px mobile, 56px desktop)
-- Espacamento: DE `mx-12` PARA `mx-8`
-
----
-
-## 3. Destacar Titulo Principal (Sem Badge)
-
-### Arquivo: `src/pages/Index.tsx`
-
-**Novo codigo do titulo:**
+### De (linhas 27-30):
 ```tsx
 <h1 className="text-4xl md:text-5xl mb-4 tracking-tight font-sans text-foreground font-extrabold drop-shadow-sm animate-fade-in">
-  CENTRAL DE REQUISICOES
+  CENTRAL DE REQUISIÇÕES
   <span className="block text-primary">DE COMPRAS</span>
 </h1>
 ```
 
-**Caracteristicas:**
-- Titulo em duas linhas para mais impacto
-- "CENTRAL DE REQUISICOES" em cor padrao (foreground)
-- "DE COMPRAS" destacado na cor primaria (laranja)
-- Fonte extra bold com sombra sutil
-- Tamanho maior (text-5xl no desktop)
+### Para:
+```tsx
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif uppercase text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in">
+  Central de Requisições de Compras
+</h1>
+```
 
 ---
 
-## 4. Resumo das Alteracoes
+## Características do Novo Design
 
-| Arquivo | Alteracao |
-|---------|-----------|
-| `src/components/layout/Logo.tsx` | Adicionar tamanho `2xl` (w-36 h-36) |
-| `src/pages/Index.tsx` | Usar `size="2xl"` na logo + titulo em duas linhas com destaque |
-| `src/components/home/LogoMarquee.tsx` | Diminuir logos para `h-10 md:h-14` |
+| Elemento | Descrição |
+|----------|-----------|
+| **Linha única** | Todo o texto em uma linha, com tamanho responsivo |
+| **Fonte serif** | Usa a fonte Lora (font-serif) para visual mais elegante |
+| **Fundo gradiente** | Gradiente laranja (from-primary to-orange-600) |
+| **Padding interno** | px-6 py-3 cria o efeito de "caixa" |
+| **Bordas arredondadas** | rounded-lg para cantos suaves |
+| **Sombra** | shadow-lg para dar profundidade |
+| **Texto branco** | Contraste alto sobre o fundo laranja |
 
 ---
 
-## 5. Resultado Visual Esperado
+## Alternativas de Estilo
+
+### Opção A - Fundo Sólido (Recomendada):
+```tsx
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-white font-bold bg-primary rounded-lg shadow-lg animate-fade-in">
+  Central de Requisições de Compras
+</h1>
+```
+
+### Opção B - Fundo Escuro com Borda:
+```tsx
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-primary font-bold bg-zinc-800 border-2 border-primary rounded-lg shadow-lg animate-fade-in">
+  Central de Requisições de Compras
+</h1>
+```
+
+### Opção C - Fundo com Blur (Glassmorphism):
+```tsx
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-foreground font-bold bg-white/80 backdrop-blur-sm border border-primary/30 rounded-lg shadow-lg animate-fade-in">
+  Central de Requisições de Compras
+</h1>
+```
+
+---
+
+## Resultado Visual Esperado
 
 ```text
 +------------------------------------------+
 |                                          |
-|         [LOGO GMAD GRANDE - 144px]       |
+|         [LOGO GMAD GRANDE]               |
 |                                          |
-|        CENTRAL DE REQUISICOES            |
-|             DE COMPRAS                   |
-|         (destaque em laranja)            |
+|  +------------------------------------+  |
+|  | Central de Requisições de Compras |  |
+|  +------------------------------------+  |
+|     (fundo laranja com sombra)           |
 |                                          |
 |   Sistema de controle...                 |
 |                                          |
-|   [logos pequenas rolando - 56px]        |
-|                                          |
+|   [logos pequenas rolando]               |
 +------------------------------------------+
 ```
+
+---
+
+## Resumo
+
+| Item | Alteração |
+|------|-----------|
+| Arquivo | `src/pages/Index.tsx` (linhas 27-30) |
+| Título | Uma linha única |
+| Fonte | font-serif (Lora) - mais elegante |
+| Fundo | Gradiente laranja com cantos arredondados |
+| Texto | Branco para contraste |
 
