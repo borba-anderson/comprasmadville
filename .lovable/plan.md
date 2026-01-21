@@ -1,124 +1,93 @@
 
 
-# Plano de Ajustes Visuais - Tela Inicial
+# Plano de Ajustes Visuais - Logo e Titulo Principal
 
-## Resumo das Alteracoes
-
-Ajustes pontuais na tela inicial para corrigir o visual conforme solicitado.
+## Objetivo
+Aumentar a logo GMAD principal, diminuir as logos do marquee, e destacar o titulo "CENTRAL DE REQUISICOES DE COMPRAS" com um visual mais impactante (sem badge).
 
 ---
 
-## 1. Adicionar Logo GMAD Acima do Titulo
+## 1. Aumentar Logo GMAD Principal
+
+### Arquivo: `src/components/layout/Logo.tsx`
+
+**Alteracao:**
+Adicionar um novo tamanho `2xl` maior para a hero section:
+
+```typescript
+const sizes = {
+  sm: 'w-10 h-10',
+  md: 'w-14 h-14',
+  lg: 'w-20 h-20',
+  xl: 'w-28 h-28',
+  '2xl': 'w-36 h-36'  // 144px - novo tamanho
+};
+```
 
 ### Arquivo: `src/pages/Index.tsx`
 
 **Alteracao:**
-- Importar o componente `Logo` de `@/components/layout/Logo`
-- Adicionar a logo GMAD centralizada acima do titulo principal
-- Usar tamanho grande (`size="lg"`) e sem texto (`showText={false}`)
-
-**Estrutura Nova do Hero:**
-```text
-+------------------------------------------+
-|              [LOGO GMAD]                 |
-|                                          |
-|   "CENTRAL DE REQUISICOES DE COMPRAS"    |
-|        Sistema de controle...            |
-|                                          |
-|   [LOGOS MARQUEE]                        |
-+------------------------------------------+
-```
+- DE: `<Logo size="lg" showText={false} />`
+- PARA: `<Logo size="2xl" showText={false} />`
 
 ---
 
-## 2. Corrigir Workflow Timeline - Usar Setas
+## 2. Diminuir Logos do Marquee
 
-### Arquivo: `src/components/home/WorkflowTimeline.tsx`
+### Arquivo: `src/components/home/LogoMarquee.tsx`
 
-**Problema atual:**
-- Existe uma linha horizontal (div com `h-0.5`) passando por cima dos cards
-- Linhas nas linhas 77-80 estao sobrepondo o conteudo
-
-**Solucao:**
-- Remover as duas linhas conectoras horizontais (linhas 76-80)
-- Adicionar setas (icone `ChevronRight` ou `ArrowRight`) entre cada etapa
-- As setas ficarao posicionadas entre os cards, nao atras deles
-
-**Estrutura Visual Nova (Desktop):**
-```text
-[CARD 1] → [CARD 2] → [CARD 3] → [CARD 4] → [CARD 5] → [CARD 6]
-```
-
-**Implementacao:**
-- Usar `ArrowRight` do lucide-react entre cada etapa
-- Renderizar seta apenas quando `index < steps.length - 1`
-- Seta com cor `text-muted-foreground` e tamanho adequado
+**Alteracoes:**
+- Altura das logos: DE `h-16 md:h-24` PARA `h-10 md:h-14` (40px mobile, 56px desktop)
+- Espacamento: DE `mx-12` PARA `mx-8`
 
 ---
 
-## 3. Alterar Cor do Card "Fazer Requisicao"
+## 3. Destacar Titulo Principal (Sem Badge)
 
-### Arquivo: `src/components/home/ActionCards.tsx`
+### Arquivo: `src/pages/Index.tsx`
 
-**Alteracao na linha 36:**
-- DE: `bg-gradient-to-br from-info to-info/80`
-- PARA: `bg-gradient-to-br from-zinc-700 to-zinc-800` (cinza escuro)
-
-**Ajustes adicionais:**
-- Sombra no hover: mudar de `hover:shadow-info/30` para `hover:shadow-zinc-700/30`
-- Remover shimmer overlay (linha 38) se preferir visual mais limpo
-
----
-
-## 4. Remover Badge "Mais Utilizado"
-
-### Arquivo: `src/components/home/ActionCards.tsx`
-
-**Remover linhas 40-44:**
+**Novo codigo do titulo:**
 ```tsx
-{/* Badge "Mais utilizado" com pulse */}
-<Badge className="absolute -top-3 left-6 bg-success text-success-foreground border-0 shadow-lg animate-pulse-glow">
-  <Sparkles className="w-3 h-3 mr-1" />
-  Mais utilizado
-</Badge>
+<h1 className="text-4xl md:text-5xl mb-4 tracking-tight font-sans text-foreground font-extrabold drop-shadow-sm animate-fade-in">
+  CENTRAL DE REQUISICOES
+  <span className="block text-primary">DE COMPRAS</span>
+</h1>
 ```
 
-**Limpar imports:**
-- Remover `Sparkles` do import do lucide-react
-- Remover `Badge` do import se nao for mais utilizado em outro lugar
+**Caracteristicas:**
+- Titulo em duas linhas para mais impacto
+- "CENTRAL DE REQUISICOES" em cor padrao (foreground)
+- "DE COMPRAS" destacado na cor primaria (laranja)
+- Fonte extra bold com sombra sutil
+- Tamanho maior (text-5xl no desktop)
 
 ---
 
-## 5. Resumo dos Arquivos a Modificar
+## 4. Resumo das Alteracoes
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `src/pages/Index.tsx` | Adicionar Logo GMAD acima do titulo |
-| `src/components/home/WorkflowTimeline.tsx` | Remover linhas, adicionar setas entre etapas |
-| `src/components/home/ActionCards.tsx` | Cor cinza escuro + remover badge |
+| `src/components/layout/Logo.tsx` | Adicionar tamanho `2xl` (w-36 h-36) |
+| `src/pages/Index.tsx` | Usar `size="2xl"` na logo + titulo em duas linhas com destaque |
+| `src/components/home/LogoMarquee.tsx` | Diminuir logos para `h-10 md:h-14` |
 
 ---
 
-## 6. Resultado Visual Esperado
+## 5. Resultado Visual Esperado
 
-**Hero Section:**
 ```text
-            [LOGO GMAD]
-   CENTRAL DE REQUISICOES DE COMPRAS
-     Sistema de controle...
-   [logos rolando]
-```
-
-**Workflow Timeline:**
-```text
-[1 SOLICITE] → [2 ANALISE] → [3 COTACAO] → [4 APROVACAO] → [5 COMPRA] → [6 ENTREGA]
-```
-
-**Action Cards:**
-```text
-+------------------------+  +------------------------+
-|   FAZER REQUISICAO     |  |   PAINEL ADMIN         |
-|   (cinza escuro)       |  |   (com borda)          |
-+------------------------+  +------------------------+
++------------------------------------------+
+|                                          |
+|         [LOGO GMAD GRANDE - 144px]       |
+|                                          |
+|        CENTRAL DE REQUISICOES            |
+|             DE COMPRAS                   |
+|         (destaque em laranja)            |
+|                                          |
+|   Sistema de controle...                 |
+|                                          |
+|   [logos pequenas rolando - 56px]        |
+|                                          |
++------------------------------------------+
 ```
 
