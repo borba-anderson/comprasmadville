@@ -2,20 +2,20 @@
 // TYPES - SISTEMA DE REQUISIÇÕES MADVILLE
 // ============================================
 
-export type AppRole = 'admin' | 'comprador' | 'gerente' | 'solicitante';
+export type AppRole = "admin" | "comprador" | "gerente" | "solicitante";
 
-export type RequisicaoStatus = 
-  | 'pendente' 
-  | 'em_analise' 
-  | 'aprovado' 
-  | 'cotando' 
-  | 'comprado' 
-  | 'em_entrega'
-  | 'recebido'
-  | 'rejeitado' 
-  | 'cancelado';
+export type RequisicaoStatus =
+  | "pendente"
+  | "em_analise"
+  | "aprovado"
+  | "cotando"
+  | "comprado"
+  | "em_entrega"
+  | "recebido"
+  | "rejeitado"
+  | "cancelado";
 
-export type RequisicaoPrioridade = 'ALTA' | 'MEDIA' | 'BAIXA';
+export type RequisicaoPrioridade = "ALTA" | "MEDIA" | "BAIXA";
 
 export interface Profile {
   id: string;
@@ -137,94 +137,86 @@ export interface AuthUser {
 
 // Compradores fixos
 export const COMPRADORES = [
-  { id: 'anderson', nome: 'Anderson' },
-  { id: 'mariana', nome: 'Mariana' },
-  { id: 'geovani', nome: 'Geovani' },
-  { id: 'ruan', nome: 'Ruan' },
+  { id: "anderson", nome: "Anderson" },
+  { id: "mariana", nome: "Mariana" },
+  { id: "geovani", nome: "Geovani" },
+  { id: "ruan", nome: "Ruan" },
 ] as const;
 
-export type CompradorId = typeof COMPRADORES[number]['id'];
+export type CompradorId = (typeof COMPRADORES)[number]["id"];
 
 // Constants
 export const EMPRESAS = [
-  'GMAD Madville (Loja)',
-  'GMAD Madville (CD)',
-  'GMAD Madville (Soluções)',
-  'GMAD Curitiba (Loja)',
-  'GMAD Curitiba (CD Pinheirinho)',
+  "GMAD Madville (Loja)",
+  "GMAD Madville (CD)",
+  "GMAD Madville (Soluções)",
+  "GMAD Curitiba (Loja)",
+  "GMAD Curitiba (CD Pinheirinho)",
 ] as const;
 
 // Quick view presets
 export const QUICK_VIEWS = {
   minhasPendencias: {
-    label: 'Minhas Pendências',
-    icon: '📋',
-    statuses: ['pendente', 'em_analise', 'cotando'] as RequisicaoStatus[],
+    label: "Pendências",
+    icon: "📋",
+    statuses: ["pendente", "em_analise", "cotando", "aprovado"] as RequisicaoStatus[],
   },
   aguardandoFornecedor: {
-    label: 'Aguardando Fornecedor',
-    icon: '🚚',
-    statuses: ['comprado', 'em_entrega'] as RequisicaoStatus[],
+    label: "Aguardando",
+    icon: "🚚",
+    statuses: ["comprado", "em_entrega"] as RequisicaoStatus[],
   },
   finalizados: {
-    label: 'Finalizados',
-    icon: '✅',
-    statuses: ['recebido', 'cancelado', 'rejeitado'] as RequisicaoStatus[],
+    label: "Finalizados",
+    icon: "✅",
+    statuses: ["recebido", "cancelado", "rejeitado"] as RequisicaoStatus[],
   },
 } as const;
 
 export const SETORES = [
-  'Almoxarifado',
-  'Comercial',
-  'Compras',
-  'Diretoria',
-  'Eventos',
-  'Financeiro',
-  'Logística',
-  'Manutenção Predial',
-  'Marketing',
-  'Recursos Humanos',
-  'SAC',
-  'Showroom',
-  'TI',
-  'Uso e Consumo',
+  "Almoxarifado",
+  "Comercial",
+  "Compras",
+  "Diretoria",
+  "Eventos",
+  "Financeiro",
+  "Logística",
+  "Manutenção Predial",
+  "Marketing",
+  "Recursos Humanos",
+  "SAC",
+  "Showroom",
+  "TI",
+  "Uso e Consumo",
 ] as const;
 
-export const UNIDADES = [
-  'unidade',
-  'peça',
-  'kit',
-  'litro',
-  'metro',
-  'kg',
-  'par',
-  'rolo',
-] as const;
+export const UNIDADES = ["unidade", "peça", "kit", "litro", "metro", "kg", "par", "rolo"] as const;
 
 export const MOTIVOS_COMPRA = [
-  'Reposição de estoque',
-  'Demanda de produção',
-  'Manutenção/Reparos',
-  'Uso administrativo',
-  'Projeto especial',
-  'Melhoria de processo',
-  'Outros',
+  "Reposição de estoque",
+  "Demanda de produção",
+  "Manutenção/Reparos",
+  "Uso administrativo",
+  "Projeto especial",
+  "Melhoria de processo",
+  "Outros",
 ] as const;
 
-export const STATUS_CONFIG: Record<RequisicaoStatus, { label: string; icon: string; color: string; dotColor: string }> = {
-  pendente: { label: 'Pendente', icon: '⏳', color: 'yellow', dotColor: 'bg-amber-500' },
-  em_analise: { label: 'Em Análise', icon: '🔍', color: 'blue', dotColor: 'bg-blue-500' },
-  aprovado: { label: 'Aprovado', icon: '✅', color: 'green', dotColor: 'bg-emerald-500' },
-  cotando: { label: 'Cotando', icon: '💰', color: 'purple', dotColor: 'bg-violet-500' },
-  comprado: { label: 'Comprado', icon: '🛒', color: 'cyan', dotColor: 'bg-cyan-500' },
-  em_entrega: { label: 'Em Entrega', icon: '🚚', color: 'blue', dotColor: 'bg-blue-500' },
-  recebido: { label: 'Recebido', icon: '📦', color: 'green', dotColor: 'bg-emerald-500' },
-  rejeitado: { label: 'Rejeitado', icon: '❌', color: 'red', dotColor: 'bg-red-500' },
-  cancelado: { label: 'Cancelado', icon: '🚫', color: 'gray', dotColor: 'bg-gray-500' },
-};
+export const STATUS_CONFIG: Record<RequisicaoStatus, { label: string; icon: string; color: string; dotColor: string }> =
+  {
+    pendente: { label: "Pendente", icon: "⏳", color: "yellow", dotColor: "bg-amber-500" },
+    em_analise: { label: "Em Análise", icon: "🔍", color: "blue", dotColor: "bg-blue-500" },
+    aprovado: { label: "Aprovado", icon: "✅", color: "green", dotColor: "bg-emerald-500" },
+    cotando: { label: "Cotando", icon: "💰", color: "purple", dotColor: "bg-violet-500" },
+    comprado: { label: "Comprado", icon: "🛒", color: "cyan", dotColor: "bg-cyan-500" },
+    em_entrega: { label: "Em Entrega", icon: "🚚", color: "blue", dotColor: "bg-blue-500" },
+    recebido: { label: "Recebido", icon: "📦", color: "green", dotColor: "bg-emerald-500" },
+    rejeitado: { label: "Rejeitado", icon: "❌", color: "red", dotColor: "bg-red-500" },
+    cancelado: { label: "Cancelado", icon: "🚫", color: "gray", dotColor: "bg-gray-500" },
+  };
 
 export const PRIORIDADE_CONFIG: Record<RequisicaoPrioridade, { label: string; icon: string; prazo: string }> = {
-  ALTA: { label: 'Alta', icon: '🔴', prazo: 'Máximo 24h' },
-  MEDIA: { label: 'Média', icon: '🟡', prazo: 'Até 3 dias' },
-  BAIXA: { label: 'Baixa', icon: '🟢', prazo: 'Planejamento semanal' },
+  ALTA: { label: "Alta", icon: "🔴", prazo: "Máximo 24h" },
+  MEDIA: { label: "Média", icon: "🟡", prazo: "Até 3 dias" },
+  BAIXA: { label: "Baixa", icon: "🟢", prazo: "Planejamento semanal" },
 };
