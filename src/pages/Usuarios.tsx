@@ -148,12 +148,12 @@ export default function Usuarios() {
     setFilteredUsers(filtered);
   }, [search, users]);
 
-  const openEditDialog = (user: UserWithRoles) => {
-    setSelectedUser(user);
-    setEditEmpresa(user.empresa || '');
-    setEditSetor(user.setor || '');
-    setEditGestorId(user.gestor_id || '');
-    setEditRoles(user.roles);
+  const openEditDialog = (userToEdit: UserWithRoles) => {
+    setSelectedUser(userToEdit);
+    setEditEmpresa(userToEdit.empresa || 'none');
+    setEditSetor(userToEdit.setor || 'none');
+    setEditGestorId(userToEdit.gestor_id || 'none');
+    setEditRoles(userToEdit.roles);
     setIsEditDialogOpen(true);
   };
 
@@ -173,9 +173,9 @@ export default function Usuarios() {
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
-          empresa: editEmpresa || null,
-          setor: editSetor || null,
-          gestor_id: editGestorId || null,
+          empresa: editEmpresa === 'none' ? null : editEmpresa,
+          setor: editSetor === 'none' ? null : editSetor,
+          gestor_id: editGestorId === 'none' ? null : editGestorId,
           updated_at: new Date().toISOString(),
         })
         .eq('id', selectedUser.id);
@@ -373,7 +373,7 @@ export default function Usuarios() {
                     <SelectValue placeholder="Selecione a empresa..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhuma</SelectItem>
+                    <SelectItem value="none">Nenhuma</SelectItem>
                     {EMPRESAS.map((e) => (
                       <SelectItem key={e} value={e}>
                         {e}
@@ -391,7 +391,7 @@ export default function Usuarios() {
                     <SelectValue placeholder="Selecione o setor..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhum</SelectItem>
+                    <SelectItem value="none">Nenhum</SelectItem>
                     {SETORES.map((s) => (
                       <SelectItem key={s} value={s}>
                         {s}
@@ -412,7 +412,7 @@ export default function Usuarios() {
                     <SelectValue placeholder="Selecione o gestor..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhum</SelectItem>
+                    <SelectItem value="none">Nenhum</SelectItem>
                     {potentialManagers
                       .filter((m) => m.id !== selectedUser.id)
                       .map((m) => (
