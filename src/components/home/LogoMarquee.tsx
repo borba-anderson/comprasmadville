@@ -13,7 +13,7 @@ export const LogoMarquee = () => {
   const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
 
   return (
-    <div className="w-full overflow-hidden py-8">
+    <div className="w-full overflow-hidden py-6 mt-8 border-t border-border/30">
       <div className="flex animate-marquee">
         {duplicatedLogos.map((logo, index) => (
           <div

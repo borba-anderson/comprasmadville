@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import gmadLogo from '@/assets/gmad-logo.png';
 interface LogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   showText?: boolean;
 }
 const sizes = {
@@ -10,7 +10,8 @@ const sizes = {
   md: 'w-14 h-14',
   lg: 'w-20 h-20',
   xl: 'w-28 h-28',
-  '2xl': 'w-36 h-36'
+  '2xl': 'w-36 h-36',
+  '3xl': 'w-48 h-48'
 };
 const textSizes = {
   sm: 'text-lg',
