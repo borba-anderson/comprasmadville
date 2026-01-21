@@ -1,19 +1,12 @@
 import { Header } from '@/components/layout/Header';
 import { Logo } from '@/components/layout/Logo';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  UserGreeting, 
-  QuickStats, 
-  ActionCards, 
-  LogoMarquee, 
-  WorkflowTimeline 
-} from '@/components/home';
-
+import { UserGreeting, QuickStats, ActionCards, LogoMarquee, WorkflowTimeline } from '@/components/home';
 const Index = () => {
-  const { user } = useAuth();
-
-  return (
-    <div className="min-h-screen bg-background">
+  const {
+    user
+  } = useAuth();
+  return <div className="min-h-screen bg-background">
       <Header />
       
       <main className="page-container rounded-2xl shadow">
@@ -26,10 +19,10 @@ const Index = () => {
             <div className="text-center md:text-left flex-1 animate-fade-in">
               <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
                 Central de Requisições
-                <span className="block text-primary">de Compras.</span>
+                <span className="block text-primary">de Compras</span>
               </h1>
 
-              <p className="text-muted-foreground max-w-xl text-base md:text-lg">
+              <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin text-left mx-0 mb-[10px]">
                 Gerencie suas solicitações de compras corporativas de forma simples, rápida e eficiente.
               </p>
             </div>
@@ -45,12 +38,10 @@ const Index = () => {
         </section>
 
         {/* User Context (quando logado) */}
-        {user && (
-          <section className="animate-fade-in">
+        {user && <section className="animate-fade-in">
             <UserGreeting />
             <QuickStats />
-          </section>
-        )}
+          </section>}
 
         {/* Action Cards */}
         <ActionCards />
@@ -65,19 +56,12 @@ const Index = () => {
           </p>
           <p className="text-muted-foreground text-xs mt-2">
             Versão 2.0 | Suporte:{' '}
-            <a 
-              href="https://wa.me/5547992189824" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-info hover:underline font-medium"
-            >
+            <a href="https://wa.me/5547992189824" target="_blank" rel="noopener noreferrer" className="text-info hover:underline font-medium">
               WhatsApp
             </a>
           </p>
         </footer>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
