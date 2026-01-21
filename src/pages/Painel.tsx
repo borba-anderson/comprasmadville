@@ -10,9 +10,11 @@ import {
   RequisicaoTable,
   SidePanel,
   PaginationControls,
+  BatchActionsBar,
   usePainelFilters,
   useSorting,
   usePagination,
+  useMultiSelect,
 } from '@/components/painel';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -60,6 +62,7 @@ export default function Painel() {
 
   const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
   const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
+  const multiSelect = useMultiSelect(paginatedItems);
 
   // Redirect if not staff
   useEffect(() => {
@@ -209,6 +212,14 @@ export default function Painel() {
                 exportRequisicoes={sortedRequisicoes}
               />
 
+              {/* Batch Actions Bar */}
+              <BatchActionsBar
+                selectedItems={multiSelect.selectedItems}
+                selectedCount={multiSelect.selectedCount}
+                onClear={multiSelect.clearSelection}
+                onActionComplete={() => fetchRequisicoes(true)}
+              />
+
               <RequisicaoTable
                 requisicoes={paginatedItems}
                 isLoading={isLoading}
@@ -222,6 +233,11 @@ export default function Painel() {
                 hasFilters={hasActiveFilters}
                 sortConfig={sortConfig}
                 onSort={handleSort}
+                isItemSelected={multiSelect.isSelected}
+                onToggleItem={multiSelect.toggleItem}
+                onToggleAll={multiSelect.toggleAll}
+                allSelected={multiSelect.allSelected}
+                someSelected={multiSelect.someSelected}
               />
 
               <PaginationControls

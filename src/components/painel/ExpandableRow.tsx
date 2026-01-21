@@ -6,6 +6,7 @@ import { PriorityBadge } from '@/components/PriorityBadge';
 import { DeliveryBadge } from './DeliveryBadge';
 import { SLAIndicator } from './SLAIndicator';
 import { QuickActionsMenu } from './QuickActionsMenu';
+import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { ViewMode } from './types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -20,6 +21,9 @@ interface ExpandableRowProps {
   onStatusUpdate: () => void;
   onSendEmail: () => void;
   formatCurrency: (value: number | null | undefined) => string;
+  // Multi-select props
+  isChecked?: boolean;
+  onToggleCheck?: () => void;
 }
 
 export function ExpandableRow({
@@ -32,8 +36,11 @@ export function ExpandableRow({
   onStatusUpdate,
   onSendEmail,
   formatCurrency,
+  isChecked = false,
+  onToggleCheck,
 }: ExpandableRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const hasMultiSelect = onToggleCheck !== undefined;
 
   // Parse date string correctly to avoid timezone issues
   const parseDateString = (dateString: string): Date => {
@@ -85,6 +92,20 @@ export function ExpandableRow({
           )}
           onClick={onViewDetails}
         >
+          {/* Multi-select Checkbox */}
+          {hasMultiSelect && (
+            <td className="w-10 px-2">
+              <Checkbox
+                checked={isChecked}
+                onCheckedChange={(e) => {
+                  onToggleCheck();
+                }}
+                onClick={(e) => e.stopPropagation()}
+                aria-label={`Selecionar ${requisicao.item_nome}`}
+              />
+            </td>
+          )}
+
           {/* Expand Toggle + Overdue Icon */}
           <td className="w-10 px-2">
             <div className="flex items-center gap-1">
@@ -214,10 +235,9 @@ export function ExpandableRow({
           </td>
         </tr>
 
-        {/* Expanded Content */}
         {isExpanded && (
           <tr className="bg-muted/30">
-            <td colSpan={14} className="p-0">
+            <td colSpan={hasMultiSelect ? 15 : 14} className="p-0">
               <div className="p-4 space-y-4 animate-fade-in border-b border-border/50">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Descrição / Justificativa */}
