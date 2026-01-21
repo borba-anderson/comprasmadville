@@ -160,6 +160,7 @@ export type Database = {
           aprovado_por: string | null
           arquivo_nome: string | null
           arquivo_url: string | null
+          centro_custo: string | null
           comprado_em: string | null
           comprador_id: string | null
           comprador_nome: string | null
@@ -196,6 +197,7 @@ export type Database = {
           aprovado_por?: string | null
           arquivo_nome?: string | null
           arquivo_url?: string | null
+          centro_custo?: string | null
           comprado_em?: string | null
           comprador_id?: string | null
           comprador_nome?: string | null
@@ -232,6 +234,7 @@ export type Database = {
           aprovado_por?: string | null
           arquivo_nome?: string | null
           arquivo_url?: string | null
+          centro_custo?: string | null
           comprado_em?: string | null
           comprador_id?: string | null
           comprador_nome?: string | null

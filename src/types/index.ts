@@ -46,6 +46,7 @@ export interface Requisicao {
   solicitante_telefone?: string;
   solicitante_setor: string;
   solicitante_empresa?: string;
+  centro_custo?: string;
   item_nome: string;
   quantidade: number;
   unidade: string;
@@ -109,6 +110,7 @@ export interface RequisicaoFormData {
   solicitante_telefone: string;
   solicitante_setor: string;
   solicitante_empresa: string;
+  centro_custo?: string;
   item_nome: string;
   quantidade: number;
   unidade: string;

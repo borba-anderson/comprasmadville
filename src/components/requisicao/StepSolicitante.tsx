@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SETORES, EMPRESAS } from '@/types';
-import { User, Mail, Phone, Building2, Building } from 'lucide-react';
+import { User, Mail, Phone, Building2, Building, Wallet } from 'lucide-react';
 
 interface StepSolicitanteProps {
   formData: {
@@ -17,6 +17,7 @@ interface StepSolicitanteProps {
     solicitante_telefone: string;
     solicitante_setor: string;
     solicitante_empresa: string;
+    centro_custo: string;
   };
   errors: Record<string, string>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -137,6 +138,24 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
           </Select>
           {errors.solicitante_setor && (
             <p className="text-xs text-destructive mt-1">{errors.solicitante_setor}</p>
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="centro_custo" className="flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-muted-foreground" />
+            Centro de Custo
+          </Label>
+          <Input
+            id="centro_custo"
+            name="centro_custo"
+            value={formData.centro_custo}
+            onChange={onChange}
+            placeholder="Ex: CC-001, Marketing-2024"
+            className="mt-1.5"
+          />
+          {errors.centro_custo && (
+            <p className="text-xs text-destructive mt-1">{errors.centro_custo}</p>
           )}
         </div>
       </div>
