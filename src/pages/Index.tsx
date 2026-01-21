@@ -24,7 +24,7 @@ const Index = () => {
             <Logo size="2xl" showText={false} />
           </div>
           
-          <h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-sans text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in animate-title-glow">
+          <h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-sans text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in">
             CENTRAL DE REQUISIÇÕES DE COMPRAS
           </h1>
           
