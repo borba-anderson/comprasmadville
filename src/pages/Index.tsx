@@ -9,10 +9,10 @@ const Index = () => {
   return <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="page-container rounded-2xl shadow">
+      <main className="page-container shadow-xl rounded-none border-0 border-none">
         {/* Hero Section */}
-        <section className="py-10 md:py-16 text-center animate-fade-in">
-          <div className="flex justify-center mb-6">
+        <section className="py-10 md:py-16 text-center animate-fade-in border rounded-2xl">
+          <div className="mb-6 flex-row flex items-center justify-center gap-0 border-0">
             <Logo size="xl" showText={false} />
           </div>
           <h1 className="text-3xl mb-3 tracking-tight font-sans text-primary font-bold text-center md:text-4xl bg-[status-em-analise] py-[8px] bg-info-foreground">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
