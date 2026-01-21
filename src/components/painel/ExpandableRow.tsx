@@ -137,20 +137,20 @@ export function ExpandableRow({
           </td>
 
           {/* Item */}
-          <td className={cn('px-3', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-3', isCompact ? 'py-2' : 'py-3')}>
             <div className="min-w-0">
               <p className={cn(
                 'font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug',
-                isCompact ? 'text-sm' : 'text-sm'
+                isCompact ? 'text-sm' : 'text-base'
               )} title={requisicao.item_nome}>
                 {requisicao.item_nome}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
-                <p className="text-xs text-muted-foreground font-mono truncate">
+                <p className={cn('text-muted-foreground font-mono truncate', isCompact ? 'text-xs' : 'text-sm')}>
                   {requisicao.protocolo}
                 </p>
                 {empresaShort && (
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground whitespace-nowrap">
+                  <span className={cn('px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground whitespace-nowrap', isCompact ? 'text-xs' : 'text-sm')}>
                     {empresaShort}
                   </span>
                 )}
@@ -159,73 +159,73 @@ export function ExpandableRow({
           </td>
 
           {/* Solicitante */}
-          <td className={cn('px-3', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-3', isCompact ? 'py-2' : 'py-3')}>
             <div className="min-w-0">
-              <p className={cn('font-medium truncate', isCompact ? 'text-sm' : 'text-sm')} title={requisicao.solicitante_nome}>
+              <p className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.solicitante_nome}>
                 {requisicao.solicitante_nome}
               </p>
-              <p className="text-xs text-muted-foreground truncate">{requisicao.solicitante_setor}</p>
+              <p className={cn('text-muted-foreground truncate', isCompact ? 'text-xs' : 'text-sm')}>{requisicao.solicitante_setor}</p>
             </div>
           </td>
 
           {/* Quantidade */}
-          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-2.5')}>
-            <span className={cn('font-semibold', isCompact ? 'text-sm' : 'text-sm')}>
+          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
+            <span className={cn('font-semibold', isCompact ? 'text-sm' : 'text-base')}>
               {requisicao.quantidade}
             </span>
-            <span className="text-muted-foreground text-xs ml-1">{requisicao.unidade}</span>
+            <span className={cn('text-muted-foreground ml-1', isCompact ? 'text-xs' : 'text-sm')}>{requisicao.unidade}</span>
           </td>
 
           {/* Prioridade */}
-          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-3')}>
             <PriorityBadge priority={requisicao.prioridade} />
           </td>
 
           {/* Status */}
-          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-3')}>
             <StatusBadge status={requisicao.status} showIcon={false} />
           </td>
 
           {/* Comprador */}
-          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
             {requisicao.comprador_nome ? (
-              <span className="text-sm font-medium truncate block" title={requisicao.comprador_nome}>{requisicao.comprador_nome}</span>
+              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.comprador_nome}>{requisicao.comprador_nome}</span>
             ) : (
-              <span className="text-xs text-muted-foreground">—</span>
+              <span className={cn('text-muted-foreground', isCompact ? 'text-xs' : 'text-sm')}>—</span>
             )}
           </td>
 
           {/* Fornecedor */}
-          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-3 text-center', isCompact ? 'py-2' : 'py-3')}>
             {requisicao.fornecedor_nome ? (
-              <span className="text-sm font-medium truncate block" title={requisicao.fornecedor_nome}>{requisicao.fornecedor_nome}</span>
+              <span className={cn('font-medium line-clamp-2 leading-snug', isCompact ? 'text-sm' : 'text-base')} title={requisicao.fornecedor_nome}>{requisicao.fornecedor_nome}</span>
             ) : (
-              <span className="text-xs text-muted-foreground">—</span>
+              <span className={cn('text-muted-foreground', isCompact ? 'text-xs' : 'text-sm')}>—</span>
             )}
           </td>
 
           {/* Previsão */}
-          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-3')}>
             <DeliveryBadge previsao={requisicao.previsao_entrega} />
           </td>
 
           {/* SLA */}
-          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-2 text-center', isCompact ? 'py-2' : 'py-3')}>
             <SLAIndicator requisicao={requisicao} compact={false} />
           </td>
 
           {/* Valor */}
-          <td className={cn('px-3 text-right', isCompact ? 'py-2' : 'py-2.5')}>
-            <span className={cn('font-semibold tabular-nums', isCompact ? 'text-sm' : 'text-sm')}>{formatCurrency(requisicao.valor)}</span>
+          <td className={cn('px-3 text-right', isCompact ? 'py-2' : 'py-3')}>
+            <span className={cn('font-semibold tabular-nums', isCompact ? 'text-sm' : 'text-base')}>{formatCurrency(requisicao.valor)}</span>
           </td>
 
           {/* Data */}
-          <td className={cn('px-3 text-center text-muted-foreground tabular-nums', isCompact ? 'py-2 text-xs' : 'py-2.5 text-sm')}>
+          <td className={cn('px-3 text-center text-muted-foreground tabular-nums', isCompact ? 'py-2 text-xs' : 'py-3 text-sm')}>
             {formatDate(requisicao.created_at)}
           </td>
 
           {/* Ações */}
-          <td className={cn('px-2 text-right', isCompact ? 'py-2' : 'py-2.5')}>
+          <td className={cn('px-2 text-right', isCompact ? 'py-2' : 'py-3')}>
             <QuickActionsMenu
               requisicao={requisicao}
               onView={onViewDetails}
