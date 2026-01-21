@@ -1,92 +1,122 @@
 
-# Plano de Redesign do Título - Estilo Moderno e Limpo
+
+# Plano de Reorganização do Hero - Layout Lado a Lado
 
 ## Objetivo
-Redesenhar a seção do título seguindo o estilo de referência: badge no topo, título grande sem fundo, com palavra em destaque colorida.
+Reorganizar a seção hero para um layout horizontal com título à esquerda e logo à direita, removendo a badge.
 
 ---
 
 ## Alterações no Arquivo: `src/pages/Index.tsx`
 
-### De (linhas 27-33):
+### Estrutura Atual (linhas 21-44):
 ```tsx
-<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-sans text-white font-bold bg-zinc-800 rounded-lg shadow-lg animate-fade-in">
-  CENTRAL DE REQUISIÇÕES DE COMPRAS
-</h1>
+<section className="py-10 md:py-16 text-center">
+  {/* Logo centralizada */}
+  <div className="flex justify-center mb-6 animate-fade-in">
+    <Logo size="2xl" showText={false} />
+  </div>
+  
+  {/* Badge/Pill */}
+  <div className="inline-flex items-center gap-2 ...">
+    ...Sistema Corporativo GMAD
+  </div>
 
-<p className="text-muted-foreground max-w-xl mx-auto text-sm animate-stagger-1">
-  Sistema de controle para suas solicitações de compras corporativas.
-</p>
+  {/* Título centralizado */}
+  <h1 className="mb-4 text-4xl...">...</h1>
+  <p className="text-muted-foreground max-w-xl mx-auto...">...</p>
+  
+  <LogoMarquee />
+</section>
 ```
 
-### Para:
+### Nova Estrutura:
 ```tsx
-{/* Badge/Pill no topo */}
-<div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-primary/10 border border-primary/20 rounded-full animate-fade-in">
-  <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-  <span className="text-sm font-medium text-primary">Sistema Corporativo GMAD</span>
-</div>
+<section className="py-10 md:py-16">
+  {/* Container flex com título à esquerda e logo à direita */}
+  <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+    
+    {/* Lado Esquerdo - Título e subtítulo */}
+    <div className="text-center md:text-left flex-1 animate-fade-in">
+      <h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
+        Central de Requisições
+        <span className="block text-primary">de Compras.</span>
+      </h1>
 
-{/* Título principal - estilo limpo */}
-<h1 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground animate-fade-in">
-  Central de Requisições
-  <span className="block text-primary">de Compras.</span>
-</h1>
-
-<p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg animate-stagger-1">
-  Gerencie suas solicitações de compras corporativas de forma simples, rápida e eficiente.
-</p>
+      <p className="text-muted-foreground max-w-xl text-base md:text-lg">
+        Gerencie suas solicitações de compras corporativas de forma simples, rápida e eficiente.
+      </p>
+    </div>
+    
+    {/* Lado Direito - Logo GMAD */}
+    <div className="flex-shrink-0 animate-fade-in">
+      <Logo size="2xl" showText={false} />
+    </div>
+  </div>
+  
+  {/* Logo Marquee - mantém abaixo */}
+  <LogoMarquee />
+</section>
 ```
 
 ---
 
-## Detalhes do Novo Design
+## Detalhes das Alterações
 
-| Elemento | Descrição |
-|----------|-----------|
-| **Badge Pill** | Fundo laranja translúcido (primary/10), borda sutil, cantos totalmente arredondados |
-| **Círculo animado** | Pequeno círculo laranja com `animate-pulse` sutil |
-| **Título** | Fonte maior (text-4xl até 6xl), sem fundo, tracking-tight para elegância |
-| **Destaque colorido** | "de Compras." em cor primária (laranja) como bloco separado |
-| **Subtítulo** | Texto maior (text-base/lg), mais legível |
+| Mudança | Antes | Depois |
+|---------|-------|--------|
+| **Layout** | Centralizado vertical | Flex horizontal (md+) |
+| **Título** | Centro | Esquerda em desktop, centro em mobile |
+| **Logo GMAD** | Topo centralizado | Direita em desktop |
+| **Badge** | Visível | Removida |
+| **Subtítulo** | `mx-auto` centralizado | Alinhado à esquerda em desktop |
+
+---
+
+## Comportamento Responsivo
+
+| Viewport | Layout |
+|----------|--------|
+| **Mobile** | Título centralizado no topo, logo abaixo (empilhado) |
+| **Desktop** | Título à esquerda, logo à direita (lado a lado) |
 
 ---
 
 ## Resultado Visual Esperado
 
+**Desktop:**
 ```text
-+--------------------------------------------------+
-|                                                  |
-|            [LOGO GMAD GRANDE]                    |
-|                                                  |
-|      ●━ Sistema Corporativo GMAD ━━              |  <- badge pill
-|                                                  |
-|        Central de Requisições                    |  <- texto escuro
-|           de Compras.                            |  <- texto laranja
-|                                                  |
-|   Gerencie suas solicitações de compras...       |
-|                                                  |
-|       [logos pequenas rolando]                   |
-+--------------------------------------------------+
++------------------------------------------------------------+
+|                                                            |
+|  Central de Requisições              [LOGO GMAD]           |
+|  de Compras.                                               |
+|                                                            |
+|  Gerencie suas solicitações...                             |
+|                                                            |
+|  [====== logos rolando ======]                             |
++------------------------------------------------------------+
+```
+
+**Mobile:**
+```text
++---------------------------+
+|                           |
+|  Central de Requisições   |
+|      de Compras.          |
+|                           |
+|  Gerencie suas...         |
+|                           |
+|      [LOGO GMAD]          |
+|                           |
+|  [logos rolando]          |
++---------------------------+
 ```
 
 ---
 
-## Arquivos a Modificar
+## Arquivo a Modificar
 
 | Arquivo | Alteração |
 |---------|-----------|
-| `src/pages/Index.tsx` | Linhas 27-33: Novo layout do título com badge e tipografia limpa |
+| `src/pages/Index.tsx` | Linhas 21-44: Novo layout flex com título à esquerda e logo à direita |
 
----
-
-## Alternativa: Título em Linha Única
-
-Se preferir manter o título em uma linha só:
-
-```tsx
-<h1 className="mb-4 text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight animate-fade-in">
-  <span className="text-foreground">Central de Requisições </span>
-  <span className="text-primary">de Compras.</span>
-</h1>
-```
