@@ -1,97 +1,94 @@
 
 
-# Plano de Ajuste do Título Principal
+# Plano de Ajuste do Título - Sombra Animada e Fonte
 
 ## Objetivo
-Colocar o título "CENTRAL DE REQUISIÇÕES DE COMPRAS" em uma única linha, com fonte diferenciada e fundo em destaque.
+Adicionar sombra animada sutil ao título, texto em caixa alta (UPPERCASE), e usar a mesma fonte do resto da página (font-sans).
 
 ---
 
-## Alterações no Arquivo: `src/pages/Index.tsx`
+## 1. Criar Nova Animação de Sombra
 
-### De (linhas 27-30):
+### Arquivo: `src/index.css`
+
+**Adicionar no final do arquivo (antes do fechamento do `@layer utilities`):**
+
+```css
+/* Title Glow - Sombra pulsante para título */
+@keyframes title-glow {
+  0%, 100% {
+    box-shadow: 0 10px 25px hsl(24 95% 53% / 0.3);
+  }
+  50% {
+    box-shadow: 0 10px 40px hsl(24 95% 53% / 0.5);
+  }
+}
+
+.animate-title-glow {
+  animation: title-glow 3s ease-in-out infinite;
+}
+```
+
+**Características:**
+- Usa a cor primária (HSL 24 95% 53% - laranja)
+- Pulsa suavemente a cada 3 segundos
+- Sombra vai de 30% a 50% de opacidade
+- Efeito sutil, não agressivo
+
+---
+
+## 2. Atualizar o Título
+
+### Arquivo: `src/pages/Index.tsx`
+
+**De (linha 27-29):**
 ```tsx
-<h1 className="text-4xl md:text-5xl mb-4 tracking-tight font-sans text-foreground font-extrabold drop-shadow-sm animate-fade-in">
-  CENTRAL DE REQUISIÇÕES
-  <span className="block text-primary">DE COMPRAS</span>
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in">
+  Central de Requisições de Compras
 </h1>
 ```
 
-### Para:
+**Para:**
 ```tsx
-<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif uppercase text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in">
-  Central de Requisições de Compras
+<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-sans text-white font-bold bg-gradient-to-r from-primary to-orange-600 rounded-lg shadow-lg animate-fade-in animate-title-glow">
+  CENTRAL DE REQUISIÇÕES DE COMPRAS
 </h1>
 ```
 
 ---
 
-## Características do Novo Design
+## Resumo das Alterações
 
-| Elemento | Descrição |
-|----------|-----------|
-| **Linha única** | Todo o texto em uma linha, com tamanho responsivo |
-| **Fonte serif** | Usa a fonte Lora (font-serif) para visual mais elegante |
-| **Fundo gradiente** | Gradiente laranja (from-primary to-orange-600) |
-| **Padding interno** | px-6 py-3 cria o efeito de "caixa" |
-| **Bordas arredondadas** | rounded-lg para cantos suaves |
-| **Sombra** | shadow-lg para dar profundidade |
-| **Texto branco** | Contraste alto sobre o fundo laranja |
+| Alteração | Antes | Depois |
+|-----------|-------|--------|
+| Fonte | `font-serif` (Lora) | `font-sans` (Inter) |
+| Texto | "Central de Requisições de Compras" | "CENTRAL DE REQUISIÇÕES DE COMPRAS" |
+| Animação | `animate-fade-in` | `animate-fade-in animate-title-glow` |
 
 ---
 
-## Alternativas de Estilo
+## Arquivos a Modificar
 
-### Opção A - Fundo Sólido (Recomendada):
-```tsx
-<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-white font-bold bg-primary rounded-lg shadow-lg animate-fade-in">
-  Central de Requisições de Compras
-</h1>
-```
-
-### Opção B - Fundo Escuro com Borda:
-```tsx
-<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-primary font-bold bg-zinc-800 border-2 border-primary rounded-lg shadow-lg animate-fade-in">
-  Central de Requisições de Compras
-</h1>
-```
-
-### Opção C - Fundo com Blur (Glassmorphism):
-```tsx
-<h1 className="inline-block px-6 py-3 mb-4 text-2xl md:text-3xl lg:text-4xl tracking-wide font-serif text-foreground font-bold bg-white/80 backdrop-blur-sm border border-primary/30 rounded-lg shadow-lg animate-fade-in">
-  Central de Requisições de Compras
-</h1>
-```
+| Arquivo | Alteração |
+|---------|-----------|
+| `src/index.css` | Adicionar keyframes `title-glow` e classe `.animate-title-glow` |
+| `src/pages/Index.tsx` | Linha 27-29: mudar fonte, caixa alta e adicionar animação |
 
 ---
 
 ## Resultado Visual Esperado
 
 ```text
-+------------------------------------------+
-|                                          |
-|         [LOGO GMAD GRANDE]               |
-|                                          |
-|  +------------------------------------+  |
-|  | Central de Requisições de Compras |  |
-|  +------------------------------------+  |
-|     (fundo laranja com sombra)           |
-|                                          |
-|   Sistema de controle...                 |
-|                                          |
-|   [logos pequenas rolando]               |
-+------------------------------------------+
++------------------------------------------------+
+|                                                |
+|           [LOGO GMAD GRANDE]                   |
+|                                                |
+|  +------------------------------------------+  |
+|  | CENTRAL DE REQUISIÇÕES DE COMPRAS        |  |
+|  +------------------------------------------+  |
+|      (sombra laranja pulsando suavemente)      |
+|                                                |
+|   Sistema de controle...                       |
++------------------------------------------------+
 ```
-
----
-
-## Resumo
-
-| Item | Alteração |
-|------|-----------|
-| Arquivo | `src/pages/Index.tsx` (linhas 27-30) |
-| Título | Uma linha única |
-| Fonte | font-serif (Lora) - mais elegante |
-| Fundo | Gradiente laranja com cantos arredondados |
-| Texto | Branco para contraste |
 
