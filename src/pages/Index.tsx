@@ -27,8 +27,8 @@ const Index = () => {
               </p>
             </div>
             
-            {/* Lado Direito - Logo GMAD */}
-            <div className="flex-shrink-0 animate-fade-in">
+        {/* Lado Direito - Logo GMAD */}
+            <div className="flex-shrink-0 animate-fade-in flex items-center justify-center">
               <Logo size="3xl" showText={false} />
             </div>
           </div>
