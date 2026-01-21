@@ -144,7 +144,7 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
         <div>
           <Label htmlFor="centro_custo" className="flex items-center gap-2">
             <Wallet className="w-4 h-4 text-muted-foreground" />
-            Centro de Custo
+            Centro de Custo <span className="text-muted-foreground font-normal">(Opcional)</span>
           </Label>
           <Input
             id="centro_custo"
