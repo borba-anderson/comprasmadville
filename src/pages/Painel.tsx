@@ -46,6 +46,9 @@ export default function Painel() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Determine if user is a solicitante (read-only mode)
+  const isReadOnly = !isStaff;
+
   const {
     filters,
     updateFilter,
@@ -64,16 +67,12 @@ export default function Painel() {
   const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
   const multiSelect = useMultiSelect(paginatedItems);
 
-  // Redirect if not staff
+  // Redirect only if not authenticated
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
-      if (user && !isStaff) {
-        toast({ title: 'Acesso negado', description: 'Você não tem permissão.', variant: 'destructive' });
-        navigate('/');
-      }
       if (!user) navigate('/auth');
     }
-  }, [authLoading, rolesLoaded, user, isStaff, navigate, toast]);
+  }, [authLoading, rolesLoaded, user, navigate]);
 
   const fetchRequisicoes = useCallback(async (silent = false) => {
     try {
@@ -106,15 +105,16 @@ export default function Painel() {
     }
   }, [toast]);
 
+  // Fetch requisicoes for any authenticated user (RLS handles visibility)
   useEffect(() => {
-    if (isStaff) fetchRequisicoes();
-  }, [isStaff, fetchRequisicoes]);
+    if (user) fetchRequisicoes();
+  }, [user, fetchRequisicoes]);
 
   useEffect(() => {
-    if (!isStaff) return;
+    if (!user) return;
     const interval = setInterval(() => fetchRequisicoes(true), AUTO_REFRESH_INTERVAL);
     return () => clearInterval(interval);
-  }, [isStaff, fetchRequisicoes]);
+  }, [user, fetchRequisicoes]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
@@ -169,6 +169,16 @@ export default function Painel() {
       <Header />
 
       <main className="max-w-[1600px] mx-auto px-4 py-4">
+        {/* Read-only banner for solicitantes */}
+        {isReadOnly && (
+          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-2">
+            <FileText className="w-5 h-5 text-blue-600" />
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              <strong>Modo visualização:</strong> Você está vendo apenas as suas requisições.
+            </span>
+          </div>
+        )}
+
         {/* Compact Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
           <StatsCard title="Total" value={stats.total} icon={FileText} className="col-span-1" />
@@ -184,12 +194,14 @@ export default function Painel() {
           <TabsList className="bg-card border">
             <TabsTrigger value="requisicoes" className="gap-2">
               <FileText className="w-4 h-4" />
-              Requisições
+              {isReadOnly ? 'Minhas Requisições' : 'Requisições'}
             </TabsTrigger>
-            <TabsTrigger value="dashboard" className="gap-2">
-              <DollarSign className="w-4 h-4" />
-              Dashboard
-            </TabsTrigger>
+            {!isReadOnly && (
+              <TabsTrigger value="dashboard" className="gap-2">
+                <DollarSign className="w-4 h-4" />
+                Dashboard
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
@@ -210,15 +222,18 @@ export default function Painel() {
                 totalCount={requisicoes.length}
                 onQuickView={applyQuickView}
                 exportRequisicoes={sortedRequisicoes}
+                readOnly={isReadOnly}
               />
 
-              {/* Batch Actions Bar */}
-              <BatchActionsBar
-                selectedItems={multiSelect.selectedItems}
-                selectedCount={multiSelect.selectedCount}
-                onClear={multiSelect.clearSelection}
-                onActionComplete={() => fetchRequisicoes(true)}
-              />
+              {/* Batch Actions Bar - Only for staff */}
+              {!isReadOnly && (
+                <BatchActionsBar
+                  selectedItems={multiSelect.selectedItems}
+                  selectedCount={multiSelect.selectedCount}
+                  onClear={multiSelect.clearSelection}
+                  onActionComplete={() => fetchRequisicoes(true)}
+                />
+              )}
 
               <RequisicaoTable
                 requisicoes={paginatedItems}
@@ -233,11 +248,11 @@ export default function Painel() {
                 hasFilters={hasActiveFilters}
                 sortConfig={sortConfig}
                 onSort={handleSort}
-                isItemSelected={multiSelect.isSelected}
-                onToggleItem={multiSelect.toggleItem}
-                onToggleAll={multiSelect.toggleAll}
-                allSelected={multiSelect.allSelected}
-                someSelected={multiSelect.someSelected}
+                isItemSelected={isReadOnly ? undefined : multiSelect.isSelected}
+                onToggleItem={isReadOnly ? undefined : multiSelect.toggleItem}
+                onToggleAll={isReadOnly ? undefined : multiSelect.toggleAll}
+                allSelected={isReadOnly ? false : multiSelect.allSelected}
+                someSelected={isReadOnly ? false : multiSelect.someSelected}
               />
 
               <PaginationControls
@@ -248,9 +263,11 @@ export default function Painel() {
             </div>
           </TabsContent>
 
-          <TabsContent value="dashboard">
-            <GastosDashboard requisicoes={requisicoes} />
-          </TabsContent>
+          {!isReadOnly && (
+            <TabsContent value="dashboard">
+              <GastosDashboard requisicoes={requisicoes} />
+            </TabsContent>
+          )}
         </Tabs>
       </main>
 
@@ -261,6 +278,7 @@ export default function Painel() {
         onUpdate={() => fetchRequisicoes(true)}
         profileNome={profile?.nome}
         profileId={profile?.id}
+        readOnly={isReadOnly}
       />
     </div>
   );
