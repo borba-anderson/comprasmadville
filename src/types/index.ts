@@ -147,10 +147,11 @@ export type CompradorId = typeof COMPRADORES[number]['id'];
 
 // Constants
 export const EMPRESAS = [
-  'GMAD Madville',
+  'GMAD Madville (Loja)',
   'GMAD Madville (CD)',
   'GMAD Madville (Soluções)',
-  'GMAD Curitiba',
+  'GMAD Curitiba (Loja)'
+  'GMAD Curitiba (CD Pinheirinho)',
 ] as const;
 
 // Quick view presets
@@ -174,33 +175,29 @@ export const QUICK_VIEWS = {
 
 export const SETORES = [
   'Almoxarifado',
-  'Assistência/Garantia',
   'Comercial',
   'Compras',
   'Diretoria',
   'Eventos',
   'Financeiro',
-  'Limpeza',
   'Logística',
   'Manutenção Predial',
   'Marketing',
-  'RH',
+  'Recursos Humanos',
+  'SAC',
   'Showroom',
   'TI',
+  'Uso e Consumo',
 ] as const;
 
 export const UNIDADES = [
   'unidade',
   'peça',
-  'caixa',
-  'pacote',
   'kit',
-  'conjunto',
   'litro',
   'metro',
   'kg',
   'par',
-  'dúzia',
   'rolo',
 ] as const;
 
