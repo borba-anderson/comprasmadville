@@ -4,7 +4,8 @@ import {
   Calculator, 
   CheckCircle, 
   ShoppingCart, 
-  PackageCheck 
+  PackageCheck,
+  ArrowRight
 } from 'lucide-react';
 
 const steps = [
@@ -72,48 +73,48 @@ export const WorkflowTimeline = () => {
       </h2>
       
       {/* Desktop: Horizontal Timeline */}
-      <div className="hidden md:block relative">
-        {/* Linha conectora de fundo */}
-        <div className="absolute top-12 left-0 right-0 h-0.5 bg-border" />
-        
-        {/* Linha animada */}
-        <div className="absolute top-12 left-0 h-0.5 bg-gradient-to-r from-info via-purple-500 to-success animate-draw-line" />
-        
-        <div className="grid grid-cols-6 gap-4 relative">
-          {steps.map((step, index) => (
+      <div className="hidden md:flex items-start justify-center gap-2">
+        {steps.map((step, index) => (
+          <div key={step.title} className="flex items-start">
             <div
-              key={step.title}
               className={`flex flex-col items-center text-center group animate-stagger-${index + 1}`}
             >
               {/* Ícone com número */}
               <div className="relative mb-4">
                 <div
-                  className={`w-24 h-24 ${step.bgColor} ${step.borderColor} border-2 rounded-2xl flex items-center justify-center 
+                  className={`w-20 h-20 ${step.bgColor} ${step.borderColor} border-2 rounded-2xl flex items-center justify-center 
                     transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg cursor-pointer`}
                 >
-                  <step.icon className={`w-10 h-10 ${step.color} animate-float`} style={{ animationDelay: `${index * 0.2}s` }} />
+                  <step.icon className={`w-8 h-8 ${step.color} animate-float`} style={{ animationDelay: `${index * 0.2}s` }} />
                 </div>
                 {/* Número da etapa */}
                 <div 
-                  className={`absolute -top-2 -right-2 w-7 h-7 rounded-full ${step.bgColor} ${step.borderColor} border-2 
-                    flex items-center justify-center text-sm font-bold ${step.color}`}
+                  className={`absolute -top-2 -right-2 w-6 h-6 rounded-full ${step.bgColor} ${step.borderColor} border-2 
+                    flex items-center justify-center text-xs font-bold ${step.color}`}
                 >
                   {step.number}
                 </div>
               </div>
               
               {/* Título */}
-              <h3 className={`font-bold ${step.color} mb-2 text-sm tracking-wide`}>
+              <h3 className={`font-bold ${step.color} mb-1 text-xs tracking-wide`}>
                 {step.title}
               </h3>
               
               {/* Descrição */}
-              <p className="text-xs text-muted-foreground leading-relaxed max-w-[140px]">
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-[120px]">
                 {step.description}
               </p>
             </div>
-          ))}
-        </div>
+            
+            {/* Seta entre etapas */}
+            {index < steps.length - 1 && (
+              <div className="flex items-center pt-7 px-1">
+                <ArrowRight className="w-5 h-5 text-muted-foreground" />
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Mobile: Vertical Timeline */}

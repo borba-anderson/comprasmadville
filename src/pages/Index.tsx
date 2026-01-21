@@ -1,4 +1,5 @@
 import { Header } from '@/components/layout/Header';
+import { Logo } from '@/components/layout/Logo';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   UserGreeting, 
@@ -16,8 +17,13 @@ const Index = () => {
       <Header />
       
       <main className="page-container rounded-2xl shadow">
-        {/* Hero Section - Sem logo central */}
+        {/* Hero Section - Com logo GMAD */}
         <section className="py-10 md:py-16 text-center">
+          {/* Logo GMAD centralizada */}
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <Logo size="lg" showText={false} />
+          </div>
+          
           <h1 className="text-3xl md:text-4xl mb-4 tracking-tight font-sans text-foreground font-bold animate-fade-in">
             CENTRAL DE REQUISIÇÕES DE COMPRAS
           </h1>

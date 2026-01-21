@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FileText, Shield, ArrowRight, Sparkles, Lock } from 'lucide-react';
+import { FileText, Shield, ArrowRight, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 
@@ -27,22 +27,13 @@ export const ActionCards = () => {
 
   return (
     <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
-      {/* Card Primário: Fazer Requisição - Com Shimmer e Glow */}
+      {/* Card Primário: Fazer Requisição - Cinza escuro */}
       <a 
         href="#" 
         onClick={handleRequisicaoClick} 
         className="group relative animate-stagger-1"
       >
-        <div className="relative bg-gradient-to-br from-info to-info/80 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:shadow-info/30 hover:-translate-y-2 overflow-hidden">
-          {/* Shimmer overlay */}
-          <div className="absolute inset-0 animate-shimmer pointer-events-none" />
-          
-          {/* Badge "Mais utilizado" com pulse */}
-          <Badge className="absolute -top-3 left-6 bg-success text-success-foreground border-0 shadow-lg animate-pulse-glow">
-            <Sparkles className="w-3 h-3 mr-1" />
-            Mais utilizado
-          </Badge>
-          
+        <div className="relative bg-gradient-to-br from-zinc-700 to-zinc-800 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:shadow-zinc-700/30 hover:-translate-y-2 overflow-hidden">
           {/* Ícone com flutuação */}
           <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <FileText className="w-7 h-7 text-white animate-float" />
