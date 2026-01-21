@@ -9,13 +9,13 @@ const Index = () => {
   return <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="page-container shadow-sm rounded-2xl">
+      <main className="page-container rounded-2xl shadow">
         {/* Hero Section */}
         <section className="py-10 md:py-16 text-center animate-fade-in">
           <div className="flex justify-center mb-6">
             <Logo size="xl" showText={false} />
           </div>
-          <h1 className="text-3xl mb-3 tracking-tight font-sans text-primary font-bold text-center md:text-4xl bg-[status-em-analise] bg-neutral-100 py-[8px]">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
+          <h1 className="text-3xl mb-3 tracking-tight font-sans text-primary font-bold text-center md:text-4xl bg-[status-em-analise] py-[8px] bg-info-foreground">CENTRAL DE REQUISIÇÕES DE COMPRAS</h1>
           
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">Sistema de controle para suas solicitações de compras corporativas. </p>
         </section>
