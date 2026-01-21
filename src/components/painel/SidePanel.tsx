@@ -684,6 +684,11 @@ Qualquer dúvida, estamos à disposição!`;
                 {requisicao.solicitante_empresa && (
                   <p className="text-sm text-muted-foreground font-medium">Empresa: {requisicao.solicitante_empresa}</p>
                 )}
+                {requisicao.centro_custo && (
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium text-primary">Centro de Custo:</span> {requisicao.centro_custo}
+                  </p>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" className="gap-2" onClick={sendEmailToSolicitante}>
