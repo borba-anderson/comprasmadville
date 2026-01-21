@@ -126,6 +126,11 @@ export function usePainelFilters(requisicoes: Requisicao[]) {
       result = result.filter((req) => req.solicitante_setor === filters.setor);
     }
 
+    // Centro de Custo filter
+    if (filters.centroCusto && filters.centroCusto !== 'all') {
+      result = result.filter((req) => req.centro_custo === filters.centroCusto);
+    }
+
     // Prioridade filter (multi-select)
     if (filters.prioridade.length > 0) {
       result = result.filter((req) => filters.prioridade.includes(req.prioridade));
