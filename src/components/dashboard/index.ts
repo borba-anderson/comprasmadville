@@ -14,6 +14,7 @@ export { LeadTimeAnalysis } from './LeadTimeAnalysis';
 export { ProcessFunnel } from './ProcessFunnel';
 export { EfficiencyKPIs } from './EfficiencyKPIs';
 export { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
+export { GastosPorCentroCusto } from './GastosPorCentroCusto';
 
 // Legacy exports for compatibility
 export { OverviewCards } from './OverviewCards';
