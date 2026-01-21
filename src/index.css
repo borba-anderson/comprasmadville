@@ -521,4 +521,18 @@
     animation: slideUp 0.5s ease-out 0.6s forwards;
     opacity: 0;
   }
+
+  /* Title Glow - Sombra pulsante para título */
+  @keyframes title-glow {
+    0%, 100% {
+      box-shadow: 0 10px 25px hsl(24 95% 53% / 0.3);
+    }
+    50% {
+      box-shadow: 0 10px 40px hsl(24 95% 53% / 0.5);
+    }
+  }
+
+  .animate-title-glow {
+    animation: title-glow 3s ease-in-out infinite;
+  }
 }
