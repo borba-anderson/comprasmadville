@@ -10,6 +10,7 @@ import {
   RequisicaoTable,
   SidePanel,
   usePainelFilters,
+  useSorting,
 } from '@/components/painel';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,7 +36,7 @@ export default function Painel() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedRequisicao, setSelectedRequisicao] = useState<Requisicao | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [valorHistoryMap, setValorHistoryMap] = useState<Record<string, ValorHistorico[]>>({});
+  const [valorHistoryMap, _setValorHistoryMap] = useState<Record<string, ValorHistorico[]>>({});
 
   const { user, profile, isStaff, isLoading: authLoading, rolesLoaded } = useAuth();
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ export default function Painel() {
     applyQuickView,
   } = usePainelFilters(requisicoes);
 
+  const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
   // Redirect if not staff
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
@@ -203,7 +205,7 @@ export default function Painel() {
               />
 
               <RequisicaoTable
-                requisicoes={filteredRequisicoes}
+                requisicoes={sortedRequisicoes}
                 isLoading={isLoading}
                 viewMode={viewMode}
                 selectedId={selectedRequisicao?.id || null}
@@ -213,6 +215,8 @@ export default function Painel() {
                 onSendEmail={sendNotification}
                 formatCurrency={formatCurrency}
                 hasFilters={hasActiveFilters}
+                sortConfig={sortConfig}
+                onSort={handleSort}
               />
             </div>
           </TabsContent>

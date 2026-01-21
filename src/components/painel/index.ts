@@ -8,3 +8,4 @@ export * from './QuickActionsMenu';
 export * from './ExpandableRow';
 export * from './hooks/usePainelFilters';
 export * from './hooks/useSLA';
+export * from './hooks/useSorting';

@@ -1,4 +1,4 @@
-import { FileText } from 'lucide-react';
+import { FileText, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
 import { Requisicao, ValorHistorico } from '@/types';
 import { ExpandableRow } from './ExpandableRow';
 import { ViewMode } from './types';
+import { SortConfig, SortField } from './hooks/useSorting';
 import { cn } from '@/lib/utils';
 
 interface RequisicaoTableProps {
@@ -22,6 +23,43 @@ interface RequisicaoTableProps {
   onSendEmail: (requisicao: Requisicao) => void;
   formatCurrency: (value: number | null | undefined) => string;
   hasFilters: boolean;
+  sortConfig: SortConfig;
+  onSort: (field: SortField) => void;
+}
+
+interface SortableHeaderProps {
+  field: SortField;
+  label: string;
+  sortConfig: SortConfig;
+  onSort: (field: SortField) => void;
+  className?: string;
+}
+
+function SortableHeader({ field, label, sortConfig, onSort, className }: SortableHeaderProps) {
+  const isActive = sortConfig.field === field;
+  
+  return (
+    <TableHead 
+      className={cn(
+        'font-semibold text-foreground/80 cursor-pointer select-none hover:bg-muted/70 transition-colors',
+        className
+      )}
+      onClick={() => onSort(field)}
+    >
+      <div className="flex items-center gap-1 justify-center">
+        <span>{label}</span>
+        {isActive ? (
+          sortConfig.direction === 'desc' ? (
+            <ArrowDown className="w-3 h-3 text-primary" />
+          ) : (
+            <ArrowUp className="w-3 h-3 text-primary" />
+          )
+        ) : (
+          <ArrowUpDown className="w-3 h-3 text-muted-foreground/50" />
+        )}
+      </div>
+    </TableHead>
+  );
 }
 
 export function RequisicaoTable({
@@ -35,6 +73,8 @@ export function RequisicaoTable({
   onSendEmail,
   formatCurrency,
   hasFilters,
+  sortConfig,
+  onSort,
 }: RequisicaoTableProps) {
   if (isLoading) {
     return (
@@ -68,17 +108,77 @@ export function RequisicaoTable({
             isCompact ? 'text-[11px]' : 'text-xs'
           )}>
             <TableHead className="w-9 px-1" />
-            <TableHead className="w-[180px] font-semibold text-foreground/80">Item</TableHead>
-            <TableHead className="w-[130px] font-semibold text-foreground/80">Solicitante</TableHead>
-            <TableHead className="text-center w-16 font-semibold text-foreground/80">Qtd</TableHead>
-            <TableHead className="text-center w-20 font-semibold text-foreground/80">Prioridade</TableHead>
-            <TableHead className="text-center w-24 font-semibold text-foreground/80">Status</TableHead>
-            <TableHead className="text-center w-20 font-semibold text-foreground/80">Comprador</TableHead>
-            <TableHead className="text-center w-24 font-semibold text-foreground/80">Fornecedor</TableHead>
-            <TableHead className="text-center w-20 font-semibold text-foreground/80">Previsão</TableHead>
+            <SortableHeader 
+              field="item_nome" 
+              label="Item" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="w-[180px] !justify-start"
+            />
+            <SortableHeader 
+              field="solicitante_nome" 
+              label="Solicitante" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="w-[130px] !justify-start"
+            />
+            <SortableHeader 
+              field="quantidade" 
+              label="Qtd" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-16"
+            />
+            <SortableHeader 
+              field="prioridade" 
+              label="Prioridade" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-20"
+            />
+            <SortableHeader 
+              field="status" 
+              label="Status" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-24"
+            />
+            <SortableHeader 
+              field="comprador_nome" 
+              label="Comprador" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-20"
+            />
+            <SortableHeader 
+              field="fornecedor_nome" 
+              label="Fornecedor" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-24"
+            />
+            <SortableHeader 
+              field="previsao_entrega" 
+              label="Previsão" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-20"
+            />
             <TableHead className="text-center w-16 font-semibold text-foreground/80">SLA</TableHead>
-            <TableHead className="text-right w-24 font-semibold text-foreground/80">Valor</TableHead>
-            <TableHead className="text-center w-20 font-semibold text-foreground/80">Data</TableHead>
+            <SortableHeader 
+              field="valor" 
+              label="Valor" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-right w-24"
+            />
+            <SortableHeader 
+              field="created_at" 
+              label="Data" 
+              sortConfig={sortConfig} 
+              onSort={onSort}
+              className="text-center w-20"
+            />
             <TableHead className="text-right w-12 font-semibold text-foreground/80">Ações</TableHead>
           </TableRow>
         </TableHeader>
