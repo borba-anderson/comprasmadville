@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Requisicao, ValorHistorico } from '@/types';
 import { ExpandableRow } from './ExpandableRow';
 import { ViewMode } from './types';
@@ -25,6 +26,12 @@ interface RequisicaoTableProps {
   hasFilters: boolean;
   sortConfig: SortConfig;
   onSort: (field: SortField) => void;
+  // Multi-select props
+  isItemSelected?: (id: string) => boolean;
+  onToggleItem?: (id: string) => void;
+  onToggleAll?: () => void;
+  allSelected?: boolean;
+  someSelected?: boolean;
 }
 
 interface SortableHeaderProps {
@@ -75,7 +82,13 @@ export function RequisicaoTable({
   hasFilters,
   sortConfig,
   onSort,
+  isItemSelected,
+  onToggleItem,
+  onToggleAll,
+  allSelected = false,
+  someSelected = false,
 }: RequisicaoTableProps) {
+  const hasMultiSelect = isItemSelected && onToggleItem && onToggleAll;
   if (isLoading) {
     return (
       <div className="p-12 text-center">
@@ -107,6 +120,22 @@ export function RequisicaoTable({
             'bg-muted/50 hover:bg-muted/50 border-b-2 border-border/80',
             isCompact ? 'text-xs' : 'text-sm'
           )}>
+            {/* Select All Checkbox */}
+            {hasMultiSelect && (
+              <TableHead className="w-10 px-2">
+                <Checkbox
+                  checked={allSelected}
+                  ref={(el) => {
+                    if (el) {
+                      (el as HTMLButtonElement).dataset.state = someSelected ? 'indeterminate' : allSelected ? 'checked' : 'unchecked';
+                    }
+                  }}
+                  onCheckedChange={onToggleAll}
+                  aria-label="Selecionar todos"
+                  className="translate-y-[2px]"
+                />
+              </TableHead>
+            )}
             <TableHead className="w-10 px-2" />
             <SortableHeader 
               field="item_nome" 
@@ -195,6 +224,8 @@ export function RequisicaoTable({
               onStatusUpdate={() => onViewDetails(req)}
               onSendEmail={() => onSendEmail(req)}
               formatCurrency={formatCurrency}
+              isChecked={isItemSelected?.(req.id) ?? false}
+              onToggleCheck={onToggleItem ? () => onToggleItem(req.id) : undefined}
             />
           ))}
         </TableBody>
