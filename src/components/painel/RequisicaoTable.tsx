@@ -60,29 +60,29 @@ export function RequisicaoTable({
   const isCompact = viewMode === 'compact';
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
+    <div className="overflow-x-auto rounded-lg border border-border/60">
+      <Table className="table-fixed">
         <TableHeader>
           <TableRow className={cn(
-            'bg-muted/30 hover:bg-muted/30',
-            isCompact ? 'text-xs' : 'text-sm'
+            'bg-muted/50 hover:bg-muted/50 border-b-2 border-border/80',
+            isCompact ? 'text-[11px]' : 'text-xs'
           )}>
-            <TableHead className="w-10" />
-            <TableHead>Item</TableHead>
-            <TableHead>Solicitante</TableHead>
-            <TableHead className="text-center w-20">Qtd</TableHead>
-            <TableHead className="text-center w-24">Prioridade</TableHead>
-            <TableHead className="text-center w-28">Status</TableHead>
-            <TableHead className="text-center w-24">Comprador</TableHead>
-            <TableHead className="text-center w-28">Fornecedor</TableHead>
-            <TableHead className="text-center w-28">Previsão</TableHead>
-            <TableHead className="text-center w-24">SLA</TableHead>
-            <TableHead className="text-right w-28">Valor</TableHead>
-            <TableHead className="text-center w-24">Data</TableHead>
-            <TableHead className="text-right w-16">Ações</TableHead>
+            <TableHead className="w-9 px-1" />
+            <TableHead className="w-[180px] font-semibold text-foreground/80">Item</TableHead>
+            <TableHead className="w-[130px] font-semibold text-foreground/80">Solicitante</TableHead>
+            <TableHead className="text-center w-16 font-semibold text-foreground/80">Qtd</TableHead>
+            <TableHead className="text-center w-20 font-semibold text-foreground/80">Prioridade</TableHead>
+            <TableHead className="text-center w-24 font-semibold text-foreground/80">Status</TableHead>
+            <TableHead className="text-center w-20 font-semibold text-foreground/80">Comprador</TableHead>
+            <TableHead className="text-center w-24 font-semibold text-foreground/80">Fornecedor</TableHead>
+            <TableHead className="text-center w-20 font-semibold text-foreground/80">Previsão</TableHead>
+            <TableHead className="text-center w-16 font-semibold text-foreground/80">SLA</TableHead>
+            <TableHead className="text-right w-24 font-semibold text-foreground/80">Valor</TableHead>
+            <TableHead className="text-center w-20 font-semibold text-foreground/80">Data</TableHead>
+            <TableHead className="text-right w-12 font-semibold text-foreground/80">Ações</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="text-sm">
           {requisicoes.map((req) => (
             <ExpandableRow
               key={req.id}
