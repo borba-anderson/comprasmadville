@@ -395,4 +395,130 @@
       box-shadow: 0 0 0 8px hsl(var(--priority-alta) / 0);
     }
   }
+
+  /* ============================================
+     ANIMAÇÕES DINÂMICAS - REDESIGN VISUAL
+     ============================================ */
+
+  /* Marquee - Logo scroll infinito */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
+  }
+
+  /* Shimmer - Efeito de luz passando */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(0 0% 100% / 0.15) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  /* Pulse Glow - Brilho pulsante */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px hsl(var(--info) / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px hsl(var(--info) / 0.6);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Float - Flutuação suave */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Draw Line - Linha sendo desenhada */
+  @keyframes draw-line {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  .animate-draw-line {
+    animation: draw-line 2s ease-out forwards;
+  }
+
+  /* Bounce Subtle - Pequeno pulo */
+  @keyframes bounce-subtle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  .hover-bounce:hover {
+    animation: bounce-subtle 0.5s ease-in-out;
+  }
+
+  /* Stagger animations - Delays de entrada */
+  .animate-stagger-1 {
+    animation: slideUp 0.5s ease-out 0.1s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-2 {
+    animation: slideUp 0.5s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-3 {
+    animation: slideUp 0.5s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-4 {
+    animation: slideUp 0.5s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-5 {
+    animation: slideUp 0.5s ease-out 0.5s forwards;
+    opacity: 0;
+  }
+
+  .animate-stagger-6 {
+    animation: slideUp 0.5s ease-out 0.6s forwards;
+    opacity: 0;
+  }
 }
