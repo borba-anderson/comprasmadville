@@ -150,7 +150,7 @@ export const EMPRESAS = [
   'GMAD Madville (Loja)',
   'GMAD Madville (CD)',
   'GMAD Madville (Soluções)',
-  'GMAD Curitiba (Loja)'
+  'GMAD Curitiba (Loja)',
   'GMAD Curitiba (CD Pinheirinho)',
 ] as const;
 
