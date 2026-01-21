@@ -9,8 +9,10 @@ import {
   FiltersBar,
   RequisicaoTable,
   SidePanel,
+  PaginationControls,
   usePainelFilters,
   useSorting,
+  usePagination,
 } from '@/components/painel';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,6 +59,8 @@ export default function Painel() {
   } = usePainelFilters(requisicoes);
 
   const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
+  const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
+
   // Redirect if not staff
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
@@ -205,7 +209,7 @@ export default function Painel() {
               />
 
               <RequisicaoTable
-                requisicoes={sortedRequisicoes}
+                requisicoes={paginatedItems}
                 isLoading={isLoading}
                 viewMode={viewMode}
                 selectedId={selectedRequisicao?.id || null}
@@ -217,6 +221,12 @@ export default function Painel() {
                 hasFilters={hasActiveFilters}
                 sortConfig={sortConfig}
                 onSort={handleSort}
+              />
+
+              <PaginationControls
+                pagination={pagination}
+                onPageChange={goToPage}
+                onPageSizeChange={changePageSize}
               />
             </div>
           </TabsContent>
