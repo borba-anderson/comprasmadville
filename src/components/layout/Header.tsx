@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogOut, User, Menu } from 'lucide-react';
+import { LogOut, User, Menu, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +18,7 @@ interface HeaderProps {
 }
 
 export function Header({ showSidebarTrigger = false }: HeaderProps) {
-  const { user, profile, roles, signOut, isStaff } = useAuth();
+  const { user, profile, roles, signOut, isStaff, isAdmin } = useAuth();
 
   const getRoleBadge = () => {
     if (roles.includes('admin')) return 'Admin';
@@ -67,6 +67,14 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                 {isStaff && (
                   <DropdownMenuItem asChild>
                     <Link to="/painel">Painel Administrativo</Link>
+                  </DropdownMenuItem>
+                )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/usuarios" className="flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Gestão de Usuários
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>

@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Requisicao from "./pages/Requisicao";
 import Painel from "./pages/Painel";
+import Usuarios from "./pages/Usuarios";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/requisicao" element={<Requisicao />} />
               <Route path="/painel" element={<Painel />} />
+              <Route path="/usuarios" element={<Usuarios />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -37,3 +39,4 @@ const App = () => (
 );
 
 export default App;
+
