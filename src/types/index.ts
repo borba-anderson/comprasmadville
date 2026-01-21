@@ -24,6 +24,7 @@ export interface Profile {
   email: string;
   telefone?: string;
   setor?: string;
+  empresa?: string;
   ativo: boolean;
   created_at: string;
   updated_at: string;
@@ -175,15 +176,17 @@ export const QUICK_VIEWS = {
 
 export const SETORES = [
   "Almoxarifado",
+  "Assistência/Garantia",
   "Comercial",
   "Compras",
   "Diretoria",
   "Eventos",
   "Financeiro",
+  "Limpeza",
   "Logística",
   "Manutenção Predial",
   "Marketing",
-  "Recursos Humanos",
+  "RH",
   "SAC",
   "Showroom",
   "TI",

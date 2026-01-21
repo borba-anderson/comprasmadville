@@ -110,6 +110,7 @@ export type Database = {
           auth_uid: string
           created_at: string | null
           email: string
+          empresa: string | null
           id: string
           nome: string
           setor: string | null
@@ -121,6 +122,7 @@ export type Database = {
           auth_uid: string
           created_at?: string | null
           email: string
+          empresa?: string | null
           id?: string
           nome: string
           setor?: string | null
@@ -132,6 +134,7 @@ export type Database = {
           auth_uid?: string
           created_at?: string | null
           email?: string
+          empresa?: string | null
           id?: string
           nome?: string
           setor?: string | null
