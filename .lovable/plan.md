@@ -1,209 +1,124 @@
 
 
-# Plano de Redesign Visual - Tela Inicial (Atualizado)
+# Plano de Ajustes Visuais - Tela Inicial
 
-## Objetivo
-Transformar a tela inicial em uma experiência visual mais impactante e profissional, com animações dinâmicas corporativas, workflow interativo do processo de requisições e uma faixa de logos das empresas GMAD rolando no fundo.
+## Resumo das Alteracoes
 
----
-
-## 1. Logos das Empresas - Upload e Configuração
-
-### Arquivos a Copiar para o Projeto
-| Arquivo Original | Destino |
-|------------------|---------|
-| `LOGO_MADVILLE.png` | `src/assets/logos/logo-madville.png` |
-| `LOGO_SOLUÇÕES.png` | `src/assets/logos/logo-solucoes.png` |
-| `gmad_curitiba.png` | `src/assets/logos/logo-curitiba.png` |
+Ajustes pontuais na tela inicial para corrigir o visual conforme solicitado.
 
 ---
 
-## 2. Novas Animações CSS
+## 1. Adicionar Logo GMAD Acima do Titulo
 
-### Keyframes a Adicionar em `src/index.css`
+### Arquivo: `src/pages/Index.tsx`
 
-| Keyframe | Descrição |
-|----------|-----------|
-| `marquee` | Scroll infinito horizontal para logos |
-| `pulse-glow` | Brilho pulsante para badges |
-| `shimmer` | Efeito de luz passando para card primário |
-| `float` | Flutuação suave para ícones |
-| `draw-line` | Linha sendo desenhada para workflow |
-| `bounce-subtle` | Pequeno pulo para ícones hover |
+**Alteracao:**
+- Importar o componente `Logo` de `@/components/layout/Logo`
+- Adicionar a logo GMAD centralizada acima do titulo principal
+- Usar tamanho grande (`size="lg"`) e sem texto (`showText={false}`)
 
-### Classes Utilitárias Novas
-- `.animate-marquee` - Logos rolando continuamente
-- `.animate-shimmer` - Efeito brilho no card
-- `.animate-float` - Flutuação suave
-- `.animate-stagger-1/2/3` - Delays de entrada escalonados
-- `.hover-bounce` - Pulo sutil no hover
-
----
-
-## 3. Componente: LogoMarquee
-
-### Novo arquivo: `src/components/home/LogoMarquee.tsx`
-
-**Funcionalidade:**
-- Uma única faixa de carrossel infinito horizontal
-- 3 logos (Madville, Soluções, Curitiba) repetidas para criar loop contínuo
-- Opacidade reduzida (15-20%) para não competir com conteúdo
-- Velocidade suave (25 segundos por ciclo)
-- Posicionada abaixo do título principal
-
----
-
-## 4. Componente: WorkflowTimeline (Substitui HowItWorks)
-
-### Novo arquivo: `src/components/home/WorkflowTimeline.tsx`
-
-**6 Etapas do Processo:**
-
-| Etapa | Ícone | Título | Descrição |
-|-------|-------|--------|-----------|
-| 1 | ClipboardList | SOLICITE | Preencha o formulário com dados do item |
-| 2 | Search | ANÁLISE | Equipe de compras revisa a solicitação |
-| 3 | Calculator | COTAÇÃO | Busca de fornecedores e melhores preços |
-| 4 | CheckCircle | APROVAÇÃO | Validação pela gestão (se necessário) |
-| 5 | ShoppingCart | COMPRA | Pedido realizado com fornecedor |
-| 6 | PackageCheck | ENTREGA | Item recebido e confirmado |
-
-**Animações:**
-- Cards aparecem sequencialmente com delay (stagger effect)
-- Linha conectora animada entre etapas
-- Ícones com flutuação suave
-- Cards levantam no hover com sombra
-
-**Layout Responsivo:**
-- Desktop: Linha horizontal com 6 etapas conectadas
-- Mobile: Timeline vertical empilhada
-
----
-
-## 5. Redesign do Hero Section
-
-### Alterações em `src/pages/Index.tsx`
-
-**Mudanças:**
-- Remover a logo GMAD grande do centro (manter apenas no Header)
-- Título principal com animação fade-in + slide-up
-- Subtítulo com delay de animação
-- Uma faixa de LogoMarquee abaixo do subtítulo
-
-**Estrutura Nova:**
+**Estrutura Nova do Hero:**
 ```text
-+----------------------------------------------------------+
-|                    HEADER (com logo)                      |
-+----------------------------------------------------------+
-|                                                           |
-|      "CENTRAL DE REQUISIÇÕES DE COMPRAS"                  |
-|           (fade-in + slide-up animado)                    |
-|                                                           |
-|      Sistema de controle para suas solicitações...        |
-|           (fade-in com delay)                             |
-|                                                           |
-|   [→ MADVILLE | SOLUÇÕES | CURITIBA | MADVILLE... →]      |
-|              (logos rolando - única faixa)                |
-|                                                           |
-+----------------------------------------------------------+
++------------------------------------------+
+|              [LOGO GMAD]                 |
+|                                          |
+|   "CENTRAL DE REQUISICOES DE COMPRAS"    |
+|        Sistema de controle...            |
+|                                          |
+|   [LOGOS MARQUEE]                        |
++------------------------------------------+
 ```
 
 ---
 
-## 6. Redesign dos Action Cards
+## 2. Corrigir Workflow Timeline - Usar Setas
 
-### Alterações em `src/components/home/ActionCards.tsx`
+### Arquivo: `src/components/home/WorkflowTimeline.tsx`
 
-**Card Primário (Fazer Requisição):**
-- Efeito shimmer constante passando pelo card
-- Gradiente mais vibrante (laranja para laranja escuro)
-- Sombra colorida (glow) laranja
-- Badge "Mais utilizado" com pulse animation
-- Ícone com flutuação suave
+**Problema atual:**
+- Existe uma linha horizontal (div com `h-0.5`) passando por cima dos cards
+- Linhas nas linhas 77-80 estao sobrepondo o conteudo
 
-**Card Secundário (Painel Administrativo):**
-- Border animado no hover
-- Sombra mais pronunciada no hover
-- Entrada com delay (stagger effect)
+**Solucao:**
+- Remover as duas linhas conectoras horizontais (linhas 76-80)
+- Adicionar setas (icone `ChevronRight` ou `ArrowRight`) entre cada etapa
+- As setas ficarao posicionadas entre os cards, nao atras deles
 
-**Animações de Entrada:**
-- Card 1: aparece primeiro (delay 0.2s)
-- Card 2: aparece segundo (delay 0.4s)
-- Ambos com slide-up + fade
-
----
-
-## 7. Estrutura Final da Página
-
+**Estrutura Visual Nova (Desktop):**
 ```text
-+----------------------------------------------------------+
-|              HEADER (com logo GMAD)                       |
-+----------------------------------------------------------+
-|                                                           |
-|      "CENTRAL DE REQUISIÇÕES DE COMPRAS"                  |
-|           Sistema de controle...                          |
-|                                                           |
-|   [→ LOGOS MARQUEE - única faixa →]                       |
-|                                                           |
-+----------------------------------------------------------+
-|                                                           |
-|   [STATS DO USUÁRIO - quando logado]                      |
-|                                                           |
-+----------------------------------------------------------+
-|                                                           |
-|   +------------------------+  +------------------------+  |
-|   |   FAZER REQUISIÇÃO     |  |   PAINEL ADMIN         |  |
-|   |      (shimmer)         |  |                        |  |
-|   +------------------------+  +------------------------+  |
-|                                                           |
-+----------------------------------------------------------+
-|                                                           |
-|              COMO FUNCIONA - WORKFLOW                     |
-|                                                           |
-|  [1]----[2]----[3]----[4]----[5]----[6]                   |
-|   |      |      |      |      |      |                    |
-| SOLIC  ANAL   COTA   APROV  COMPRA ENTREG                 |
-|                                                           |
-+----------------------------------------------------------+
-|                       FOOTER                              |
-+----------------------------------------------------------+
+[CARD 1] → [CARD 2] → [CARD 3] → [CARD 4] → [CARD 5] → [CARD 6]
 ```
 
----
-
-## 8. Resumo dos Arquivos a Criar/Modificar
-
-| Tipo | Arquivo | Ação |
-|------|---------|------|
-| Asset | `src/assets/logos/logo-madville.png` | Criar (copiar upload) |
-| Asset | `src/assets/logos/logo-solucoes.png` | Criar (copiar upload) |
-| Asset | `src/assets/logos/logo-curitiba.png` | Criar (copiar upload) |
-| CSS | `src/index.css` | Adicionar keyframes e classes |
-| Componente | `src/components/home/LogoMarquee.tsx` | Criar novo |
-| Componente | `src/components/home/WorkflowTimeline.tsx` | Criar novo |
-| Componente | `src/components/home/ActionCards.tsx` | Modificar com animações |
-| Componente | `src/components/home/index.ts` | Atualizar exports |
-| Página | `src/pages/Index.tsx` | Remover logo central, adicionar animações |
+**Implementacao:**
+- Usar `ArrowRight` do lucide-react entre cada etapa
+- Renderizar seta apenas quando `index < steps.length - 1`
+- Seta com cor `text-muted-foreground` e tamanho adequado
 
 ---
 
-## 9. Especificações Técnicas
+## 3. Alterar Cor do Card "Fazer Requisicao"
 
-### Velocidades de Animação
-| Elemento | Duração |
-|----------|---------|
-| Marquee logos | 25 segundos por ciclo |
-| Shimmer card | 3 segundos por ciclo |
-| Workflow line draw | 2 segundos |
-| Entrada de elementos | 0.5s com delays escalonados |
+### Arquivo: `src/components/home/ActionCards.tsx`
 
-### Cores e Opacidades
-- Logos no fundo: 15% opacidade
-- Sombra glow laranja: `rgba(234, 88, 12, 0.25)`
-- Gradiente card: `from-primary to-primary/80`
+**Alteracao na linha 36:**
+- DE: `bg-gradient-to-br from-info to-info/80`
+- PARA: `bg-gradient-to-br from-zinc-700 to-zinc-800` (cinza escuro)
 
-### Responsividade
-- Workflow horizontal em desktop (>768px)
-- Workflow vertical empilhado em mobile
-- Logos menores em mobile (60px vs 100px altura)
+**Ajustes adicionais:**
+- Sombra no hover: mudar de `hover:shadow-info/30` para `hover:shadow-zinc-700/30`
+- Remover shimmer overlay (linha 38) se preferir visual mais limpo
+
+---
+
+## 4. Remover Badge "Mais Utilizado"
+
+### Arquivo: `src/components/home/ActionCards.tsx`
+
+**Remover linhas 40-44:**
+```tsx
+{/* Badge "Mais utilizado" com pulse */}
+<Badge className="absolute -top-3 left-6 bg-success text-success-foreground border-0 shadow-lg animate-pulse-glow">
+  <Sparkles className="w-3 h-3 mr-1" />
+  Mais utilizado
+</Badge>
+```
+
+**Limpar imports:**
+- Remover `Sparkles` do import do lucide-react
+- Remover `Badge` do import se nao for mais utilizado em outro lugar
+
+---
+
+## 5. Resumo dos Arquivos a Modificar
+
+| Arquivo | Alteracao |
+|---------|-----------|
+| `src/pages/Index.tsx` | Adicionar Logo GMAD acima do titulo |
+| `src/components/home/WorkflowTimeline.tsx` | Remover linhas, adicionar setas entre etapas |
+| `src/components/home/ActionCards.tsx` | Cor cinza escuro + remover badge |
+
+---
+
+## 6. Resultado Visual Esperado
+
+**Hero Section:**
+```text
+            [LOGO GMAD]
+   CENTRAL DE REQUISICOES DE COMPRAS
+     Sistema de controle...
+   [logos rolando]
+```
+
+**Workflow Timeline:**
+```text
+[1 SOLICITE] → [2 ANALISE] → [3 COTACAO] → [4 APROVACAO] → [5 COMPRA] → [6 ENTREGA]
+```
+
+**Action Cards:**
+```text
++------------------------+  +------------------------+
+|   FAZER REQUISICAO     |  |   PAINEL ADMIN         |
+|   (cinza escuro)       |  |   (com borda)          |
++------------------------+  +------------------------+
+```
 
