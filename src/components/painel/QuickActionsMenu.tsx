@@ -13,7 +13,6 @@ import {
   Mail,
   Paperclip,
   History,
-  ExternalLink,
 } from 'lucide-react';
 import { Requisicao } from '@/types';
 
@@ -22,6 +21,7 @@ interface QuickActionsMenuProps {
   onView: () => void;
   onStatusUpdate: () => void;
   onSendEmail: () => void;
+  readOnly?: boolean;
 }
 
 export function QuickActionsMenu({
@@ -29,6 +29,7 @@ export function QuickActionsMenu({
   onView,
   onStatusUpdate,
   onSendEmail,
+  readOnly = false,
 }: QuickActionsMenuProps) {
   return (
     <DropdownMenu>
@@ -47,25 +48,32 @@ export function QuickActionsMenu({
           <Eye className="w-4 h-4 mr-2" />
           Ver detalhes
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusUpdate(); }}>
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Atualizar status
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSendEmail(); }}>
-          <Mail className="w-4 h-4 mr-2" />
-          Enviar e-mail
-        </DropdownMenuItem>
-        {requisicao.arquivo_url && (
-          <DropdownMenuItem 
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(requisicao.arquivo_url!, '_blank');
-            }}
-          >
-            <Paperclip className="w-4 h-4 mr-2" />
-            Ver anexo
+        {!readOnly && (
+          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusUpdate(); }}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Atualizar status
           </DropdownMenuItem>
+        )}
+        {!readOnly && <DropdownMenuSeparator />}
+        {!readOnly && (
+          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSendEmail(); }}>
+            <Mail className="w-4 h-4 mr-2" />
+            Enviar e-mail
+          </DropdownMenuItem>
+        )}
+        {requisicao.arquivo_url && (
+          <>
+            {!readOnly && <DropdownMenuSeparator />}
+            <DropdownMenuItem 
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(requisicao.arquivo_url!, '_blank');
+              }}
+            >
+              <Paperclip className="w-4 h-4 mr-2" />
+              Ver anexo
+            </DropdownMenuItem>
+          </>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onView(); }}>

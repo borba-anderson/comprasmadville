@@ -228,49 +228,34 @@ export function FiltersBar({
   return (
     <div className="sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b">
       <div className="p-3 space-y-3">
-        {/* Quick View Buttons - only for staff */}
-        {!readOnly && (
-          <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
-            <span className="text-xs font-medium text-muted-foreground mr-2">Visões rápidas:</span>
-            {quickViewButtons.map((btn) => {
-              const view = QUICK_VIEWS[btn.id as keyof typeof QUICK_VIEWS];
-              const isActive = filters.quickView === btn.id;
-              return (
-                <Button
-                  key={btn.id}
-                  variant={isActive ? 'default' : 'outline'}
-                  size="sm"
-                  className={cn('gap-1.5 h-8', isActive && 'shadow-md')}
-                  onClick={() => onQuickView(isActive ? '' : btn.id)}
-                >
-                  <btn.icon className={cn('w-3.5 h-3.5', !isActive && btn.color)} />
-                  {view.label}
-                </Button>
-              );
-            })}
-            
-            <div className="flex-1" />
-            
-            {/* Result count */}
-            <span className="text-sm font-medium">
-              <span className="text-primary">{resultCount}</span>
-              <span className="text-muted-foreground"> de {totalCount}</span>
-            </span>
-          </div>
-        )}
-
-        {/* Read-only header for solicitantes */}
-        {readOnly && (
-          <div className="flex items-center justify-between pb-2 border-b">
-            <span className="text-sm font-medium text-muted-foreground">
-              Acompanhe o status das suas requisições
-            </span>
-            <span className="text-sm font-medium">
-              <span className="text-primary">{resultCount}</span>
-              <span className="text-muted-foreground"> requisições</span>
-            </span>
-          </div>
-        )}
+        {/* Quick View Buttons - for all users */}
+        <div className="flex flex-wrap items-center gap-2 pb-2 border-b">
+          <span className="text-xs font-medium text-muted-foreground mr-2">Visões rápidas:</span>
+          {quickViewButtons.map((btn) => {
+            const view = QUICK_VIEWS[btn.id as keyof typeof QUICK_VIEWS];
+            const isActive = filters.quickView === btn.id;
+            return (
+              <Button
+                key={btn.id}
+                variant={isActive ? 'default' : 'outline'}
+                size="sm"
+                className={cn('gap-1.5 h-8', isActive && 'shadow-md')}
+                onClick={() => onQuickView(isActive ? '' : btn.id)}
+              >
+                <btn.icon className={cn('w-3.5 h-3.5', !isActive && btn.color)} />
+                {view.label}
+              </Button>
+            );
+          })}
+          
+          <div className="flex-1" />
+          
+          {/* Result count */}
+          <span className="text-sm font-medium">
+            <span className="text-primary">{resultCount}</span>
+            <span className="text-muted-foreground"> de {totalCount}</span>
+          </span>
+        </div>
 
         {/* Primary Filters Row */}
         <div className="flex flex-wrap items-center gap-2">

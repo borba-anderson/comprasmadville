@@ -32,6 +32,8 @@ interface RequisicaoTableProps {
   onToggleAll?: () => void;
   allSelected?: boolean;
   someSelected?: boolean;
+  // Read-only mode for solicitantes
+  readOnly?: boolean;
 }
 
 interface SortableHeaderProps {
@@ -87,6 +89,7 @@ export function RequisicaoTable({
   onToggleAll,
   allSelected = false,
   someSelected = false,
+  readOnly = false,
 }: RequisicaoTableProps) {
   const hasMultiSelect = isItemSelected && onToggleItem && onToggleAll;
   if (isLoading) {
@@ -226,6 +229,7 @@ export function RequisicaoTable({
               formatCurrency={formatCurrency}
               isChecked={isItemSelected?.(req.id) ?? false}
               onToggleCheck={onToggleItem ? () => onToggleItem(req.id) : undefined}
+              readOnly={readOnly}
             />
           ))}
         </TableBody>

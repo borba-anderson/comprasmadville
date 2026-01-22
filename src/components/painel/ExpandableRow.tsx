@@ -24,6 +24,8 @@ interface ExpandableRowProps {
   // Multi-select props
   isChecked?: boolean;
   onToggleCheck?: () => void;
+  // Read-only mode for solicitantes
+  readOnly?: boolean;
 }
 
 export function ExpandableRow({
@@ -38,6 +40,7 @@ export function ExpandableRow({
   formatCurrency,
   isChecked = false,
   onToggleCheck,
+  readOnly = false,
 }: ExpandableRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const hasMultiSelect = onToggleCheck !== undefined;
@@ -233,6 +236,7 @@ export function ExpandableRow({
               onView={onViewDetails}
               onStatusUpdate={onStatusUpdate}
               onSendEmail={onSendEmail}
+              readOnly={readOnly}
             />
           </td>
         </tr>
