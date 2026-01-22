@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote, Ban } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote, Ban, Wallet } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -47,6 +47,7 @@ export function SidePanel({
   const [orcamentoFile, setOrcamentoFile] = useState<File | null>(null);
   const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
   const [observacaoComprador, setObservacaoComprador] = useState('');
+  const [centroCustoInput, setCentroCustoInput] = useState('');
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const [isDeletingOrcamento, setIsDeletingOrcamento] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
@@ -75,6 +76,7 @@ export function SidePanel({
       setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
+      setCentroCustoInput(requisicao.centro_custo || '');
     }
   }, [isOpen, requisicao]);
 
@@ -391,6 +393,30 @@ export function SidePanel({
     }
   };
 
+  const updateCentroCusto = async () => {
+    if (!requisicao) return;
+    
+    try {
+      setIsUpdating(true);
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          centro_custo: centroCustoInput || null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Centro de custo atualizado' });
+      onUpdate();
+    } catch (error) {
+      console.error('Error updating centro_custo:', error);
+      toast({ title: 'Erro ao atualizar centro de custo', variant: 'destructive' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const deleteAnexo = async (indexToDelete?: number) => {
     if (!requisicao || !requisicao.arquivo_url) return;
     
@@ -686,7 +712,7 @@ Qualquer dúvida, estamos à disposição!`;
                 {requisicao.solicitante_empresa && (
                   <p className="text-sm text-muted-foreground font-medium">Empresa: {requisicao.solicitante_empresa}</p>
                 )}
-                {requisicao.centro_custo && (
+                {readOnly && requisicao.centro_custo && (
                   <p className="text-sm text-muted-foreground">
                     <span className="font-medium text-primary">Centro de Custo:</span> {requisicao.centro_custo}
                   </p>
@@ -710,6 +736,31 @@ Qualquer dúvida, estamos à disposição!`;
                 </div>
               )}
             </div>
+
+            {/* Centro de Custo - Editable for staff */}
+            {!readOnly && (
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold flex items-center gap-2">
+                  <Wallet className="w-4 h-4" />
+                  Centro de Custo
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={centroCustoInput}
+                    onChange={(e) => setCentroCustoInput(e.target.value)}
+                    placeholder="Ex: CC-001, Marketing-2024"
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={updateCentroCusto} 
+                    disabled={isUpdating || centroCustoInput === (requisicao.centro_custo || '')}
+                    size="sm"
+                  >
+                    {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+                  </Button>
+                </div>
+              </div>
+            )}
 
             <Separator />
 
