@@ -2,13 +2,13 @@ import { useState } from 'react';
 import {
   Calendar,
   Building2,
-  Users,
   Building,
   Save,
   Star,
   X,
   Trash2,
   Filter,
+  Wallet,
 } from 'lucide-react';
 import {
   Select,
@@ -42,6 +42,7 @@ export interface DashboardFiltersState {
   empresas: string[];
   setores: string[];
   status: string[];
+  centrosCusto: string[];
   dateFrom: string;
   dateTo: string;
 }
@@ -57,6 +58,7 @@ export const DEFAULT_DASHBOARD_FILTERS: DashboardFiltersState = {
   empresas: [],
   setores: [],
   status: [],
+  centrosCusto: [],
   dateFrom: '',
   dateTo: '',
 };
@@ -154,6 +156,7 @@ interface DashboardFiltersProps {
   onLoadFilter: (id: string) => void;
   onDeleteFilter: (id: string) => void;
   onReset: () => void;
+  centrosCustoOptions?: string[];
 }
 
 export function DashboardFilters({
@@ -164,6 +167,7 @@ export function DashboardFilters({
   onLoadFilter,
   onDeleteFilter,
   onReset,
+  centrosCustoOptions = [],
 }: DashboardFiltersProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -180,8 +184,14 @@ export function DashboardFilters({
     filters.empresas.length > 0 ||
     filters.setores.length > 0 ||
     filters.status.length > 0 ||
+    filters.centrosCusto.length > 0 ||
     filters.dateFrom !== '' ||
     filters.dateTo !== '';
+  
+  const centroCustoOptions = centrosCustoOptions.map((cc) => ({
+    value: cc,
+    label: cc,
+  }));
 
   const empresaOptions = EMPRESAS.map((empresa) => ({
     value: empresa,
@@ -247,6 +257,17 @@ export function DashboardFilters({
         value={filters.status}
         onChange={(status) => onChange({ ...filters, status })}
       />
+
+      {/* Centro de Custo Multi-select */}
+      {centroCustoOptions.length > 0 && (
+        <MultiSelectDropdown
+          label="Centro Custo"
+          icon={Wallet}
+          options={centroCustoOptions}
+          value={filters.centrosCusto}
+          onChange={(centrosCusto) => onChange({ ...filters, centrosCusto })}
+        />
+      )}
 
       {/* Saved Filters */}
       {savedFilters.length > 0 && (
