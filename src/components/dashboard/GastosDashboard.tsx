@@ -134,6 +134,12 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
       previous = previous.filter((r) => filters.status.includes(r.status));
     }
 
+    // Apply centro de custo filter
+    if (filters.centrosCusto.length > 0) {
+      filtered = filtered.filter((r) => r.centro_custo && filters.centrosCusto.includes(r.centro_custo));
+      previous = previous.filter((r) => r.centro_custo && filters.centrosCusto.includes(r.centro_custo));
+    }
+
     return { filteredRequisicoes: filtered, previousPeriodRequisicoes: previous };
   }, [requisicoes, filters]);
 
@@ -169,6 +175,25 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     onDrillDown?.({ status });
   };
 
+  // Filter handlers for quick actions
+  const handleFilterPendentes = () => {
+    setFilters({
+      ...filters,
+      status: ['pendente', 'em_analise'],
+    });
+  };
+
+  const handleFilterAtrasadas = () => {
+    // Filter requisicoes that are overdue (previsao_entrega passed and not finished)
+    // We set status to active ones and period to all to show all overdue
+    setFilters({
+      ...DEFAULT_DASHBOARD_FILTERS,
+      periodo: 'all',
+      status: ['pendente', 'em_analise', 'aprovado', 'cotando', 'comprado', 'em_entrega'],
+    });
+    // Show a toast to indicate what was filtered
+  };
+
   if (requisicoes.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -182,6 +207,15 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
       </div>
     );
   }
+
+  // Get unique centros de custo for filter options
+  const centrosCustoOptions = useMemo(() => {
+    const centros = new Set<string>();
+    requisicoes.forEach((r) => {
+      if (r.centro_custo) centros.add(r.centro_custo);
+    });
+    return Array.from(centros).sort();
+  }, [requisicoes]);
 
   return (
     <div className="space-y-6">
@@ -198,10 +232,14 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
           onLoadFilter={loadFilter}
           onDeleteFilter={deleteFilter}
           onReset={resetFilters}
+          centrosCustoOptions={centrosCustoOptions}
         />
       </div>
 
-      <AcoesRapidas />
+      <AcoesRapidas 
+        onFilterPendentes={handleFilterPendentes}
+        onFilterAtrasadas={handleFilterAtrasadas}
+      />
       <HeroKPIs {...kpis} />
 
       {/* Trend Chart - Full width */}

@@ -1,8 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { Plus, Clock, AlertTriangle, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { Plus, Clock, AlertTriangle, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function AcoesRapidas() {
+interface AcoesRapidasProps {
+  onFilterPendentes?: () => void;
+  onFilterAtrasadas?: () => void;
+}
+
+export function AcoesRapidas({ onFilterPendentes, onFilterAtrasadas }: AcoesRapidasProps) {
   const navigate = useNavigate();
 
   const handleExportPDF = () => {
@@ -10,9 +15,28 @@ export function AcoesRapidas() {
     window.print();
   };
 
-  const handleExportExcel = () => {
-    // TODO: Implementar exportação Excel
-    alert('Funcionalidade de exportação Excel em desenvolvimento.');
+  const handleVerPendentes = () => {
+    if (onFilterPendentes) {
+      onFilterPendentes();
+    } else {
+      // Fallback: scroll to table
+      const element = document.querySelector('[data-status-filter]');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleVerAtrasadas = () => {
+    if (onFilterAtrasadas) {
+      onFilterAtrasadas();
+    } else {
+      // Fallback: scroll to table
+      const element = document.querySelector('[data-status-filter]');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   const acoes = [
@@ -26,25 +50,13 @@ export function AcoesRapidas() {
       label: 'Ver Pendentes',
       icon: Clock,
       variant: 'outline' as const,
-      onClick: () => {
-        // Scroll to table or filter
-        const element = document.querySelector('[data-status-filter]');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      },
+      onClick: handleVerPendentes,
     },
     {
       label: 'Ver Atrasadas',
       icon: AlertTriangle,
       variant: 'outline' as const,
-      onClick: () => {
-        // Scroll to table or filter
-        const element = document.querySelector('[data-status-filter]');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      },
+      onClick: handleVerAtrasadas,
     },
     {
       label: 'Exportar PDF',
