@@ -41,7 +41,7 @@ interface UserWithRoles extends Profile {
 
 const ROLE_LABELS: Record<AppRole, { label: string; color: string }> = {
   admin: { label: 'Admin', color: 'bg-red-100 text-red-800 border-red-300' },
-  gerente: { label: 'Gerente', color: 'bg-purple-100 text-purple-800 border-purple-300' },
+  gerente: { label: 'Gestor', color: 'bg-purple-100 text-purple-800 border-purple-300' },
   comprador: { label: 'Comprador', color: 'bg-blue-100 text-blue-800 border-blue-300' },
   solicitante: { label: 'Solicitante', color: 'bg-gray-100 text-gray-800 border-gray-300' },
 };
