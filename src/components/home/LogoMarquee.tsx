@@ -23,7 +23,7 @@ export const LogoMarquee = () => {
             <img
               src={logo.src}
               alt={logo.alt}
-              className="h-10 md:h-14 w-auto object-contain opacity-15 grayscale hover:opacity-30 hover:grayscale-0 transition-all duration-500"
+              className="h-10 md:h-14 w-auto object-contain opacity-60 hover:opacity-100 transition-all duration-500"
             />
           </div>
         ))}
