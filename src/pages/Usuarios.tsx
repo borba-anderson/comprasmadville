@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2 } from 'lucide-react';
+import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -57,6 +57,7 @@ export default function Usuarios() {
   const [selectedUser, setSelectedUser] = useState<UserWithRoles | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSendingReset, setIsSendingReset] = useState(false);
 
   // Edit form state
   const [editEmpresa, setEditEmpresa] = useState('');
@@ -206,6 +207,34 @@ export default function Usuarios() {
       toast({ title: 'Erro ao salvar', description: 'Tente novamente.', variant: 'destructive' });
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleSendPasswordReset = async () => {
+    if (!selectedUser) return;
+
+    try {
+      setIsSendingReset(true);
+
+      const { error } = await supabase.auth.resetPasswordForEmail(selectedUser.email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Email enviado',
+        description: `Um link de redefinição de senha foi enviado para ${selectedUser.email}`,
+      });
+    } catch (error) {
+      console.error('Error sending password reset:', error);
+      toast({
+        title: 'Erro ao enviar email',
+        description: 'Tente novamente mais tarde.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSendingReset(false);
     }
   };
 
@@ -452,6 +481,39 @@ export default function Usuarios() {
                     </label>
                   ))}
                 </div>
+              </div>
+
+              {/* Password Reset */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <KeyRound className="w-4 h-4" />
+                  Senha
+                </Label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSendPasswordReset}
+                    disabled={isSendingReset}
+                    className="w-full"
+                  >
+                    {isSendingReset ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-4 h-4 mr-2" />
+                        Enviar email de redefinição de senha
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Um link será enviado para o email do usuário para definir uma nova senha
+                </p>
               </div>
             </div>
           )}
