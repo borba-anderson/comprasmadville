@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/hooks/useNotifications';
 import { STATUS_CONFIG, Requisicao } from '@/types';
 
 interface UseRealtimeNotificationsOptions {
@@ -15,6 +16,7 @@ export function useRealtimeNotifications({
   onDataChange,
 }: UseRealtimeNotificationsOptions) {
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
 
   const handleStatusChange = useCallback((newData: Requisicao, oldData: Partial<Requisicao>) => {
     // Check if status actually changed
@@ -31,17 +33,29 @@ export function useRealtimeNotifications({
       else if (newData.status === 'cotando') emoji = '💰';
       else if (newData.status === 'em_entrega') emoji = '🚚';
       
-      // Show notification
+      const title = `${emoji} ${newData.item_nome}`;
+      const description = `Status alterado de "${oldStatusConfig?.label || oldData.status}" para "${statusConfig?.label || newData.status}"`;
+      
+      // Show toast notification
       toast({
-        title: `${emoji} ${newData.item_nome}`,
-        description: `Status alterado de "${oldStatusConfig?.label || oldData.status}" para "${statusConfig?.label || newData.status}"`,
+        title,
+        description,
         duration: 8000,
+      });
+
+      // Add to notification center
+      addNotification({
+        title: newData.item_nome,
+        description,
+        type: 'status_change',
+        requisicaoId: newData.id,
+        itemNome: newData.item_nome,
       });
 
       // Trigger data refresh
       onDataChange?.();
     }
-  }, [toast, onDataChange]);
+  }, [toast, addNotification, onDataChange]);
 
   useEffect(() => {
     if (!userEmail || !enabled) return;

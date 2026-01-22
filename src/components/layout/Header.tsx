@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { LogOut, User, Menu, Users } from 'lucide-react';
+import { LogOut, User, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
+import { NotificationBell } from './NotificationBell';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
@@ -40,7 +41,8 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
 
         <div className="flex-1" />
 
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-2">
+          {user && <NotificationBell />}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
