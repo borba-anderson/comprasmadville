@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogOut, User, Users, KeyRound } from 'lucide-react';
+import { LogOut, User, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { NotificationBell } from './NotificationBell';
@@ -81,12 +81,6 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                 )}
                 <DropdownMenuItem asChild>
                   <Link to="/requisicao">Nova Requisição</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/alterar-senha" className="flex items-center gap-2">
-                    <KeyRound className="w-4 h-4" />
-                    Alterar Senha
-                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={signOut} className="text-destructive">

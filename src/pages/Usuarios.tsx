@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Eye, EyeOff } from 'lucide-react';
+import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -57,9 +57,7 @@ export default function Usuarios() {
   const [selectedUser, setSelectedUser] = useState<UserWithRoles | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isSettingPassword, setIsSettingPassword] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [isSendingReset, setIsSendingReset] = useState(false);
 
   // Edit form state
   const [editEmpresa, setEditEmpresa] = useState('');
@@ -157,8 +155,6 @@ export default function Usuarios() {
     setEditSetor(userToEdit.setor || 'none');
     setEditGestorId(userToEdit.gestor_id || 'none');
     setEditRoles(userToEdit.roles);
-    setNewPassword('');
-    setShowPassword(false);
     setIsEditDialogOpen(true);
   };
 
@@ -214,63 +210,31 @@ export default function Usuarios() {
     }
   };
 
-  const handleSetPassword = async () => {
-    if (!selectedUser || !newPassword) return;
-
-    if (newPassword.length < 6) {
-      toast({
-        title: 'Senha inválida',
-        description: 'A senha deve ter pelo menos 6 caracteres.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const handleSendPasswordReset = async () => {
+    if (!selectedUser) return;
 
     try {
-      setIsSettingPassword(true);
+      setIsSendingReset(true);
 
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData?.session?.access_token;
-
-      if (!token) {
-        throw new Error('Sessão expirada');
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-set-password`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            target_user_id: selectedUser.id,
-            new_password: newPassword,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao definir senha');
-      }
-
-      toast({
-        title: 'Senha definida',
-        description: `A nova senha foi definida para ${selectedUser.nome}`,
+      const { error } = await supabase.auth.resetPasswordForEmail(selectedUser.email, {
+        redirectTo: `${window.location.origin}/auth`,
       });
-      setNewPassword('');
-    } catch (error) {
-      console.error('Error setting password:', error);
+
+      if (error) throw error;
+
       toast({
-        title: 'Erro ao definir senha',
-        description: error instanceof Error ? error.message : 'Tente novamente.',
+        title: 'Email enviado',
+        description: `Um link de redefinição de senha foi enviado para ${selectedUser.email}`,
+      });
+    } catch (error) {
+      console.error('Error sending password reset:', error);
+      toast({
+        title: 'Erro ao enviar email',
+        description: 'Tente novamente mais tarde.',
         variant: 'destructive',
       });
     } finally {
-      setIsSettingPassword(false);
+      setIsSendingReset(false);
     }
   };
 
@@ -519,45 +483,36 @@ export default function Usuarios() {
                 </div>
               </div>
 
-              {/* Password Set */}
+              {/* Password Reset */}
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <KeyRound className="w-4 h-4" />
-                  Definir Senha Temporária
+                  Senha
                 </Label>
                 <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <Input
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Nova senha..."
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
-                    onClick={handleSetPassword}
-                    disabled={isSettingPassword || !newPassword}
+                    onClick={handleSendPasswordReset}
+                    disabled={isSendingReset}
+                    className="w-full"
                   >
-                    {isSettingPassword ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                    {isSendingReset ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Enviando...
+                      </>
                     ) : (
-                      'Definir'
+                      <>
+                        <Mail className="w-4 h-4 mr-2" />
+                        Enviar email de redefinição de senha
+                      </>
                     )}
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Defina uma senha temporária para o usuário. Ele poderá alterá-la depois nas configurações de conta.
+                  Um link será enviado para o email do usuário para definir uma nova senha
                 </p>
               </div>
             </div>
