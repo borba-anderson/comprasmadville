@@ -19,6 +19,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { Requisicao, RequisicaoStats, ValorHistorico } from '@/types';
 import {
   Clock,
@@ -48,7 +49,6 @@ export default function Painel() {
 
   // Determine if user is a solicitante (read-only mode)
   const isReadOnly = !isStaff;
-
   const {
     filters,
     updateFilter,
@@ -104,6 +104,13 @@ export default function Painel() {
       setIsRefreshing(false);
     }
   }, [toast]);
+
+  // Enable realtime notifications for solicitantes (after fetchRequisicoes is defined)
+  useRealtimeNotifications({
+    userEmail: profile?.email || null,
+    enabled: isReadOnly && !!profile?.email,
+    onDataChange: () => fetchRequisicoes(true),
+  });
 
   // Fetch requisicoes for any authenticated user (RLS handles visibility)
   useEffect(() => {
