@@ -22,7 +22,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
 
   const getRoleBadge = () => {
     if (roles.includes('admin')) return 'Admin';
-    if (roles.includes('gerente')) return 'Gerente';
+    if (roles.includes('gerente')) return 'Gestor';
     if (roles.includes('comprador')) return 'Comprador';
     return 'Usuário';
   };
