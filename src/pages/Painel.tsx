@@ -253,6 +253,7 @@ export default function Painel() {
                 onToggleAll={isReadOnly ? undefined : multiSelect.toggleAll}
                 allSelected={isReadOnly ? false : multiSelect.allSelected}
                 someSelected={isReadOnly ? false : multiSelect.someSelected}
+                readOnly={isReadOnly}
               />
 
               <PaginationControls

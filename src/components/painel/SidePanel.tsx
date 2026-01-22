@@ -814,19 +814,22 @@ Qualquer dúvida, estamos à disposição!`;
                           <span className="truncate">{nome}</span>
                           <Download className="w-4 h-4 ml-auto flex-shrink-0" />
                         </button>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => deleteAnexo(index)}
-                          disabled={isDeletingAnexo}
-                          title="Excluir anexo"
-                        >
-                          {isDeletingAnexo ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
-                        </Button>
+                        {/* Delete button - only for staff */}
+                        {!readOnly && (
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => deleteAnexo(index)}
+                            disabled={isDeletingAnexo}
+                            title="Excluir anexo"
+                          >
+                            {isDeletingAnexo ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </Button>
+                        )}
                       </div>
                     );
                   })}
