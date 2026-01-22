@@ -26,7 +26,7 @@ export const ActionCards = () => {
   return <section className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
       {/* Card Primário: Fazer Requisição - Cinza escuro */}
       <a href="#" onClick={handleRequisicaoClick} className="group relative animate-stagger-1">
-        <div className="relative bg-accent rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:shadow-accent/30 hover:-translate-y-2 overflow-hidden">
+        <div className="relative rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2 overflow-hidden" style={{ backgroundColor: 'hsl(152 69% 28%)' }}>
           {/* Ícone com flutuação */}
           <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <FileText className="w-7 h-7 text-white animate-float" />
