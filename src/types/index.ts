@@ -2,7 +2,7 @@
 // TYPES - SISTEMA DE REQUISIÇÕES MADVILLE
 // ============================================
 
-export type AppRole = "admin" | "comprador" | "gestor" | "solicitante";
+export type AppRole = "admin" | "comprador" | "gerente" | "solicitante";
 
 export type RequisicaoStatus =
   | "pendente"
@@ -154,7 +154,7 @@ export const EMPRESAS = [
   "GMAD Madville",
   "GMAD Madville (CD)",
   "GMAD Madville (Soluções)",
-  "GMAD Curitiba,
+  "GMAD Curitiba",
 ] as const;
 
 // Quick view presets
@@ -194,6 +194,24 @@ export const SETORES = [
 ] as const;
 
 export const UNIDADES = ["unidade", "peça", "kit", "litro", "metro", "kg", "par", "rolo"] as const;
+
+// Unidades with labels and abbreviations for display
+export const UNIDADES_CONFIG = [
+  { value: "unidade", label: "Unidade", sigla: "un" },
+  { value: "peça", label: "Peça", sigla: "pç" },
+  { value: "kit", label: "Kit", sigla: "kit" },
+  { value: "litro", label: "Litro", sigla: "L" },
+  { value: "metro", label: "Metro", sigla: "m" },
+  { value: "kg", label: "Quilograma", sigla: "kg" },
+  { value: "par", label: "Par", sigla: "par" },
+  { value: "rolo", label: "Rolo", sigla: "rolo" },
+] as const;
+
+// Helper to get abbreviation from unit value
+export const getUnidadeSigla = (unidade: string): string => {
+  const config = UNIDADES_CONFIG.find((u) => u.value === unidade);
+  return config?.sigla || unidade;
+};
 
 export const MOTIVOS_COMPRA = [
   "Reposição de estoque",

@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { UNIDADES } from '@/types';
+import { UNIDADES_CONFIG } from '@/types';
 import { Package, Hash, Ruler, FileText, Lightbulb } from 'lucide-react';
 
 interface StepItemProps {
@@ -90,7 +90,7 @@ export const StepItem = ({ formData, errors, onChange, onSelectChange }: StepIte
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {UNIDADES.map((unidade) => (
+                {UNIDADES_CONFIG.map((unidade) => (
                   <SelectItem key={unidade.value} value={unidade.value}>
                     {unidade.label} ({unidade.sigla})
                   </SelectItem>
