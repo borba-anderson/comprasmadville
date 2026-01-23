@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { FileText, DollarSign } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Header } from "@/components/layout/Header";
-import { StatsCard } from "@/components/StatsCard";
-import { GastosDashboard } from "@/components/dashboard";
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FileText, DollarSign } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Header } from '@/components/layout/Header';
+import { StatsCard } from '@/components/StatsCard';
+import { GastosDashboard } from '@/components/dashboard';
 import {
   FiltersBar,
   RequisicaoTable,
@@ -13,26 +13,27 @@ import {
   usePainelFilters,
   useSorting,
   usePagination,
-} from "@/components/painel";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
-import { Requisicao, RequisicaoStats, ValorHistorico } from "@/types";
-import { Clock, CheckCircle, XCircle, TrendingUp, Package, ShoppingCart } from "lucide-react";
+} from '@/components/painel';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
+import { Requisicao, RequisicaoStats, ValorHistorico } from '@/types';
+import {
+  Clock,
+  CheckCircle,
+  XCircle,
+  TrendingUp,
+  Package,
+  ShoppingCart,
+} from 'lucide-react';
 
 const AUTO_REFRESH_INTERVAL = 15000;
 
 export default function Painel() {
   const [requisicoes, setRequisicoes] = useState<Requisicao[]>([]);
   const [stats, setStats] = useState<RequisicaoStats>({
-    total: 0,
-    pendente: 0,
-    em_analise: 0,
-    aprovado: 0,
-    cotando: 0,
-    comprado: 0,
-    rejeitado: 0,
+    total: 0, pendente: 0, em_analise: 0, aprovado: 0, cotando: 0, comprado: 0, rejeitado: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -62,53 +63,45 @@ export default function Painel() {
 
   const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
   const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
+  
 
   // Redirect only if not authenticated
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
-      if (!user) navigate("/auth");
+      if (!user) navigate('/auth');
     }
   }, [authLoading, rolesLoaded, user, navigate]);
 
-  const fetchRequisicoes = useCallback(
-    async (silent = false) => {
-      try {
-        if (!silent) setIsLoading(true);
-        setIsRefreshing(true);
+  const fetchRequisicoes = useCallback(async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      setIsRefreshing(true);
 
-        const { data, error } = await supabase
-          .from("requisicoes")
-          .select("*")
-          .order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from('requisicoes')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        const requisicaoData = (data || []) as Requisicao[];
-        setRequisicoes(requisicaoData);
+      const requisicaoData = (data || []) as Requisicao[];
+      setRequisicoes(requisicaoData);
 
-        const newStats: RequisicaoStats = {
-          total: requisicaoData.length,
-          pendente: 0,
-          em_analise: 0,
-          aprovado: 0,
-          cotando: 0,
-          comprado: 0,
-          rejeitado: 0,
-        };
-        requisicaoData.forEach((req) => {
-          if (req.status in newStats) newStats[req.status as keyof RequisicaoStats]++;
-        });
-        setStats(newStats);
-      } catch (error) {
-        console.error("Error fetching requisitions:", error);
-        if (!silent) toast({ title: "Erro", description: "Falha ao carregar requisições.", variant: "destructive" });
-      } finally {
-        setIsLoading(false);
-        setIsRefreshing(false);
-      }
-    },
-    [toast],
-  );
+      const newStats: RequisicaoStats = {
+        total: requisicaoData.length, pendente: 0, em_analise: 0, aprovado: 0, cotando: 0, comprado: 0, rejeitado: 0,
+      };
+      requisicaoData.forEach((req) => {
+        if (req.status in newStats) newStats[req.status as keyof RequisicaoStats]++;
+      });
+      setStats(newStats);
+    } catch (error) {
+      console.error('Error fetching requisitions:', error);
+      if (!silent) toast({ title: 'Erro', description: 'Falha ao carregar requisições.', variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [toast]);
 
   // Enable realtime notifications for solicitantes (after fetchRequisicoes is defined)
   useRealtimeNotifications({
@@ -129,13 +122,13 @@ export default function Painel() {
   }, [user, fetchRequisicoes]);
 
   const formatCurrency = (value: number | null | undefined) => {
-    if (value == null) return "-";
-    return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    if (value == null) return '-';
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
 
   const sendNotification = async (req: Requisicao) => {
     try {
-      await supabase.functions.invoke("send-notification", {
+      await supabase.functions.invoke('send-notification', {
         body: {
           to: req.solicitante_email,
           solicitante_nome: req.solicitante_nome,
@@ -146,9 +139,9 @@ export default function Painel() {
           previsao_entrega: req.previsao_entrega,
         },
       });
-      toast({ title: "E-mail enviado" });
+      toast({ title: 'E-mail enviado' });
     } catch (err) {
-      console.error("Error sending notification:", err);
+      console.error('Error sending notification:', err);
     }
   };
 
@@ -157,36 +150,35 @@ export default function Painel() {
     setIsPanelOpen(true);
   };
 
-  const hasActiveFilters =
-    filters.search !== "" ||
+  const hasActiveFilters = 
+    filters.search !== '' ||
     filters.status.length > 0 ||
-    filters.comprador !== "all" ||
-    filters.setor !== "all" ||
+    filters.comprador !== 'all' ||
+    filters.setor !== 'all' ||
     filters.prioridade.length > 0 ||
     filters.empresa.length > 0 ||
-    filters.dateFrom !== "" ||
-    filters.dateTo !== "" ||
-    filters.deliveryFilter !== "all";
+    filters.dateFrom !== '' ||
+    filters.dateTo !== '' ||
+    filters.deliveryFilter !== 'all';
 
   if (authLoading || !rolesLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-green-950">
-        <div className="spinner w-8 h-8 border-white" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="spinner w-8 h-8 border-primary" />
       </div>
     );
   }
 
   return (
-    // AQUI ESTÁ A MUDANÇA: bg-green-950 (Verde Floresta)
-    <div className="min-h-screen bg-green-950 text-slate-50">
+    <div className="min-h-screen bg-muted/30">
       <Header />
 
       <main className="max-w-[1600px] mx-auto px-4 py-4">
         {/* Read-only banner for solicitantes */}
         {isReadOnly && (
-          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-2 text-blue-800">
+          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-2">
             <FileText className="w-5 h-5 text-blue-600" />
-            <span className="text-sm dark:text-blue-200">
+            <span className="text-sm text-blue-800 dark:text-blue-200">
               <strong>Modo visualização:</strong> Você está vendo apenas as suas requisições.
             </span>
           </div>
@@ -204,19 +196,13 @@ export default function Painel() {
         </div>
 
         <Tabs defaultValue="requisicoes" className="space-y-4">
-          <TabsList className="bg-card border shadow-sm">
-            <TabsTrigger
-              value="requisicoes"
-              className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
-            >
+          <TabsList className="bg-card border">
+            <TabsTrigger value="requisicoes" className="gap-2">
               <FileText className="w-4 h-4" />
-              {isReadOnly ? "Minhas Requisições" : "Requisições"}
+              {isReadOnly ? 'Minhas Requisições' : 'Requisições'}
             </TabsTrigger>
             {!isReadOnly && (
-              <TabsTrigger
-                value="dashboard"
-                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
-              >
+              <TabsTrigger value="dashboard" className="gap-2">
                 <DollarSign className="w-4 h-4" />
                 Dashboard
               </TabsTrigger>
@@ -224,7 +210,7 @@ export default function Painel() {
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            <div className="bg-card rounded-xl border overflow-hidden shadow-sm">
+            <div className="bg-card rounded-xl border overflow-hidden">
               <FiltersBar
                 filters={filters}
                 onFilterChange={updateFilter}
@@ -244,6 +230,7 @@ export default function Painel() {
                 readOnly={isReadOnly}
               />
 
+
               <RequisicaoTable
                 requisicoes={paginatedItems}
                 isLoading={isLoading}
@@ -260,7 +247,11 @@ export default function Painel() {
                 readOnly={isReadOnly}
               />
 
-              <PaginationControls pagination={pagination} onPageChange={goToPage} onPageSizeChange={changePageSize} />
+              <PaginationControls
+                pagination={pagination}
+                onPageChange={goToPage}
+                onPageSizeChange={changePageSize}
+              />
             </div>
           </TabsContent>
 
