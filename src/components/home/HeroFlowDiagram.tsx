@@ -1,9 +1,7 @@
 import {
-  // Novos ícones para o Hub externo
   PackagePlus,
   Network,
   FolderInput,
-  // Ícones do fluxo interno
   ClipboardList,
   Search,
   Calculator,
@@ -42,17 +40,14 @@ export const HeroFlowDiagram = () => {
 
   return (
     <div className="relative w-full max-w-[800px] mx-auto h-[380px] lg:h-[320px] flex items-center z-20">
-      {/* CAMADA DE CONEXÕES (SVG ABSOLUTO) - Ajustada */}
+      {/* === CAMADA DE CONEXÕES EXTERNAS (Hub -> Card) === */}
+      {/* Esta fica fora do card, conectando os ícones flutuantes ao card */}
       <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+        className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block"
         viewBox="0 0 800 320"
         fill="none"
       >
         <defs>
-          {/* Marcadores de Flecha */}
-          <marker id="arrow-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#cbd5e1" />
-          </marker>
           <marker id="arrow-orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
             <path d="M 0 0 L 6 3 L 0 6 Z" fill="#fb923c" />
           </marker>
@@ -62,13 +57,9 @@ export const HeroFlowDiagram = () => {
           <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
             <path d="M 0 0 L 6 3 L 0 6 Z" fill="#22c55e" />
           </marker>
-          <marker id="arrow-purple-round" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-            <circle cx="4" cy="4" r="3" fill="#a855f7" />
-          </marker>
         </defs>
 
-        {/* --- CONEXÕES EXTERNAS (Do Hub para o Card) --- */}
-        {/* Laranja Ext -> Entrada Card (Item 1) */}
+        {/* Laranja Ext -> Item 1 */}
         <path
           d="M 85 50 Q 150 50 190 75"
           stroke="#fb923c"
@@ -77,7 +68,7 @@ export const HeroFlowDiagram = () => {
           markerEnd="url(#arrow-orange)"
           strokeDasharray="4 2"
         />
-        {/* Azul Ext -> Centro Card (Item 2) */}
+        {/* Azul Ext -> Item 2 (Aproximado) */}
         <path
           d="M 110 160 Q 250 160 350 110"
           stroke="#3b82f6"
@@ -87,7 +78,7 @@ export const HeroFlowDiagram = () => {
           strokeDasharray="4 2"
           opacity="0.6"
         />
-        {/* Verde Ext -> Entrada Aprovação (Item 4) */}
+        {/* Verde Ext -> Item 4 */}
         <path
           d="M 85 270 Q 150 270 190 245"
           stroke="#22c55e"
@@ -96,47 +87,20 @@ export const HeroFlowDiagram = () => {
           markerEnd="url(#arrow-green)"
           strokeDasharray="4 2"
         />
-
-        {/* --- CONEXÕES INTERNAS (Corrigidas) --- */}
-        {/* Linha 1: 1->2 e 2->3 (Cinza) */}
-        <path d="M 300 90 L 380 90" stroke="#cbd5e1" strokeWidth="2" markerEnd="url(#arrow-gray)" />
-        <path d="M 460 90 L 540 90" stroke="#cbd5e1" strokeWidth="2" markerEnd="url(#arrow-gray)" />
-
-        {/* O RETORNO: 3 -> 4 (Roxo Pontilhado - "Snake") */}
-        {/* Sai da direita do 3, faz a curva larga, volta pela esquerda e entra no topo do 4 */}
-        <path
-          d="M 620 90 Q 680 90 680 135 Q 680 180 620 180 L 320 180 Q 260 180 260 210"
-          stroke="#a855f7"
-          strokeWidth="2"
-          fill="none"
-          strokeDasharray="4 4"
-          markerEnd="url(#arrow-purple-round)"
-          className="animate-pulse"
-          style={{ animationDuration: "3s" }}
-        />
-
-        {/* Linha 2: 4->5 e 5->6 (Cinza) */}
-        <path d="M 300 230 L 380 230" stroke="#cbd5e1" strokeWidth="2" markerEnd="url(#arrow-gray)" />
-        <path d="M 460 230 L 540 230" stroke="#cbd5e1" strokeWidth="2" markerEnd="url(#arrow-gray)" />
       </svg>
 
-      {/* --- ÍCONES FLUTUANTES (Novos Ícones de Hub/Portal) --- */}
+      {/* --- ÍCONES FLUTUANTES (Esquerda) --- */}
       <div className="absolute left-0 top-0 h-full w-[120px] z-30 hidden lg:flex flex-col justify-between py-8">
-        {/* Laranja: PackagePlus (Múltiplas Solicitações) */}
         <div className="relative left-2 group">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/20 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <PackagePlus size={28} strokeWidth={2} />
           </div>
         </div>
-
-        {/* Azul: Network (O Hub Central) */}
         <div className="relative left-8 group">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <Network size={36} strokeWidth={2} />
           </div>
         </div>
-
-        {/* Verde: FolderInput (Entrada no Fluxo) */}
         <div className="relative left-2 group">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/20 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <FolderInput size={28} strokeWidth={2} />
@@ -145,26 +109,85 @@ export const HeroFlowDiagram = () => {
       </div>
 
       {/* --- CARD BRANCO (Direita) --- */}
-      <div className="relative ml-auto w-full lg:w-[85%] bg-white/95 backdrop-blur-sm rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-100 z-20">
-        <div className="flex flex-col gap-16">
-          {/* LINHA 1 */}
-          <div className="flex justify-around items-start pl-6 pr-6">
-            {steps.slice(0, 3).map((step) => (
-              <CardStep key={step.id} step={step} />
-            ))}
+      <div className="relative ml-auto w-full lg:w-[85%] bg-white/95 backdrop-blur-sm rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-100 z-20 overflow-visible">
+        {/* SVG INTERNO DO CARD (Correção: Agora dentro do card e com z-index correto) */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+          viewBox="0 0 680 260"
+          fill="none"
+        >
+          <defs>
+            <marker id="arrow-purple-round-card" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <circle cx="4" cy="4" r="3" fill="#a855f7" />
+            </marker>
+          </defs>
+
+          {/* A GRANDE SETA DE RETORNO (3 -> 4) */}
+          {/* Coordenadas ajustadas para o viewBox do card */}
+          {/* Sai do item 3 (aprox X=580, Y=50), desce, volta e entra no item 4 (aprox X=100, Y=210) */}
+          <path
+            d="M 580 80 Q 640 80 640 130 Q 640 180 580 180 L 150 180 Q 90 180 90 200"
+            stroke="#a855f7"
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray="5 5"
+            markerEnd="url(#arrow-purple-round-card)"
+            className="opacity-80"
+          />
+        </svg>
+
+        <div className="flex flex-col gap-16 relative z-10">
+          {/* LINHA 1: 1 -> 2 -> 3 */}
+          <div className="flex justify-between items-center px-4">
+            {/* Passo 1 */}
+            <CardStep step={steps[0]} />
+
+            {/* Seta Reta 1->2 */}
+            <SimpleArrow />
+
+            {/* Passo 2 */}
+            <CardStep step={steps[1]} />
+
+            {/* Seta Reta 2->3 */}
+            <SimpleArrow />
+
+            {/* Passo 3 */}
+            <CardStep step={steps[2]} />
           </div>
 
-          {/* LINHA 2 */}
-          <div className="flex justify-around items-start pl-6 pr-6">
-            {steps.slice(3, 6).map((step) => (
-              <CardStep key={step.id} step={step} />
-            ))}
+          {/* LINHA 2: 4 -> 5 -> 6 */}
+          <div className="flex justify-between items-center px-4">
+            {/* Passo 4 */}
+            <CardStep step={steps[3]} />
+
+            {/* Seta Reta 4->5 */}
+            <SimpleArrow />
+
+            {/* Passo 5 */}
+            <CardStep step={steps[4]} />
+
+            {/* Seta Reta 5->6 */}
+            <SimpleArrow />
+
+            {/* Passo 6 */}
+            <CardStep step={steps[5]} />
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+// Componente para a Seta Simples (Cinza Reta) entre os itens
+const SimpleArrow = () => (
+  <div className="flex-1 h-[2px] bg-slate-200 relative mx-2 hidden md:block">
+    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[2px]">
+      <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0L6 5L0 10V0Z" fill="#e2e8f0" />
+      </svg>
+    </div>
+  </div>
+);
 
 // Item do Card
 const CardStep = ({ step }: { step: any }) => (
