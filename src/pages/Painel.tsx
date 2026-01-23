@@ -173,12 +173,14 @@ export default function Painel() {
   }
 
   return (
-    // FUNDO VERDE ESPECÍFICO (#107c50) E TEXTO BRANCO PARA O GERAL
+    // Fundo Verde Floresta (#107c50) para a página inteira
     <div className="min-h-screen bg-[#107c50] text-slate-50">
-      <Header />
+      {/* HEADER: Envolvido em div branca para garantir o fundo branco */}
+      <div className="bg-white sticky top-0 z-50 shadow-sm">
+        <Header />
+      </div>
 
       <main className="max-w-[1600px] mx-auto px-4 py-4">
-        {/* Banner do Solicitante (Fundo Branco para destaque) */}
         {isReadOnly && (
           <div className="mb-4 p-3 bg-white rounded-lg flex items-center gap-2 shadow-sm border-l-4 border-blue-600 text-slate-700">
             <FileText className="w-5 h-5 text-blue-600" />
@@ -188,20 +190,63 @@ export default function Painel() {
           </div>
         )}
 
-        {/* Stats Cards - O componente StatsCard geralmente já tem fundo branco.
-            Se necessário, eles se adaptarão ao contexto. */}
+        {/* STATS CARDS: 
+            Adicionada a classe 'bg-white text-slate-900 border-none' em TODOS.
+            Isso força o fundo branco, mantendo os ícones coloridos pela 'variant'.
+        */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
-          <StatsCard title="Total" value={stats.total} icon={FileText} className="col-span-1" />
-          <StatsCard title="Pendentes" value={stats.pendente} variant="warning" icon={Clock} />
-          <StatsCard title="Em Análise" value={stats.em_analise} variant="info" icon={TrendingUp} />
-          <StatsCard title="Aprovados" value={stats.aprovado} variant="success" icon={CheckCircle} />
-          <StatsCard title="Cotando" value={stats.cotando} variant="primary" icon={Package} />
-          <StatsCard title="Comprados" value={stats.comprado} variant="success" icon={ShoppingCart} />
-          <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
+          <StatsCard
+            title="Total"
+            value={stats.total}
+            icon={FileText}
+            className="col-span-1 bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Pendentes"
+            value={stats.pendente}
+            variant="warning"
+            icon={Clock}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Em Análise"
+            value={stats.em_analise}
+            variant="info"
+            icon={TrendingUp}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Aprovados"
+            value={stats.aprovado}
+            variant="success"
+            icon={CheckCircle}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Cotando"
+            value={stats.cotando}
+            variant="primary"
+            icon={Package}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Comprados"
+            value={stats.comprado}
+            variant="success"
+            icon={ShoppingCart}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Rejeitados"
+            value={stats.rejeitado}
+            variant="danger"
+            icon={XCircle}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
         </div>
 
         <Tabs defaultValue="requisicoes" className="space-y-4">
-          {/* TabsList com fundo BRANCO e texto escuro para os itens inativos */}
+          {/* TabsList com fundo BRANCO */}
           <TabsList className="bg-white border shadow-sm text-slate-600">
             <TabsTrigger
               value="requisicoes"
@@ -222,7 +267,7 @@ export default function Painel() {
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            {/* Bloco da Tabela com fundo BRANCO e texto padrão (escuro) */}
+            {/* Bloco Tabela com fundo BRANCO */}
             <div className="bg-white text-slate-900 rounded-xl border-none overflow-hidden shadow-lg">
               <FiltersBar
                 filters={filters}
@@ -265,7 +310,7 @@ export default function Painel() {
 
           {!isReadOnly && (
             <TabsContent value="dashboard">
-              {/* Bloco do Dashboard com fundo BRANCO */}
+              {/* Bloco Dashboard com fundo BRANCO */}
               <div className="bg-white text-slate-900 rounded-xl p-4 shadow-lg">
                 <GastosDashboard requisicoes={requisicoes} />
               </div>
