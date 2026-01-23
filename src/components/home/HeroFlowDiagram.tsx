@@ -6,7 +6,7 @@ import {
   ShoppingCart,
   PackageCheck,
   ArrowRight,
-  ArrowDown,
+  CornerRightDown,
 } from "lucide-react";
 
 export const HeroFlowDiagram = () => {
@@ -16,7 +16,6 @@ export const HeroFlowDiagram = () => {
       icon: ClipboardList,
       title: "Solicite",
       desc: "Preencha a necessidade.",
-      // Gradientes modernos e sombras coloridas
       style: "bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200",
     },
     {
@@ -56,67 +55,57 @@ export const HeroFlowDiagram = () => {
     },
   ];
 
-  // Função auxiliar para renderizar um único nó (step)
   const renderStep = (step: any) => (
-    <div className="flex flex-col items-center text-center group cursor-default relative z-10">
-      {/* Ícone Redondo Moderno com "Glow" */}
+    <div className="flex flex-col items-center text-center group relative z-10 w-24">
+      {/* Ícone Redondo com Efeito Glow */}
       <div
-        className={`relative flex items-center justify-center w-14 h-14 rounded-full text-white shadow-lg transition-transform duration-300 group-hover:scale-110 ${step.style}`}
+        className={`relative flex items-center justify-center w-12 h-12 rounded-full text-white shadow-lg transition-transform duration-300 group-hover:scale-110 ${step.style}`}
       >
-        <step.icon size={24} strokeWidth={2} />
-        {/* Pequeno número indicador */}
-        <div className="absolute -top-1 -right-1 w-5 h-5 bg-white text-xs text-muted-foreground font-bold rounded-full flex items-center justify-center border shadow-sm">
+        <step.icon size={20} strokeWidth={2.5} />
+        {/* Badge numérico */}
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-white text-[10px] text-muted-foreground font-bold rounded-full flex items-center justify-center border shadow-sm">
           {step.id}
         </div>
       </div>
       {/* Texto */}
-      <div className="mt-3">
-        <h3 className="font-bold text-sm text-foreground leading-tight">{step.title}</h3>
-        <p className="text-[11px] text-muted-foreground leading-tight">{step.desc}</p>
+      <div className="mt-2">
+        <h3 className="font-bold text-xs text-foreground leading-tight">{step.title}</h3>
+        <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{step.desc}</p>
       </div>
     </div>
   );
 
+  const Arrow = () => (
+    <div className="pt-4 text-muted-foreground/30">
+      <ArrowRight size={18} strokeWidth={3} />
+    </div>
+  );
+
   return (
-    // Container com fundo estilo "vidro" (glassmorphism) sutil
-    <div className="p-6 bg-white/40 backdrop-blur-md rounded-3xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[400px]">
-      <div className="flex flex-col gap-4 relative">
-        {/* Linha 1: Par 1 -> Par 2 */}
+    // Container mais largo (max-w-xl) para acomodar 3 itens
+    <div className="p-5 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-xl">
+      <div className="flex flex-col gap-6">
+        {/* LINHA 1: Passos 1, 2, 3 */}
         <div className="flex items-start justify-between relative">
           {renderStep(steps[0])}
-          {/* Seta Horizontal */}
-          <div className="pt-5 text-muted-foreground/40 animate-pulse">
-            <ArrowRight size={24} strokeWidth={3} />
-          </div>
+          <Arrow />
           {renderStep(steps[1])}
-        </div>
-
-        {/* Conector Vertical entre linhas */}
-        <div className="flex justify-center -my-2 text-muted-foreground/30 z-0">
-          <ArrowDown size={20} strokeWidth={3} />
-        </div>
-
-        {/* Linha 2: Par 3 -> Par 4 */}
-        <div className="flex items-start justify-between relative">
+          <Arrow />
           {renderStep(steps[2])}
-          <div className="pt-5 text-muted-foreground/40 animate-pulse">
-            <ArrowRight size={24} strokeWidth={3} />
-          </div>
-          {renderStep(steps[3])}
         </div>
 
-        {/* Conector Vertical entre linhas */}
-        <div className="flex justify-center -my-2 text-muted-foreground/30 z-0">
-          <ArrowDown size={20} strokeWidth={3} />
-        </div>
-
-        {/* Linha 3: Par 5 -> Par 6 */}
+        {/* LINHA 2: Passos 4, 5, 6 */}
         <div className="flex items-start justify-between relative">
+          {renderStep(steps[3])}
+          <Arrow />
           {renderStep(steps[4])}
-          <div className="pt-5 text-muted-foreground/40 animate-pulse">
-            <ArrowRight size={24} strokeWidth={3} />
-          </div>
+          <Arrow />
           {renderStep(steps[5])}
+        </div>
+
+        {/* Conector Visual Opcional: Curva do 3 para o 4 */}
+        <div className="absolute right-8 top-[3.5rem] text-muted-foreground/10 hidden md:block">
+          <CornerRightDown size={40} strokeWidth={1} />
         </div>
       </div>
     </div>
