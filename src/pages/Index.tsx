@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link } from "react-router-dom"; // Importa o Link
+import { Link } from "react-router-dom";
+// CORREÇÃO: Adicionado 'Plus' na importação
 import {
   FileText,
   CheckCircle,
@@ -20,6 +21,7 @@ import {
   Package,
   BarChart3,
   PieChart,
+  Plus,
 } from "lucide-react";
 import {
   UserGreeting,
