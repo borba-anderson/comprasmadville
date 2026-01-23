@@ -6,10 +6,8 @@ import {
   ActionCards,
   LogoMarquee,
   HeroFlowDiagram,
-  // WorkflowTimeline, <--- Removido
+  WorkflowTimeline,
 } from "@/components/home";
-// Importar o novo componente (certifique-se de criar/exportar ele)
-import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 
 const Index = () => {
   const { user } = useAuth();
