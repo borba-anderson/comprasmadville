@@ -6,7 +6,7 @@ import {
   ActionCards,
   LogoMarquee,
   HeroFlowDiagram,
-  WorkflowTimeline, // Lembre-se: este componente agora exibe a grid de benefícios
+  WorkflowTimeline,
 } from "@/components/home";
 
 const Index = () => {
@@ -18,24 +18,24 @@ const Index = () => {
 
       <main className="page-container rounded-none shadow-none">
         {/* HERO SECTION */}
-        {/* 'pt-6' para colar no header, 'pb-12' para dar respiro embaixo */}
         <section className="pt-6 pb-12 md:pt-10 md:pb-14">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-16">
             {/* Lado Esquerdo - Título */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
+              {/* Título Ajustado: Trocado 'Requisições' por 'Solicitações' */}
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-2 leading-snug">
-                Workflow de Requisições
+                Workflow de Solicitações
                 <br />
                 de Suprimentos<span className="text-primary">.</span>
               </h1>
 
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-8 md:text-left">
-                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
+                Transforme pedidos internos em processos organizados, garantindo rastreabilidade e controle
                 orçamentário.
               </p>
             </div>
 
-            {/* Lado Direito - Novo Hero Visual (2 linhas coloridas) */}
+            {/* Lado Direito - Hero Visual */}
             <div className="flex-shrink-0 animate-fade-in flex items-center justify-center w-full md:w-auto">
               <HeroFlowDiagram />
             </div>
@@ -47,7 +47,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Seção do Usuário Logado */}
         {user && (
           <section className="animate-fade-in mb-8">
             <UserGreeting />
@@ -55,18 +54,15 @@ const Index = () => {
           </section>
         )}
 
-        {/* Cards de Ação Rápida */}
         <div className="mb-12">
           <ActionCards />
         </div>
 
-        {/* Seção de Benefícios (Antigo WorkflowTimeline) */}
         <WorkflowTimeline />
 
-        {/* Rodapé */}
         <footer className="py-8 text-center border-t bg-background mt-8">
           <p className="text-muted-foreground text-sm">
-            © 2026 GMAD Madville | Curitiba - Workflow de Requisições de Suprimentos
+            © 2026 GMAD Madville | Curitiba - Workflow de Solicitações de Suprimentos
           </p>
           <p className="text-muted-foreground text-xs mt-2">
             Versão Beta 2.1 | Suporte:{" "}
