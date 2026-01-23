@@ -36,75 +36,75 @@ import {
 // MOCK 1: TELA DE LOGIN
 const MockAuthScreen = () => (
   <div className="w-full h-full bg-[#107c50] flex items-center justify-center relative overflow-hidden rounded-xl border-4 border-slate-800/5 shadow-2xl">
-    <div className="w-[85%] bg-white rounded-2xl shadow-2xl p-5 transform scale-95">
-      <div className="flex bg-slate-100/80 p-1 rounded-xl mb-6">
-        <div className="flex-1 py-2 text-center text-[10px] font-bold bg-white text-[#107c50] shadow-sm rounded-lg">
+    <div className="w-[85%] bg-white rounded-2xl shadow-2xl p-4 transform scale-95">
+      <div className="flex bg-slate-100/80 p-1 rounded-xl mb-4">
+        <div className="flex-1 py-1.5 text-center text-[9px] font-bold bg-white text-[#107c50] shadow-sm rounded-lg">
           Entrar
         </div>
-        <div className="flex-1 py-2 text-center text-[10px] font-bold text-slate-400">Cadastrar</div>
+        <div className="flex-1 py-1.5 text-center text-[9px] font-bold text-slate-400">Cadastrar</div>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="space-y-1">
-          <div className="h-2 w-1/3 bg-slate-200 rounded"></div>
-          <div className="h-9 w-full bg-slate-50 border border-slate-200 rounded-xl"></div>
+          <div className="h-1.5 w-1/3 bg-slate-200 rounded"></div>
+          <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-xl"></div>
         </div>
         <div className="space-y-1">
-          <div className="h-2 w-1/4 bg-slate-200 rounded"></div>
-          <div className="h-9 w-full bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-end px-3">
-            <div className="w-4 h-4 rounded-full bg-slate-200"></div>
+          <div className="h-1.5 w-1/4 bg-slate-200 rounded"></div>
+          <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-end px-3">
+            <div className="w-3 h-3 rounded-full bg-slate-200"></div>
           </div>
         </div>
-        <div className="h-9 w-full bg-[#107c50] rounded-xl mt-4 flex items-center justify-center text-white text-[10px] font-bold gap-2 shadow-lg">
-          <LogIn size={12} /> Acessar
+        <div className="h-8 w-full bg-[#107c50] rounded-xl mt-3 flex items-center justify-center text-white text-[9px] font-bold gap-2 shadow-lg">
+          <LogIn size={10} /> Acessar
         </div>
       </div>
     </div>
   </div>
 );
 
-// MOCK 2: PAINEL DE LISTAGEM (OPERACIONAL)
+// MOCK 2: PAINEL DE LISTAGEM (CENTRAL - REQUISIÇÕES)
 const MockPainelScreen = () => (
   <div className="w-full h-full bg-slate-50 flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl">
-    <div className="bg-white h-12 flex items-center justify-between px-4 shrink-0 border-b">
+    <div className="bg-white h-10 flex items-center justify-between px-3 shrink-0 border-b">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 bg-[#107c50] rounded"></div>
-        <div className="w-20 h-3 bg-slate-200 rounded"></div>
+        <div className="w-5 h-5 bg-[#107c50] rounded"></div>
+        <div className="w-16 h-2.5 bg-slate-200 rounded"></div>
       </div>
-      <div className="flex gap-2">
-        <div className="w-7 h-7 bg-slate-100 rounded-full"></div>
-        <div className="w-7 h-7 bg-[#107c50] rounded-full text-white flex items-center justify-center">
-          <User size={12} />
+      <div className="flex gap-1.5">
+        <div className="w-6 h-6 bg-slate-100 rounded-full"></div>
+        <div className="w-6 h-6 bg-[#107c50] rounded-full text-white flex items-center justify-center">
+          <User size={10} />
         </div>
       </div>
     </div>
-    <div className="p-3 bg-slate-50 flex-1 overflow-hidden flex flex-col gap-3">
+    <div className="p-2.5 bg-slate-50 flex-1 overflow-hidden flex flex-col gap-2.5">
       <div className="flex gap-2">
-        <div className="bg-white p-2 rounded border shadow-sm flex-1">
-          <div className="h-3 w-8 bg-slate-200 rounded mb-1"></div>
-          <div className="h-4 w-6 bg-slate-800 rounded"></div>
+        <div className="bg-white p-1.5 rounded border shadow-sm flex-1">
+          <div className="h-2.5 w-8 bg-slate-200 rounded mb-1"></div>
+          <div className="h-3.5 w-6 bg-slate-800 rounded"></div>
         </div>
-        <div className="bg-white p-2 rounded border shadow-sm flex-1 border-l-2 border-orange-400">
-          <div className="h-3 w-8 bg-orange-100 rounded mb-1"></div>
-          <div className="h-4 w-4 bg-orange-500 rounded"></div>
+        <div className="bg-white p-1.5 rounded border shadow-sm flex-1 border-l-2 border-orange-400">
+          <div className="h-2.5 w-8 bg-orange-100 rounded mb-1"></div>
+          <div className="h-3.5 w-4 bg-orange-500 rounded"></div>
         </div>
-        <div className="bg-white p-2 rounded border shadow-sm flex-1 border-l-2 border-green-400">
-          <div className="h-3 w-8 bg-green-100 rounded mb-1"></div>
-          <div className="h-4 w-6 bg-green-500 rounded"></div>
+        <div className="bg-white p-1.5 rounded border shadow-sm flex-1 border-l-2 border-green-400">
+          <div className="h-2.5 w-8 bg-green-100 rounded mb-1"></div>
+          <div className="h-3.5 w-6 bg-green-500 rounded"></div>
         </div>
       </div>
-      <div className="bg-white rounded-lg shadow-sm border flex-1 p-2 space-y-2">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="flex items-center justify-between p-2 border rounded bg-slate-50">
-            <div className="flex gap-2 items-center">
-              <div className="w-6 h-6 rounded bg-white border flex items-center justify-center text-[9px] font-bold text-slate-400">
+      <div className="bg-white rounded-lg shadow-sm border flex-1 p-1.5 space-y-1.5">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex items-center justify-between p-1.5 border rounded bg-slate-50">
+            <div className="flex gap-1.5 items-center">
+              <div className="w-5 h-5 rounded bg-white border flex items-center justify-center text-[8px] font-bold text-slate-400">
                 #{i}
               </div>
               <div>
-                <div className="w-16 h-2 bg-slate-300 rounded mb-1"></div>
-                <div className="w-10 h-1.5 bg-slate-200 rounded"></div>
+                <div className="w-12 h-1.5 bg-slate-300 rounded mb-0.5"></div>
+                <div className="w-8 h-1 bg-slate-200 rounded"></div>
               </div>
             </div>
-            <div className="w-12 h-4 bg-slate-200 rounded"></div>
+            <div className="w-10 h-3 bg-slate-200 rounded"></div>
           </div>
         ))}
       </div>
@@ -115,47 +115,47 @@ const MockPainelScreen = () => (
 // MOCK 3: FORMULÁRIO (REQUISIÇÃO)
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl relative">
-    <div className="bg-slate-50 border-b p-3">
-      <div className="flex justify-between items-center px-2 mb-2">
+    <div className="bg-slate-50 border-b p-2.5">
+      <div className="flex justify-between items-center px-1 mb-1.5">
         {[1, 2, 3, 4].map((step) => (
           <div
             key={step}
-            className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold ${step <= 2 ? "bg-[#107c50] text-white" : "bg-slate-200 text-slate-400"}`}
+            className={`w-4 h-4 rounded-full flex items-center justify-center text-[7px] font-bold ${step <= 2 ? "bg-[#107c50] text-white" : "bg-slate-200 text-slate-400"}`}
           >
             {step}
           </div>
         ))}
       </div>
-      <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
+      <div className="h-0.5 w-full bg-slate-200 rounded-full overflow-hidden">
         <div className="h-full w-[50%] bg-[#107c50]"></div>
       </div>
     </div>
-    <div className="p-4 flex-1 flex flex-col gap-3">
+    <div className="p-3 flex-1 flex flex-col gap-2.5">
       <div className="space-y-1">
-        <div className="h-2 w-1/3 bg-slate-200 rounded"></div>
-        <div className="h-8 w-full bg-white border rounded"></div>
+        <div className="h-1.5 w-1/3 bg-slate-200 rounded"></div>
+        <div className="h-7 w-full bg-white border rounded"></div>
       </div>
       <div className="space-y-1">
-        <div className="h-2 w-1/4 bg-slate-200 rounded"></div>
-        <div className="h-8 w-full bg-white border rounded"></div>
+        <div className="h-1.5 w-1/4 bg-slate-200 rounded"></div>
+        <div className="h-7 w-full bg-white border rounded"></div>
       </div>
-      <div className="mt-auto w-full h-8 bg-[#107c50] rounded flex items-center justify-center text-white text-[10px] font-bold">
+      <div className="mt-auto w-full h-7 bg-[#107c50] rounded flex items-center justify-center text-white text-[9px] font-bold">
         Enviar
       </div>
     </div>
   </div>
 );
 
-// MOCK 4: DASHBOARD (GRÁFICOS) - NOVO
+// MOCK 4: DASHBOARD (GRÁFICOS)
 const MockChartScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl">
-    <div className="p-4 border-b flex justify-between">
-      <div className="w-24 h-4 bg-slate-200 rounded"></div>
-      <BarChart3 size={16} className="text-slate-400" />
+    <div className="p-3 border-b flex justify-between">
+      <div className="w-20 h-3 bg-slate-200 rounded"></div>
+      <BarChart3 size={14} className="text-slate-400" />
     </div>
-    <div className="p-4 flex-1 flex flex-col gap-4">
+    <div className="p-3 flex-1 flex flex-col gap-3">
       {/* Gráfico de Barras */}
-      <div className="flex items-end justify-between gap-1 h-32 px-2 pb-2 border-b border-l border-slate-100">
+      <div className="flex items-end justify-between gap-0.5 h-24 px-1 pb-1 border-b border-l border-slate-100">
         {[30, 50, 40, 70, 50, 80, 60, 90].map((h, i) => (
           <div
             key={i}
@@ -165,23 +165,23 @@ const MockChartScreen = () => (
         ))}
       </div>
       {/* Cards Inferiores */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="h-16 bg-slate-50 rounded border p-2 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-            <PieChart size={14} />
+      <div className="grid grid-cols-2 gap-2">
+        <div className="h-12 bg-slate-50 rounded border p-1.5 flex items-center gap-1.5">
+          <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+            <PieChart size={12} />
           </div>
           <div>
-            <div className="w-8 h-2 bg-slate-300 mb-1 rounded"></div>
-            <div className="w-12 h-3 bg-slate-800 rounded"></div>
+            <div className="w-6 h-1.5 bg-slate-300 mb-0.5 rounded"></div>
+            <div className="w-10 h-2.5 bg-slate-800 rounded"></div>
           </div>
         </div>
-        <div className="h-16 bg-slate-50 rounded border p-2 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
-            <TrendingUp size={14} />
+        <div className="h-12 bg-slate-50 rounded border p-1.5 flex items-center gap-1.5">
+          <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+            <TrendingUp size={12} />
           </div>
           <div>
-            <div className="w-8 h-2 bg-slate-300 mb-1 rounded"></div>
-            <div className="w-12 h-3 bg-slate-800 rounded"></div>
+            <div className="w-6 h-1.5 bg-slate-300 mb-0.5 rounded"></div>
+            <div className="w-10 h-2.5 bg-slate-800 rounded"></div>
           </div>
         </div>
       </div>
@@ -190,38 +190,39 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D AJUSTADA
+// 2. COMPOSIÇÃO 3D AJUSTADA (BEM MENOR & FOCADA)
 // ==========================================
 
 const Hero3DComposition = () => {
   return (
-    // Reduzi a altura do container e adicionei scale para caber em telas menores
-    <div className="relative w-full h-[450px] md:h-[550px] flex items-center justify-center [perspective:1200px] overflow-visible mt-8 lg:mt-0 scale-[0.85] md:scale-100 origin-center">
-      {/* Grupo Rotacionado */}
-      <div className="relative w-[300px] md:w-[600px] lg:w-[700px] h-[350px] md:h-[450px] transform [transform-style:preserve-3d] [transform:rotateX(12deg)_rotateY(-15deg)_rotateZ(4deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* 1. FUNDO DIREITA (Dashboard Gráficos) - O cérebro do sistema */}
-        <div className="absolute top-[-40px] right-[-80px] w-[320px] md:w-[400px] h-[280px] md:h-[320px] transform [transform:translateZ(-120px)] opacity-90 bg-white rounded-xl shadow-xl transition-all duration-500 hover:opacity-100 hover:[transform:translateZ(-80px)] border border-slate-200">
+    // Redução significativa da altura e da escala base (scale-[0.65] md:scale-[0.85])
+    <div className="relative w-full h-[350px] md:h-[450px] flex items-center justify-center [perspective:1200px] overflow-visible mt-8 lg:mt-0 scale-[0.65] md:scale-[0.85] origin-center">
+      {/* Grupo Rotacionado (Dimensões base reduzidas) */}
+      <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(12deg)_rotateY(-15deg)_rotateZ(4deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
+        {/* 1. FUNDO DIREITA (Dashboard Gráficos) */}
+        <div className="absolute top-[-30px] right-[-60px] w-[280px] md:w-[360px] h-[240px] md:h-[300px] transform [transform:translateZ(-120px)] opacity-80 bg-white rounded-xl shadow-xl transition-all duration-500 hover:opacity-100 hover:[transform:translateZ(-80px)] border border-slate-200">
           <MockChartScreen />
         </div>
 
-        {/* 2. CENTRAL (Painel Operacional) - O corpo do sistema */}
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_30px_60px_-15px_rgba(16,124,80,0.25)] bg-white rounded-xl z-20 transition-all duration-500 hover:[transform:translateZ(40px)] border-[3px] border-white">
+        {/* 2. CENTRAL (Painel Operacional - EM EVIDÊNCIA) */}
+        {/* Movido para frente (translateZ 30px) e adicionado um anel verde (ring-[#107c50]/20) */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(30px)] shadow-[0_35px_60px_-15px_rgba(16,124,80,0.4)] bg-white rounded-xl z-20 transition-all duration-500 hover:[transform:translateZ(70px)] border-[3px] border-white ring-4 ring-[#107c50]/20">
           <MockPainelScreen />
         </div>
 
-        {/* 3. FLUTUANTE ESQUERDA (Auth) - A porta de entrada */}
-        <div className="absolute top-[20%] -left-[20%] md:-left-[25%] w-[220px] md:w-[260px] h-[280px] md:h-[340px] transform [transform:translateZ(80px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(120px)_scale(1.05)] z-30 animate-float">
+        {/* 3. FLUTUANTE ESQUERDA (Auth) */}
+        <div className="absolute top-[15%] -left-[15%] md:-left-[20%] w-[200px] md:w-[240px] h-[240px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(120px)_scale(1.05)] z-30 animate-float">
           <MockAuthScreen />
         </div>
 
-        {/* 4. FLUTUANTE DIREITA (Formulário) - A ação */}
-        <div className="absolute bottom-[-15%] -right-[10%] md:-right-[15%] w-[240px] md:w-[280px] h-[320px] md:h-[380px] transform [transform:translateZ(120px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(160px)_scale(1.05)] z-40 animate-float-delayed">
+        {/* 4. FLUTUANTE DIREITA (Formulário) */}
+        <div className="absolute bottom-[-10%] -right-[5%] md:-right-[10%] w-[220px] md:w-[260px] h-[280px] md:h-[340px] transform [transform:translateZ(120px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(160px)_scale(1.05)] z-40 animate-float-delayed">
           <MockFormScreen />
         </div>
       </div>
 
-      {/* Glow de fundo mais suave */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#107c50]/10 to-blue-500/10 blur-[80px] rounded-full -z-10 pointer-events-none"></div>
+      {/* Glow de fundo mais contido */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-[#107c50]/10 to-blue-500/10 blur-[70px] rounded-full -z-10 pointer-events-none"></div>
     </div>
   );
 };
@@ -229,8 +230,6 @@ const Hero3DComposition = () => {
 // ==========================================
 // 3. PÁGINA PRINCIPAL (INDEX)
 // ==========================================
-
-// Efeito de digitação removido conforme solicitado no ajuste anterior, mantendo texto estático e limpo.
 
 const Index = () => {
   const { user } = useAuth();
@@ -255,14 +254,14 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1440px] mx-auto">
-          {/* === 1. HERO SECTION === */}
-          <section className="px-6 md:px-12 pt-10 pb-12 lg:pt-14 lg:pb-24 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16 min-h-[550px]">
+          {/* === 1. HERO SECTION (Ajustada) === */}
+          <section className="px-6 md:px-12 pt-8 pb-12 lg:pt-12 lg:pb-20 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16 min-h-[500px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[600px] relative z-30">
-              {/* Título Ajustado (Estático) */}
+              {/* Título Ajustado (Cor Verde Removida) */}
               <h1 className="font-jakarta text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-[#0F172A] mb-6 tracking-tight leading-[1.1]">
                 Portal de Solicitações <br />
-                <span className="text-[#107c50]">de Suprimentos.</span>
+                <span>de Suprimentos.</span>
               </h1>
 
               <p
@@ -283,7 +282,7 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Composição 3D */}
+            {/* Composição 3D (Reduzida e Focada) */}
             <div
               className="flex-1 w-full animate-fade-in opacity-0 origin-center relative z-20"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
