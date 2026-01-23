@@ -173,10 +173,10 @@ export default function Painel() {
   }
 
   return (
-    // Fundo Verde Floresta (#107c50) para a página inteira
     <div className="min-h-screen bg-[#107c50] text-slate-50">
-      {/* HEADER: Envolvido em div branca para garantir o fundo branco */}
-      <div className="bg-white sticky top-0 z-50 shadow-sm">
+      {/* HEADER: Classes adicionadas para forçar a cor do texto para verde escuro (#107c50) 
+          e garantir que o nome do usuário apareça no fundo branco */}
+      <div className="bg-white sticky top-0 z-50 shadow-sm text-[#107c50] [&_*]:text-[#107c50] [&_button]:text-[#107c50] [&_svg]:text-[#107c50]">
         <Header />
       </div>
 
@@ -190,10 +190,6 @@ export default function Painel() {
           </div>
         )}
 
-        {/* STATS CARDS: 
-            Adicionada a classe 'bg-white text-slate-900 border-none' em TODOS.
-            Isso força o fundo branco, mantendo os ícones coloridos pela 'variant'.
-        */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
           <StatsCard
             title="Total"
@@ -246,7 +242,6 @@ export default function Painel() {
         </div>
 
         <Tabs defaultValue="requisicoes" className="space-y-4">
-          {/* TabsList com fundo BRANCO */}
           <TabsList className="bg-white border shadow-sm text-slate-600">
             <TabsTrigger
               value="requisicoes"
@@ -267,7 +262,6 @@ export default function Painel() {
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            {/* Bloco Tabela com fundo BRANCO */}
             <div className="bg-white text-slate-900 rounded-xl border-none overflow-hidden shadow-lg">
               <FiltersBar
                 filters={filters}
@@ -310,7 +304,6 @@ export default function Painel() {
 
           {!isReadOnly && (
             <TabsContent value="dashboard">
-              {/* Bloco Dashboard com fundo BRANCO */}
               <div className="bg-white text-slate-900 rounded-xl p-4 shadow-lg">
                 <GastosDashboard requisicoes={requisicoes} />
               </div>
