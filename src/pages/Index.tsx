@@ -12,8 +12,6 @@ import {
   Menu,
   Search,
   Filter,
-  MoreVertical,
-  X,
 } from "lucide-react";
 import {
   UserGreeting,
@@ -24,62 +22,12 @@ import {
   WorkflowTimeline,
 } from "@/components/home";
 
-// --- COMPONENTE INTERNO: EFEITO DE DIGITAÇÃO ---
-const TypewriterEffect = ({
-  text,
-  speed = 40,
-  initialDelay = 0,
-  className = "",
-  hideCursorOnFinish = false,
-}: {
-  text: string;
-  speed?: number;
-  initialDelay?: number;
-  className?: string;
-  hideCursorOnFinish?: boolean;
-}) => {
-  const [displayedText, setDisplayedText] = useState("");
-  const [showCursor, setShowCursor] = useState(false);
-
-  useEffect(() => {
-    setDisplayedText("");
-    setShowCursor(initialDelay === 0);
-    const startTimeout = setTimeout(() => {
-      setShowCursor(true);
-      let currentIndex = 0;
-      const interval = setInterval(() => {
-        if (currentIndex <= text.length) {
-          setDisplayedText(text.slice(0, currentIndex));
-          currentIndex++;
-        } else {
-          clearInterval(interval);
-          if (hideCursorOnFinish) setShowCursor(false);
-        }
-      }, speed);
-      return () => clearInterval(interval);
-    }, initialDelay);
-    return () => clearTimeout(startTimeout);
-  }, [text, speed, initialDelay, hideCursorOnFinish]);
-
-  return (
-    <span className={className}>
-      {displayedText}
-      {showCursor && (
-        <span className="ml-1 border-r-[4px] border-slate-900 animate-pulse inline-block align-middle h-[0.9em]">
-          &nbsp;
-        </span>
-      )}
-    </span>
-  );
-};
-
-// --- COMPONENTE INTERNO: MASHUP DE 4 TELAS REAIS ---
+// --- COMPONENTE INTERNO: MASHUP DE 4 TELAS REAIS (Mantido) ---
 const HeroAppScreens = () => {
   return (
     <div className="relative w-full max-w-[900px] mx-auto h-[400px] md:h-[480px] z-20 mt-8 lg:mt-0 [perspective:1000px]">
       {/* TELA 1: DASHBOARD (Fundo / Principal) */}
       <div className="absolute top-0 left-[10%] w-[80%] h-[85%] bg-[#F8FAFC] rounded-xl shadow-2xl border border-slate-200/80 overflow-hidden transform translate-z-0 z-10">
-        {/* Header */}
         <div className="bg-[#107c50] px-4 py-2 flex justify-between items-center h-10">
           <div className="flex items-center gap-2">
             <div className="w-16 h-4 bg-white/20 rounded"></div>
@@ -91,7 +39,6 @@ const HeroAppScreens = () => {
             <div className="w-20 h-6 bg-[#0d6942] rounded-full border border-[#1a8a5d]"></div>
           </div>
         </div>
-        {/* Body */}
         <div className="p-4">
           <div className="flex gap-3 mb-4">
             <div className="w-24 h-8 bg-white border border-slate-200 rounded-lg shadow-sm"></div>
@@ -255,22 +202,20 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1440px] mx-auto">
-          {/* === 1. HERO SECTION (COMPACTA E AGRESSIVA) === */}
+          {/* === 1. HERO SECTION (Layout Ajustado) === */}
           <section className="px-6 md:px-12 pt-10 pb-16 lg:pt-16 lg:pb-20 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-12 min-h-[550px]">
             {/* Texto Hero */}
-            <div className="flex-1 text-center lg:text-left max-w-[550px] relative z-30">
-              <h1 className="font-jakarta text-[2.5rem] sm:text-4xl md:text-[3.5rem] leading-[1.1] font-extrabold text-[#0F172A] mb-6 tracking-tight drop-shadow-sm">
-                <div className="block min-h-[1.15em]">
-                  <TypewriterEffect text="Portal de Solicitações" speed={35} hideCursorOnFinish={true} />
-                </div>
-                <div className="block min-h-[1.15em] text-[#107c50]">
-                  <TypewriterEffect text="de Suprimentos." speed={35} initialDelay={1100} hideCursorOnFinish={false} />
-                </div>
+            {/* max-w aumentado para 650px para evitar quebra de linha indesejada */}
+            <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
+              {/* TÍTULO ESTÁTICO (Sem Typewriter, Tamanho Ajustado) */}
+              <h1 className="font-jakarta text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] mb-6 tracking-tight leading-tight">
+                Portal de Solicitações <br />
+                <span className="text-[#107c50]">de Suprimentos.</span>
               </h1>
 
               <p
                 className="text-slate-600 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 animate-fade-in opacity-0 mb-8"
-                style={{ animationDelay: "1.8s", animationFillMode: "forwards" }}
+                style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}
               >
                 O controle total das suas compras corporativas. Centralize requisições, automate aprovações e garanta
                 compliance em um único painel.
@@ -278,7 +223,7 @@ const Index = () => {
 
               <div
                 className="animate-fade-in opacity-0 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
-                style={{ animationDelay: "2.2s", animationFillMode: "forwards" }}
+                style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
               >
                 <button className="bg-[#107c50] hover:bg-[#0d6942] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95">
                   Acessar o Painel
@@ -286,7 +231,7 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Nova Composição de 4 Telas (HeroAppScreens) */}
+            {/* Composição de Telas (HeroAppScreens) */}
             <div
               className="flex-1 w-full animate-fade-in opacity-0 scale-95 origin-center relative z-20"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
@@ -301,7 +246,6 @@ const Index = () => {
           </div>
 
           {/* === 2. AÇÕES RÁPIDAS (Cards) === */}
-          {/* Agora vem ANTES do "Como Funciona" */}
           <div className="mb-20 px-6 md:px-12 relative z-20">
             <ActionCards />
           </div>
@@ -314,7 +258,6 @@ const Index = () => {
           )}
 
           {/* === 3. SEÇÃO COMO FUNCIONA (Diagrama) === */}
-          {/* Movido para DEPOIS dos ActionCards */}
           <section className="py-20 bg-white relative overflow-hidden border-t border-slate-100">
             <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
 
@@ -331,7 +274,6 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Diagrama de Fluxo */}
               <div className="flex justify-center">
                 <HeroFlowDiagram />
               </div>
