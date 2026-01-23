@@ -34,7 +34,7 @@ export const ActionCards = () => {
             <FileText className="w-7 h-7 text-white animate-float" />
           </div>
 
-          <h3 className="font-bold text-white mb-3 text-xl">Fazer Requisição</h3>
+          <h3 className="font-bold text-white mb-3 text-xl">Fazer Solicitação</h3>
 
           <p className="text-white/80 mb-6 leading-relaxed text-sm">
             Solicite materiais, equipamentos ou serviços de forma rápida e organizada.
@@ -68,11 +68,11 @@ export const ActionCards = () => {
           </h3>
 
           <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-            Painel de Controle de pedidos e KPIs. Gerencie as requisições e acompanhe suas solicitações.
+            Visão completa do fluxo. Gerencie pedidos e acompanhe suas solicitações.
           </p>
 
           <div className="flex items-center text-muted-foreground font-medium group-hover:text-info group-hover:gap-3 transition-all">
-            {user ? "Acessar painel" : "Entrar para gestão"}
+            {user ? "Acessar painel" : "Entrar para acompanhar"}
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
           </div>
         </div>
