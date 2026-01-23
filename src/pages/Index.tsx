@@ -27,6 +27,7 @@ import {
   Calendar,
   MoreHorizontal,
   Download,
+  List,
 } from "lucide-react";
 import {
   UserGreeting,
@@ -38,7 +39,7 @@ import {
 } from "@/components/home";
 
 // ==========================================
-// 1. COMPONENTES VISUAIS (MOCKS)
+// 1. COMPONENTES VISUAIS (MOCKS) - RÉPLICAS FIÉIS
 // ==========================================
 
 // MOCK 1: TELA DE LOGIN
@@ -69,12 +70,11 @@ const MockAuthScreen = () => (
   </div>
 );
 
-// MOCK 2: PAINEL DE REQUISIÇÕES (Principal - Fundo Branco)
+// MOCK 2: PAINEL DE REQUISIÇÕES (RÉPLICA FIEL - image_6b4618.png)
 const MockPainelScreen = () => (
-  // AJUSTE: bg-[#008651] mudado para bg-white para base branca
-  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden font-sans relative">
-    {/* Header Topo (Verde interno) */}
-    <div className="h-7 bg-[#008651] flex items-center justify-between px-2 shrink-0">
+  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl overflow-hidden border-[3px] border-white/20 shadow-2xl font-sans relative">
+    {/* Header Topo */}
+    <div className="h-7 flex items-center justify-between px-3 shrink-0">
       <div className="flex items-center gap-1.5">
         <div className="text-[7px] font-extrabold text-white tracking-tighter italic">GMAD</div>
         <div className="h-2 w-[1px] bg-white/30"></div>
@@ -89,31 +89,32 @@ const MockPainelScreen = () => (
       </div>
     </div>
 
-    {/* Cards de Status (Fundo Verde do Container Pai) */}
-    <div className="bg-[#008651] px-2 pb-1.5 flex gap-1 overflow-hidden">
+    {/* Linha de Cards de Status (Fundo Branco) */}
+    <div className="px-3 pb-1.5 flex gap-1 overflow-hidden">
       {[
-        { l: "TOTAL", v: "76", c: "slate", i: FileText },
-        { l: "PENDENTES", v: "11", c: "orange", i: Clock },
-        { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp },
-        { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
-        { l: "COTANDO", v: "5", c: "purple", i: Package },
-        { l: "COMPRADOS", v: "37", c: "teal", i: ShoppingCart },
-        { l: "REJEITADOS", v: "1", c: "red", i: XCircle },
+        { l: "TOTAL", v: "76", c: "slate", i: FileText, bg: "bg-white" },
+        { l: "PENDENTES", v: "11", c: "orange", i: Clock, bg: "bg-orange-50" },
+        { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp, bg: "bg-white" },
+        { l: "APROVADOS", v: "1", c: "green", i: CheckCircle, bg: "bg-white" },
+        { l: "COTANDO", v: "5", c: "slate", i: Package, bg: "bg-white" },
+        { l: "COMPRADOS", v: "37", c: "slate", i: ShoppingCart, bg: "bg-white" },
+        { l: "REJEITADOS", v: "1", c: "red", i: XCircle, bg: "bg-white" },
       ].map((card, idx) => (
         <div
           key={idx}
-          className={`bg-white rounded-[4px] p-1 min-w-[30px] flex-1 shadow-sm flex flex-col justify-between h-8 ${idx > 0 ? `border-l-2 border-${card.c}-100` : ""}`}
+          className={`bg-white rounded-[3px] p-1 min-w-[32px] flex-1 shadow-sm flex flex-col justify-between h-8 relative overflow-hidden`}
         >
+          {idx === 1 && <div className="absolute top-0 left-0 w-full h-[2px] bg-orange-200"></div>}
           <div className="flex justify-between items-start">
             <span
               className={`text-[3.5px] text-${card.c === "slate" ? "slate-400" : card.c + "-500"} font-bold uppercase`}
             >
               {card.l}
             </span>
-            <card.i size={4} className={`text-${card.c}-300`} />
+            <card.i size={4} className={`text-${card.c === "slate" ? "slate-300" : card.c + "-400"}`} />
           </div>
           <div
-            className={`text-[9px] font-bold text-${card.c === "slate" ? "slate-700" : card.c + "-600"} leading-none`}
+            className={`text-[10px] font-bold text-${card.c === "slate" ? "slate-700" : card.c + "-600"} leading-none`}
           >
             {card.v}
           </div>
@@ -121,131 +122,169 @@ const MockPainelScreen = () => (
       ))}
     </div>
 
-    {/* Área Branca Principal */}
-    <div className="bg-[#F8FAFC] flex-1 mx-2 mb-2 rounded-[6px] overflow-hidden flex flex-col shadow-sm border border-slate-100">
-      {/* Abas */}
-      <div className="bg-white px-2 py-1 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex gap-1">
-          <div className="bg-slate-800 text-white px-1.5 py-0.5 rounded-[3px] text-[5px] font-bold flex items-center gap-0.5">
-            <FileText size={5} /> Pendências
+    {/* Botões de Aba (Requisições | Dashboard) */}
+    <div className="px-3 flex gap-1 mb-1.5">
+      <div className="bg-white px-2 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm">
+        <FileText size={5} className="text-[#008651]" />
+        <span className="text-[5px] font-bold text-[#008651]">Requisições</span>
+      </div>
+      <div className="px-2 py-0.5 flex items-center gap-1 opacity-70">
+        <DollarSign size={5} className="text-white" />
+        <span className="text-[5px] font-bold text-white">Dashboard</span>
+      </div>
+    </div>
+
+    {/* Área Branca Principal (Tabela) */}
+    <div className="bg-[#F8FAFC] flex-1 rounded-t-lg overflow-hidden flex flex-col shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] mx-0">
+      {/* Visões Rápidas e Contagem */}
+      <div className="bg-white px-3 py-1.5 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex gap-1 items-center">
+          <span className="text-[4px] text-slate-400 mr-1">Visões rápidas:</span>
+          <div className="bg-slate-800 text-white px-1.5 py-0.5 rounded-[2px] text-[4.5px] font-bold flex items-center gap-0.5">
+            <List size={4} /> Pendências
           </div>
-          <div className="bg-white border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded-[3px] text-[5px] font-bold flex items-center gap-0.5">
-            <Clock size={5} /> Aguardando
+          <div className="bg-white border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded-[2px] text-[4.5px] font-bold">
+            Aguardando
           </div>
-          <div className="bg-white border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded-[3px] text-[5px] font-bold flex items-center gap-0.5">
-            <CheckCircle size={5} /> Finalizados
+          <div className="bg-white border border-slate-200 text-slate-500 px-1.5 py-0.5 rounded-[2px] text-[4.5px] font-bold flex items-center gap-0.5">
+            <CheckCircle size={4} /> Finalizados
           </div>
         </div>
-        <span className="text-[5px] text-slate-400 font-medium">17 de 76</span>
+        <span className="text-[4.5px] text-slate-400 font-bold">17 de 76</span>
       </div>
 
-      {/* Toolbar */}
-      <div className="bg-white px-2 py-1 border-b border-slate-100 flex gap-1 items-center">
-        <div className="h-3.5 flex-1 bg-white border border-slate-200 rounded flex items-center px-1 gap-1">
+      {/* Toolbar de Filtros */}
+      <div className="bg-white px-3 py-1 border-b border-slate-100 flex gap-1 items-center">
+        <div className="h-4 flex-1 bg-white border border-slate-200 rounded-[3px] flex items-center px-1.5 gap-1">
           <Search size={5} className="text-slate-300" />
-          <span className="text-[4px] text-slate-300">Buscar...</span>
+          <span className="text-[4.5px] text-slate-300">Buscar item, solicitante...</span>
         </div>
-        <div className="h-3.5 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-[4px] text-slate-600 font-bold">
-          <LayoutGrid size={5} className="mr-0.5" /> Empresa
+        <div className="h-4 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold gap-0.5">
+          <LayoutGrid size={4} /> Empresa
         </div>
-        <div className="h-3.5 w-10 bg-white border border-slate-200 rounded flex items-center justify-center gap-0.5 text-[4px] font-bold text-slate-600">
-          <Filter size={5} /> Filtros
+        <div className="h-4 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold">
+          Status 4
+        </div>
+        <div className="h-4 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold">
+          Prioridade
+        </div>
+        <div className="h-4 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center gap-0.5 text-[4.5px] font-bold text-slate-600">
+          <Filter size={4} /> Mais filtros
+        </div>
+        <div className="ml-auto h-4 w-4 border border-slate-200 rounded-[3px] flex items-center justify-center">
+          <Download size={4} className="text-slate-400" />
         </div>
       </div>
 
-      {/* Cabeçalho */}
-      <div className="flex bg-slate-50 px-2 py-1 border-b border-slate-200">
-        <div className="w-[30%] text-[4px] font-bold text-slate-400 uppercase">Item</div>
-        <div className="w-[20%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
-        <div className="w-[5%] text-[4px] font-bold text-slate-400 uppercase text-center">Qtd</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Prior.</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Status</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
+      {/* Cabeçalho Tabela */}
+      <div className="flex bg-slate-50 px-3 py-1 border-b border-slate-200">
+        <div className="w-[28%] text-[4px] font-bold text-slate-400">Item</div>
+        <div className="w-[22%] text-[4px] font-bold text-slate-400">Solicitante</div>
+        <div className="w-[8%] text-[4px] font-bold text-slate-400 text-center">Qtd</div>
+        <div className="w-[12%] text-[4px] font-bold text-slate-400 text-center">Prioridade</div>
+        <div className="w-[15%] text-[4px] font-bold text-slate-400 text-center">Status</div>
+        <div className="w-[10%] text-[4px] font-bold text-slate-400 text-right">Data</div>
+        <div className="w-[5%] text-[4px] font-bold text-slate-400 text-center">...</div>
       </div>
 
-      {/* Linhas */}
+      {/* Linhas da Tabela (Dados do Print) */}
       <div className="flex-1 bg-white p-0 space-y-0 overflow-hidden">
         {/* Row 1 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Notebook Dell</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260123</div>
+        <div className="flex px-3 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+          <div className="w-[28%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-700">Notebook</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5">
+              REQ-20260123 <span className="bg-slate-100 px-0.5 rounded text-slate-500">Madville</span>
+            </div>
           </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Willian H.</div>
+          <div className="w-[22%] pr-1">
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Willian Henrique</div>
             <div className="text-[3.5px] text-slate-400">Comercial</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">1</div>
-          <div className="w-[10%] text-center">
+          <div className="w-[8%] text-center text-[5px] font-bold text-slate-600">1 un</div>
+          <div className="w-[12%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
             </div>
           </div>
           <div className="w-[15%] text-center">
-            <span className="bg-orange-100 text-orange-700 text-[3.5px] font-bold px-1 py-0.5 rounded border border-orange-200">
+            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-100 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
+          <div className="w-[5%] text-center flex justify-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
 
         {/* Row 2 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260123</div>
+        <div className="flex px-3 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+          <div className="w-[28%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente rosa</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5">
+              REQ-20260123 <span className="bg-slate-100 px-0.5 rounded text-slate-500">Madville</span>
+            </div>
           </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Eliane C.</div>
-            <div className="text-[3.5px] text-slate-400">Almox.</div>
+          <div className="w-[22%] pr-1">
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Eliane Cristina</div>
+            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">8</div>
-          <div className="w-[10%] text-center">
+          <div className="w-[8%] text-center text-[5px] font-bold text-slate-600">8 un</div>
+          <div className="w-[12%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
             </div>
           </div>
           <div className="w-[15%] text-center">
-            <span className="bg-orange-100 text-orange-700 text-[3.5px] font-bold px-1 py-0.5 rounded border border-orange-200">
+            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-100 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
+          <div className="w-[5%] text-center flex justify-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
 
         {/* Row 3 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Alicate Univ.</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260122</div>
+        <div className="flex px-3 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+          <div className="w-[28%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-700">Alicate universal</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5">
+              REQ-20260122 <span className="bg-slate-100 px-0.5 rounded text-slate-500">Madville</span>
+            </div>
           </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Kesia S.</div>
-            <div className="text-[3.5px] text-slate-400">Almox.</div>
+          <div className="w-[22%] pr-1">
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Kesia de Souza</div>
+            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">4</div>
-          <div className="w-[10%] text-center">
+          <div className="w-[8%] text-center text-[5px] font-bold text-slate-600">4 un</div>
+          <div className="w-[12%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
             </div>
           </div>
           <div className="w-[15%] text-center">
-            <span className="bg-purple-100 text-purple-700 text-[3.5px] font-bold px-1 py-0.5 rounded border border-purple-200">
+            <span className="bg-purple-50 text-purple-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-purple-100 uppercase">
               COTANDO
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">22/01</div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">22/01/2026</div>
+          <div className="w-[5%] text-center flex justify-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
       </div>
     </div>
   </div>
 );
 
-// MOCK 3: FORMULÁRIO
+// MOCK 3: FORMULÁRIO (Simplificado)
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
-      <ArrowRight size={5} className="rotate-180" /> Voltar
+      <ArrowRight size={5} className="rotate-180" /> Voltar ao início
     </div>
     <div className="px-4 py-1 border-b border-slate-50">
       <div className="flex justify-between items-center relative z-10">
@@ -262,26 +301,34 @@ const MockFormScreen = () => (
     </div>
     <div className="p-3 flex-1 flex flex-col">
       <h3 className="text-[7px] font-bold text-slate-800 mb-0.5">Dados do Solicitante</h3>
-      <p className="text-[4.5px] text-slate-400 mb-2">Confirme seus dados</p>
+      <p className="text-[4.5px] text-slate-400 mb-2">Confirme seus dados para identificação</p>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
+            GMAD Madville
+          </div>
         </div>
         <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
+            Ruan Wilt
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
+            ruan@madville...
+          </div>
         </div>
         <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
+            (47) 99999-9999
+          </div>
         </div>
       </div>
       <div className="mt-auto flex justify-between pt-1.5 border-t border-slate-50">
         <div className="h-4 px-2 rounded border border-slate-200 flex items-center text-[4.5px] font-bold text-slate-500">
-          Voltar
+          Anterior
         </div>
         <div className="h-4 px-2 rounded bg-slate-800 flex items-center text-[4.5px] font-bold text-white">Próximo</div>
       </div>
@@ -289,26 +336,31 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 4: DASHBOARD ANALYTICS
+// MOCK 4: DASHBOARD ANALYTICS (Funil e KPIs)
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-2 font-sans">
-    <div className="flex justify-between items-center mb-2">
-      <span className="text-[6px] font-bold text-slate-800">Dashboard</span>
+    <div className="flex justify-between items-center mb-1.5">
+      <span className="text-[6px] font-bold text-slate-800">Indicadores de Eficiência</span>
+      <span className="text-[4px] text-slate-400">Últimos 30 dias</span>
     </div>
     <div className="flex gap-2 h-full">
       <div className="flex-1 bg-white rounded border border-slate-100 p-1.5 flex flex-col gap-1">
         <div className="flex justify-between">
           <span className="text-[5px] font-bold text-slate-700">Funil</span>
+          <span className="text-[3.5px] bg-red-50 text-red-500 px-1 rounded">20 atrasadas</span>
         </div>
         <div className="space-y-1 mt-1">
           <div className="flex items-center gap-1">
             <div className="flex-1 h-1.5 bg-orange-400 rounded-r w-[20%]"></div>
+            <span className="text-[3.5px]">11</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="flex-1 h-1.5 bg-teal-500 rounded-r w-[80%]"></div>
+            <span className="text-[3.5px]">37</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="flex-1 h-1.5 bg-green-600 rounded-r w-[40%]"></div>
+            <span className="text-[3.5px]">12</span>
           </div>
         </div>
       </div>
@@ -316,15 +368,18 @@ const MockChartScreen = () => (
         <div className="grid grid-cols-2 gap-1">
           <div className="bg-red-50 p-1 rounded border border-red-100">
             <div className="text-[8px] font-bold text-red-600">17%</div>
+            <div className="text-[3.5px] text-red-400">Conclusão</div>
           </div>
           <div className="bg-green-50 p-1 rounded border border-green-100">
             <div className="text-[8px] font-bold text-green-700">1.6d</div>
+            <div className="text-[3.5px] text-green-600">Leadtime</div>
           </div>
         </div>
         <div className="bg-white rounded border border-slate-100 flex-1 p-1 flex items-end justify-between gap-1">
-          <div className="w-1.5 h-[40%] bg-slate-300 rounded-t-[1px]"></div>
+          <div className="w-1.5 h-[40%] bg-slate-200 rounded-t-[1px]"></div>
           <div className="w-1.5 h-[60%] bg-[#008651] rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[30%] bg-slate-300 rounded-t-[1px]"></div>
+          <div className="w-1.5 h-[30%] bg-slate-200 rounded-t-[1px]"></div>
+          <div className="w-1.5 h-[80%] bg-[#008651] rounded-t-[1px]"></div>
         </div>
       </div>
     </div>
@@ -332,30 +387,31 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D
+// 2. COMPOSIÇÃO 3D (ORDEM AJUSTADA: DASHBOARD NA FRENTE)
 // ==========================================
 
 const Hero3DComposition = () => {
   return (
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
-        {/* AJUSTE: bg-[#008651] removido, shadow verde removida. Agora é branco com sombra cinza */}
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.2)] bg-white rounded-xl z-10 transition-all duration-500 border border-slate-100">
+        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES */}
+        {/* Fica atrás (translateZ 0), mas é grande o suficiente para ser visto */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,134,81,0.2)] bg-white rounded-xl z-10 transition-all duration-500">
           <MockPainelScreen />
         </div>
 
         {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS */}
-        <div className="absolute top-[20%] -right-[15%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(50px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(70px)_scale(1.05)] border border-slate-100">
+        {/* Trazido para frente (translateZ 60px) e posicionado para não tapar o centro */}
+        <div className="absolute bottom-[10%] -right-[15%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(60px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(80px)_scale(1.05)] border border-slate-100">
           <MockChartScreen />
         </div>
 
         {/* 3. CAMADA FRENTE ESQUERDA: LOGIN */}
-        <div className="absolute top-[-10%] -left-[10%] w-[160px] md:w-[200px] h-[200px] md:h-[260px] transform [transform:translateZ(40px)] shadow-[0_20px_40px_rgba(0,0,0,0.15)] z-20 animate-float">
+        <div className="absolute top-[-5%] -left-[10%] w-[160px] md:w-[200px] h-[200px] md:h-[260px] transform [transform:translateZ(40px)] shadow-[0_20px_40px_rgba(0,0,0,0.15)] z-20 animate-float">
           <MockAuthScreen />
         </div>
 
-        {/* 4. CAMADA FRENTE INFERIOR: FORMULÁRIO */}
+        {/* 4. CAMADA FLUTUANTE INFERIOR ESQUERDA: FORMULÁRIO */}
         <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.25)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
           <MockFormScreen />
         </div>
@@ -397,8 +453,7 @@ const Index = () => {
           <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              {/* AJUSTE: Tamanhos de fonte reduzidos para caber em 2 linhas */}
-              <h1 className="font-jakarta text-[2.5rem] sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15]">
+              <h1 className="font-jakarta text-[2.75rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15]">
                 Portal de Solicitações <br />
                 de Suprimentos.
               </h1>
