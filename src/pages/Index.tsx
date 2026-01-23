@@ -30,8 +30,8 @@ const Index = () => {
               </h1>
 
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-6 md:text-left">
-                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle orçamentário.
-  </p>
+                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
+                orçamentário.
               </p>
             </div>
 
