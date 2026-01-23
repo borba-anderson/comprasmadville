@@ -1,80 +1,92 @@
-import { Header } from "@/components/layout/Header";
-import { useAuth } from "@/contexts/AuthContext";
-import {
-  UserGreeting,
-  QuickStats,
-  ActionCards,
-  LogoMarquee,
-  WorkflowTimeline,
-  HeroFlowDiagram,
-} from "@/components/home";
+import { FileText, UserCheck, Search, ShieldCheck, Truck, Database } from "lucide-react";
 
-const Index = () => {
-  const { user } = useAuth();
+export const HeroFlowDiagram = () => {
+  const steps = [
+    {
+      id: "01",
+      icon: FileText,
+      title: "Solicitação",
+      desc: "Registro da necessidade.",
+      color: "text-blue-600",
+      bg: "bg-blue-50 hover:bg-blue-100",
+      border: "border-blue-100",
+    },
+    {
+      id: "02",
+      icon: UserCheck,
+      title: "Validação",
+      desc: "Revisão do gestor.",
+      color: "text-indigo-600",
+      bg: "bg-indigo-50 hover:bg-indigo-100",
+      border: "border-indigo-100",
+    },
+    {
+      id: "03",
+      icon: Search,
+      title: "Análise",
+      desc: "Cotação e fornecedores.",
+      color: "text-purple-600",
+      bg: "bg-purple-50 hover:bg-purple-100",
+      border: "border-purple-100",
+    },
+    {
+      id: "04",
+      icon: ShieldCheck,
+      title: "Aprovação",
+      desc: "Autorização final.",
+      color: "text-amber-600",
+      bg: "bg-amber-50 hover:bg-amber-100",
+      border: "border-amber-100",
+    },
+    {
+      id: "05",
+      icon: Truck,
+      title: "Atendimento",
+      desc: "Aquisição e entrega.",
+      color: "text-emerald-600",
+      bg: "bg-emerald-50 hover:bg-emerald-100",
+      border: "border-emerald-100",
+    },
+    {
+      id: "06",
+      icon: Database,
+      title: "Registro",
+      desc: "Estoque e fiscal.",
+      color: "text-slate-600",
+      bg: "bg-slate-50 hover:bg-slate-100",
+      border: "border-slate-100",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="page-container rounded-none shadow-none">
-        {/* REDUZI O PADDING AQUI: de 'py-10 md:py-16' para 'pt-8 pb-10 md:pt-12 md:pb-12' */}
-        {/* Isso puxa o título para cima */}
-        <section className="pt-8 pb-10 md:pt-12 md:pb-12">
-          {/* Ajustei o gap para aproximar mais as colunas */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 lg:gap-12">
-            {/* Lado Esquerdo - Título e subtítulo */}
-            <div className="text-center md:text-left flex-1 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-2 leading-snug">
-                Workflow de Requisições
-                <br />
-                de Suprimentos<span className="text-primary">.</span>
-              </h1>
-
-              <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-4 md:text-left">
-                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
-                orçamentário.
-              </p>
+    // Container principal: Card com efeito 'Glass' e sombra suave
+    <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[400px]">
+      {/* GRID LAYOUT: 2 Colunas (Compacto) */}
+      <div className="grid grid-cols-2 gap-3">
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            className={`
+              relative flex flex-col p-3 rounded-xl border transition-all duration-300
+              ${step.bg} ${step.border} group cursor-default
+            `}
+          >
+            {/* Cabeçalho do Card: Ícone e Número */}
+            <div className="flex items-center justify-between mb-2">
+              <div className={`p-1.5 rounded-lg bg-white shadow-sm ${step.color}`}>
+                <step.icon size={16} strokeWidth={2.5} />
+              </div>
+              <span className="text-[10px] font-bold opacity-40 font-mono tracking-tighter">{step.id}</span>
             </div>
 
-            {/* Lado Direito - Fluxo Visual */}
-            <div className="flex-shrink-0 animate-fade-in flex items-center justify-center w-full md:w-auto">
-              <HeroFlowDiagram />
+            {/* Textos compactos */}
+            <div>
+              <h3 className="font-bold text-sm text-foreground leading-tight mb-0.5">{step.title}</h3>
+              <p className="text-[11px] text-muted-foreground leading-tight line-clamp-2">{step.desc}</p>
             </div>
           </div>
-
-          {/* Logo Marquee */}
-          <LogoMarquee />
-        </section>
-
-        {user && (
-          <section className="animate-fade-in">
-            <UserGreeting />
-            <QuickStats />
-          </section>
-        )}
-
-        <ActionCards />
-        <WorkflowTimeline />
-
-        <footer className="py-8 text-center border-t mt-8">
-          <p className="text-muted-foreground text-sm">
-            © 2026 GMAD Madville | Curitiba - Workflow de Requisições de Suprimentos
-          </p>
-          <p className="text-muted-foreground text-xs mt-2">
-            Versão Beta 2.1 | Suporte:{" "}
-            <a
-              href="https://wa.me/5547992189824"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-info hover:underline font-medium"
-            >
-              WhatsApp
-            </a>
-          </p>
-        </footer>
-      </main>
+        ))}
+      </div>
     </div>
   );
 };
-
-export default Index;
