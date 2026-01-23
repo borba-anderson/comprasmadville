@@ -1,81 +1,80 @@
-import { FileText, UserCheck, Search, ShieldCheck, Truck, Database } from "lucide-react";
+import { Header } from "@/components/layout/Header";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  UserGreeting,
+  QuickStats,
+  ActionCards,
+  LogoMarquee,
+  WorkflowTimeline,
+  HeroFlowDiagram,
+} from "@/components/home";
 
-export const HeroFlowDiagram = () => {
-  const steps = [
-    {
-      icon: FileText,
-      title: "Solicitação",
-      desc: "Registro da necessidade.",
-      iconTheme: "bg-blue-100/80 text-blue-700 border-blue-200",
-      hoverText: "group-hover:text-blue-700",
-    },
-    {
-      icon: UserCheck,
-      title: "Validação",
-      desc: "Revisão do gestor.",
-      iconTheme: "bg-indigo-100/80 text-indigo-700 border-indigo-200",
-      hoverText: "group-hover:text-indigo-700",
-    },
-    {
-      icon: Search,
-      title: "Análise",
-      desc: "Cotação e fornecedores.",
-      iconTheme: "bg-purple-100/80 text-purple-700 border-purple-200",
-      hoverText: "group-hover:text-purple-700",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Aprovação",
-      desc: "Autorização final.",
-      iconTheme: "bg-amber-100/80 text-amber-700 border-amber-200",
-      hoverText: "group-hover:text-amber-700",
-    },
-    {
-      icon: Truck,
-      title: "Atendimento",
-      desc: "Aquisição e entrega.",
-      iconTheme: "bg-emerald-100/80 text-emerald-700 border-emerald-200",
-      hoverText: "group-hover:text-emerald-700",
-    },
-    {
-      icon: Database,
-      title: "Registro",
-      desc: "Estoque e fiscal.",
-      iconTheme: "bg-slate-100/80 text-slate-700 border-slate-200",
-      hoverText: "group-hover:text-slate-700",
-    },
-  ];
+const Index = () => {
+  const { user } = useAuth();
 
   return (
-    // Reduzi o padding para p-5 e limitei a largura para ficar mais 'tight'
-    <div className="relative p-5 rounded-2xl w-full max-w-[340px] bg-white/50 border border-slate-100 shadow-sm backdrop-blur-sm">
-      {/* Linha conectora vertical - Recalculada para ícones w-10 */}
-      {/* Container p-5 (1.25rem) + Metade do ícone w-10 (1.25rem) = 2.5rem de distância da esquerda */}
-      <div className="absolute left-[2.5rem] top-8 bottom-8 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-slate-200 opacity-60 rounded-full" />
+    <div className="min-h-screen bg-background">
+      <Header />
 
-      {/* Reduzi o espaçamento vertical entre itens de space-y-7 para space-y-3 */}
-      <div className="space-y-3 relative">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-center gap-4 group">
-            {/* Ícone - Reduzido para w-10 h-10 (40px) */}
-            <div
-              className={`relative z-10 flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg border shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-all duration-300 group-hover:scale-105 group-hover:shadow-md ${step.iconTheme} bg-white`}
-            >
-              <step.icon size={18} strokeWidth={2} />
+      <main className="page-container rounded-none shadow-none">
+        {/* REDUZI O PADDING AQUI: de 'py-10 md:py-16' para 'pt-8 pb-10 md:pt-12 md:pb-12' */}
+        {/* Isso puxa o título para cima */}
+        <section className="pt-8 pb-10 md:pt-12 md:pb-12">
+          {/* Ajustei o gap para aproximar mais as colunas */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 lg:gap-12">
+            {/* Lado Esquerdo - Título e subtítulo */}
+            <div className="text-center md:text-left flex-1 animate-fade-in">
+              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-2 leading-snug">
+                Workflow de Requisições
+                <br />
+                de Suprimentos<span className="text-primary">.</span>
+              </h1>
+
+              <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-4 md:text-left">
+                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
+                orçamentário.
+              </p>
             </div>
 
-            {/* Texto */}
-            <div className="flex-1">
-              <h3
-                className={`font-semibold text-sm text-foreground leading-none mb-1 transition-colors duration-300 ${step.hoverText}`}
-              >
-                {step.title}
-              </h3>
-              <p className="text-xs text-muted-foreground leading-tight">{step.desc}</p>
+            {/* Lado Direito - Fluxo Visual */}
+            <div className="flex-shrink-0 animate-fade-in flex items-center justify-center w-full md:w-auto">
+              <HeroFlowDiagram />
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Logo Marquee */}
+          <LogoMarquee />
+        </section>
+
+        {user && (
+          <section className="animate-fade-in">
+            <UserGreeting />
+            <QuickStats />
+          </section>
+        )}
+
+        <ActionCards />
+        <WorkflowTimeline />
+
+        <footer className="py-8 text-center border-t mt-8">
+          <p className="text-muted-foreground text-sm">
+            © 2026 GMAD Madville | Curitiba - Workflow de Requisições de Suprimentos
+          </p>
+          <p className="text-muted-foreground text-xs mt-2">
+            Versão Beta 2.1 | Suporte:{" "}
+            <a
+              href="https://wa.me/5547992189824"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-info hover:underline font-medium"
+            >
+              WhatsApp
+            </a>
+          </p>
+        </footer>
+      </main>
     </div>
   );
 };
+
+export default Index;
