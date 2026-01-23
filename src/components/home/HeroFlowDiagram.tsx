@@ -56,34 +56,41 @@ export const HeroFlowDiagram = () => {
 
   return (
     <div className="relative p-8 bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/60 w-full max-w-2xl z-10">
-      {/* === SVG DA SETA CURVA AJUSTADO === */}
-      {/* Ajustei o viewBox, o posicionamento e o caminho (d) para uma curva perfeita que não corta os ícones */}
+      {/* === SVG DA SETA CURVA (SNAKE) === */}
+      {/* Ajustado para cobrir toda a área (inset-0) para alinhamento perfeito */}
       <svg
-        className="absolute top-[35%] right-[12%] w-[65%] h-[35%] z-0 hidden md:block pointer-events-none"
-        viewBox="0 0 450 130"
+        className="absolute inset-0 w-full h-full z-0 hidden md:block pointer-events-none"
+        viewBox="0 0 600 300"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="snake-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="100%" stopColor="#22c55e" />
+          <linearGradient id="snake-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#a855f7" /> {/* Roxo */}
+            <stop offset="100%" stopColor="#22c55e" /> {/* Verde */}
           </linearGradient>
         </defs>
-        {/* Caminho ajustado para uma curva mais aberta e suave */}
+
+        {/* Caminho (Path) Recalculado:
+           M 500 80  -> Começa na direita do item 3 (aprox)
+           C 560 80... -> Faz a curva bem aberta para a direita (fora dos ícones)
+           ... 560 210 -> Desce até a altura da linha 2
+           L 100 210 -> Vai reto para a esquerda até o item 4
+        */}
         <path
-          d="M 420 25 C 480 25, 480 105, 360 105 L 60 105"
+          d="M 500 70 C 580 70, 580 195, 500 195 L 90 195"
           stroke="url(#snake-gradient)"
           strokeWidth="4"
           strokeLinecap="round"
           fill="none"
         />
-        {/* Ponta da seta ajustada */}
-        <path d="M 65 105 L 75 95 M 65 105 L 75 115" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
+
+        {/* Ponta da Seta (Apontando para a esquerda no item 4) */}
+        <path d="M 95 195 L 105 185 M 95 195 L 105 205" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
       </svg>
 
       <div className="flex flex-col gap-12 relative z-10">
-        {/* === LINHA 1 === */}
+        {/* === LINHA 1 (1 -> 2 -> 3) === */}
         <div className="flex items-start justify-between px-4">
           <StepItem step={steps[0]} />
           <ArrowH />
@@ -92,9 +99,8 @@ export const HeroFlowDiagram = () => {
           <StepItem step={steps[2]} />
         </div>
 
-        {/* === LINHA 2 === */}
-        {/* Adicionado padding para alinhar visualmente com o final da curva */}
-        <div className="flex items-start justify-between pl-12 pr-4">
+        {/* === LINHA 2 (4 -> 5 -> 6) === */}
+        <div className="flex items-start justify-between pl-4 pr-4">
           <StepItem step={steps[3]} />
           <ArrowH />
           <StepItem step={steps[4]} />
@@ -106,6 +112,7 @@ export const HeroFlowDiagram = () => {
   );
 };
 
+// Componente Item
 const StepItem = ({ step }: { step: any }) => (
   <div className="flex flex-col items-center text-center group cursor-default relative w-28">
     <div
