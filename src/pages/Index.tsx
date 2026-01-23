@@ -24,14 +24,14 @@ const Index = () => {
             {/* Lado Esquerdo - Título e subtítulo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-tight">
-                Gestão de Requisições
+                Workflow de Requisições
                 <br /> {/* <--- AQUI ESTÁ A QUEBRA DE LINHA FORÇADA */}
-                de Demandas<span className="text-primary">.</span>
+                de Compras<span className="text-primary">.</span>
               </h1>
 
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-6 md:text-left">
-                Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
-                orçamentário.
+                Automatize o fluxo de aprovações, elimine gargalos manuais e conecte solicitantes e compradores em um
+                processo contínuo.
               </p>
             </div>
 
