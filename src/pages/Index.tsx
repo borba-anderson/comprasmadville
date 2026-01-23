@@ -68,79 +68,85 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-50 relative overflow-hidden">
+    // Adicionado fundo com gradiente sutil e overflow-hidden para os elementos absolutos
+    <div className="min-h-screen bg-slate-50/50 relative overflow-hidden font-sans">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
           .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+          body { font-family: 'Plus Jakarta Sans', sans-serif; }
         `}
       </style>
 
-      {/* --- FUNDO GEOMÉTRICO (Igual à referência) --- */}
+      {/* --- FUNDO GEOMÉTRICO E GRADIENTE (Baseado na referência) --- */}
       <div className="absolute inset-0 pointer-events-none z-0">
+        {/* Gradiente de fundo sutil */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
+
         {/* Triângulo/Seta Esquerda (Atrás do Texto) */}
         <svg
-          className="absolute top-[10%] left-[-5%] w-[500px] h-[500px] text-slate-200/50 rotate-12"
+          className="absolute top-[15%] left-[-5%] w-[400px] h-[400px] text-slate-200/60 rotate-12 opacity-70"
           viewBox="0 0 200 200"
           fill="currentColor"
         >
-          <path d="M 40 150 L 100 50 L 160 150 Z" /> {/* Triângulo grande */}
+          <path d="M 40 150 L 100 50 L 160 150 Z" />
         </svg>
 
         {/* Círculo/Forma Direita (Atrás do Diagrama) */}
         <svg
-          className="absolute top-[5%] right-[-10%] w-[600px] h-[600px] text-blue-100/40"
+          className="absolute top-[10%] right-[-10%] w-[500px] h-[500px] text-blue-50/80 opacity-60"
           viewBox="0 0 200 200"
           fill="currentColor"
         >
           <circle cx="100" cy="100" r="80" />
         </svg>
 
-        {/* Triângulo Pequeno Flutuante */}
+        {/* Elementos menores flutuantes */}
         <svg
-          className="absolute top-[40%] left-[45%] w-16 h-16 text-slate-300/60 animate-bounce"
-          style={{ animationDuration: "3s" }}
+          className="absolute top-[45%] left-[40%] w-12 h-12 text-slate-300/50 animate-bounce"
+          style={{ animationDuration: "4s" }}
           viewBox="0 0 24 24"
           fill="currentColor"
         >
           <path d="M 12 4 L 20 18 L 4 18 Z" />
         </svg>
+        <svg
+          className="absolute top-[20%] right-[30%] w-8 h-8 text-blue-200/60 animate-pulse"
+          style={{ animationDuration: "3s" }}
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <circle cx="12" cy="12" r="10" />
+        </svg>
       </div>
 
       <div className="relative z-10">
-        {" "}
-        {/* Conteúdo acima do fundo */}
         <Header />
-        <main className="page-container rounded-none shadow-none bg-transparent">
+
+        <main className="page-container rounded-none shadow-none bg-transparent px-4 md:px-8 max-w-7xl mx-auto">
           {/* HERO SECTION */}
-          <section className="pt-8 pb-12 md:pt-14 md:pb-20">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-20">
+          <section className="pt-12 pb-16 md:pt-20 md:pb-28">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
               {/* Lado Esquerdo - Texto */}
-              <div className="text-center lg:text-left flex-1 max-w-2xl">
-                <h1 className="font-jakarta text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-slate-900 mb-6 leading-[1.1] min-h-[2.4em] md:min-h-[auto]">
-                  <TypewriterEffect text="Portal de Solicitações" speed={50} hideCursorOnFinish={true} />
+              <div className="text-center lg:text-left flex-1 max-w-xl relative z-10">
+                <h1 className="font-jakarta text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15]">
+                  Workflow de Requisições
                   <br className="hidden md:block" />
-                  <TypewriterEffect
-                    text="de Suprimentos."
-                    speed={50}
-                    initialDelay={1150}
-                    className="text-[#107c50]" // Verde da marca
-                    hideCursorOnFinish={false}
-                  />
+                  <span className="text-primary">de Suprimentos.</span>
                 </h1>
 
                 <p
-                  className="text-slate-600 max-w-xl text-lg md:text-xl font-medium mx-auto lg:mx-0 mb-8 leading-relaxed font-jakarta animate-fade-in"
-                  style={{ animationDelay: "2.5s" }}
+                  className="text-slate-600 text-lg md:text-xl font-medium mb-8 leading-relaxed font-jakarta animate-fade-in"
+                  style={{ animationDelay: "0.3s" }}
                 >
-                  Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
-                  gestão.
+                  Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
+                  orçamentário.
                 </p>
               </div>
 
               {/* Lado Direito - Diagrama Complexo */}
               <div
-                className="flex-shrink-0 animate-fade-in w-full lg:w-auto flex justify-center lg:justify-end"
+                className="flex-shrink-0 animate-fade-in w-full lg:w-auto flex justify-center lg:justify-end relative z-20"
                 style={{ animationDelay: "0.5s" }}
               >
                 <HeroFlowDiagram />
@@ -148,7 +154,7 @@ const Index = () => {
             </div>
 
             <div
-              className="mt-12 md:mt-16 border-t border-slate-200/60 pt-8 animate-fade-in"
+              className="mt-16 md:mt-20 border-t border-slate-200/60 pt-10 animate-fade-in"
               style={{ animationDelay: "0.8s" }}
             >
               <LogoMarquee />
@@ -156,29 +162,29 @@ const Index = () => {
           </section>
 
           {user && (
-            <section className="animate-fade-in mb-8">
+            <section className="animate-fade-in mb-12">
               <UserGreeting />
               <QuickStats />
             </section>
           )}
 
-          <div className="mb-16">
+          <div className="mb-20">
             <ActionCards />
           </div>
 
           <WorkflowTimeline />
 
-          <footer className="py-10 text-center border-t border-slate-200 bg-white/50 mt-12 backdrop-blur-sm">
+          <footer className="py-12 text-center border-t border-slate-200 bg-white/60 mt-16 backdrop-blur-md rounded-t-3xl">
             <p className="text-slate-500 text-sm font-medium font-jakarta">
               © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
             </p>
-            <p className="text-slate-400 text-xs mt-2 font-jakarta">
+            <p className="text-slate-400 text-xs mt-3 font-jakarta">
               Versão Beta 2.1 | Suporte:{" "}
               <a
                 href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#107c50] hover:underline font-bold transition-colors"
+                className="text-primary hover:underline font-bold transition-colors"
               >
                 WhatsApp
               </a>
