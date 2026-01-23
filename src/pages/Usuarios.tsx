@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail } from 'lucide-react';
+import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail, Eye, EyeOff, Lock } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -58,12 +59,17 @@ export default function Usuarios() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSendingReset, setIsSendingReset] = useState(false);
+  const [isSettingPassword, setIsSettingPassword] = useState(false);
 
   // Edit form state
   const [editEmpresa, setEditEmpresa] = useState('');
   const [editSetor, setEditSetor] = useState('');
   const [editGestorId, setEditGestorId] = useState('');
   const [editRoles, setEditRoles] = useState<AppRole[]>([]);
+  
+  // Temporary password state
+  const [tempPassword, setTempPassword] = useState('');
+  const [showTempPassword, setShowTempPassword] = useState(false);
 
   const { user, isAdmin, isLoading: authLoading, rolesLoaded } = useAuth();
   const navigate = useNavigate();
@@ -154,7 +160,9 @@ export default function Usuarios() {
     setEditEmpresa(userToEdit.empresa || 'none');
     setEditSetor(userToEdit.setor || 'none');
     setEditGestorId(userToEdit.gestor_id || 'none');
-    setEditRoles(userToEdit.roles);
+    setEditRoles([...userToEdit.roles]); // Create a copy to avoid mutation
+    setTempPassword('');
+    setShowTempPassword(false);
     setIsEditDialogOpen(true);
   };
 
@@ -170,7 +178,7 @@ export default function Usuarios() {
     try {
       setIsSaving(true);
 
-      // Update profile
+      // Update profile ONLY - don't touch roles here
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
@@ -183,21 +191,27 @@ export default function Usuarios() {
 
       if (profileError) throw profileError;
 
-      // Update roles - delete existing and insert new
-      const { error: deleteRolesError } = await supabase
-        .from('user_roles')
-        .delete()
-        .eq('user_id', selectedUser.id);
+      // Only update roles if they actually changed
+      const originalRoles = selectedUser.roles.sort().join(',');
+      const newRoles = editRoles.sort().join(',');
 
-      if (deleteRolesError) throw deleteRolesError;
+      if (originalRoles !== newRoles) {
+        // Delete existing roles
+        const { error: deleteRolesError } = await supabase
+          .from('user_roles')
+          .delete()
+          .eq('user_id', selectedUser.id);
 
-      // Insert new roles (at least solicitante)
-      const rolesToInsert: AppRole[] = editRoles.length > 0 ? editRoles : ['solicitante'];
-      const { error: insertRolesError } = await supabase
-        .from('user_roles')
-        .insert(rolesToInsert.map((role) => ({ user_id: selectedUser.id, role })));
+        if (deleteRolesError) throw deleteRolesError;
 
-      if (insertRolesError) throw insertRolesError;
+        // Insert new roles (at least solicitante if empty)
+        const rolesToInsert: AppRole[] = editRoles.length > 0 ? editRoles : ['solicitante'];
+        const { error: insertRolesError } = await supabase
+          .from('user_roles')
+          .insert(rolesToInsert.map((role) => ({ user_id: selectedUser.id, role })));
+
+        if (insertRolesError) throw insertRolesError;
+      }
 
       toast({ title: 'Usuário atualizado com sucesso' });
       setIsEditDialogOpen(false);
@@ -235,6 +249,72 @@ export default function Usuarios() {
       });
     } finally {
       setIsSendingReset(false);
+    }
+  };
+
+  const handleSetTemporaryPassword = async () => {
+    if (!selectedUser || !tempPassword) return;
+
+    if (tempPassword.length < 6) {
+      toast({
+        title: 'Senha inválida',
+        description: 'A senha deve ter pelo menos 6 caracteres.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsSettingPassword(true);
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        toast({
+          title: 'Erro de autenticação',
+          description: 'Faça login novamente.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-set-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            user_auth_uid: selectedUser.auth_uid,
+            new_password: tempPassword,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao definir senha');
+      }
+
+      toast({
+        title: 'Senha definida com sucesso',
+        description: `A senha temporária foi definida para ${selectedUser.nome}. Informe ao usuário.`,
+      });
+
+      setTempPassword('');
+    } catch (error) {
+      console.error('Error setting password:', error);
+      toast({
+        title: 'Erro ao definir senha',
+        description: error instanceof Error ? error.message : 'Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSettingPassword(false);
     }
   };
 
@@ -483,13 +563,60 @@ export default function Usuarios() {
                 </div>
               </div>
 
-              {/* Password Reset */}
-              <div className="space-y-2">
+              {/* Password Management */}
+              <div className="space-y-4">
                 <Label className="flex items-center gap-2">
                   <KeyRound className="w-4 h-4" />
-                  Senha
+                  Gerenciar Senha
                 </Label>
-                <div className="flex items-center gap-2">
+                
+                {/* Set Temporary Password */}
+                <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
+                  <p className="text-sm font-medium flex items-center gap-2">
+                    <Lock className="w-4 h-4" />
+                    Definir Senha Temporária
+                  </p>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Input
+                        type={showTempPassword ? 'text' : 'password'}
+                        value={tempPassword}
+                        onChange={(e) => setTempPassword(e.target.value)}
+                        placeholder="Nova senha (mín. 6 caracteres)"
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                        onClick={() => setShowTempPassword(!showTempPassword)}
+                      >
+                        {showTempPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={handleSetTemporaryPassword}
+                      disabled={isSettingPassword || !tempPassword}
+                    >
+                      {isSettingPassword ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Definir'
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Define uma senha temporária diretamente. Informe ao usuário para alterar depois.
+                  </p>
+                </div>
+
+                <Separator />
+
+                {/* Send Reset Email */}
+                <div className="space-y-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -510,10 +637,10 @@ export default function Usuarios() {
                       </>
                     )}
                   </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Envia um link para o email do usuário para definir uma nova senha
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Um link será enviado para o email do usuário para definir uma nova senha
-                </p>
               </div>
             </div>
           )}
