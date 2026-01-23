@@ -25,7 +25,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
     if (roles.includes("admin")) return "Admin";
     if (roles.includes("gerente")) return "Gestor";
     if (roles.includes("comprador")) return "Comprador";
-    return "Usuário";
+    return "Solicitante";
   };
 
   return (
@@ -76,7 +76,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link to="/requisicao">Nova Solicitação</Link>
+                  <Link to="/requisicao">Nova Requisição</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/alterar-senha" className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                 <Link to="/auth">Entrar</Link>
               </Button>
               <Button asChild>
-                <Link to="/requisicao">Fazer Solicitação</Link>
+                <Link to="/requisicao">Fazer Requisição</Link>
               </Button>
             </div>
           )}
