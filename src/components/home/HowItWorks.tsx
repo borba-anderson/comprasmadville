@@ -1,47 +1,57 @@
-import { Zap, ShieldCheck, BarChart3, Clock } from "lucide-react";
+import { ClipboardList, Search, PackageCheck, ArrowRight } from 'lucide-react';
 
-export const FeaturesGrid = () => {
-  const features = [
-    {
-      icon: Zap,
-      title: "Agilidade Total",
-      desc: "Reduza o tempo de aprovação de dias para horas com notificações automáticas.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Compliance Fiscal",
-      desc: "Garanta que nenhuma compra seja feita sem a classificação fiscal correta.",
-    },
-    {
-      icon: BarChart3,
-      title: "Controle de Budget",
-      desc: "Bloqueios automáticos para requisições que excedem o orçamento do setor.",
-    },
-    {
-      icon: Clock,
-      title: "Histórico Completo",
-      desc: "Rastreabilidade total de quem pediu, quem aprovou e quando chegou.",
-    },
-  ];
+const steps = [
+  {
+    icon: ClipboardList,
+    title: 'Solicite',
+    description: 'Preencha o formulário com os dados do item',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+  },
+  {
+    icon: Search,
+    title: 'Acompanhe',
+    description: 'Sua requisição é analisada e cotada',
+    color: 'text-info',
+    bgColor: 'bg-info/10',
+  },
+  {
+    icon: PackageCheck,
+    title: 'Receba',
+    description: 'Após aprovação, o item é entregue',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
+  },
+];
 
+export const HowItWorks = () => {
   return (
-    <section className="py-12 border-t bg-slate-50/50">
-      <div className="text-center mb-10">
-        <h2 className="text-2xl font-bold text-foreground">Por que centralizar suas compras?</h2>
-        <p className="text-muted-foreground text-sm mt-2">Mais eficiência para sua operação.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature, i) => (
-          <div
-            key={i}
-            className="flex flex-col items-center text-center p-6 bg-background rounded-2xl border shadow-sm hover:border-primary/20 transition-colors"
-          >
-            <div className="p-3 rounded-full bg-primary/10 text-primary mb-4">
-              <feature.icon size={24} />
+    <section className="py-12 max-w-4xl mx-auto">
+      <h2 className="text-xl font-semibold text-center text-foreground mb-10">
+        Como funciona
+      </h2>
+      
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
+        {steps.map((step, index) => (
+          <div key={step.title} className="flex items-center">
+            <div className="flex flex-col items-center text-center group">
+              <div
+                className={`w-16 h-16 ${step.bgColor} rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110`}
+              >
+                <step.icon className={`w-7 h-7 ${step.color}`} />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">{step.title}</h3>
+              <p className="text-sm text-muted-foreground max-w-[160px]">
+                {step.description}
+              </p>
             </div>
-            <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+            
+            {index < steps.length - 1 && (
+              <div className="hidden md:flex items-center mx-8">
+                <div className="w-12 h-px bg-border" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground/50 -ml-1" />
+              </div>
+            )}
           </div>
         ))}
       </div>
