@@ -34,14 +34,14 @@ export const ActionCards = () => {
             <FileText className="w-7 h-7 text-white animate-float" />
           </div>
 
-          <h3 className="font-bold text-white mb-3 text-xl">Fazer Solicitação</h3>
+          <h3 className="font-bold text-white mb-3 text-xl">Fazer Requisição</h3>
 
           <p className="text-white/80 mb-6 leading-relaxed text-sm">
-            Precisa de materiais ou serviços? Inicie um novo processo de compra de forma rápida e padronizada.
+            Solicite materiais, equipamentos ou serviços de forma rápida e organizada.
           </p>
 
           <div className="flex items-center text-white font-semibold group-hover:gap-3 transition-all">
-            {user ? "Iniciar nova requisição" : "Abrir Solicitação"}
+            {user ? "Iniciar nova requisição" : "Entrar para solicitar"}
             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
           </div>
         </div>
@@ -68,12 +68,11 @@ export const ActionCards = () => {
           </h3>
 
           <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-            Visão completa do fluxo. Gerencie aprovações pendentes, acompanhe indicadores (KPIs) e controle o orçamento
-            em tempo real.
+            Painel de Controle de pedidos e KPIs. Gerencie as requisições e acompanhe suas solicitações.
           </p>
 
           <div className="flex items-center text-muted-foreground font-medium group-hover:text-info group-hover:gap-3 transition-all">
-            {user ? "Acessar painel" : "Painel de Controle"}
+            {user ? "Acessar painel" : "Entrar para gestão"}
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
           </div>
         </div>
