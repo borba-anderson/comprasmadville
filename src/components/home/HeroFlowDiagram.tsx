@@ -1,7 +1,6 @@
 import { ClipboardList, Search, CheckCircle2, Calculator, ShoppingCart, PackageCheck, ArrowRight } from "lucide-react";
 
 export const HeroFlowDiagram = () => {
-  // Dados dos passos
   const steps = [
     {
       id: "1",
@@ -30,134 +29,130 @@ export const HeroFlowDiagram = () => {
   ];
 
   return (
-    // Container reduzido e alinhado
-    <div className="relative flex items-center justify-end w-full max-w-[850px] mx-auto lg:mr-0 scale-90 sm:scale-100">
-      {/* === ÍCONES FLUTUANTES (Lateral Esquerda) === */}
-      <div className="hidden lg:flex flex-col gap-6 absolute left-[-60px] top-[10%] z-20">
-        {/* Laranja (Aponta para linha 1) */}
-        <div className="relative group">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/20 flex items-center justify-center text-white border-[3px] border-white transform transition-transform group-hover:scale-105">
+    <div className="relative w-full max-w-[800px] mx-auto h-[380px] lg:h-[320px] flex items-center">
+      {/* CAMADA DE CONEXÕES (SVG ABSOLUTO) */}
+      {/* Esta camada desenha todas as setas por trás dos elementos */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+        viewBox="0 0 800 320"
+        fill="none"
+      >
+        <defs>
+          {/* Marcadores de Flecha (Arrowheads) */}
+          <marker id="arrow-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#94a3b8" />
+          </marker>
+          <marker id="arrow-orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#fb923c" />
+          </marker>
+          <marker id="arrow-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#3b82f6" />
+          </marker>
+          <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#22c55e" />
+          </marker>
+          <marker id="arrow-purple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="#a855f7" />
+          </marker>
+        </defs>
+
+        {/* --- CONEXÕES EXTERNAS (Ícones Flutuantes) --- */}
+
+        {/* 1. Laranja Ext -> Azul Ext (Curva Suave) */}
+        <path
+          d="M 60 70 Q 60 110 90 130"
+          stroke="#fb923c"
+          strokeWidth="2"
+          fill="none"
+          markerEnd="url(#arrow-orange)"
+          strokeDasharray="4 2"
+        />
+
+        {/* 2. Azul Ext -> Verde Ext (Curva Suave) */}
+        <path
+          d="M 90 190 Q 60 210 60 250"
+          stroke="#3b82f6"
+          strokeWidth="2"
+          fill="none"
+          markerEnd="url(#arrow-blue)"
+          strokeDasharray="4 2"
+        />
+
+        {/* 3. Laranja Ext -> Card Item 1 (Entrada no Processo) */}
+        <path d="M 85 50 Q 180 50 210 70" stroke="#fb923c" strokeWidth="3" fill="none" markerEnd="url(#arrow-orange)" />
+
+        {/* 4. Verde Ext -> Card Item 4 (Entrada na Aprovação) */}
+        {/* Seta pontilhada verde entrando pela esquerda do item 4 */}
+        <path
+          d="M 85 270 L 190 270"
+          stroke="#22c55e"
+          strokeWidth="3"
+          fill="none"
+          strokeDasharray="6 4"
+          markerEnd="url(#arrow-green)"
+        />
+
+        {/* --- CONEXÕES INTERNAS (Dentro do Card) --- */}
+
+        {/* Linha 1: 1->2 e 2->3 */}
+        <path d="M 280 90 L 380 90" stroke="#e2e8f0" strokeWidth="2" markerEnd="url(#arrow-gray)" />
+        <path d="M 460 90 L 560 90" stroke="#e2e8f0" strokeWidth="2" markerEnd="url(#arrow-gray)" />
+
+        {/* O GRANDE RETORNO: 3 -> 4 (Snake Line) */}
+        {/* Sai do 3, faz uma curva larga pela direita, volta pelo meio e entra no topo do 4 */}
+        <path
+          d="M 640 90 C 720 90, 720 180, 640 180 L 250 180 Q 220 180 220 220"
+          stroke="#a855f7"
+          strokeWidth="2"
+          fill="none"
+          strokeDasharray="6 4"
+          markerEnd="url(#arrow-purple)"
+        />
+
+        {/* Linha 2: 4->5 e 5->6 */}
+        <path d="M 280 270 L 380 270" stroke="#e2e8f0" strokeWidth="2" markerEnd="url(#arrow-gray)" />
+        <path d="M 460 270 L 560 270" stroke="#e2e8f0" strokeWidth="2" markerEnd="url(#arrow-gray)" />
+      </svg>
+
+      {/* --- ÍCONES FLUTUANTES (Esquerda - Posição Absoluta) --- */}
+      <div className="absolute left-0 top-0 h-full w-[120px] z-20 hidden lg:flex flex-col justify-between py-8">
+        {/* Laranja (Solicitante) */}
+        <div className="relative left-2 group">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/20 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <ClipboardList size={28} strokeWidth={2.5} />
           </div>
-          {/* Seta para o Card */}
-          <svg
-            className="absolute top-1/2 left-full w-16 h-12 -z-10 text-orange-300"
-            viewBox="0 0 60 40"
-            fill="none"
-            style={{ transform: "translate(-5px, -15px)" }}
-          >
-            <path
-              d="M 0 20 Q 30 20 50 10"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              markerEnd="url(#arrow-orange)"
-            />
-            <defs>
-              <marker id="arrow-orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M 0 0 L 6 3 L 0 6 Z" fill="currentColor" />
-              </marker>
-            </defs>
-          </svg>
         </div>
 
-        {/* Azul (Maior - Central) */}
-        <div className="relative group ml-8">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-[4px] border-white transform transition-transform group-hover:scale-105">
+        {/* Azul (Analista - Maior e Deslocado) */}
+        <div className="relative left-8 group">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <Search size={36} strokeWidth={2.5} />
           </div>
-          {/* Seta curva descendo para linha 2 */}
-          <svg
-            className="absolute top-full left-1/2 w-12 h-16 -z-10 text-blue-300"
-            viewBox="0 0 40 60"
-            fill="none"
-            style={{ transform: "translate(-10px, -5px)" }}
-          >
-            <path
-              d="M 20 0 Q 20 30 0 50"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              markerEnd="url(#arrow-blue)"
-            />
-            <defs>
-              <marker id="arrow-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M 0 0 L 6 3 L 0 6 Z" fill="currentColor" />
-              </marker>
-            </defs>
-          </svg>
         </div>
 
-        {/* Verde (Aponta para linha 2) */}
-        <div className="relative group">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/20 flex items-center justify-center text-white border-[3px] border-white transform transition-transform group-hover:scale-105">
+        {/* Verde (Aprovador) */}
+        <div className="relative left-2 group">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/20 flex items-center justify-center text-white border-4 border-white transform transition-transform group-hover:scale-105">
             <CheckCircle2 size={28} strokeWidth={2.5} />
           </div>
-          {/* Seta para o Card */}
-          <svg
-            className="absolute top-1/2 left-full w-20 h-8 -z-10 text-green-300"
-            viewBox="0 0 80 30"
-            fill="none"
-            style={{ transform: "translate(-5px, 0)" }}
-          >
-            <path
-              d="M 0 15 L 70 15"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeDasharray="4 2"
-              markerEnd="url(#arrow-green)"
-            />
-            <defs>
-              <marker id="arrow-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M 0 0 L 6 3 L 0 6 Z" fill="currentColor" />
-              </marker>
-            </defs>
-          </svg>
         </div>
       </div>
 
-      {/* === CARD PRINCIPAL === */}
-      <div className="relative bg-white/95 backdrop-blur-sm rounded-[2rem] p-6 shadow-2xl shadow-slate-200/50 border border-slate-100 z-10 w-full max-w-[680px]">
-        {/* SVG CONECTOR (Retorno 3->4) */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
-          viewBox="0 0 680 300"
-          fill="none"
-        >
-          <defs>
-            <linearGradient id="return-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#a855f7" />
-              <stop offset="100%" stopColor="#22c55e" />
-            </linearGradient>
-            <marker id="arrow-return" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-              <path d="M 0 0 L 5 2.5 L 0 5 Z" fill="#22c55e" />
-            </marker>
-          </defs>
-
-          {/* Linha pontilhada: Sai do item 3, desce e volta para o 4 */}
-          <path
-            d="M 600 80 C 660 80, 660 190, 600 190 L 100 190"
-            stroke="url(#return-gradient)"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray="6 4"
-            markerEnd="url(#arrow-return)"
-          />
-        </svg>
-
-        <div className="flex flex-col gap-14 relative z-10 py-2">
+      {/* --- CARD BRANCO (Direita) --- */}
+      <div className="relative ml-auto w-full lg:w-[85%] bg-white/95 backdrop-blur-sm rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-100 z-10">
+        <div className="flex flex-col gap-12">
+          {" "}
+          {/* Gap vertical aumentado para caber a linha de retorno */}
           {/* LINHA 1 */}
-          <div className="flex justify-between items-start px-2">
-            {steps.slice(0, 3).map((step, i) => (
-              <CardStep key={step.id} step={step} showArrow={i < 2} />
+          <div className="flex justify-around items-start pl-4">
+            {steps.slice(0, 3).map((step) => (
+              <CardStep key={step.id} step={step} />
             ))}
           </div>
-
           {/* LINHA 2 */}
-          <div className="flex justify-between items-start px-2">
-            {steps.slice(3, 6).map((step, i) => (
-              <CardStep key={step.id} step={step} showArrow={i < 2} />
+          <div className="flex justify-around items-start pl-4">
+            {steps.slice(3, 6).map((step) => (
+              <CardStep key={step.id} step={step} />
             ))}
           </div>
         </div>
@@ -166,34 +161,23 @@ export const HeroFlowDiagram = () => {
   );
 };
 
-// Item do Card (Compacto)
-const CardStep = ({ step, showArrow }: { step: any; showArrow: boolean }) => (
-  <div className="flex flex-1 items-center last:flex-none">
-    <div className="flex flex-col items-center text-center w-24 relative group">
-      {/* Círculo */}
-      <div
-        className={`
-        w-12 h-12 rounded-full flex items-center justify-center text-white mb-2 shadow-md
-        bg-gradient-to-br ${step.color} transition-transform duration-300 group-hover:scale-110
-      `}
-      >
-        <step.icon size={20} strokeWidth={2.5} />
-      </div>
-
-      {/* Badge */}
-      <div className="absolute -top-1 -right-1 bg-white text-[9px] font-bold text-slate-400 w-4 h-4 rounded-full flex items-center justify-center border shadow-sm">
-        {step.id}
-      </div>
-
-      <h4 className="text-xs font-bold text-slate-800 leading-tight">{step.title}</h4>
-      <p className="text-[10px] text-slate-500 leading-tight mt-0.5 hidden sm:block">{step.desc}</p>
+// Item do Card
+const CardStep = ({ step }: { step: any }) => (
+  <div className="flex flex-col items-center text-center w-24 relative group z-10">
+    <div
+      className={`
+      w-14 h-14 rounded-full flex items-center justify-center text-white mb-2 shadow-md
+      bg-gradient-to-br ${step.color} transition-transform duration-300 group-hover:scale-110
+    `}
+    >
+      <step.icon size={24} strokeWidth={2.5} />
     </div>
 
-    {/* Seta simples entre itens */}
-    {showArrow && (
-      <div className="hidden md:flex flex-1 justify-center text-slate-200 -mt-6">
-        <ArrowRight size={16} />
-      </div>
-    )}
+    <div className="absolute -top-1 -right-1 bg-white text-[10px] font-bold text-slate-400 w-5 h-5 rounded-full flex items-center justify-center border shadow-sm">
+      {step.id}
+    </div>
+
+    <h4 className="text-sm font-bold text-slate-800 leading-tight">{step.title}</h4>
+    <p className="text-[10px] text-slate-500 leading-tight mt-0.5">{step.desc}</p>
   </div>
 );
