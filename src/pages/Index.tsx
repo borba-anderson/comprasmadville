@@ -42,42 +42,12 @@ import {
 // 1. COMPONENTES VISUAIS (MOCKS)
 // ==========================================
 
-// MOCK 1: TELA DE LOGIN
-const MockAuthScreen = () => (
-  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl border-[2px] border-white/30 shadow-2xl relative overflow-hidden">
-    <div className="bg-[#006e42] h-6 flex items-center px-3 text-white text-[8px] font-bold">
-      <LogIn size={10} className="mr-1" /> Portal GMAD
-    </div>
-    <div className="flex-1 flex items-center justify-center p-3">
-      <div className="w-full bg-white rounded-lg shadow-lg p-3 transform scale-95">
-        <div className="flex bg-slate-100 p-0.5 rounded-md mb-2">
-          <div className="flex-1 py-1 text-center text-[7px] font-bold bg-white text-[#008651] shadow-sm rounded">
-            Login
-          </div>
-          <div className="flex-1 py-1 text-center text-[7px] font-bold text-slate-400">Cadastro</div>
-        </div>
-        <div className="space-y-1.5">
-          <div className="h-5 w-full bg-slate-50 border border-slate-200 rounded"></div>
-          <div className="h-5 w-full bg-slate-50 border border-slate-200 rounded flex items-center justify-end px-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
-          </div>
-          <div className="h-5 w-full bg-[#008651] rounded mt-1 flex items-center justify-center text-white text-[8px] font-bold">
-            Entrar
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// MOCK 2: PAINEL DE REQUISIÇÕES (AGORA 100% BRANCO)
+// MOCK 1: PAINEL DE REQUISIÇÕES (Principal - 100% Branco)
 const MockPainelScreen = () => (
-  // Container Principal BRANCO
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden shadow-2xl font-sans border border-slate-200 relative">
-    {/* Header Topo (AGORA BRANCO - ZERO VERDE NO FUNDO) */}
+    {/* Header Topo */}
     <div className="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-3 shrink-0">
       <div className="flex items-center gap-1.5">
-        {/* Logo e Texto em Verde Escuro/Preto para contraste */}
         <div className="text-[8px] font-extrabold text-[#008651] tracking-tighter italic">GMAD</div>
         <div className="h-3 w-[1px] bg-slate-300"></div>
         <span className="text-[7px] font-bold text-slate-700">Central de Compras</span>
@@ -91,7 +61,7 @@ const MockPainelScreen = () => (
       </div>
     </div>
 
-    {/* Linha de Cards de Status (Fundo Branco, bordas sutis) */}
+    {/* Linha de Cards de Status */}
     <div className="px-3 py-2 flex gap-1 overflow-hidden bg-slate-50/50">
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
@@ -246,7 +216,7 @@ const MockPainelScreen = () => (
   </div>
 );
 
-// MOCK 3: FORMULÁRIO
+// MOCK 2: FORMULÁRIO (Simplificado)
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
@@ -302,50 +272,52 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 4: DASHBOARD ANALYTICS
+// MOCK 3: DASHBOARD ANALYTICS (AUMENTADO e em DESTAQUE)
 const MockChartScreen = () => (
-  <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-2 font-sans">
-    <div className="flex justify-between items-center mb-1.5">
-      <span className="text-[6px] font-bold text-slate-800">Indicadores de Eficiência</span>
-      <span className="text-[4px] text-slate-400">Últimos 30 dias</span>
+  <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-3 font-sans">
+    <div className="flex justify-between items-center mb-2">
+      <span className="text-[7px] font-bold text-slate-800">Indicadores de Eficiência</span>
+      <span className="text-[5px] text-slate-400 bg-white px-1 py-0.5 rounded border border-slate-100">
+        Últimos 30 dias
+      </span>
     </div>
     <div className="flex gap-2 h-full">
-      <div className="flex-1 bg-white rounded border border-slate-100 p-1.5 flex flex-col gap-1">
+      <div className="flex-1 bg-white rounded border border-slate-100 p-2 flex flex-col gap-1.5">
         <div className="flex justify-between">
-          <span className="text-[5px] font-bold text-slate-700">Funil</span>
-          <span className="text-[3.5px] bg-red-50 text-red-500 px-1 rounded">20 atrasadas</span>
+          <span className="text-[6px] font-bold text-slate-700">Funil</span>
+          <span className="text-[4px] bg-red-50 text-red-500 px-1 rounded font-bold">20 atrasadas</span>
         </div>
-        <div className="space-y-1 mt-1">
+        <div className="space-y-1.5 mt-1">
           <div className="flex items-center gap-1">
-            <div className="flex-1 h-1.5 bg-orange-400 rounded-r w-[20%]"></div>
-            <span className="text-[3.5px]">11</span>
+            <div className="flex-1 h-2 bg-orange-400 rounded-r w-[20%]"></div>
+            <span className="text-[4.5px] font-bold text-slate-600">11</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="flex-1 h-1.5 bg-teal-500 rounded-r w-[80%]"></div>
-            <span className="text-[3.5px]">37</span>
+            <div className="flex-1 h-2 bg-teal-500 rounded-r w-[80%]"></div>
+            <span className="text-[4.5px] font-bold text-slate-600">37</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="flex-1 h-1.5 bg-green-600 rounded-r w-[40%]"></div>
-            <span className="text-[3.5px]">12</span>
+            <div className="flex-1 h-2 bg-green-600 rounded-r w-[40%]"></div>
+            <span className="text-[4.5px] font-bold text-slate-600">12</span>
           </div>
         </div>
       </div>
-      <div className="flex-1 flex flex-col gap-1.5">
-        <div className="grid grid-cols-2 gap-1">
-          <div className="bg-red-50 p-1 rounded border border-red-100">
-            <div className="text-[8px] font-bold text-red-600">17%</div>
-            <div className="text-[3.5px] text-red-400">Conclusão</div>
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className="bg-red-50 p-1.5 rounded border border-red-100">
+            <div className="text-[9px] font-bold text-red-600">17%</div>
+            <div className="text-[4px] text-red-400 font-medium">Conclusão</div>
           </div>
-          <div className="bg-green-50 p-1 rounded border border-green-100">
-            <div className="text-[8px] font-bold text-green-700">1.6d</div>
-            <div className="text-[3.5px] text-green-600">Leadtime</div>
+          <div className="bg-green-50 p-1.5 rounded border border-green-100">
+            <div className="text-[9px] font-bold text-green-700">1.6d</div>
+            <div className="text-[4px] text-green-600 font-medium">Leadtime</div>
           </div>
         </div>
-        <div className="bg-white rounded border border-slate-100 flex-1 p-1 flex items-end justify-between gap-1">
-          <div className="w-1.5 h-[40%] bg-slate-200 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[60%] bg-[#008651] rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[30%] bg-slate-200 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[80%] bg-[#008651] rounded-t-[1px]"></div>
+        <div className="bg-white rounded border border-slate-100 flex-1 p-1.5 flex items-end justify-between gap-1.5">
+          <div className="w-2 h-[40%] bg-slate-200 rounded-t-[1px]"></div>
+          <div className="w-2 h-[60%] bg-[#008651] rounded-t-[1px]"></div>
+          <div className="w-2 h-[30%] bg-slate-200 rounded-t-[1px]"></div>
+          <div className="w-2 h-[80%] bg-[#008651] rounded-t-[1px]"></div>
         </div>
       </div>
     </div>
@@ -353,31 +325,25 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D (ORDEM AJUSTADA)
+// 2. COMPOSIÇÃO 3D (ATUALIZADA SEM LOGIN)
 // ==========================================
 
 const Hero3DComposition = () => {
   return (
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
-        {/* Agora totalmente branco na base */}
+        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES */}
         <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] bg-white rounded-xl z-10 transition-all duration-500">
           <MockPainelScreen />
         </div>
 
-        {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS */}
-        {/* Trazido para frente (translateZ 60px) para garantir visibilidade total */}
-        <div className="absolute top-[15%] -right-[20%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(60px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(80px)_scale(1.05)] border border-slate-100">
+        {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS (AUMENTADO) */}
+        {/* Mais largo (w-[280px]/[380px]) e posicionado para destaque */}
+        <div className="absolute top-[15%] -right-[25%] w-[280px] md:w-[380px] h-[200px] md:h-[260px] transform [transform:translateZ(60px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(80px)_scale(1.05)] border border-slate-100">
           <MockChartScreen />
         </div>
 
-        {/* 3. CAMADA FRENTE ESQUERDA: LOGIN */}
-        <div className="absolute top-[-10%] -left-[10%] w-[160px] md:w-[200px] h-[200px] md:h-[260px] transform [transform:translateZ(40px)] shadow-[0_20px_40px_rgba(0,0,0,0.15)] z-20 animate-float">
-          <MockAuthScreen />
-        </div>
-
-        {/* 4. CAMADA FLUTUANTE INFERIOR ESQUERDA: FORMULÁRIO */}
+        {/* 3. CAMADA FLUTUANTE INFERIOR ESQUERDA: FORMULÁRIO */}
         <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.25)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
           <MockFormScreen />
         </div>
