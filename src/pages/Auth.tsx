@@ -4,7 +4,6 @@ import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/layout/Logo";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
@@ -136,7 +135,6 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-[#107c50] flex flex-col items-center justify-center p-4">
-      {/* INJEÇÃO DE FONTE (Para garantir o visual moderno) */}
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -144,24 +142,7 @@ export default function Auth() {
         `}
       </style>
 
-      {/* --- CABEÇALHO FLUTUANTE (Fora do Card) --- */}
-      <div className="text-center mb-8 animate-fade-in">
-        {/* Box do Logo com fundo translúcido */}
-        <div className="inline-flex items-center justify-center p-6 bg-white/10 backdrop-blur-md rounded-3xl mb-6 shadow-xl shadow-emerald-900/10 ring-1 ring-white/20">
-          {/* Se o componente Logo aceitar cor, melhor. Se não, ele se adapta. 
-               Aqui forçamos um container que contraste bem. */}
-          <div className="text-white scale-125">
-            <Logo size="lg" showText={false} />
-          </div>
-        </div>
-
-        <h1 className="text-3xl md:text-4xl font-extrabold text-white font-jakarta tracking-tight drop-shadow-sm">
-          Central de Compras
-        </h1>
-        <p className="text-emerald-100 mt-3 text-base font-medium font-jakarta opacity-90">
-          Sistema de Requisições de Compras
-        </p>
-      </div>
+      {/* REMOVIDO: Bloco de Título e Logo flutuante */}
 
       {/* --- CARD BRANCO DO FORMULÁRIO --- */}
       <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
@@ -321,7 +302,7 @@ export default function Auth() {
         </div>
       </div>
 
-      {/* Back link - Fora do Card */}
+      {/* Back link - Discreto fora do card */}
       <div className="mt-8 text-center animate-fade-in delay-100">
         <Link
           to="/"
