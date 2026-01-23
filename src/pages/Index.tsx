@@ -43,7 +43,7 @@ import {
 
 // MOCK 1: TELA DE LOGIN
 const MockAuthScreen = () => (
-  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl shadow-2xl relative overflow-hidden">
+  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl border-[2px] border-white/30 shadow-2xl relative overflow-hidden">
     <div className="bg-[#006e42] h-6 flex items-center px-3 text-white text-[8px] font-bold">
       <LogIn size={10} className="mr-1" /> Portal GMAD
     </div>
@@ -69,11 +69,12 @@ const MockAuthScreen = () => (
   </div>
 );
 
-// MOCK 2: PAINEL DE REQUISIÇÕES (Principal - Sem borda grossa)
+// MOCK 2: PAINEL DE REQUISIÇÕES (Principal - Fundo Branco)
 const MockPainelScreen = () => (
-  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl overflow-hidden shadow-2xl font-sans">
-    {/* Header Topo */}
-    <div className="h-7 flex items-center justify-between px-2 shrink-0">
+  // AJUSTE: bg-[#008651] mudado para bg-white para base branca
+  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden font-sans relative">
+    {/* Header Topo (Verde interno) */}
+    <div className="h-7 bg-[#008651] flex items-center justify-between px-2 shrink-0">
       <div className="flex items-center gap-1.5">
         <div className="text-[7px] font-extrabold text-white tracking-tighter italic">GMAD</div>
         <div className="h-2 w-[1px] bg-white/30"></div>
@@ -88,8 +89,8 @@ const MockPainelScreen = () => (
       </div>
     </div>
 
-    {/* Linha de Cards de Status */}
-    <div className="px-2 pb-1.5 flex gap-1 overflow-hidden">
+    {/* Cards de Status (Fundo Verde do Container Pai) */}
+    <div className="bg-[#008651] px-2 pb-1.5 flex gap-1 overflow-hidden">
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
         { l: "PENDENTES", v: "11", c: "orange", i: Clock },
@@ -121,7 +122,7 @@ const MockPainelScreen = () => (
     </div>
 
     {/* Área Branca Principal */}
-    <div className="bg-[#F8FAFC] flex-1 mx-2 mb-2 rounded-[6px] overflow-hidden flex flex-col shadow-inner">
+    <div className="bg-[#F8FAFC] flex-1 mx-2 mb-2 rounded-[6px] overflow-hidden flex flex-col shadow-sm border border-slate-100">
       {/* Abas */}
       <div className="bg-white px-2 py-1 border-b border-slate-100 flex items-center justify-between">
         <div className="flex gap-1">
@@ -240,7 +241,7 @@ const MockPainelScreen = () => (
   </div>
 );
 
-// MOCK 3: FORMULÁRIO (Simplificado)
+// MOCK 3: FORMULÁRIO
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
@@ -288,7 +289,7 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 4: DASHBOARD ANALYTICS (Simples)
+// MOCK 4: DASHBOARD ANALYTICS
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-2 font-sans">
     <div className="flex justify-between items-center mb-2">
@@ -331,7 +332,7 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D (PAINEL FUNDO + DASHBOARD FRENTE)
+// 2. COMPOSIÇÃO 3D
 // ==========================================
 
 const Hero3DComposition = () => {
@@ -339,13 +340,12 @@ const Hero3DComposition = () => {
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
         {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
-        {/* Recuado um pouco para dar profundidade, mas visível */}
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,134,81,0.3)] bg-[#008651] rounded-xl z-10 transition-all duration-500">
+        {/* AJUSTE: bg-[#008651] removido, shadow verde removida. Agora é branco com sombra cinza */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.2)] bg-white rounded-xl z-10 transition-all duration-500 border border-slate-100">
           <MockPainelScreen />
         </div>
 
         {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS */}
-        {/* Trazido para frente para aparecer sobre o painel */}
         <div className="absolute top-[20%] -right-[15%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(50px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(70px)_scale(1.05)] border border-slate-100">
           <MockChartScreen />
         </div>
@@ -397,7 +397,8 @@ const Index = () => {
           <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              <h1 className="font-jakarta text-[2.75rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15]">
+              {/* AJUSTE: Tamanhos de fonte reduzidos para caber em 2 linhas */}
+              <h1 className="font-jakarta text-[2.5rem] sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15]">
                 Portal de Solicitações <br />
                 de Suprimentos.
               </h1>
