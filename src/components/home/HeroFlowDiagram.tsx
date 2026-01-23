@@ -57,7 +57,6 @@ export const HeroFlowDiagram = () => {
   return (
     <div className="relative p-8 bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/60 w-full max-w-2xl z-10">
       {/* === SVG DA SETA CURVA (SNAKE) === */}
-      {/* Ajustado para cobrir toda a área (inset-0) para alinhamento perfeito */}
       <svg
         className="absolute inset-0 w-full h-full z-0 hidden md:block pointer-events-none"
         viewBox="0 0 600 300"
@@ -71,22 +70,22 @@ export const HeroFlowDiagram = () => {
           </linearGradient>
         </defs>
 
-        {/* Caminho (Path) Recalculado:
-           M 500 80  -> Começa na direita do item 3 (aprox)
-           C 560 80... -> Faz a curva bem aberta para a direita (fora dos ícones)
-           ... 560 210 -> Desce até a altura da linha 2
-           L 100 210 -> Vai reto para a esquerda até o item 4
+        {/* Caminho (Path) Ajustado:
+           - M 520 70: Início movido mais para a direita.
+           - C 620 70, 620 230...: Curva mais aberta (x=620) e descendo mais (y=230).
+           - ... 520 230: Fim da curva mais baixo.
+           - L 90 230: Linha reta de retorno mais baixa para não cortar o texto.
         */}
         <path
-          d="M 500 70 C 580 70, 580 195, 500 195 L 90 195"
+          d="M 520 70 C 620 70, 620 230, 520 230 L 90 230"
           stroke="url(#snake-gradient)"
           strokeWidth="4"
           strokeLinecap="round"
           fill="none"
         />
 
-        {/* Ponta da Seta (Apontando para a esquerda no item 4) */}
-        <path d="M 95 195 L 105 185 M 95 195 L 105 205" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
+        {/* Ponta da Seta (Ajustada para a nova altura y=230) */}
+        <path d="M 95 230 L 105 220 M 95 230 L 105 240" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
       </svg>
 
       <div className="flex flex-col gap-12 relative z-10">
