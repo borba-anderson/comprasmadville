@@ -23,13 +23,14 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
             {/* Lado Esquerdo - Título e subtítulo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
-              {/* Mudei de 'leading-tight' para 'leading-snug' na linha abaixo */}
-              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-snug">
+              {/* Título ajustado com espaçamento 'leading-snug' e termo 'Suprimentos' */}
+              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-normal">
                 Workflow de Requisições
                 <br />
                 de Suprimentos<span className="text-primary">.</span>
               </h1>
 
+              {/* Subtítulo focado em processos e controle */}
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-6 md:text-left">
                 Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
                 orçamentário.
@@ -63,7 +64,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="py-8 text-center border-t mt-8">
           <p className="text-muted-foreground text-sm">
-            © 2026 GMAD Madville | Curitiba - Sistema de Requisições de Compras
+            © 2026 GMAD Madville | Curitiba - Workflow de Requisições de Suprimentos
           </p>
           <p className="text-muted-foreground text-xs mt-2">
             Versão Beta 2.1 | Suporte:{" "}
