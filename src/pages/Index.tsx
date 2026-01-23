@@ -38,12 +38,12 @@ import {
 } from "@/components/home";
 
 // ==========================================
-// 1. COMPONENTES VISUAIS (MOCKS) - RÉPLICAS FIÉIS
+// 1. COMPONENTES VISUAIS (MOCKS)
 // ==========================================
 
-// MOCK 1: TELA DE LOGIN (Simplificada)
+// MOCK 1: TELA DE LOGIN
 const MockAuthScreen = () => (
-  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl border-[2px] border-white/30 shadow-2xl relative overflow-hidden">
+  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl shadow-2xl relative overflow-hidden">
     <div className="bg-[#006e42] h-6 flex items-center px-3 text-white text-[8px] font-bold">
       <LogIn size={10} className="mr-1" /> Portal GMAD
     </div>
@@ -69,9 +69,9 @@ const MockAuthScreen = () => (
   </div>
 );
 
-// MOCK 2: PAINEL DE REQUISIÇÕES (RÉPLICA FIEL - image_6bb315.png)
+// MOCK 2: PAINEL DE REQUISIÇÕES (Principal - Sem borda grossa)
 const MockPainelScreen = () => (
-  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl overflow-hidden border-[3px] border-white shadow-2xl font-sans">
+  <div className="w-full h-full bg-[#008651] flex flex-col rounded-xl overflow-hidden shadow-2xl font-sans">
     {/* Header Topo */}
     <div className="h-7 flex items-center justify-between px-2 shrink-0">
       <div className="flex items-center gap-1.5">
@@ -88,7 +88,7 @@ const MockPainelScreen = () => (
       </div>
     </div>
 
-    {/* Linha de Cards de Status (Brancos sobre Verde) */}
+    {/* Linha de Cards de Status */}
     <div className="px-2 pb-1.5 flex gap-1 overflow-hidden">
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
@@ -120,9 +120,9 @@ const MockPainelScreen = () => (
       ))}
     </div>
 
-    {/* Área Branca Principal (Conteúdo) */}
+    {/* Área Branca Principal */}
     <div className="bg-[#F8FAFC] flex-1 mx-2 mb-2 rounded-[6px] overflow-hidden flex flex-col shadow-inner">
-      {/* Abas e Botões Superiores */}
+      {/* Abas */}
       <div className="bg-white px-2 py-1 border-b border-slate-100 flex items-center justify-between">
         <div className="flex gap-1">
           <div className="bg-slate-800 text-white px-1.5 py-0.5 rounded-[3px] text-[5px] font-bold flex items-center gap-0.5">
@@ -138,52 +138,43 @@ const MockPainelScreen = () => (
         <span className="text-[5px] text-slate-400 font-medium">17 de 76</span>
       </div>
 
-      {/* Toolbar de Filtros */}
+      {/* Toolbar */}
       <div className="bg-white px-2 py-1 border-b border-slate-100 flex gap-1 items-center">
         <div className="h-3.5 flex-1 bg-white border border-slate-200 rounded flex items-center px-1 gap-1">
           <Search size={5} className="text-slate-300" />
-          <span className="text-[4px] text-slate-300">Buscar item, solicitante...</span>
+          <span className="text-[4px] text-slate-300">Buscar...</span>
         </div>
         <div className="h-3.5 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-[4px] text-slate-600 font-bold">
           <LayoutGrid size={5} className="mr-0.5" /> Empresa
         </div>
-        <div className="h-3.5 w-8 bg-white border border-slate-200 rounded flex items-center justify-center text-[4px] text-slate-600 font-bold">
-          Status: 4
-        </div>
         <div className="h-3.5 w-10 bg-white border border-slate-200 rounded flex items-center justify-center gap-0.5 text-[4px] font-bold text-slate-600">
-          <Filter size={5} /> Mais filtros
-        </div>
-        <div className="h-3.5 w-10 bg-white border border-slate-200 rounded flex items-center justify-center gap-0.5 text-[4px] font-bold text-slate-600 ml-auto">
-          <Download size={5} /> Exportar
+          <Filter size={5} /> Filtros
         </div>
       </div>
 
-      {/* Cabeçalho Tabela */}
+      {/* Cabeçalho */}
       <div className="flex bg-slate-50 px-2 py-1 border-b border-slate-200">
         <div className="w-[30%] text-[4px] font-bold text-slate-400 uppercase">Item</div>
         <div className="w-[20%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
         <div className="w-[5%] text-[4px] font-bold text-slate-400 uppercase text-center">Qtd</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Prioridade</div>
+        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Prior.</div>
         <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Status</div>
         <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
-        <div className="w-[5%] text-[4px] font-bold text-slate-400 uppercase text-center">...</div>
       </div>
 
-      {/* Linhas da Tabela */}
+      {/* Linhas */}
       <div className="flex-1 bg-white p-0 space-y-0 overflow-hidden">
         {/* Row 1 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
           <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Notebook</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">
-              REQ-20260123 <span className="bg-slate-100 px-0.5 rounded">Madville</span>
-            </div>
+            <div className="text-[5.5px] font-bold text-slate-700">Notebook Dell</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260123</div>
           </div>
           <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Willian Henrique</div>
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Willian H.</div>
             <div className="text-[3.5px] text-slate-400">Comercial</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">1 un</div>
+          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">1</div>
           <div className="w-[10%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
@@ -194,25 +185,20 @@ const MockPainelScreen = () => (
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
-          <div className="w-[5%] text-center flex justify-center text-slate-400">
-            <MoreHorizontal size={6} />
-          </div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
         </div>
 
         {/* Row 2 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
           <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente rosa</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">
-              REQ-20260123 <span className="bg-slate-100 px-0.5 rounded">Madville</span>
-            </div>
+            <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260123</div>
           </div>
           <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Eliane Cristina</div>
-            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Eliane C.</div>
+            <div className="text-[3.5px] text-slate-400">Almox.</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">8 un</div>
+          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">8</div>
           <div className="w-[10%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
@@ -223,25 +209,20 @@ const MockPainelScreen = () => (
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
-          <div className="w-[5%] text-center flex justify-center text-slate-400">
-            <MoreHorizontal size={6} />
-          </div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
         </div>
 
         {/* Row 3 */}
-        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
+        <div className="flex px-2 py-1.5 border-b border-slate-50 items-center hover:bg-slate-50">
           <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Alicate universal</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1">
-              REQ-20260122 <span className="bg-slate-100 px-0.5 rounded">Madville</span>
-            </div>
+            <div className="text-[5.5px] font-bold text-slate-700">Alicate Univ.</div>
+            <div className="text-[3.5px] text-slate-400 flex gap-1">REQ-20260122</div>
           </div>
           <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Kesia de Souza</div>
-            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
+            <div className="text-[5.5px] font-medium text-slate-600 leading-tight">Kesia S.</div>
+            <div className="text-[3.5px] text-slate-400">Almox.</div>
           </div>
-          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">4 un</div>
+          <div className="w-[5%] text-center text-[5px] font-bold text-slate-600">4</div>
           <div className="w-[10%] text-center">
             <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
               <div className="w-1 h-1 rounded-full bg-yellow-500"></div> Média
@@ -252,153 +233,97 @@ const MockPainelScreen = () => (
               COTANDO
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">22/01/2026</div>
-          <div className="w-[5%] text-center flex justify-center text-slate-400">
-            <MoreHorizontal size={6} />
-          </div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">22/01</div>
         </div>
       </div>
     </div>
   </div>
 );
 
-// MOCK 3: FORMULÁRIO DE REQUISIÇÃO (Fiel a image_6bac10.png)
+// MOCK 3: FORMULÁRIO (Simplificado)
 const MockFormScreen = () => (
-  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border-[2px] border-slate-100 shadow-xl relative font-sans">
-    {/* Link Voltar */}
-    <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1 cursor-pointer hover:text-slate-600">
-      <ArrowRight size={5} className="rotate-180" /> Voltar ao início
+  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
+    <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
+      <ArrowRight size={5} className="rotate-180" /> Voltar
     </div>
-
-    {/* Stepper Minimalista */}
     <div className="px-4 py-1 border-b border-slate-50">
       <div className="flex justify-between items-center relative z-10">
         {[1, 2, 3, 4, 5].map((step) => (
-          <div key={step} className="flex flex-col items-center gap-0.5">
-            <div
-              className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[5px] font-bold ${step === 1 ? "bg-slate-800 text-white" : "bg-white border border-slate-200 text-slate-300"}`}
-            >
-              {step}
-            </div>
-            <span className={`text-[3.5px] font-bold ${step === 1 ? "text-slate-800" : "text-slate-300"}`}>
-              {step === 1 ? "Solicitante" : step === 2 ? "Item" : step === 3 ? "Justif." : step === 4 ? "Anexo" : "Fim"}
-            </span>
+          <div
+            key={step}
+            className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[5px] font-bold ${step === 1 ? "bg-slate-800 text-white" : "bg-white border border-slate-200 text-slate-300"}`}
+          >
+            {step}
           </div>
         ))}
       </div>
-      {/* Linha Fina */}
       <div className="absolute top-[20px] left-[15%] w-[70%] h-[0.5px] bg-slate-100 -z-0"></div>
     </div>
-
-    {/* Form Body */}
     <div className="p-3 flex-1 flex flex-col">
       <h3 className="text-[7px] font-bold text-slate-800 mb-0.5">Dados do Solicitante</h3>
-      <p className="text-[4.5px] text-slate-400 mb-2">Confirme seus dados para identificação da requisição</p>
-
+      <p className="text-[4.5px] text-slate-400 mb-2">Confirme seus dados</p>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="space-y-0.5">
-          <label className="text-[4px] font-bold text-slate-500 block">Empresa *</label>
-          <div className="h-4 w-full border border-slate-200 rounded flex items-center justify-between px-1.5 bg-white">
-            <span className="text-[4.5px] text-slate-700">GMAD Madville</span>
-            <ChevronDown size={5} className="text-slate-400" />
-          </div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
         </div>
         <div className="space-y-0.5">
-          <label className="text-[4px] font-bold text-slate-500 block">Nome Completo *</label>
-          <div className="h-4 w-full border border-slate-200 rounded flex items-center px-1.5 bg-white">
-            <span className="text-[4.5px] text-slate-700">Ruan Wilt</span>
-          </div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div className="space-y-0.5">
-          <label className="text-[4px] font-bold text-slate-500 block">Email Corporativo *</label>
-          <div className="h-4 w-full border border-slate-200 rounded flex items-center px-1.5 bg-white">
-            <span className="text-[4.5px] text-slate-700">ruan@madville...</span>
-          </div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
         </div>
         <div className="space-y-0.5">
-          <label className="text-[4px] font-bold text-slate-500 block">Telefone *</label>
-          <div className="h-4 w-full border border-slate-200 rounded flex items-center px-1.5 bg-white">
-            <span className="text-[4.5px] text-slate-700">(00) 00000-0000</span>
-          </div>
+          <div className="h-4 w-full border border-slate-200 rounded bg-white"></div>
         </div>
       </div>
-
       <div className="mt-auto flex justify-between pt-1.5 border-t border-slate-50">
         <div className="h-4 px-2 rounded border border-slate-200 flex items-center text-[4.5px] font-bold text-slate-500">
-          Anterior
+          Voltar
         </div>
-        <div className="h-4 px-2 rounded bg-slate-800 flex items-center text-[4.5px] font-bold text-white gap-1 shadow-sm">
-          Próximo <ArrowRight size={5} />
-        </div>
+        <div className="h-4 px-2 rounded bg-slate-800 flex items-center text-[4.5px] font-bold text-white">Próximo</div>
       </div>
     </div>
   </div>
 );
 
-// MOCK 4: DASHBOARD ANALYTICS (Baseado na image_6bab39.png)
+// MOCK 4: DASHBOARD ANALYTICS (Simples)
 const MockChartScreen = () => (
-  <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border-[2px] border-slate-200 shadow-xl p-2 font-sans">
-    {/* Header Simulado */}
+  <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-2 font-sans">
     <div className="flex justify-between items-center mb-2">
-      <span className="text-[6px] font-bold text-slate-800">Dashboard de Compras</span>
-      <div className="flex gap-1">
-        <span className="bg-slate-200 h-1.5 w-1.5 rounded-full"></span>
-        <span className="bg-slate-200 h-1.5 w-1.5 rounded-full"></span>
-      </div>
+      <span className="text-[6px] font-bold text-slate-800">Dashboard</span>
     </div>
-
     <div className="flex gap-2 h-full">
-      {/* Coluna Esquerda: Funil */}
       <div className="flex-1 bg-white rounded border border-slate-100 p-1.5 flex flex-col gap-1">
         <div className="flex justify-between">
-          <span className="text-[5px] font-bold text-slate-700">Funil do Processo</span>
-          <span className="text-[3.5px] bg-red-100 text-red-600 px-1 rounded font-bold">20 atrasadas</span>
+          <span className="text-[5px] font-bold text-slate-700">Funil</span>
         </div>
         <div className="space-y-1 mt-1">
-          {/* Pendentes */}
           <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-6 text-slate-400">Pendentes</span>
-            <div className="flex-1 h-1.5 bg-orange-400 rounded-r relative w-[20%]"></div>
-            <span className="text-[3.5px] text-slate-600">11</span>
+            <div className="flex-1 h-1.5 bg-orange-400 rounded-r w-[20%]"></div>
           </div>
-          {/* Comprados */}
           <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-6 text-slate-400">Comprados</span>
-            <div className="flex-1 h-1.5 bg-teal-500 rounded-r relative w-[80%]"></div>
-            <span className="text-[3.5px] text-slate-600">37</span>
+            <div className="flex-1 h-1.5 bg-teal-500 rounded-r w-[80%]"></div>
           </div>
-          {/* Recebidos */}
           <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-6 text-slate-400">Recebidos</span>
-            <div className="flex-1 h-1.5 bg-green-600 rounded-r relative w-[30%]"></div>
-            <span className="text-[3.5px] text-slate-600">12</span>
+            <div className="flex-1 h-1.5 bg-green-600 rounded-r w-[40%]"></div>
           </div>
         </div>
       </div>
-
-      {/* Coluna Direita: Cards e Gráfico */}
       <div className="flex-1 flex flex-col gap-1.5">
-        {/* Cards KPI */}
         <div className="grid grid-cols-2 gap-1">
           <div className="bg-red-50 p-1 rounded border border-red-100">
-            <div className="text-[3.5px] text-red-500 font-bold mb-0.5">Taxa Conclusão</div>
             <div className="text-[8px] font-bold text-red-600">17%</div>
           </div>
           <div className="bg-green-50 p-1 rounded border border-green-100">
-            <div className="text-[3.5px] text-green-600 font-bold mb-0.5">Tempo Médio</div>
             <div className="text-[8px] font-bold text-green-700">1.6d</div>
           </div>
         </div>
-        {/* Gráfico Barras */}
         <div className="bg-white rounded border border-slate-100 flex-1 p-1 flex items-end justify-between gap-1">
           <div className="w-1.5 h-[40%] bg-slate-300 rounded-t-[1px]"></div>
           <div className="w-1.5 h-[60%] bg-[#008651] rounded-t-[1px]"></div>
           <div className="w-1.5 h-[30%] bg-slate-300 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[50%] bg-[#008651] rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[20%] bg-slate-300 rounded-t-[1px]"></div>
         </div>
       </div>
     </div>
@@ -413,24 +338,26 @@ const Hero3DComposition = () => {
   return (
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES */}
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,134,81,0.3)] bg-[#008651] rounded-xl z-10 border-white ring-1 ring-[#008651]/20 transition-all duration-500">
+        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
+        {/* Recuado um pouco para dar profundidade, mas visível */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,134,81,0.3)] bg-[#008651] rounded-xl z-10 transition-all duration-500">
           <MockPainelScreen />
         </div>
 
         {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS */}
-        <div className="absolute top-[20%] -right-[15%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(60px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(80px)_scale(1.05)] border border-slate-100">
+        {/* Trazido para frente para aparecer sobre o painel */}
+        <div className="absolute top-[20%] -right-[15%] w-[220px] md:w-[280px] h-[180px] md:h-[220px] transform [transform:translateZ(50px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(70px)_scale(1.05)] border border-slate-100">
           <MockChartScreen />
         </div>
 
-        {/* 3. CAMADA FRENTE ESQUERDA: FORMULÁRIO */}
-        <div className="absolute bottom-[-15%] -left-[10%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(90px)] shadow-[0_30px_60px_rgba(0,0,0,0.25)] z-40 transition-all duration-500 hover:[transform:translateZ(110px)_scale(1.05)] animate-float-delayed">
-          <MockFormScreen />
+        {/* 3. CAMADA FRENTE ESQUERDA: LOGIN */}
+        <div className="absolute top-[-10%] -left-[10%] w-[160px] md:w-[200px] h-[200px] md:h-[260px] transform [transform:translateZ(40px)] shadow-[0_20px_40px_rgba(0,0,0,0.15)] z-20 animate-float">
+          <MockAuthScreen />
         </div>
 
-        {/* 4. DETALHE FLUTUANTE: LOGIN (Bem discreto atrás) */}
-        <div className="absolute top-[-15%] left-[10%] w-[140px] md:w-[180px] h-[180px] md:h-[220px] transform [transform:translateZ(-40px)] shadow-[0_20px_40px_rgba(0,0,0,0.1)] z-0 opacity-80 blur-[0.5px]">
-          <MockAuthScreen />
+        {/* 4. CAMADA FRENTE INFERIOR: FORMULÁRIO */}
+        <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.25)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
+          <MockFormScreen />
         </div>
       </div>
 
