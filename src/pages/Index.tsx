@@ -23,9 +23,10 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
             {/* Lado Esquerdo - Título e subtítulo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-tight">
+              {/* Mudei de 'leading-tight' para 'leading-snug' na linha abaixo */}
+              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-snug">
                 Workflow de Requisições
-                <br /> {/* <--- AQUI ESTÁ A QUEBRA DE LINHA FORÇADA */}
+                <br />
                 de Suprimentos<span className="text-primary">.</span>
               </h1>
 
