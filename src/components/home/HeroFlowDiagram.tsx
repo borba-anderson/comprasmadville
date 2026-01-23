@@ -1,88 +1,82 @@
-import { FileText, UserCheck, Search, ShieldCheck, Truck, Database } from "lucide-react";
+import { ClipboardList, Search, Calculator, CheckCircle2, ShoppingCart, PackageCheck } from "lucide-react";
 
 export const HeroFlowDiagram = () => {
   const steps = [
     {
-      id: "01",
-      icon: FileText,
-      title: "Solicitação",
-      desc: "Registro da necessidade.",
-      color: "text-blue-600",
-      bg: "bg-blue-50 hover:bg-blue-100",
-      border: "border-blue-100",
+      id: "1",
+      icon: ClipboardList,
+      title: "Solicite",
+      desc: "Preencha o formulário.",
+      // Laranja (Igual img)
+      colors: "bg-orange-50 text-orange-600 border-orange-200 badge-bg:bg-orange-100",
     },
     {
-      id: "02",
-      icon: UserCheck,
-      title: "Validação",
-      desc: "Revisão do gestor.",
-      color: "text-indigo-600",
-      bg: "bg-indigo-50 hover:bg-indigo-100",
-      border: "border-indigo-100",
-    },
-    {
-      id: "03",
+      id: "2",
       icon: Search,
       title: "Análise",
-      desc: "Cotação e fornecedores.",
-      color: "text-purple-600",
-      bg: "bg-purple-50 hover:bg-purple-100",
-      border: "border-purple-100",
+      desc: "Revisão da compra.",
+      // Azul (Igual img)
+      colors: "bg-blue-50 text-blue-600 border-blue-200 badge-bg:bg-blue-100",
     },
     {
-      id: "04",
-      icon: ShieldCheck,
+      id: "3",
+      icon: Calculator,
+      title: "Cotação",
+      desc: "Busca de preços.",
+      // Roxo (Igual img)
+      colors: "bg-purple-50 text-purple-600 border-purple-200 badge-bg:bg-purple-100",
+    },
+    {
+      id: "4",
+      icon: CheckCircle2,
       title: "Aprovação",
-      desc: "Autorização final.",
-      color: "text-amber-600",
-      bg: "bg-amber-50 hover:bg-amber-100",
-      border: "border-amber-100",
+      desc: "Validação da gestão.",
+      // Verde (Igual img)
+      colors: "bg-green-50 text-green-600 border-green-200 badge-bg:bg-green-100",
     },
     {
-      id: "05",
-      icon: Truck,
-      title: "Atendimento",
-      desc: "Aquisição e entrega.",
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 hover:bg-emerald-100",
-      border: "border-emerald-100",
+      id: "5",
+      icon: ShoppingCart,
+      title: "Compra",
+      desc: "Pedido ao fornecedor.",
+      // Ciano (Igual img)
+      colors: "bg-cyan-50 text-cyan-600 border-cyan-200 badge-bg:bg-cyan-100",
     },
     {
-      id: "06",
-      icon: Database,
-      title: "Registro",
-      desc: "Estoque e fiscal.",
-      color: "text-slate-600",
-      bg: "bg-slate-50 hover:bg-slate-100",
-      border: "border-slate-100",
+      id: "6",
+      icon: PackageCheck,
+      title: "Entrega",
+      desc: "Recebimento fiscal.",
+      // Esmeralda (Igual img)
+      colors: "bg-emerald-50 text-emerald-600 border-emerald-200 badge-bg:bg-emerald-100",
     },
   ];
 
   return (
-    // Container principal: Card com efeito 'Glass' e sombra suave
-    <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[400px]">
-      {/* GRID LAYOUT: 2 Colunas (Compacto) */}
+    <div className="w-full max-w-[420px]">
+      {/* Grid 2x3 Compacto */}
       <div className="grid grid-cols-2 gap-3">
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`
-              relative flex flex-col p-3 rounded-xl border transition-all duration-300
-              ${step.bg} ${step.border} group cursor-default
-            `}
+            className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group"
           >
-            {/* Cabeçalho do Card: Ícone e Número */}
-            <div className="flex items-center justify-between mb-2">
-              <div className={`p-1.5 rounded-lg bg-white shadow-sm ${step.color}`}>
-                <step.icon size={16} strokeWidth={2.5} />
+            {/* Ícone com Badge Numérico estilo 'Como Funciona' */}
+            <div
+              className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl border ${step.colors} bg-opacity-40`}
+            >
+              <step.icon size={22} strokeWidth={2} />
+
+              {/* Badge com Número Flutuante */}
+              <div className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center rounded-full bg-white border shadow-sm text-[10px] font-bold text-muted-foreground">
+                {step.id}
               </div>
-              <span className="text-[10px] font-bold opacity-40 font-mono tracking-tighter">{step.id}</span>
             </div>
 
-            {/* Textos compactos */}
-            <div>
+            {/* Texto */}
+            <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm text-foreground leading-tight mb-0.5">{step.title}</h3>
-              <p className="text-[11px] text-muted-foreground leading-tight line-clamp-2">{step.desc}</p>
+              <p className="text-[11px] text-muted-foreground leading-tight truncate">{step.desc}</p>
             </div>
           </div>
         ))}
