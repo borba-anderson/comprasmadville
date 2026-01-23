@@ -10,11 +10,9 @@ import {
   RequisicaoTable,
   SidePanel,
   PaginationControls,
-  BatchActionsBar,
   usePainelFilters,
   useSorting,
   usePagination,
-  useMultiSelect,
 } from '@/components/painel';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,7 +63,7 @@ export default function Painel() {
 
   const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
   const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
-  const multiSelect = useMultiSelect(paginatedItems);
+  
 
   // Redirect only if not authenticated
   useEffect(() => {
@@ -232,15 +230,6 @@ export default function Painel() {
                 readOnly={isReadOnly}
               />
 
-              {/* Batch Actions Bar - Only for staff */}
-              {!isReadOnly && (
-                <BatchActionsBar
-                  selectedItems={multiSelect.selectedItems}
-                  selectedCount={multiSelect.selectedCount}
-                  onClear={multiSelect.clearSelection}
-                  onActionComplete={() => fetchRequisicoes(true)}
-                />
-              )}
 
               <RequisicaoTable
                 requisicoes={paginatedItems}
@@ -255,11 +244,6 @@ export default function Painel() {
                 hasFilters={hasActiveFilters}
                 sortConfig={sortConfig}
                 onSort={handleSort}
-                isItemSelected={isReadOnly ? undefined : multiSelect.isSelected}
-                onToggleItem={isReadOnly ? undefined : multiSelect.toggleItem}
-                onToggleAll={isReadOnly ? undefined : multiSelect.toggleAll}
-                allSelected={isReadOnly ? false : multiSelect.allSelected}
-                someSelected={isReadOnly ? false : multiSelect.someSelected}
                 readOnly={isReadOnly}
               />
 
