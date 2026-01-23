@@ -3,15 +3,20 @@ import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   FileText,
-  LayoutDashboard,
+  CheckCircle,
+  Clock,
   ShoppingCart,
+  TrendingUp,
+  XCircle,
   Bell,
   User,
-  CheckCircle2,
-  Calculator,
-  Menu,
+  ArrowRight,
+  LogIn,
   Search,
   Filter,
+  Menu,
+  Calculator,
+  Package,
 } from "lucide-react";
 import {
   UserGreeting,
@@ -22,163 +27,208 @@ import {
   WorkflowTimeline,
 } from "@/components/home";
 
-// --- COMPONENTE INTERNO: MASHUP DE 4 TELAS REAIS (Mantido) ---
-const HeroAppScreens = () => {
-  return (
-    <div className="relative w-full max-w-[900px] mx-auto h-[400px] md:h-[480px] z-20 mt-8 lg:mt-0 [perspective:1000px]">
-      {/* TELA 1: DASHBOARD (Fundo / Principal) */}
-      <div className="absolute top-0 left-[10%] w-[80%] h-[85%] bg-[#F8FAFC] rounded-xl shadow-2xl border border-slate-200/80 overflow-hidden transform translate-z-0 z-10">
-        <div className="bg-[#107c50] px-4 py-2 flex justify-between items-center h-10">
-          <div className="flex items-center gap-2">
-            <div className="w-16 h-4 bg-white/20 rounded"></div>
-            <div className="w-[1px] h-4 bg-white/30"></div>
-            <div className="w-24 h-3 bg-white/20 rounded"></div>
-          </div>
-          <div className="flex gap-2">
-            <div className="w-6 h-6 bg-white/20 rounded-full"></div>
-            <div className="w-20 h-6 bg-[#0d6942] rounded-full border border-[#1a8a5d]"></div>
+// ==========================================
+// 1. COMPONENTES VISUAIS (MOCKS) - INTERNOS
+// ==========================================
+
+// Visual da Tela de Login (Baseado no seu Auth.tsx)
+const MockAuthScreen = () => (
+  <div className="w-full h-full bg-[#107c50] flex items-center justify-center relative overflow-hidden rounded-xl border-4 border-slate-800/5 shadow-2xl">
+    {/* Card Branco de Login */}
+    <div className="w-[85%] bg-white rounded-2xl shadow-2xl p-5 transform scale-95">
+      {/* Abas Entrar/Cadastrar */}
+      <div className="flex bg-slate-100/80 p-1 rounded-xl mb-6">
+        <div className="flex-1 py-2 text-center text-[10px] font-bold bg-white text-[#107c50] shadow-sm rounded-lg">
+          Entrar
+        </div>
+        <div className="flex-1 py-2 text-center text-[10px] font-bold text-slate-400">Cadastrar</div>
+      </div>
+      {/* Inputs Falsos */}
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <div className="h-2 w-1/3 bg-slate-200 rounded"></div>
+          <div className="h-10 w-full bg-slate-50 border border-slate-200 rounded-xl"></div>
+        </div>
+        <div className="space-y-1">
+          <div className="h-2 w-1/4 bg-slate-200 rounded"></div>
+          <div className="h-10 w-full bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-end px-3">
+            <div className="w-4 h-4 rounded-full bg-slate-200"></div>
           </div>
         </div>
-        <div className="p-4">
-          <div className="flex gap-3 mb-4">
-            <div className="w-24 h-8 bg-white border border-slate-200 rounded-lg shadow-sm"></div>
-            <div className="w-24 h-8 bg-transparent border border-transparent rounded-lg"></div>
+        <div className="h-10 w-full bg-[#107c50] hover:bg-[#0d6942] rounded-xl mt-4 flex items-center justify-center text-white text-[10px] font-bold gap-2 shadow-lg shadow-emerald-900/10">
+          <LogIn size={12} /> Entrar no Sistema
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Visual do Painel Principal (Baseado no seu Painel.tsx)
+const MockPainelScreen = () => (
+  <div className="w-full h-full bg-[#107c50] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl">
+    {/* Header do Painel */}
+    <div className="bg-white sticky top-0 h-14 flex items-center justify-between px-4 shrink-0 border-b">
+      <div className="flex items-center gap-2">
+        <div className="w-6 h-6 bg-[#107c50] rounded"></div>
+        <div className="w-20 h-3 bg-slate-200 rounded"></div>
+      </div>
+      <div className="flex gap-2">
+        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+          <Bell size={14} className="text-slate-400" />
+        </div>
+        <div className="w-8 h-8 bg-[#107c50] rounded-full flex items-center justify-center text-white">
+          <User size={14} />
+        </div>
+      </div>
+    </div>
+
+    {/* Conteúdo do Painel */}
+    <div className="p-3 bg-[#107c50] flex-1 overflow-hidden flex flex-col gap-3">
+      {/* Cards de Stats */}
+      <div className="grid grid-cols-4 gap-2">
+        <div className="bg-white p-2 rounded-lg shadow-sm">
+          <div className="flex justify-between mb-1">
+            <FileText size={10} className="text-slate-400" />
           </div>
-          <div className="grid grid-cols-4 gap-3">
-            <div className="bg-white p-3 rounded-lg border border-slate-200 h-24 shadow-sm">
-              <div className="flex justify-between mb-2">
-                <div className="w-8 h-3 bg-slate-200 rounded"></div>
-                <FileText size={14} className="text-slate-300" />
-              </div>
-              <div className="text-2xl font-bold text-slate-700">73</div>
-            </div>
-            <div className="bg-orange-50 p-3 rounded-lg border border-orange-100 h-24 shadow-sm">
-              <div className="flex justify-between mb-2">
-                <div className="w-12 h-3 bg-orange-200 rounded"></div>
-                <ShoppingCart size={14} className="text-orange-300" />
-              </div>
-              <div className="text-2xl font-bold text-orange-600">8</div>
-            </div>
-            <div className="bg-green-50 p-3 rounded-lg border border-green-100 h-24 shadow-sm">
-              <div className="flex justify-between mb-2">
-                <div className="w-12 h-3 bg-green-200 rounded"></div>
-                <CheckCircle2 size={14} className="text-green-300" />
-              </div>
-              <div className="text-2xl font-bold text-green-600">37</div>
-            </div>
-            <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 h-24 shadow-sm">
-              <div className="flex justify-between mb-2">
-                <div className="w-10 h-3 bg-blue-200 rounded"></div>
-                <Calculator size={14} className="text-blue-300" />
-              </div>
-              <div className="text-2xl font-bold text-blue-600">5</div>
-            </div>
+          <div className="h-4 w-6 bg-slate-800 rounded"></div>
+        </div>
+        <div className="bg-white p-2 rounded-lg shadow-sm border-l-2 border-orange-500">
+          <div className="flex justify-between mb-1">
+            <Clock size={10} className="text-orange-500" />
           </div>
-          <div className="mt-4 h-32 bg-white rounded-lg border border-slate-200 shadow-sm p-3">
-            <div className="w-20 h-3 bg-slate-200 rounded mb-4"></div>
-            <div className="w-full h-16 bg-slate-50 rounded-b flex items-end gap-2 px-2 pb-0">
-              {[40, 70, 50, 90, 60, 80, 45].map((h, i) => (
-                <div key={i} className="flex-1 bg-[#107c50]/20 rounded-t-sm" style={{ height: `${h}%` }}></div>
-              ))}
-            </div>
+          <div className="h-4 w-4 bg-slate-800 rounded"></div>
+        </div>
+        <div className="bg-white p-2 rounded-lg shadow-sm border-l-2 border-green-500">
+          <div className="flex justify-between mb-1">
+            <CheckCircle size={10} className="text-green-500" />
           </div>
+          <div className="h-4 w-6 bg-slate-800 rounded"></div>
+        </div>
+        <div className="bg-white p-2 rounded-lg shadow-sm border-l-2 border-blue-500">
+          <div className="flex justify-between mb-1">
+            <Package size={10} className="text-blue-500" />
+          </div>
+          <div className="h-4 w-4 bg-slate-800 rounded"></div>
         </div>
       </div>
 
-      {/* TELA 2: LISTA DE REQUISIÇÕES (Esquerda / Sobreposta) */}
-      <div className="absolute top-[15%] left-0 w-[45%] h-[80%] bg-white rounded-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] border border-slate-200 overflow-hidden transform -rotate-2 hover:rotate-0 transition-transform duration-500 z-20">
-        <div className="bg-slate-50 p-3 border-b border-slate-100 flex justify-between items-center">
-          <span className="font-bold text-slate-700 text-xs flex items-center gap-1">
-            <FileText size={12} /> Requisições
-          </span>
-          <div className="flex gap-1">
-            <Search size={12} className="text-slate-400" />
-            <Filter size={12} className="text-slate-400" />
+      {/* Tabela Principal */}
+      <div className="bg-white rounded-xl shadow-lg flex-1 p-3 overflow-hidden">
+        <div className="flex gap-2 mb-3 border-b pb-2">
+          <div className="px-3 py-1 bg-slate-100 text-[#107c50] rounded-md text-[10px] font-bold flex gap-1 items-center">
+            <FileText size={10} /> Requisições
           </div>
+          <div className="px-3 py-1 text-slate-400 text-[10px] font-bold">Dashboard</div>
         </div>
-        <div className="p-2 space-y-2">
-          {[1, 2, 3, 4].map((i) => (
+        <div className="space-y-2">
+          {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
-              className="p-2 bg-white border border-slate-100 rounded shadow-sm hover:border-green-200 transition-colors cursor-default"
+              className="flex items-center justify-between p-2 border rounded-lg bg-slate-50 hover:bg-white transition-colors"
             >
-              <div className="flex justify-between mb-1">
-                <span className="text-[10px] font-bold text-slate-700">REQ-00{i}</span>
-                <span className="text-[8px] bg-slate-100 px-1 rounded text-slate-500">Hoje</span>
+              <div className="flex gap-2 items-center">
+                <div className="w-8 h-8 rounded bg-white border flex items-center justify-center font-bold text-[10px] text-slate-500">
+                  #{i}24
+                </div>
+                <div>
+                  <div className="w-20 h-2 bg-slate-300 rounded mb-1"></div>
+                  <div className="w-12 h-1.5 bg-slate-200 rounded"></div>
+                </div>
               </div>
-              <div className="w-2/3 h-2 bg-slate-100 rounded mb-1"></div>
-              <div className="flex justify-between items-center mt-2">
-                <div className="w-4 h-4 rounded-full bg-slate-200"></div>
-                <span
-                  className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${i === 1 ? "bg-orange-100 text-orange-600" : "bg-blue-100 text-blue-600"}`}
-                >
-                  {i === 1 ? "Pendente" : "Cotando"}
-                </span>
+              <div
+                className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${i === 1 ? "bg-orange-100 text-orange-600" : i === 2 ? "bg-blue-100 text-blue-600" : "bg-green-100 text-green-600"}`}
+              >
+                {i === 1 ? "PENDENTE" : i === 2 ? "ANÁLISE" : "APROVADO"}
               </div>
             </div>
           ))}
         </div>
       </div>
+    </div>
+  </div>
+);
 
-      {/* TELA 3: DETALHES / COTAÇÃO (Direita / Sobreposta) */}
-      <div className="absolute bottom-[5%] right-0 w-[50%] h-[60%] bg-white rounded-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] border border-slate-200 overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500 z-30">
-        <div className="bg-[#107c50] h-1 w-full"></div>
-        <div className="p-4">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h4 className="font-bold text-slate-800 text-sm">Cotação #4092</h4>
-              <p className="text-[10px] text-slate-500">3 Fornecedores respondendo</p>
-            </div>
-            <div className="bg-blue-50 text-blue-600 p-1.5 rounded-lg">
-              <Calculator size={16} />
-            </div>
+// Visual do Formulário (Baseado no seu Requisicao.tsx)
+const MockFormScreen = () => (
+  <div className="w-full h-full bg-slate-50 flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl relative">
+    {/* Stepper Header */}
+    <div className="bg-white border-b p-4 shadow-sm">
+      <div className="flex justify-between items-center px-1 mb-3">
+        {[1, 2, 3, 4, 5].map((step) => (
+          <div
+            key={step}
+            className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm ${step <= 2 ? "bg-[#107c50] text-white" : "bg-white border text-slate-300"}`}
+          >
+            {step}
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 p-2 bg-green-50/50 border border-green-100 rounded-lg">
-              <div className="w-8 h-8 rounded bg-white border border-slate-200 flex items-center justify-center font-bold text-[10px] text-slate-600">
-                A
-              </div>
-              <div className="flex-1">
-                <div className="w-16 h-2 bg-slate-200 rounded mb-1"></div>
-                <div className="w-10 h-2 bg-green-200 rounded"></div>
-              </div>
-              <CheckCircle2 size={14} className="text-green-500" />
-            </div>
-            <div className="flex items-center gap-3 p-2 bg-white border border-slate-100 rounded-lg opacity-60">
-              <div className="w-8 h-8 rounded bg-slate-50 border border-slate-200"></div>
-              <div className="flex-1">
-                <div className="w-16 h-2 bg-slate-200 rounded mb-1"></div>
-                <div className="w-12 h-2 bg-slate-100 rounded"></div>
-              </div>
-            </div>
-          </div>
-          <button className="w-full mt-4 bg-[#107c50] text-white text-[10px] font-bold py-2 rounded hover:bg-[#0d6942]">
-            Aprovar Melhor Preço
-          </button>
+        ))}
+      </div>
+      <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-full w-[40%] bg-[#107c50]"></div>
+      </div>
+    </div>
+
+    {/* Form Body */}
+    <div className="p-5 flex-1 flex flex-col gap-3 bg-white m-3 rounded-xl border shadow-sm">
+      <div className="space-y-1">
+        <div className="h-2 w-1/3 bg-slate-200 rounded"></div>
+        <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-lg"></div>
+      </div>
+      <div className="space-y-1">
+        <div className="h-2 w-1/4 bg-slate-200 rounded"></div>
+        <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-lg"></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-lg"></div>
+        <div className="h-8 w-full bg-slate-50 border border-slate-200 rounded-lg"></div>
+      </div>
+
+      {/* Buttons */}
+      <div className="mt-auto flex justify-between pt-2">
+        <div className="w-16 h-8 bg-white border border-slate-200 rounded-lg"></div>
+        <div className="w-20 h-8 bg-[#107c50] rounded-lg flex items-center justify-center text-white gap-1 text-[10px] font-bold shadow-lg shadow-green-900/10">
+          Próximo <ArrowRight size={10} />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ==========================================
+// 2. COMPOSIÇÃO 3D (O PALCO)
+// ==========================================
+
+const Hero3DComposition = () => {
+  return (
+    <div className="relative w-full h-[500px] md:h-[600px] flex items-center justify-center [perspective:1500px] overflow-visible mt-10 lg:mt-0">
+      {/* Grupo Rotacionado (O ângulo geral) */}
+      <div className="relative w-[300px] md:w-[600px] lg:w-[800px] h-[400px] md:h-[500px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-12deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
+        {/* TELA CENTRAL (Painel Principal) - O foco */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_30px_60px_-15px_rgba(16,124,80,0.3)] bg-white rounded-xl z-20 transition-all duration-500 hover:[transform:translateZ(30px)] border-[3px] border-white">
+          <MockPainelScreen />
+        </div>
+
+        {/* TELA FLUTUANTE ESQUERDA (Auth) - Login */}
+        <div className="absolute top-[20%] -left-[15%] md:-left-[20%] w-[240px] md:w-[280px] h-[300px] md:h-[350px] transform [transform:translateZ(80px)] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:[transform:translateZ(120px)_scale(1.05)] z-30">
+          <MockAuthScreen />
+        </div>
+
+        {/* TELA FLUTUANTE DIREITA (Formulário) - Requisição */}
+        <div className="absolute bottom-[-10%] -right-[10%] md:-right-[15%] w-[260px] md:w-[320px] h-[350px] md:h-[400px] transform [transform:translateZ(120px)] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:[transform:translateZ(160px)_scale(1.05)] z-40">
+          <MockFormScreen />
         </div>
       </div>
 
-      {/* TELA 4: MODAL MOBILE (Flutuante Topo Direita) */}
-      <div className="absolute top-[10%] right-[5%] w-[160px] bg-white rounded-xl shadow-xl border border-slate-100 p-3 animate-bounce-slow z-40">
-        <div className="flex items-start gap-2">
-          <div className="bg-green-100 text-green-600 p-1.5 rounded-full mt-0.5">
-            <CheckCircle2 size={12} />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-slate-800 leading-tight">Aprovação Solicitada</p>
-            <p className="text-[8px] text-slate-500 leading-tight mt-0.5">Notebook Dell i7</p>
-          </div>
-        </div>
-        <div className="flex gap-2 mt-2">
-          <button className="flex-1 bg-[#107c50] text-white text-[8px] font-bold py-1 rounded">Aprovar</button>
-          <button className="flex-1 bg-slate-100 text-slate-600 text-[8px] font-bold py-1 rounded">Ver</button>
-        </div>
-      </div>
+      {/* Glow de fundo */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#107c50]/20 to-blue-500/20 blur-[80px] rounded-full -z-10 pointer-events-none"></div>
     </div>
   );
 };
 
-// --- PÁGINA PRINCIPAL ---
+// ==========================================
+// 3. PÁGINA PRINCIPAL (INDEX)
+// ==========================================
+
 const Index = () => {
   const { user } = useAuth();
 
@@ -202,12 +252,10 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1440px] mx-auto">
-          {/* === 1. HERO SECTION (Layout Ajustado) === */}
-          <section className="px-6 md:px-12 pt-10 pb-16 lg:pt-16 lg:pb-20 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-12 min-h-[550px]">
+          {/* === 1. HERO SECTION (COM EFEITO 3D AGRESSIVO) === */}
+          <section className="px-6 md:px-12 pt-10 pb-16 lg:pt-16 lg:pb-32 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-12 min-h-[600px]">
             {/* Texto Hero */}
-            {/* max-w aumentado para 650px para evitar quebra de linha indesejada */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              {/* TÍTULO ESTÁTICO (Sem Typewriter, Tamanho Ajustado) */}
               <h1 className="font-jakarta text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] mb-6 tracking-tight leading-tight">
                 Portal de Solicitações <br />
                 <span className="text-[#107c50]">de Suprimentos.</span>
@@ -231,12 +279,12 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Composição de Telas (HeroAppScreens) */}
+            {/* Composição 3D (Hero3DComposition) */}
             <div
               className="flex-1 w-full animate-fade-in opacity-0 scale-95 origin-center relative z-20"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
             >
-              <HeroAppScreens />
+              <Hero3DComposition />
             </div>
           </section>
 
