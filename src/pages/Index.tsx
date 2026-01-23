@@ -78,26 +78,31 @@ const Index = () => {
         `}
       </style>
 
-      {/* Shapes de Fundo Sutis */}
+      {/* Shapes de Fundo Sutis e Compactos */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/60 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-slate-100/60 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl opacity-60"></div>
+        <svg
+          className="absolute top-[5%] left-[-2%] w-[200px] h-[200px] text-slate-100 rotate-12"
+          viewBox="0 0 100 100"
+          fill="currentColor"
+        >
+          <path d="M 50 0 L 100 100 L 0 100 Z" />
+        </svg>
       </div>
 
       <div className="relative z-10">
         <Header />
 
-        <main className="max-w-[1440px] mx-auto px-6 md:px-12 pt-6 pb-12">
-          {/* HERO SECTION - Altura e espaçamentos reduzidos */}
-          <section className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-16 md:mb-20 min-h-[400px]">
+        <main className="max-w-[1280px] mx-auto px-6 md:px-8 pt-4 pb-12">
+          {/* HERO SECTION - Mais compacta */}
+          <section className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 mb-12 md:mb-16 min-h-[380px]">
             {/* Texto */}
-            <div className="flex-1 text-center lg:text-left max-w-[550px]">
-              {/* Título mais compacto */}
-              <h1 className="font-jakarta text-[2.25rem] sm:text-4xl md:text-[3rem] leading-[1.15] font-extrabold text-[#0F172A] mb-5 tracking-tight">
-                <div className="block min-h-[1.15em]">
+            <div className="flex-1 text-center lg:text-left max-w-[500px]">
+              <h1 className="font-jakarta text-[2.5rem] sm:text-4xl md:text-[2.75rem] leading-[1.1] font-extrabold text-[#0F172A] mb-4 tracking-tight">
+                <div className="block min-h-[1.1em]">
                   <TypewriterEffect text="Portal de Solicitações" speed={40} hideCursorOnFinish={true} />
                 </div>
-                <div className="block min-h-[1.15em]">
+                <div className="block min-h-[1.1em]">
                   <TypewriterEffect text="de Suprimentos." speed={40} initialDelay={1100} hideCursorOnFinish={false} />
                 </div>
               </h1>
@@ -111,34 +116,33 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Diagrama */}
+            {/* Diagrama - Agora perfeitamente ajustado */}
             <div
-              className="flex-1 w-full flex justify-center lg:justify-end animate-fade-in opacity-0"
+              className="flex-1 w-full flex justify-center lg:justify-end animate-fade-in opacity-0 scale-95 origin-right"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
             >
               <HeroFlowDiagram />
             </div>
           </section>
 
-          <div className="border-t border-slate-100 pt-8 mb-12">
+          <div className="border-t border-slate-100 pt-6 mb-10">
             <LogoMarquee />
           </div>
 
           {user && (
-            <section className="mb-12 animate-fade-in">
+            <section className="mb-10 animate-fade-in">
               <UserGreeting />
               <QuickStats />
             </section>
           )}
 
-          <div className="mb-16">
+          <div className="mb-12">
             <ActionCards />
           </div>
 
           <WorkflowTimeline />
 
-          {/* FOOTER CORRIGIDO E COMPACTO */}
-          <footer className="py-8 text-center mt-16 border-t border-slate-100">
+          <footer className="py-8 text-center mt-12 border-t border-slate-100">
             <p className="text-slate-500 text-xs font-semibold font-jakarta uppercase tracking-wide">
               © 2026 GMAD Madville | Curitiba
             </p>
