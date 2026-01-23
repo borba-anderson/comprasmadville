@@ -14,8 +14,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* --- INJEÇÃO DA FONTE: PLUS JAKARTA SANS --- */}
-      {/* Isso garante que a fonte carregue sem você precisar mexer no HTML/CSS global */}
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -32,22 +30,22 @@ const Index = () => {
         {/* HERO SECTION */}
         <section className="pt-8 pb-12 md:pt-14 md:pb-20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-20">
-            {/* Lado Esquerdo - Título e Texto */}
+            {/* Lado Esquerdo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
-              {/* APLICAÇÃO DA FONTE: Adicionei a classe 'font-jakarta' criada acima */}
+              {/* TÍTULO ATUALIZADO: 'Portal' soa mais moderno e corporativo */}
               <h1 className="font-jakarta text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1]">
-                Workflow de Solicitações
+                Portal de Solicitações
                 <br className="hidden md:block" />
                 de Suprimentos<span className="text-primary">.</span>
               </h1>
 
               <p className="text-muted-foreground/80 max-w-xl text-lg md:text-xl font-normal mx-auto md:mx-0 mb-8 leading-relaxed font-jakarta">
-                Transforme pedidos internos em processos organizados, garantindo rastreabilidade e controle
-                orçamentário.
+                Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
+                gestão.
               </p>
             </div>
 
-            {/* Lado Direito - Hero Visual */}
+            {/* Lado Direito */}
             <div className="flex-shrink-0 animate-fade-in flex items-center justify-center w-full md:w-auto transform md:scale-95 lg:scale-100 transition-transform">
               <HeroFlowDiagram />
             </div>
@@ -69,13 +67,12 @@ const Index = () => {
           <ActionCards />
         </div>
 
-        {/* Se quiser aplicar a fonte nos títulos do Grid de Benefícios também, teria que passar a classe pra lá, 
-            mas o padrão já deve ficar bom. */}
         <WorkflowTimeline />
 
         <footer className="py-10 text-center border-t bg-slate-50/50 mt-12">
+          {/* Rodapé atualizado para 'Portal' */}
           <p className="text-muted-foreground text-sm font-medium font-jakarta">
-            © 2026 GMAD Madville | Curitiba - Workflow de Solicitações de Suprimentos
+            © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
           </p>
           <p className="text-muted-foreground/60 text-xs mt-2 font-jakarta">
             Versão Beta 2.1 | Suporte:{" "}
