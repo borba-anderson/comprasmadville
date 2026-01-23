@@ -16,9 +16,9 @@ const Index = () => {
             
             {/* Lado Esquerdo - Título e subtítulo */}
             <div className="text-center md:text-left flex-1 animate-fade-in">
-              <h1 className="mb-4 text-4xl md:text-5xl font-bold tracking-tight text-foreground text-left lg:text-5xl pb-0 my-0">
-                SISTEMA DE REQUISIÇÕES
-                <span className="block text-primary text-left text-6xl">DE COMPRAS</span>
+              <h1 className="text-4xl md:text-5xl tracking-tight text-foreground text-left lg:text-5xl py-[2px] pt-0 my-0 font-sans font-bold mb-0 pb-px">Sistema de Requisições
+
+de Compras.<span className="block text-primary text-left text-5xl font-sans pr-0 pt-[22px] font-bold pb-[22px]">DE COMPRAS</span>
               </h1>
 
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-[10px] text-left">
