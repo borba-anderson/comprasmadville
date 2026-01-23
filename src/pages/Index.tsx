@@ -77,11 +77,9 @@ const Index = () => {
         `}
       </style>
 
-      {/* --- FUNDO GEOMÉTRICO (Igual à referência visual) --- */}
+      {/* --- FUNDO GEOMÉTRICO --- */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
-
-        {/* Triângulo Esquerda */}
         <svg
           className="absolute top-[15%] left-[-5%] w-[400px] h-[400px] text-slate-200/60 rotate-12 opacity-70"
           viewBox="0 0 200 200"
@@ -89,8 +87,6 @@ const Index = () => {
         >
           <path d="M 40 150 L 100 50 L 160 150 Z" />
         </svg>
-
-        {/* Círculo Direita */}
         <svg
           className="absolute top-[10%] right-[-10%] w-[500px] h-[500px] text-blue-50/80 opacity-60"
           viewBox="0 0 200 200"
@@ -98,8 +94,6 @@ const Index = () => {
         >
           <circle cx="100" cy="100" r="80" />
         </svg>
-
-        {/* Elementos flutuantes */}
         <svg
           className="absolute top-[45%] left-[40%] w-12 h-12 text-slate-300/50 animate-bounce"
           style={{ animationDuration: "4s" }}
@@ -115,27 +109,28 @@ const Index = () => {
 
         <main className="page-container rounded-none shadow-none bg-transparent px-4 md:px-8 max-w-7xl mx-auto">
           {/* HERO SECTION */}
-          <section className="pt-12 pb-16 md:pt-20 md:pb-28">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
-              {/* Lado Esquerdo - Título Original */}
-              <div className="text-center lg:text-left flex-1 max-w-xl relative z-10">
-                <h1 className="font-jakarta text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15] min-h-[2.4em] md:min-h-[auto]">
+          <section className="pt-12 pb-16 md:pt-16 md:pb-24">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+              {/* Lado Esquerdo - Título (Ajustado Tamanho e Cor) */}
+              <div className="text-center lg:text-left flex-1 max-w-lg relative z-10">
+                {/* Tamanho da fonte reduzido de text-[3.5rem] para text-4xl md:text-5xl */}
+                <h1 className="font-jakarta text-4xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.2] min-h-[2.4em] md:min-h-[auto]">
                   {/* Linha 1 */}
                   <TypewriterEffect text="Portal de Solicitações" speed={50} hideCursorOnFinish={true} />
                   <br className="hidden md:block" />
 
-                  {/* Linha 2 - Verde */}
+                  {/* Linha 2 - Cor Verde REMOVIDA */}
                   <TypewriterEffect
                     text="de Suprimentos."
                     speed={50}
                     initialDelay={1150}
-                    className="text-[#107c50]"
+                    // className="text-[#107c50]"  <-- REMOVIDO
                     hideCursorOnFinish={false}
                   />
                 </h1>
 
                 <p
-                  className="text-slate-600 text-lg md:text-xl font-medium mb-8 leading-relaxed font-jakarta animate-fade-in"
+                  className="text-slate-600 text-lg font-medium mb-8 leading-relaxed font-jakarta animate-fade-in"
                   style={{ animationDelay: "2.5s" }}
                 >
                   Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
@@ -143,12 +138,15 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Lado Direito - Diagrama Estilo Imagem */}
+              {/* Lado Direito - Diagrama (Container Ajustado) */}
               <div
                 className="flex-shrink-0 animate-fade-in w-full lg:w-auto flex justify-center lg:justify-end relative z-20"
                 style={{ animationDelay: "0.5s" }}
               >
-                <HeroFlowDiagram />
+                {/* Escala reduzida para 90% em telas grandes para ajustar o tamanho geral */}
+                <div className="lg:scale-90 origin-top-right">
+                  <HeroFlowDiagram />
+                </div>
               </div>
             </div>
 
