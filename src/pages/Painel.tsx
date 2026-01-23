@@ -174,9 +174,8 @@ export default function Painel() {
 
   return (
     <div className="min-h-screen bg-[#107c50] text-slate-50">
-      {/* HEADER: Classes adicionadas para forçar a cor do texto para verde escuro (#107c50) 
-          e garantir que o nome do usuário apareça no fundo branco */}
-      <div className="bg-white sticky top-0 z-50 shadow-sm text-[#107c50] [&_*]:text-[#107c50] [&_button]:text-[#107c50] [&_svg]:text-[#107c50]">
+      {/* HEADER: Corrigido para texto PRETO (slate-900) */}
+      <div className="bg-white sticky top-0 z-50 shadow-sm text-slate-900 [&_*]:text-slate-900 [&_button]:text-slate-900 [&_svg]:text-slate-900">
         <Header />
       </div>
 
