@@ -45,7 +45,6 @@ export default function Painel() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Determine if user is a solicitante (read-only mode)
   const isReadOnly = !isStaff;
   const {
     filters,
@@ -63,9 +62,7 @@ export default function Painel() {
 
   const { sortConfig, handleSort, sortedRequisicoes } = useSorting(filteredRequisicoes);
   const { paginatedItems, pagination, goToPage, changePageSize } = usePagination(sortedRequisicoes, 25);
-  
 
-  // Redirect only if not authenticated
   useEffect(() => {
     if (!authLoading && rolesLoaded) {
       if (!user) navigate('/auth');
@@ -103,14 +100,12 @@ export default function Painel() {
     }
   }, [toast]);
 
-  // Enable realtime notifications for solicitantes (after fetchRequisicoes is defined)
   useRealtimeNotifications({
     userEmail: profile?.email || null,
     enabled: isReadOnly && !!profile?.email,
     onDataChange: () => fetchRequisicoes(true),
   });
 
-  // Fetch requisicoes for any authenticated user (RLS handles visibility)
   useEffect(() => {
     if (user) fetchRequisicoes();
   }, [user, fetchRequisicoes]);
@@ -163,115 +158,27 @@ export default function Painel() {
 
   if (authLoading || !rolesLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="spinner w-8 h-8 border-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-[#107c50]">
+        <div className="spinner w-8 h-8 border-white" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    // FUNDO VERDE ESPECÍFICO (#107c50) E TEXTO BRANCO PARA O GERAL
+    <div className="min-h-screen bg-[#107c50] text-slate-50">
       <Header />
 
       <main className="max-w-[1600px] mx-auto px-4 py-4">
-        {/* Read-only banner for solicitantes */}
+        {/* Banner do Solicitante (Fundo Branco para destaque) */}
         {isReadOnly && (
-          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-2">
+          <div className="mb-4 p-3 bg-white rounded-lg flex items-center gap-2 shadow-sm border-l-4 border-blue-600 text-slate-700">
             <FileText className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-blue-800 dark:text-blue-200">
+            <span className="text-sm">
               <strong>Modo visualização:</strong> Você está vendo apenas as suas requisições.
             </span>
           </div>
         )}
 
-        {/* Compact Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
-          <StatsCard title="Total" value={stats.total} icon={FileText} className="col-span-1" />
-          <StatsCard title="Pendentes" value={stats.pendente} variant="warning" icon={Clock} />
-          <StatsCard title="Em Análise" value={stats.em_analise} variant="info" icon={TrendingUp} />
-          <StatsCard title="Aprovados" value={stats.aprovado} variant="success" icon={CheckCircle} />
-          <StatsCard title="Cotando" value={stats.cotando} variant="primary" icon={Package} />
-          <StatsCard title="Comprados" value={stats.comprado} variant="success" icon={ShoppingCart} />
-          <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
-        </div>
-
-        <Tabs defaultValue="requisicoes" className="space-y-4">
-          <TabsList className="bg-card border">
-            <TabsTrigger value="requisicoes" className="gap-2">
-              <FileText className="w-4 h-4" />
-              {isReadOnly ? 'Minhas Requisições' : 'Requisições'}
-            </TabsTrigger>
-            {!isReadOnly && (
-              <TabsTrigger value="dashboard" className="gap-2">
-                <DollarSign className="w-4 h-4" />
-                Dashboard
-              </TabsTrigger>
-            )}
-          </TabsList>
-
-          <TabsContent value="requisicoes" className="space-y-0">
-            <div className="bg-card rounded-xl border overflow-hidden">
-              <FiltersBar
-                filters={filters}
-                onFilterChange={updateFilter}
-                onReset={resetFilters}
-                onRefresh={() => fetchRequisicoes()}
-                isRefreshing={isRefreshing}
-                savedFilters={savedFilters}
-                onSaveFilter={saveFilter}
-                onLoadFilter={loadFilter}
-                onDeleteFilter={deleteFilter}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-                resultCount={filteredRequisicoes.length}
-                totalCount={requisicoes.length}
-                onQuickView={applyQuickView}
-                exportRequisicoes={sortedRequisicoes}
-                readOnly={isReadOnly}
-              />
-
-
-              <RequisicaoTable
-                requisicoes={paginatedItems}
-                isLoading={isLoading}
-                viewMode={viewMode}
-                selectedId={selectedRequisicao?.id || null}
-                valorHistoryMap={valorHistoryMap}
-                onSelect={setSelectedRequisicao}
-                onViewDetails={handleViewDetails}
-                onSendEmail={sendNotification}
-                formatCurrency={formatCurrency}
-                hasFilters={hasActiveFilters}
-                sortConfig={sortConfig}
-                onSort={handleSort}
-                readOnly={isReadOnly}
-              />
-
-              <PaginationControls
-                pagination={pagination}
-                onPageChange={goToPage}
-                onPageSizeChange={changePageSize}
-              />
-            </div>
-          </TabsContent>
-
-          {!isReadOnly && (
-            <TabsContent value="dashboard">
-              <GastosDashboard requisicoes={requisicoes} />
-            </TabsContent>
-          )}
-        </Tabs>
-      </main>
-
-      <SidePanel
-        requisicao={selectedRequisicao}
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        onUpdate={() => fetchRequisicoes(true)}
-        profileNome={profile?.nome}
-        profileId={profile?.id}
-        readOnly={isReadOnly}
-      />
-    </div>
-  );
-}
+        {/* Stats Cards - O componente StatsCard geralmente já tem fundo branco.
+            Se necessário,
