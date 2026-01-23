@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom';
-import { LogOut, User, Users, KeyRound } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Logo } from './Logo';
-import { NotificationBell } from './NotificationBell';
-import { useAuth } from '@/contexts/AuthContext';
+import { Link } from "react-router-dom";
+import { LogOut, User, Users, KeyRound } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Logo } from "./Logo";
+import { NotificationBell } from "./NotificationBell";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +11,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+} from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface HeaderProps {
   showSidebarTrigger?: boolean;
@@ -22,19 +22,17 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
   const { user, profile, roles, signOut, isStaff, isAdmin } = useAuth();
 
   const getRoleBadge = () => {
-    if (roles.includes('admin')) return 'Admin';
-    if (roles.includes('gerente')) return 'Gestor';
-    if (roles.includes('comprador')) return 'Comprador';
-    return 'Usuário';
+    if (roles.includes("admin")) return "Admin";
+    if (roles.includes("gerente")) return "Gestor";
+    if (roles.includes("comprador")) return "Comprador";
+    return "Usuário";
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center px-4 md:px-6">
-        {showSidebarTrigger && (
-          <SidebarTrigger className="mr-4" />
-        )}
-        
+        {showSidebarTrigger && <SidebarTrigger className="mr-4" />}
+
         <Link to="/" className="flex items-center gap-2">
           <Logo size="sm" showText={true} />
         </Link>
@@ -50,15 +48,13 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                     <User className="w-4 h-4 text-primary" />
                   </div>
-                  <span className="hidden md:inline-block font-medium">
-                    {profile?.nome || user.email}
-                  </span>
+                  <span className="hidden md:inline-block font-medium">{profile?.nome || user.email}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
                   <div className="flex flex-col">
-                    <span>{profile?.nome || 'Usuário'}</span>
+                    <span>{profile?.nome || "Usuário"}</span>
                     <span className="text-xs text-muted-foreground">{user.email}</span>
                     <span className="mt-1 text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full w-fit">
                       {getRoleBadge()}
@@ -80,7 +76,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>
-                  <Link to="/requisicao">Nova Requisição</Link>
+                  <Link to="/requisicao">Nova Solicitação</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/alterar-senha" className="flex items-center gap-2">
@@ -101,7 +97,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                 <Link to="/auth">Entrar</Link>
               </Button>
               <Button asChild>
-                <Link to="/requisicao">Fazer Requisição</Link>
+                <Link to="/requisicao">Fazer Solicitação</Link>
               </Button>
             </div>
           )}
