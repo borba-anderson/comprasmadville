@@ -55,59 +55,74 @@ export const HeroFlowDiagram = () => {
     },
   ];
 
-  const renderStep = (step: any) => (
-    <div className="flex flex-col items-center text-center group relative z-10 w-24">
-      {/* Ícone Redondo com Efeito Glow */}
-      <div
-        className={`relative flex items-center justify-center w-12 h-12 rounded-full text-white shadow-lg transition-transform duration-300 group-hover:scale-110 ${step.style}`}
-      >
-        <step.icon size={20} strokeWidth={2.5} />
-        {/* Badge numérico */}
-        <div className="absolute -top-1 -right-1 w-4 h-4 bg-white text-[10px] text-muted-foreground font-bold rounded-full flex items-center justify-center border shadow-sm">
-          {step.id}
-        </div>
-      </div>
-      {/* Texto */}
-      <div className="mt-2">
-        <h3 className="font-bold text-xs text-foreground leading-tight">{step.title}</h3>
-        <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{step.desc}</p>
-      </div>
-    </div>
-  );
-
-  const Arrow = () => (
-    <div className="pt-4 text-muted-foreground/30">
-      <ArrowRight size={18} strokeWidth={3} />
+  // Componente da Seta Horizontal
+  const ArrowH = () => (
+    <div className="hidden md:flex pt-4 text-muted-foreground/30 px-1">
+      <ArrowRight size={20} strokeWidth={2.5} />
     </div>
   );
 
   return (
-    // Container mais largo (max-w-xl) para acomodar 3 itens
-    <div className="p-5 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-xl">
-      <div className="flex flex-col gap-6">
-        {/* LINHA 1: Passos 1, 2, 3 */}
-        <div className="flex items-start justify-between relative">
-          {renderStep(steps[0])}
-          <Arrow />
-          {renderStep(steps[1])}
-          <Arrow />
-          {renderStep(steps[2])}
+    // Container Principal com efeito de vidro (Glassmorphism)
+    <div className="relative p-6 bg-white/40 backdrop-blur-xl rounded-3xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-lg">
+      <div className="flex flex-col gap-8 md:gap-6">
+        {/* === LINHA 1 (1 -> 2 -> 3) === */}
+        <div className="flex items-start justify-between relative z-10">
+          {steps.slice(0, 3).map((step, i) => (
+            <>
+              <StepItem key={step.id} step={step} />
+              {/* Adiciona seta se não for o último da linha */}
+              {i < 2 && <ArrowH />}
+            </>
+          ))}
         </div>
 
-        {/* LINHA 2: Passos 4, 5, 6 */}
-        <div className="flex items-start justify-between relative">
-          {renderStep(steps[3])}
-          <Arrow />
-          {renderStep(steps[4])}
-          <Arrow />
-          {renderStep(steps[5])}
+        {/* === CONECTOR CURVO (Do 3 para o 4) === */}
+        {/* Esta linha conecta visualmente o final da linha 1 com o início da linha 2 */}
+        <div className="absolute right-8 top-[3.8rem] hidden md:block text-muted-foreground/20 z-0">
+          {/* Ícone de curva descendo */}
+          <CornerRightDown size={48} strokeWidth={1.5} className="translate-y-2 translate-x-4" />
         </div>
 
-        {/* Conector Visual Opcional: Curva do 3 para o 4 */}
-        <div className="absolute right-8 top-[3.5rem] text-muted-foreground/10 hidden md:block">
-          <CornerRightDown size={40} strokeWidth={1} />
+        {/* === LINHA 2 (4 -> 5 -> 6) === */}
+        <div className="flex items-start justify-between relative z-10">
+          {steps.slice(3, 6).map((step, i) => (
+            <>
+              <StepItem key={step.id} step={step} />
+              {/* Adiciona seta se não for o último da linha */}
+              {i < 2 && <ArrowH />}
+            </>
+          ))}
         </div>
       </div>
     </div>
   );
 };
+
+// Sub-componente para renderizar cada passo
+const StepItem = ({ step }: { step: any }) => (
+  <div className="flex flex-col items-center text-center group cursor-default relative w-24">
+    {/* Círculo do Ícone com Gradiente e Sombra */}
+    <div
+      className={`
+      relative flex items-center justify-center 
+      w-14 h-14 rounded-full text-white shadow-lg 
+      transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1
+      ${step.style}
+    `}
+    >
+      <step.icon size={22} strokeWidth={2} />
+
+      {/* Badge Numérico Flutuante */}
+      <div className="absolute -top-1 -right-1 w-5 h-5 bg-white text-[10px] text-muted-foreground font-extrabold rounded-full flex items-center justify-center border shadow-sm">
+        {step.id}
+      </div>
+    </div>
+
+    {/* Textos */}
+    <div className="mt-3">
+      <h3 className="font-bold text-xs text-foreground leading-tight">{step.title}</h3>
+      <p className="text-[10px] text-muted-foreground leading-tight mt-1 px-1">{step.desc}</p>
+    </div>
+  </div>
+);
