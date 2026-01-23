@@ -39,7 +39,6 @@ export const HeroFlowDiagram = () => {
   ];
 
   return (
-    // Container mais largo (max-w-[900px]) para permitir o afastamento
     <div className="relative w-full max-w-[900px] mx-auto h-[340px] flex items-center z-20">
       {/* === CAMADA DE CONEXÕES (SVG ABSOLUTO) === */}
       <svg
@@ -56,10 +55,7 @@ export const HeroFlowDiagram = () => {
           </marker>
         </defs>
 
-        {/* CONEXÕES LONGAS (Cruzando o espaço vazio) */}
-
-        {/* Laranja Ext -> Item 1 (Solicite) */}
-        {/* Sai do ícone laranja (aprox X=40, Y=70) e vai até o Item 1 (aprox X=250, Y=80) */}
+        {/* Laranja Ext -> Item 1 */}
         <path
           d="M 60 70 C 120 70, 180 80, 230 80"
           stroke="#fb923c"
@@ -67,10 +63,10 @@ export const HeroFlowDiagram = () => {
           fill="none"
           markerEnd="url(#arrow-orange)"
           strokeDasharray="4 3"
+          opacity="0.6"
         />
 
-        {/* Verde Ext -> Item 4 (Aprovação) */}
-        {/* Sai do ícone verde (aprox X=40, Y=270) e vai até o Item 4 (aprox X=250, Y=250) */}
+        {/* Verde Ext -> Item 4 */}
         <path
           d="M 60 270 C 120 270, 180 250, 230 250"
           stroke="#22c55e"
@@ -78,46 +74,38 @@ export const HeroFlowDiagram = () => {
           fill="none"
           markerEnd="url(#arrow-green)"
           strokeDasharray="4 3"
+          opacity="0.6"
         />
       </svg>
 
-      {/* === ÍCONES FLUTUANTES (Esquerda - Centralizados Verticalmente) === */}
-      {/* Posicionados absolutamente à esquerda e centralizados no eixo Y */}
+      {/* === ÍCONES FLUTUANTES MINIMALISTAS (Esquerda) === */}
       <div className="absolute -left-4 top-1/2 -translate-y-1/2 flex flex-col gap-10 z-30 hidden lg:flex">
-        {/* Laranja */}
+        {/* Laranja (Minimalista) */}
         <div className="group relative">
-          <div className="w-16 h-16 rounded-full bg-white border-2 border-orange-100 shadow-xl shadow-orange-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white">
-              <PackagePlus size={24} strokeWidth={2} />
-            </div>
+          {/* Fundo Branco com Sombra Colorida Suave */}
+          <div className="w-16 h-16 rounded-full bg-white shadow-[0_8px_30px_rgb(251,146,60,0.2)] border border-orange-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
+            <PackagePlus size={28} className="text-orange-500" strokeWidth={2} />
           </div>
         </div>
 
-        {/* Azul (Centro) */}
+        {/* Azul (Centro - Minimalista e Maior) */}
         <div className="group relative -ml-4">
-          {" "}
-          {/* Ligeiramente deslocado para esquerda ou direita se quiser quebrar a linha */}
-          <div className="w-20 h-20 rounded-full bg-white border-2 border-blue-100 shadow-xl shadow-blue-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white">
-              <Network size={32} strokeWidth={2} />
-            </div>
+          <div className="w-20 h-20 rounded-full bg-white shadow-[0_8px_30px_rgb(59,130,246,0.2)] border border-blue-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
+            <Network size={36} className="text-blue-600" strokeWidth={2} />
           </div>
         </div>
 
-        {/* Verde */}
+        {/* Verde (Minimalista) */}
         <div className="group relative">
-          <div className="w-16 h-16 rounded-full bg-white border-2 border-green-100 shadow-xl shadow-green-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white">
-              <FolderInput size={24} strokeWidth={2} />
-            </div>
+          <div className="w-16 h-16 rounded-full bg-white shadow-[0_8px_30px_rgb(34,197,94,0.2)] border border-green-100 flex items-center justify-center transform transition-transform group-hover:scale-105">
+            <FolderInput size={28} className="text-green-500" strokeWidth={2} />
           </div>
         </div>
       </div>
 
-      {/* === CARD BRANCO (Direita - Mais Afastado) === */}
-      {/* ml-auto empurra para a direita, w-[78%] define a largura, criando o gap na esquerda */}
+      {/* === CARD BRANCO (Direita) === */}
       <div className="relative ml-auto w-full lg:w-[78%] bg-white/95 backdrop-blur-sm rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-100 z-20">
-        {/* SVG INTERNO (Fluxo Snake) */}
+        {/* SVG INTERNO */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
           viewBox="0 0 700 280"
@@ -129,7 +117,7 @@ export const HeroFlowDiagram = () => {
             </marker>
           </defs>
 
-          {/* Seta de Retorno (3 -> 4) */}
+          {/* Seta de Retorno */}
           <path
             d="M 600 80 Q 660 80 660 135 Q 660 190 600 190 L 150 190 Q 90 190 90 215"
             stroke="#a855f7"
@@ -165,7 +153,6 @@ export const HeroFlowDiagram = () => {
   );
 };
 
-// Componente Seta Simples
 const SimpleArrow = () => (
   <div className="flex-1 h-[2px] bg-slate-100 relative mx-3 hidden md:block">
     <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[1px]">
@@ -176,7 +163,6 @@ const SimpleArrow = () => (
   </div>
 );
 
-// Item do Card
 const CardStep = ({ step }: { step: any }) => (
   <div className="flex flex-col items-center text-center w-28 relative group z-30">
     <div
