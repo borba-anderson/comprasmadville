@@ -10,7 +10,6 @@ import {
   WorkflowTimeline,
 } from "@/components/home";
 
-// --- TYPEWRITER (Mantido) ---
 const TypewriterEffect = ({
   text,
   speed = 40,
@@ -78,7 +77,6 @@ const Index = () => {
         `}
       </style>
 
-      {/* Shapes de Fundo */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl opacity-60"></div>
         <svg
@@ -94,9 +92,7 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1280px] mx-auto px-6 md:px-8 pt-4 pb-12">
-          {/* HERO SECTION */}
           <section className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 mb-12 md:mb-16 min-h-[380px]">
-            {/* Texto */}
             <div className="flex-1 text-center lg:text-left max-w-[500px]">
               <h1 className="font-jakarta text-[2.25rem] sm:text-4xl md:text-[2.75rem] leading-[1.1] font-extrabold text-[#0F172A] mb-4 tracking-tight">
                 <div className="block min-h-[1.1em]">
@@ -116,7 +112,6 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Diagrama */}
             <div
               className="flex-1 w-full flex justify-center lg:justify-end animate-fade-in opacity-0 scale-95 origin-right"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
@@ -125,7 +120,8 @@ const Index = () => {
             </div>
           </section>
 
-          <div className="border-t border-slate-100 pt-6 mb-10">
+          {/* REMOVIDA: A classe 'border-t border-slate-100' foi retirada daqui para eliminar a linha duplicada */}
+          <div className="pt-6 mb-10">
             <LogoMarquee />
           </div>
 
@@ -142,7 +138,6 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          {/* FOOTER RESTAURADO - Informações Antigas */}
           <footer className="py-12 text-center border-t border-slate-200 bg-white/60 mt-16 backdrop-blur-md rounded-t-3xl">
             <p className="text-slate-500 text-sm font-medium font-jakarta">
               © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
