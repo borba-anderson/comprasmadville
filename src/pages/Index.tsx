@@ -80,36 +80,30 @@ const Index = () => {
 
       {/* Shapes de Fundo Sutis */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-gradient-to-bl from-blue-50/50 to-transparent opacity-60"></div>
-        {/* Triângulo sutil */}
-        <svg
-          className="absolute top-[10%] left-[-2%] w-[300px] h-[300px] text-slate-100 rotate-12"
-          viewBox="0 0 100 100"
-          fill="currentColor"
-        >
-          <path d="M 50 0 L 100 100 L 0 100 Z" />
-        </svg>
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/60 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-slate-100/60 rounded-full blur-3xl opacity-50"></div>
       </div>
 
       <div className="relative z-10">
         <Header />
 
-        <main className="max-w-[1440px] mx-auto px-6 md:px-12 pt-10 pb-16">
-          {/* HERO SECTION */}
-          <section className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 mb-20 md:mb-32">
+        <main className="max-w-[1440px] mx-auto px-6 md:px-12 pt-6 pb-12">
+          {/* HERO SECTION - Altura e espaçamentos reduzidos */}
+          <section className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 mb-16 md:mb-20 min-h-[400px]">
             {/* Texto */}
-            <div className="flex-1 text-center lg:text-left">
-              <h1 className="font-jakarta text-[2.5rem] sm:text-5xl md:text-[3.5rem] leading-[1.1] font-extrabold text-[#0F172A] mb-6 tracking-tight">
-                <div className="block min-h-[1.1em]">
+            <div className="flex-1 text-center lg:text-left max-w-[550px]">
+              {/* Título mais compacto */}
+              <h1 className="font-jakarta text-[2.25rem] sm:text-4xl md:text-[3rem] leading-[1.15] font-extrabold text-[#0F172A] mb-5 tracking-tight">
+                <div className="block min-h-[1.15em]">
                   <TypewriterEffect text="Portal de Solicitações" speed={40} hideCursorOnFinish={true} />
                 </div>
-                <div className="block min-h-[1.1em]">
+                <div className="block min-h-[1.15em]">
                   <TypewriterEffect text="de Suprimentos." speed={40} initialDelay={1100} hideCursorOnFinish={false} />
                 </div>
               </h1>
 
               <p
-                className="text-slate-500 text-lg md:text-xl font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 animate-fade-in opacity-0"
+                className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-md mx-auto lg:mx-0 animate-fade-in opacity-0"
                 style={{ animationDelay: "2s", animationFillMode: "forwards" }}
               >
                 Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
@@ -126,33 +120,27 @@ const Index = () => {
             </div>
           </section>
 
-          <div className="border-t border-slate-100 pt-10 mb-16">
+          <div className="border-t border-slate-100 pt-8 mb-12">
             <LogoMarquee />
           </div>
 
           {user && (
-            <section className="mb-16 animate-fade-in">
+            <section className="mb-12 animate-fade-in">
               <UserGreeting />
               <QuickStats />
             </section>
           )}
 
-          <div className="mb-20">
+          <div className="mb-16">
             <ActionCards />
           </div>
 
           <WorkflowTimeline />
 
-          {/* FOOTER CORRIGIDO - Estilo limpo e texto correto */}
-          <footer className="py-12 text-center mt-20 border-t border-slate-100">
-            <p className="text-slate-500 text-sm font-semibold font-jakarta">
-              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
-            </p>
-            <p className="text-slate-400 text-xs mt-2 font-medium font-jakarta">
-              Versão Beta 2.1 | Suporte:{" "}
-              <a href="https://wa.me/5547992189824" className="hover:text-[#107c50] transition-colors">
-                WhatsApp
-              </a>
+          {/* FOOTER CORRIGIDO E COMPACTO */}
+          <footer className="py-8 text-center mt-16 border-t border-slate-100">
+            <p className="text-slate-500 text-xs font-semibold font-jakarta uppercase tracking-wide">
+              © 2026 GMAD Madville | Curitiba
             </p>
           </footer>
         </main>
