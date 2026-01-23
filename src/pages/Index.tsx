@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Adicionado useState e useEffect
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -10,29 +10,32 @@ import {
   WorkflowTimeline,
 } from "@/components/home";
 
-// --- COMPONENTE INTERNO: TYPEWRITER EFFECT ---
+// --- COMPONENTE AJUSTADO: CURSOR INTELIGENTE ---
 const TypewriterEffect = ({
   text,
   speed = 50,
   initialDelay = 0,
   className = "",
+  hideCursorOnFinish = false, // Nova propriedade para controlar o sumiço do cursor
 }: {
   text: string;
   speed?: number;
   initialDelay?: number;
   className?: string;
+  hideCursorOnFinish?: boolean;
 }) => {
   const [displayedText, setDisplayedText] = useState("");
-  const [isBlinking, setIsBlinking] = useState(false);
+
+  // O cursor só deve aparecer se NÃO houver atraso inicial, ou quando o atraso acabar
+  const [showCursor, setShowCursor] = useState(initialDelay === 0);
 
   useEffect(() => {
     let currentText = "";
     let currentIndex = 0;
 
-    // Inicia piscando
-    setIsBlinking(true);
-
     const startTimeout = setTimeout(() => {
+      setShowCursor(true); // Mostra o cursor quando começa a digitar a linha
+
       const interval = setInterval(() => {
         if (currentIndex < text.length) {
           currentText += text[currentIndex];
@@ -40,7 +43,10 @@ const TypewriterEffect = ({
           currentIndex++;
         } else {
           clearInterval(interval);
-          setIsBlinking(false); // Para de piscar ao terminar
+          // Se for a primeira linha, esconde o cursor ao terminar para passar para a próxima
+          if (hideCursorOnFinish) {
+            setShowCursor(false);
+          }
         }
       }, speed);
 
@@ -48,12 +54,13 @@ const TypewriterEffect = ({
     }, initialDelay);
 
     return () => clearTimeout(startTimeout);
-  }, [text, speed, initialDelay]);
+  }, [text, speed, initialDelay, hideCursorOnFinish]);
 
   return (
     <span className={className}>
       {displayedText}
-      <span className={`ml-1 border-r-4 border-primary animate-pulse ${isBlinking ? "opacity-100" : "opacity-0"}`}>
+      {/* O cursor agora obedece ao estado showCursor */}
+      <span className={`ml-1 border-r-4 border-primary animate-pulse ${showCursor ? "opacity-100" : "opacity-0"}`}>
         &nbsp;
       </span>
     </span>
@@ -63,6 +70,11 @@ const TypewriterEffect = ({
 
 const Index = () => {
   const { user } = useAuth();
+
+  // CÁLCULO DO TEMPO:
+  // "Portal de Solicitações" tem 22 caracteres.
+  // 22 chars * 50ms = 1100ms de duração.
+  // Então o segundo texto deve começar exatamente aos 1100ms.
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,15 +96,23 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-20">
             {/* Lado Esquerdo */}
             <div className="text-center md:text-left flex-1">
-              {/* TÍTULO COM ANIMAÇÃO */}
               <h1 className="font-jakarta text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1] min-h-[2.4em] md:min-h-[auto]">
-                <TypewriterEffect text="Portal de Solicitações" speed={50} />
+                {/* LINHA 1 */}
+                <TypewriterEffect
+                  text="Portal de Solicitações"
+                  speed={50}
+                  hideCursorOnFinish={true} // Oculta o cursor ao terminar
+                />
+
                 <br className="hidden md:block" />
+
+                {/* LINHA 2 */}
                 <TypewriterEffect
                   text="de Suprimentos."
                   speed={50}
-                  initialDelay={1200} // Começa depois da primeira linha
+                  initialDelay={1100} // Sincronia exata (22 letras * 50ms)
                   className="text-primary"
+                  hideCursorOnFinish={false} // Mantém o cursor piscando no final
                 />
               </h1>
 
