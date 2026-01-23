@@ -70,76 +70,74 @@ const MockAuthScreen = () => (
   </div>
 );
 
-// MOCK 2: PAINEL DE REQUISIÇÕES (AGORA COM FUNDO BRANCO NO CONTAINER)
+// MOCK 2: PAINEL DE REQUISIÇÕES (AGORA 100% BRANCO)
 const MockPainelScreen = () => (
   // Container Principal BRANCO
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden shadow-2xl font-sans border border-slate-200 relative">
-    {/* Seção Superior (Fundo Verde Interno para simular o sistema) */}
-    <div className="bg-[#008651] pb-2">
-      {/* Header */}
-      <div className="h-7 flex items-center justify-between px-3 shrink-0">
-        <div className="flex items-center gap-1.5">
-          <div className="text-[7px] font-extrabold text-white tracking-tighter italic">GMAD</div>
-          <div className="h-2 w-[1px] bg-white/30"></div>
-          <span className="text-[6px] font-medium text-white">Central de Compras</span>
-        </div>
-        <div className="flex gap-1.5 items-center">
-          <Bell size={8} className="text-white/90" />
-          <div className="flex items-center gap-1 bg-white/10 px-1 py-0.5 rounded-full border border-white/10">
-            <User size={6} className="text-white" />
-            <span className="text-[5px] text-white font-medium">Ruan Wilt</span>
-          </div>
-        </div>
+    {/* Header Topo (AGORA BRANCO - ZERO VERDE NO FUNDO) */}
+    <div className="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-3 shrink-0">
+      <div className="flex items-center gap-1.5">
+        {/* Logo e Texto em Verde Escuro/Preto para contraste */}
+        <div className="text-[8px] font-extrabold text-[#008651] tracking-tighter italic">GMAD</div>
+        <div className="h-3 w-[1px] bg-slate-300"></div>
+        <span className="text-[7px] font-bold text-slate-700">Central de Compras</span>
       </div>
-
-      {/* Linha de Cards de Status */}
-      <div className="px-3 flex gap-1 overflow-hidden">
-        {[
-          { l: "TOTAL", v: "76", c: "slate", i: FileText },
-          { l: "PENDENTES", v: "11", c: "orange", i: Clock },
-          { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp },
-          { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
-          { l: "COTANDO", v: "5", c: "slate", i: Package },
-          { l: "COMPRADOS", v: "37", c: "slate", i: ShoppingCart },
-          { l: "REJEITADOS", v: "1", c: "red", i: XCircle },
-        ].map((card, idx) => (
-          <div
-            key={idx}
-            className={`bg-white rounded-[3px] p-1 min-w-[32px] flex-1 shadow-sm flex flex-col justify-between h-8 relative overflow-hidden`}
-          >
-            {idx === 1 && <div className="absolute top-0 left-0 w-full h-[2px] bg-orange-200"></div>}
-            <div className="flex justify-between items-start">
-              <span
-                className={`text-[3.5px] text-${card.c === "slate" ? "slate-400" : card.c + "-500"} font-bold uppercase`}
-              >
-                {card.l}
-              </span>
-              <card.i size={4} className={`text-${card.c === "slate" ? "slate-300" : card.c + "-400"}`} />
-            </div>
-            <div
-              className={`text-[10px] font-bold text-${card.c === "slate" ? "slate-700" : card.c + "-600"} leading-none`}
-            >
-              {card.v}
-            </div>
-          </div>
-        ))}
+      <div className="flex gap-1.5 items-center">
+        <Bell size={9} className="text-slate-400" />
+        <div className="flex items-center gap-1 bg-slate-50 px-1.5 py-0.5 rounded-full border border-slate-200">
+          <User size={8} className="text-slate-600" />
+          <span className="text-[6px] text-slate-700 font-bold">Ruan Wilt</span>
+        </div>
       </div>
     </div>
 
-    {/* Botões de Aba (Sobrepondo o verde/branco) */}
-    <div className="px-3 flex gap-1 -mt-1 relative z-10">
-      <div className="bg-white px-2 py-0.5 rounded-t-[3px] flex items-center gap-1 shadow-sm border-t border-x border-slate-100">
+    {/* Linha de Cards de Status (Fundo Branco, bordas sutis) */}
+    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-slate-50/50">
+      {[
+        { l: "TOTAL", v: "76", c: "slate", i: FileText },
+        { l: "PENDENTES", v: "11", c: "orange", i: Clock },
+        { l: "ANÁLISE", v: "0", c: "blue", i: TrendingUp },
+        { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
+        { l: "COTANDO", v: "5", c: "purple", i: Package },
+        { l: "COMPRADOS", v: "37", c: "teal", i: ShoppingCart },
+        { l: "REJEITADOS", v: "1", c: "red", i: XCircle },
+      ].map((card, idx) => (
+        <div
+          key={idx}
+          className={`bg-white rounded-[3px] p-1 min-w-[32px] flex-1 shadow-sm border border-slate-100 flex flex-col justify-between h-8 relative overflow-hidden`}
+        >
+          {idx === 1 && <div className="absolute top-0 left-0 w-full h-[2px] bg-orange-400"></div>}
+          <div className="flex justify-between items-start">
+            <span
+              className={`text-[3.5px] text-${card.c === "slate" ? "slate-400" : card.c + "-500"} font-bold uppercase`}
+            >
+              {card.l}
+            </span>
+            <card.i size={4} className={`text-${card.c === "slate" ? "slate-300" : card.c + "-400"}`} />
+          </div>
+          <div
+            className={`text-[10px] font-bold text-${card.c === "slate" ? "slate-700" : card.c + "-600"} leading-none`}
+          >
+            {card.v}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Botões de Aba */}
+    <div className="px-3 flex gap-1 mt-1">
+      <div className="bg-white px-2 py-0.5 rounded-t-[3px] flex items-center gap-1 shadow-sm border-t border-x border-slate-200 relative z-10 top-[1px]">
         <FileText size={5} className="text-[#008651]" />
         <span className="text-[5px] font-bold text-[#008651]">Requisições</span>
       </div>
-      <div className="px-2 py-0.5 flex items-center gap-1 opacity-70 bg-[#006e42] rounded-t-[3px] text-white">
-        <DollarSign size={5} className="text-white" />
+      <div className="px-2 py-0.5 flex items-center gap-1 opacity-60 text-slate-500">
+        <DollarSign size={5} />
         <span className="text-[5px] font-bold">Dashboard</span>
       </div>
     </div>
 
     {/* Área Branca Principal (Tabela) */}
-    <div className="bg-[#F8FAFC] flex-1 border-t border-slate-200 flex flex-col">
+    <div className="bg-white flex-1 border-t border-slate-200 flex flex-col">
       {/* Visões Rápidas */}
       <div className="bg-white px-3 py-1.5 border-b border-slate-100 flex items-center justify-between">
         <div className="flex gap-1 items-center">
@@ -248,7 +246,7 @@ const MockPainelScreen = () => (
   </div>
 );
 
-// MOCK 3: FORMULÁRIO (Mantido)
+// MOCK 3: FORMULÁRIO
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
@@ -304,7 +302,7 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 4: DASHBOARD ANALYTICS (Mantido)
+// MOCK 4: DASHBOARD ANALYTICS
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F8FAFC] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-2 font-sans">
     <div className="flex justify-between items-center mb-1.5">
@@ -355,7 +353,7 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D (ORDEM AJUSTADA: DASHBOARD NA FRENTE)
+// 2. COMPOSIÇÃO 3D (ORDEM AJUSTADA)
 // ==========================================
 
 const Hero3DComposition = () => {
@@ -363,7 +361,7 @@ const Hero3DComposition = () => {
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
         {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
-        {/* Agora totalmente branco na base, com detalhes internos verdes */}
+        {/* Agora totalmente branco na base */}
         <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] bg-white rounded-xl z-10 transition-all duration-500">
           <MockPainelScreen />
         </div>
@@ -421,8 +419,8 @@ const Index = () => {
           <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              {/* Título Ajustado: Tamanho reduzido para caber em 2 linhas */}
-              <h1 className="font-jakarta text-[2.75rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15]">
+              {/* Título Ajustado: Tamanho reduzido para 2 linhas garantidas */}
+              <h1 className="font-jakarta text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.15] max-w-[600px]">
                 Portal de Solicitações <br />
                 de Suprimentos.
               </h1>
