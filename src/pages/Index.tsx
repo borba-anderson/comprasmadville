@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
-// CORREÇÃO: Adicionado 'Plus' na importação
 import {
   FileText,
   CheckCircle,
@@ -203,32 +202,29 @@ const MockChartScreen = () => (
 
 const Hero3DComposition = () => {
   return (
-    // Redução drástica da escala (scale-[0.55] md:scale-[0.75]) e altura
     <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center [perspective:1000px] overflow-visible mt-8 lg:mt-0 scale-[0.55] md:scale-[0.75] origin-center">
-      {/* Grupo Rotacionado */}
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(12deg)_rotateY(-15deg)_rotateZ(4deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* 1. FUNDO DIREITA (Indicadores) */}
+        {/* 1. FUNDO DIREITA */}
         <div className="absolute top-[-30px] right-[-60px] w-[260px] md:w-[340px] h-[220px] md:h-[280px] transform [transform:translateZ(-100px)] opacity-80 bg-white rounded-xl shadow-xl transition-all duration-500 hover:opacity-100 hover:[transform:translateZ(-60px)] border border-slate-200">
           <MockChartScreen />
         </div>
 
-        {/* 2. CENTRAL (Visão Geral - EM EVIDÊNCIA) */}
+        {/* 2. CENTRAL (Em evidência) */}
         <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(30px)] shadow-[0_35px_60px_-15px_rgba(16,124,80,0.3)] bg-white rounded-xl z-20 transition-all duration-500 hover:[transform:translateZ(60px)] border-[3px] border-white ring-4 ring-[#107c50]/20">
           <MockPainelScreen />
         </div>
 
-        {/* 3. FLUTUANTE ESQUERDA (Acesso ao Portal) */}
+        {/* 3. FLUTUANTE ESQUERDA */}
         <div className="absolute top-[15%] -left-[15%] md:-left-[20%] w-[180px] md:w-[220px] h-[220px] md:h-[280px] transform [transform:translateZ(80px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(110px)_scale(1.05)] z-30 animate-float">
           <MockAuthScreen />
         </div>
 
-        {/* 4. FLUTUANTE DIREITA (Nova Solicitação) */}
+        {/* 4. FLUTUANTE DIREITA */}
         <div className="absolute bottom-[-10%] -right-[5%] md:-right-[10%] w-[200px] md:w-[240px] h-[260px] md:h-[320px] transform [transform:translateZ(110px)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 hover:[transform:translateZ(140px)_scale(1.05)] z-40 animate-float-delayed">
           <MockFormScreen />
         </div>
       </div>
 
-      {/* Glow de fundo muito sutil */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-[#107c50]/10 to-blue-500/5 blur-[60px] rounded-full -z-10 pointer-events-none"></div>
     </div>
   );
@@ -261,7 +257,7 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1440px] mx-auto">
-          {/* === 1. HERO SECTION (Com botão funcional) === */}
+          {/* === 1. HERO SECTION === */}
           <section className="px-6 md:px-12 pt-8 pb-12 lg:pt-12 lg:pb-20 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16 min-h-[450px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[600px] relative z-30">
@@ -282,7 +278,6 @@ const Index = () => {
                 className="animate-fade-in opacity-0 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
                 style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
               >
-                {/* BOTÃO FUNCIONAL (LINK PARA O PAINEL) */}
                 <Link to="/painel">
                   <button className="bg-[#107c50] hover:bg-[#0d6942] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
                     Acessar o Painel <ArrowRight size={18} />
@@ -291,7 +286,7 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Composição 3D (Sutil e Reduzida) */}
+            {/* Composição 3D */}
             <div
               className="flex-1 w-full animate-fade-in opacity-0 origin-center relative z-20"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
@@ -305,19 +300,20 @@ const Index = () => {
             <LogoMarquee />
           </div>
 
-          {/* === 2. AÇÕES RÁPIDAS (Cards) === */}
-          <div className="mb-20 px-6 md:px-12 relative z-20">
-            <ActionCards />
-          </div>
-
+          {/* === 2. SAUDAÇÃO E STATS (MOVIDO PARA CIMA) === */}
           {user && (
-            <section className="my-10 px-6 md:px-12 animate-fade-in">
+            <section className="mt-8 mb-12 px-6 md:px-12 animate-fade-in relative z-20">
               <UserGreeting />
               <QuickStats />
             </section>
           )}
 
-          {/* === 3. SEÇÃO COMO FUNCIONA === */}
+          {/* === 3. AÇÕES RÁPIDAS (MOVIDO PARA BAIXO) === */}
+          <div className="mb-20 px-6 md:px-12 relative z-20">
+            <ActionCards />
+          </div>
+
+          {/* === 4. SEÇÃO COMO FUNCIONA === */}
           <section className="py-20 bg-white relative overflow-hidden border-t border-slate-100">
             <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
 
