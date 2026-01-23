@@ -48,7 +48,6 @@ export const HeroFlowDiagram = () => {
     },
   ];
 
-  // Seta horizontal grossa e cinza (como na imagem)
   const ArrowH = () => (
     <div className="hidden md:flex items-center px-3 text-slate-200">
       <ArrowRight size={32} strokeWidth={3} />
@@ -56,38 +55,36 @@ export const HeroFlowDiagram = () => {
   );
 
   return (
-    // Container Branco Sólido com Sombra Suave e Bordas Arredondadas
     <div className="relative p-8 bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/60 w-full max-w-2xl z-10">
-      {/* === SVG DA SETA CURVA CONECTORA (The "Snake" Arrow) === */}
-      {/* Este SVG desenha a curva exata entre a linha de cima e a de baixo */}
+      {/* === SVG DA SETA CURVA AJUSTADO === */}
+      {/* Ajustei o viewBox, o posicionamento e o caminho (d) para uma curva perfeita que não corta os ícones */}
       <svg
-        className="absolute top-[32%] right-[15%] w-[60%] h-[35%] z-0 hidden md:block pointer-events-none"
-        viewBox="0 0 400 120"
+        className="absolute top-[35%] right-[12%] w-[65%] h-[35%] z-0 hidden md:block pointer-events-none"
+        viewBox="0 0 450 130"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Gradiente da curva: Roxo (final da linha 1) para Verde (início da linha 2) */}
           <linearGradient id="snake-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#a855f7" /> {/* Purple-500 */}
-            <stop offset="100%" stopColor="#22c55e" /> {/* Green-500 */}
+            <stop offset="0%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#22c55e" />
           </linearGradient>
         </defs>
-        {/* Caminho da curva e ponta da seta */}
+        {/* Caminho ajustado para uma curva mais aberta e suave */}
         <path
-          d="M 360 20 C 420 20, 420 100, 300 100 L 40 100"
+          d="M 420 25 C 480 25, 480 105, 360 105 L 60 105"
           stroke="url(#snake-gradient)"
           strokeWidth="4"
           strokeLinecap="round"
           fill="none"
         />
-        <path d="M 45 100 L 55 90 M 45 100 L 55 110" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
+        {/* Ponta da seta ajustada */}
+        <path d="M 65 105 L 75 95 M 65 105 L 75 115" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" />
       </svg>
-      {/* ========================================================== */}
 
       <div className="flex flex-col gap-12 relative z-10">
-        {/* === LINHA 1 (1 -> 2 -> 3) === */}
-        <div className="flex items-start justify-between">
+        {/* === LINHA 1 === */}
+        <div className="flex items-start justify-between px-4">
           <StepItem step={steps[0]} />
           <ArrowH />
           <StepItem step={steps[1]} />
@@ -95,9 +92,9 @@ export const HeroFlowDiagram = () => {
           <StepItem step={steps[2]} />
         </div>
 
-        {/* === LINHA 2 (4 -> 5 -> 6) === */}
-        {/* Adicionado padding-left (pl-4) para deslocar ligeiramente a segunda linha para a direita, como na imagem */}
-        <div className="flex items-start justify-between pl-8">
+        {/* === LINHA 2 === */}
+        {/* Adicionado padding para alinhar visualmente com o final da curva */}
+        <div className="flex items-start justify-between pl-12 pr-4">
           <StepItem step={steps[3]} />
           <ArrowH />
           <StepItem step={steps[4]} />
@@ -109,10 +106,8 @@ export const HeroFlowDiagram = () => {
   );
 };
 
-// Sub-componente do Item (Ícone + Texto)
 const StepItem = ({ step }: { step: any }) => (
   <div className="flex flex-col items-center text-center group cursor-default relative w-28">
-    {/* Ícone Redondo Maior (w-16 h-16) com Sombra Forte */}
     <div
       className={`
       relative flex items-center justify-center 
@@ -123,13 +118,11 @@ const StepItem = ({ step }: { step: any }) => (
     >
       <step.icon size={28} strokeWidth={2} />
 
-      {/* Badge Numérico Branco no canto superior direito */}
       <div className="absolute -top-2 -right-2 w-6 h-6 bg-white text-xs text-muted-foreground font-extrabold rounded-full flex items-center justify-center border shadow-sm z-20">
         {step.id}
       </div>
     </div>
 
-    {/* Textos */}
     <div className="mt-4">
       <h3 className="font-bold text-sm text-foreground leading-tight">{step.title}</h3>
       <p className="text-xs text-muted-foreground leading-tight mt-1 px-1 font-medium">{step.desc}</p>
