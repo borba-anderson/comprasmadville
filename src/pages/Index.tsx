@@ -78,7 +78,7 @@ const Index = () => {
         `}
       </style>
 
-      {/* Shapes de Fundo Sutis e Compactos */}
+      {/* Shapes de Fundo */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl opacity-60"></div>
         <svg
@@ -94,11 +94,11 @@ const Index = () => {
         <Header />
 
         <main className="max-w-[1280px] mx-auto px-6 md:px-8 pt-4 pb-12">
-          {/* HERO SECTION - Mais compacta */}
+          {/* HERO SECTION */}
           <section className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 mb-12 md:mb-16 min-h-[380px]">
             {/* Texto */}
             <div className="flex-1 text-center lg:text-left max-w-[500px]">
-              <h1 className="font-jakarta text-[2.5rem] sm:text-4xl md:text-[2.75rem] leading-[1.1] font-extrabold text-[#0F172A] mb-4 tracking-tight">
+              <h1 className="font-jakarta text-[2.25rem] sm:text-4xl md:text-[2.75rem] leading-[1.1] font-extrabold text-[#0F172A] mb-4 tracking-tight">
                 <div className="block min-h-[1.1em]">
                   <TypewriterEffect text="Portal de Solicitações" speed={40} hideCursorOnFinish={true} />
                 </div>
@@ -116,7 +116,7 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Diagrama - Agora perfeitamente ajustado */}
+            {/* Diagrama */}
             <div
               className="flex-1 w-full flex justify-center lg:justify-end animate-fade-in opacity-0 scale-95 origin-right"
               style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
@@ -142,9 +142,21 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          <footer className="py-8 text-center mt-12 border-t border-slate-100">
-            <p className="text-slate-500 text-xs font-semibold font-jakarta uppercase tracking-wide">
-              © 2026 GMAD Madville | Curitiba
+          {/* FOOTER RESTAURADO - Informações Antigas */}
+          <footer className="py-12 text-center border-t border-slate-200 bg-white/60 mt-16 backdrop-blur-md rounded-t-3xl">
+            <p className="text-slate-500 text-sm font-medium font-jakarta">
+              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
+            </p>
+            <p className="text-slate-400 text-xs mt-3 font-jakarta">
+              Versão Beta 2.1 | Suporte:{" "}
+              <a
+                href="https://wa.me/5547992189824"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#107c50] hover:underline font-bold transition-colors"
+              >
+                WhatsApp
+              </a>
             </p>
           </footer>
         </main>
