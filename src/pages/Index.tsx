@@ -68,7 +68,6 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    // Adicionado fundo com gradiente sutil e overflow-hidden para os elementos absolutos
     <div className="min-h-screen bg-slate-50/50 relative overflow-hidden font-sans">
       <style>
         {`
@@ -78,12 +77,11 @@ const Index = () => {
         `}
       </style>
 
-      {/* --- FUNDO GEOMÉTRICO E GRADIENTE (Baseado na referência) --- */}
+      {/* --- FUNDO GEOMÉTRICO (Igual à referência visual) --- */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        {/* Gradiente de fundo sutil */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
 
-        {/* Triângulo/Seta Esquerda (Atrás do Texto) */}
+        {/* Triângulo Esquerda */}
         <svg
           className="absolute top-[15%] left-[-5%] w-[400px] h-[400px] text-slate-200/60 rotate-12 opacity-70"
           viewBox="0 0 200 200"
@@ -92,7 +90,7 @@ const Index = () => {
           <path d="M 40 150 L 100 50 L 160 150 Z" />
         </svg>
 
-        {/* Círculo/Forma Direita (Atrás do Diagrama) */}
+        {/* Círculo Direita */}
         <svg
           className="absolute top-[10%] right-[-10%] w-[500px] h-[500px] text-blue-50/80 opacity-60"
           viewBox="0 0 200 200"
@@ -101,7 +99,7 @@ const Index = () => {
           <circle cx="100" cy="100" r="80" />
         </svg>
 
-        {/* Elementos menores flutuantes */}
+        {/* Elementos flutuantes */}
         <svg
           className="absolute top-[45%] left-[40%] w-12 h-12 text-slate-300/50 animate-bounce"
           style={{ animationDuration: "4s" }}
@@ -109,14 +107,6 @@ const Index = () => {
           fill="currentColor"
         >
           <path d="M 12 4 L 20 18 L 4 18 Z" />
-        </svg>
-        <svg
-          className="absolute top-[20%] right-[30%] w-8 h-8 text-blue-200/60 animate-pulse"
-          style={{ animationDuration: "3s" }}
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <circle cx="12" cy="12" r="10" />
         </svg>
       </div>
 
@@ -127,24 +117,33 @@ const Index = () => {
           {/* HERO SECTION */}
           <section className="pt-12 pb-16 md:pt-20 md:pb-28">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
-              {/* Lado Esquerdo - Texto */}
+              {/* Lado Esquerdo - Título Original */}
               <div className="text-center lg:text-left flex-1 max-w-xl relative z-10">
-                <h1 className="font-jakarta text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15]">
-                  Workflow de Requisições
+                <h1 className="font-jakarta text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15] min-h-[2.4em] md:min-h-[auto]">
+                  {/* Linha 1 */}
+                  <TypewriterEffect text="Portal de Solicitações" speed={50} hideCursorOnFinish={true} />
                   <br className="hidden md:block" />
-                  <span className="text-primary">de Suprimentos.</span>
+
+                  {/* Linha 2 - Verde */}
+                  <TypewriterEffect
+                    text="de Suprimentos."
+                    speed={50}
+                    initialDelay={1150}
+                    className="text-[#107c50]"
+                    hideCursorOnFinish={false}
+                  />
                 </h1>
 
                 <p
                   className="text-slate-600 text-lg md:text-xl font-medium mb-8 leading-relaxed font-jakarta animate-fade-in"
-                  style={{ animationDelay: "0.3s" }}
+                  style={{ animationDelay: "2.5s" }}
                 >
-                  Transforme solicitações internas em processos organizados, garantindo rastreabilidade e controle
-                  orçamentário.
+                  Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
+                  gestão.
                 </p>
               </div>
 
-              {/* Lado Direito - Diagrama Complexo */}
+              {/* Lado Direito - Diagrama Estilo Imagem */}
               <div
                 className="flex-shrink-0 animate-fade-in w-full lg:w-auto flex justify-center lg:justify-end relative z-20"
                 style={{ animationDelay: "0.5s" }}
@@ -184,7 +183,7 @@ const Index = () => {
                 href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline font-bold transition-colors"
+                className="text-[#107c50] hover:underline font-bold transition-colors"
               >
                 WhatsApp
               </a>
