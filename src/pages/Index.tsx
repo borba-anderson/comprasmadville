@@ -26,7 +26,7 @@ const Index = () => {
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight text-foreground font-sans py-4 leading-tight">
                 Gestão de Requisições
                 <br /> {/* <--- AQUI ESTÁ A QUEBRA DE LINHA FORÇADA */}
-                de Compras<span className="text-primary">.</span>
+                de Demandas<span className="text-primary">.</span>
               </h1>
 
               <p className="text-muted-foreground max-w-xl text-base md:text-lg font-thin mx-0 mb-6 md:text-left">
