@@ -10,10 +10,10 @@ import {
   WorkflowTimeline,
 } from "@/components/home";
 
-// --- COMPONENTE: TYPEWRITER (Mantido) ---
+// --- TYPEWRITER (Ajustado para evitar pulos de layout) ---
 const TypewriterEffect = ({
   text,
-  speed = 50,
+  speed = 40,
   initialDelay = 0,
   className = "",
   hideCursorOnFinish = false,
@@ -57,18 +57,19 @@ const TypewriterEffect = ({
     <span className={className}>
       {displayedText}
       {showCursor && (
-        <span className="ml-1 border-r-4 border-primary animate-pulse inline-block align-middle h-[0.8em]">&nbsp;</span>
+        <span className="ml-1 border-r-4 border-slate-900 animate-pulse inline-block align-middle h-[0.9em]">
+          &nbsp;
+        </span>
       )}
     </span>
   );
 };
-// ---------------------------------------------
 
 const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-50/50 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#F8FAFC] relative overflow-x-hidden font-sans selection:bg-blue-100">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -77,89 +78,56 @@ const Index = () => {
         `}
       </style>
 
-      {/* --- FUNDO GEOMÉTRICO --- */}
+      {/* Background Decorativo Sutil */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
-        <svg
-          className="absolute top-[15%] left-[-5%] w-[400px] h-[400px] text-slate-200/60 rotate-12 opacity-70"
-          viewBox="0 0 200 200"
-          fill="currentColor"
-        >
-          <path d="M 40 150 L 100 50 L 160 150 Z" />
-        </svg>
-        <svg
-          className="absolute top-[10%] right-[-10%] w-[500px] h-[500px] text-blue-50/80 opacity-60"
-          viewBox="0 0 200 200"
-          fill="currentColor"
-        >
-          <circle cx="100" cy="100" r="80" />
-        </svg>
-        <svg
-          className="absolute top-[45%] left-[40%] w-12 h-12 text-slate-300/50 animate-bounce"
-          style={{ animationDuration: "4s" }}
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M 12 4 L 20 18 L 4 18 Z" />
-        </svg>
+        <div className="absolute -top-[10%] -right-[10%] w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute top-[20%] -left-[10%] w-[600px] h-[600px] bg-slate-100/50 rounded-full blur-3xl opacity-60"></div>
       </div>
 
       <div className="relative z-10">
         <Header />
 
-        <main className="page-container rounded-none shadow-none bg-transparent px-4 md:px-8 max-w-7xl mx-auto">
-          {/* HERO SECTION */}
-          <section className="pt-12 pb-16 md:pt-16 md:pb-24">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
-              {/* Lado Esquerdo - Título (Ajustado Tamanho e Cor) */}
-              <div className="text-center lg:text-left flex-1 max-w-lg relative z-10">
-                {/* Tamanho da fonte reduzido de text-[3.5rem] para text-4xl md:text-5xl */}
-                <h1 className="font-jakarta text-4xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.2] min-h-[2.4em] md:min-h-[auto]">
-                  {/* Linha 1 */}
-                  <TypewriterEffect text="Portal de Solicitações" speed={50} hideCursorOnFinish={true} />
-                  <br className="hidden md:block" />
-
-                  {/* Linha 2 - Cor Verde REMOVIDA */}
-                  <TypewriterEffect
-                    text="de Suprimentos."
-                    speed={50}
-                    initialDelay={1150}
-                    // className="text-[#107c50]"  <-- REMOVIDO
-                    hideCursorOnFinish={false}
-                  />
-                </h1>
-
-                <p
-                  className="text-slate-600 text-lg font-medium mb-8 leading-relaxed font-jakarta animate-fade-in"
-                  style={{ animationDelay: "2.5s" }}
-                >
-                  Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
-                  gestão.
-                </p>
-              </div>
-
-              {/* Lado Direito - Diagrama (Container Ajustado) */}
-              <div
-                className="flex-shrink-0 animate-fade-in w-full lg:w-auto flex justify-center lg:justify-end relative z-20"
-                style={{ animationDelay: "0.5s" }}
-              >
-                {/* Escala reduzida para 90% em telas grandes para ajustar o tamanho geral */}
-                <div className="lg:scale-90 origin-top-right">
-                  <HeroFlowDiagram />
+        <main className="max-w-[1440px] mx-auto px-6 md:px-12 pt-8 pb-16">
+          {/* HERO SECTION - Grid de 2 Colunas Balanceado */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20 md:mb-32 min-h-[500px]">
+            {/* COLUNA ESQUERDA: Texto (5 colunas) */}
+            <div className="lg:col-span-5 text-center lg:text-left relative z-10">
+              <h1 className="font-jakarta text-[2.75rem] sm:text-5xl md:text-[3.5rem] leading-[1.1] font-extrabold text-[#0F172A] mb-6 tracking-tight">
+                <div className="block min-h-[1.1em]">
+                  <TypewriterEffect text="Portal de Solicitações" speed={40} hideCursorOnFinish={true} />
                 </div>
-              </div>
+                <div className="block min-h-[1.1em]">
+                  <TypewriterEffect text="de Suprimentos." speed={40} initialDelay={1100} hideCursorOnFinish={false} />
+                </div>
+              </h1>
+
+              <p
+                className="text-slate-500 text-lg md:text-xl font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 animate-fade-in opacity-0"
+                style={{ animationDelay: "2s", animationFillMode: "forwards" }}
+              >
+                Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
+                gestão.
+              </p>
             </div>
 
+            {/* COLUNA DIREITA: Diagrama (7 colunas) */}
             <div
-              className="mt-16 md:mt-20 border-t border-slate-200/60 pt-10 animate-fade-in"
-              style={{ animationDelay: "0.8s" }}
+              className="lg:col-span-7 w-full flex justify-center lg:justify-end animate-fade-in opacity-0"
+              style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
             >
-              <LogoMarquee />
+              {/* Container do diagrama com padding para acomodar os itens flutuantes */}
+              <div className="w-full max-w-[800px] pl-0 lg:pl-12">
+                <HeroFlowDiagram />
+              </div>
             </div>
           </section>
 
+          <div className="border-t border-slate-200 pt-10 mb-16">
+            <LogoMarquee />
+          </div>
+
           {user && (
-            <section className="animate-fade-in mb-12">
+            <section className="mb-16 animate-fade-in">
               <UserGreeting />
               <QuickStats />
             </section>
@@ -171,21 +139,8 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          <footer className="py-12 text-center border-t border-slate-200 bg-white/60 mt-16 backdrop-blur-md rounded-t-3xl">
-            <p className="text-slate-500 text-sm font-medium font-jakarta">
-              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
-            </p>
-            <p className="text-slate-400 text-xs mt-3 font-jakarta">
-              Versão Beta 2.1 | Suporte:{" "}
-              <a
-                href="https://wa.me/5547992189824"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#107c50] hover:underline font-bold transition-colors"
-              >
-                WhatsApp
-              </a>
-            </p>
+          <footer className="py-10 text-center border-t border-slate-200 mt-20">
+            <p className="text-slate-500 text-sm font-medium">© 2026 GMAD Madville | Curitiba</p>
           </footer>
         </main>
       </div>
