@@ -482,10 +482,11 @@ const Index = () => {
           <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              {/* Título Ajustado: CENTRAL DE COMPRAS E REQUISIÇÕES */}
+              {/* Título Ajustado: Central de Compras e Requisições */}
               <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
                 Central de Compras <br />
-                <span className="text-[#008651]">e Requisições.</span>
+                {/* Alteração APENAS aqui para a cor laranja */}
+                <span className="text-orange-500">e Requisições.</span>
               </h1>
 
               <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
