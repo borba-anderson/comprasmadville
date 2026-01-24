@@ -108,10 +108,12 @@ export default function Painel() {
     [toast],
   );
 
+  // Realtime notifications - for solicitantes (status changes) and staff (new requisitions)
   useRealtimeNotifications({
     userEmail: profile?.email || null,
-    enabled: isReadOnly && !!profile?.email,
+    enabled: !!profile?.email,
     onDataChange: () => fetchRequisicoes(true),
+    isStaff: isStaff,
   });
 
   useEffect(() => {
