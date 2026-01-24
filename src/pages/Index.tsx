@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+// CORREÇÃO: Adicionado 'AlertCircle' na importação abaixo
 import {
   FileText,
   CheckCircle,
@@ -33,6 +34,7 @@ import {
   Heart,
   ShoppingBag,
   Phone,
+  AlertCircle,
 } from "lucide-react";
 import {
   UserGreeting,
@@ -47,7 +49,7 @@ import {
 // 1. COMPONENTES VISUAIS (MOCKS) - RÉPLICAS FIÉIS
 // ==========================================
 
-// MOCK 1: PAINEL DE REQUISIÇÕES (Baseado na image_6bb315.png)
+// MOCK 1: PAINEL DE REQUISIÇÕES
 const MockPainelScreen = () => (
   <div className="w-full h-full bg-[#F3F4F6] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
     {/* Header Topo */}
@@ -301,7 +303,7 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 3: DASHBOARD ANALYTICS (AUMENTADO e FIEL A image_6b2c75.png)
+// MOCK 3: DASHBOARD ANALYTICS
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F9FAFB] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-3 font-sans">
     {/* Linha 1: Funil e KPIs */}
@@ -360,7 +362,7 @@ const MockChartScreen = () => (
           </div>
           <div className="bg-green-50 p-1 rounded border border-green-50 flex flex-col justify-center">
             <span className="text-[3.5px] text-green-500 mb-0.5">Tempo Médio</span>
-            <span className="text-[8px] font-bold text-green-600 leading-none">1.6d</span>
+            <span className="text-[8px] font-bold text-green-700 leading-none">1.6d</span>
           </div>
           <div className="bg-red-50 p-1 rounded border border-red-50 flex flex-col justify-center">
             <span className="text-[3.5px] text-red-400 mb-0.5">Atrasadas</span>
