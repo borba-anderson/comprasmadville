@@ -8,16 +8,19 @@ interface UseRealtimeNotificationsOptions {
   userEmail: string | null;
   enabled?: boolean;
   onDataChange?: () => void;
+  isStaff?: boolean;
 }
 
 export function useRealtimeNotifications({ 
   userEmail, 
   enabled = true,
   onDataChange,
+  isStaff = false,
 }: UseRealtimeNotificationsOptions) {
   const { toast } = useToast();
   const { addNotification } = useNotifications();
 
+  // Handle status changes for solicitantes (requesters)
   const handleStatusChange = useCallback((newData: Requisicao, oldData: Partial<Requisicao>) => {
     // Check if status actually changed
     if (oldData.status && newData.status !== oldData.status) {
@@ -57,18 +60,65 @@ export function useRealtimeNotifications({
     }
   }, [toast, addNotification, onDataChange]);
 
-  useEffect(() => {
-    if (!userEmail || !enabled) return;
-
-    console.log('[Realtime] Subscribing to notifications for:', userEmail);
-
-    // Subscribe to realtime changes on requisicoes table
-    // Use a unique channel name per user to avoid conflicts
-    const channelName = `requisicoes-status-${userEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  // Handle new requisitions for staff/compradores
+  const handleNewRequisicao = useCallback((newData: Requisicao) => {
+    const emoji = '🆕';
+    const title = `${emoji} Nova Requisição`;
+    const description = `${newData.solicitante_nome} solicitou: ${newData.item_nome}`;
     
-    const channel = supabase
-      .channel(channelName)
-      .on(
+    // Show toast notification
+    toast({
+      title,
+      description,
+      duration: 8000,
+    });
+
+    // Add to notification center
+    addNotification({
+      title: `Nova Requisição - ${newData.protocolo}`,
+      description: `${newData.solicitante_nome} (${newData.solicitante_setor}) solicitou: ${newData.item_nome}`,
+      type: 'info',
+      requisicaoId: newData.id,
+      itemNome: newData.item_nome,
+    });
+
+    // Trigger data refresh
+    onDataChange?.();
+  }, [toast, addNotification, onDataChange]);
+
+  useEffect(() => {
+    if (!enabled) return;
+    if (!isStaff && !userEmail) return;
+
+    console.log('[Realtime] Subscribing to notifications:', { userEmail, isStaff });
+
+    // Create unique channel name
+    const channelName = isStaff 
+      ? 'requisicoes-staff-notifications'
+      : `requisicoes-user-${userEmail?.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    
+    const channel = supabase.channel(channelName);
+
+    // For staff: listen for new requisitions (INSERT)
+    if (isStaff) {
+      channel.on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'requisicoes',
+        },
+        (payload) => {
+          const newData = payload.new as Requisicao;
+          console.log('[Realtime] New requisicao created:', newData.protocolo);
+          handleNewRequisicao(newData);
+        }
+      );
+    }
+
+    // For solicitantes: listen for status updates on their requisitions
+    if (userEmail && !isStaff) {
+      channel.on(
         'postgres_changes',
         {
           event: 'UPDATE',
@@ -89,15 +139,17 @@ export function useRealtimeNotifications({
             handleStatusChange(newData, oldData);
           }
         }
-      )
-      .subscribe((status) => {
-        console.log('[Realtime] Subscription status:', status);
-      });
+      );
+    }
+
+    channel.subscribe((status) => {
+      console.log('[Realtime] Subscription status:', status);
+    });
 
     // Cleanup subscription on unmount
     return () => {
       console.log('[Realtime] Unsubscribing from:', channelName);
       supabase.removeChannel(channel);
     };
-  }, [userEmail, enabled, handleStatusChange]);
+  }, [userEmail, enabled, isStaff, handleStatusChange, handleNewRequisicao]);
 }
