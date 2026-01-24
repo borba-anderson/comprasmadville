@@ -60,28 +60,43 @@ export function useRealtimeNotifications({
   useEffect(() => {
     if (!userEmail || !enabled) return;
 
+    console.log('[Realtime] Subscribing to notifications for:', userEmail);
+
     // Subscribe to realtime changes on requisicoes table
+    // Use a unique channel name per user to avoid conflicts
+    const channelName = `requisicoes-status-${userEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    
     const channel = supabase
-      .channel('requisicoes-status-changes')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
           event: 'UPDATE',
           schema: 'public',
           table: 'requisicoes',
-          filter: `solicitante_email=eq.${userEmail}`,
         },
         (payload) => {
-          handleStatusChange(
-            payload.new as Requisicao,
-            payload.old as Partial<Requisicao>
-          );
+          const newData = payload.new as Requisicao;
+          const oldData = payload.old as Partial<Requisicao>;
+          
+          // Check if this update is for the current user's requisitions
+          if (newData.solicitante_email === userEmail) {
+            console.log('[Realtime] Status change detected:', { 
+              old: oldData.status, 
+              new: newData.status,
+              item: newData.item_nome 
+            });
+            handleStatusChange(newData, oldData);
+          }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('[Realtime] Subscription status:', status);
+      });
 
     // Cleanup subscription on unmount
     return () => {
+      console.log('[Realtime] Unsubscribing from:', channelName);
       supabase.removeChannel(channel);
     };
   }, [userEmail, enabled, handleStatusChange]);

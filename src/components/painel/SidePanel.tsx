@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote, Ban, Wallet } from 'lucide-react';
+import { X, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, DollarSign, Paperclip, Download, Mail, Upload, Loader2, MessageCircle, Trash2, StickyNote, Ban, Wallet, RefreshCw } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -19,6 +19,24 @@ import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico } from '@/t
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// Status disponíveis para alteração manual
+const MANUAL_STATUS_OPTIONS: RequisicaoStatus[] = [
+  'pendente',
+  'em_analise',
+  'aprovado',
+  'cotando',
+  'comprado',
+  'em_entrega',
+  'recebido',
+];
 
 interface SidePanelProps {
   requisicao: Requisicao | null;
@@ -788,26 +806,40 @@ Qualquer dúvida, estamos à disposição!`;
                   {requisicao.arquivo_url.split(',').map((url, index) => {
                     const nomes = requisicao.arquivo_nome?.split(',') || [];
                     const nome = nomes[index] || `arquivo-${index + 1}`;
+                    const trimmedUrl = url.trim();
+                    
+                    // Download handler using download attribute + fallback to blob
+                    const handleDownload = async (e: React.MouseEvent) => {
+                      e.preventDefault();
+                      
+                      // Try direct download link first (works for most browsers with public files)
+                      const link = document.createElement('a');
+                      link.href = trimmedUrl;
+                      link.download = nome;
+                      link.target = '_blank';
+                      link.rel = 'noopener noreferrer';
+                      
+                      // Force download by using blob approach
+                      try {
+                        const response = await fetch(trimmedUrl, { mode: 'cors' });
+                        if (!response.ok) throw new Error('Fetch failed');
+                        const blob = await response.blob();
+                        const blobUrl = window.URL.createObjectURL(blob);
+                        link.href = blobUrl;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(blobUrl);
+                      } catch {
+                        // Fallback: open in new tab
+                        window.open(trimmedUrl, '_blank', 'noopener,noreferrer');
+                      }
+                    };
                     
                     return (
                       <div key={index} className="flex gap-2">
                         <button
-                          onClick={async () => {
-                            try {
-                              const response = await fetch(url.trim());
-                              const blob = await response.blob();
-                              const downloadUrl = window.URL.createObjectURL(blob);
-                              const link = document.createElement('a');
-                              link.href = downloadUrl;
-                              link.download = nome;
-                              document.body.appendChild(link);
-                              link.click();
-                              document.body.removeChild(link);
-                              window.URL.revokeObjectURL(downloadUrl);
-                            } catch {
-                              window.open(url.trim(), '_blank');
-                            }
-                          }}
+                          onClick={handleDownload}
                           className="flex-1 flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
                         >
                           <Paperclip className="w-4 h-4 flex-shrink-0" />
@@ -1120,8 +1152,79 @@ Qualquer dúvida, estamos à disposição!`;
 
         {/* Actions Footer - only for staff */}
         {!readOnly && (
-          <div className="p-4 border-t bg-muted/30 space-y-2">
+          <div className="p-4 border-t bg-muted/30 space-y-3">
+            {/* Seletor de Status Manual */}
+            {!['rejeitado', 'cancelado'].includes(requisicao.status) && (
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground uppercase flex items-center gap-1.5">
+                  <RefreshCw className="w-3 h-3" />
+                  Alterar Status Manualmente
+                </Label>
+                <Select
+                  value={requisicao.status}
+                  onValueChange={(value) => {
+                    if (value === 'rejeitado') {
+                      if (!motivoRejeicao.trim()) {
+                        toast({ title: 'Informe o motivo da rejeição acima', variant: 'destructive' });
+                        return;
+                      }
+                      updateStatus(value as RequisicaoStatus, motivoRejeicao);
+                    } else {
+                      updateStatus(value as RequisicaoStatus);
+                    }
+                  }}
+                  disabled={isUpdating}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MANUAL_STATUS_OPTIONS.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        <div className="flex items-center gap-2">
+                          <span className={cn('w-2 h-2 rounded-full', STATUS_CONFIG[status].dotColor)} />
+                          {STATUS_CONFIG[status].label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* Ações rápidas por status */}
             {requisicao.status === 'pendente' && (
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1"
+                  variant="success"
+                  onClick={() => updateStatus('aprovado')}
+                  disabled={isUpdating}
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Aprovar
+                </Button>
+                <Button
+                  className="flex-1"
+                  variant="destructive"
+                  onClick={() => {
+                    if (!motivoRejeicao.trim()) {
+                      toast({ title: 'Informe o motivo da rejeição', variant: 'destructive' });
+                      return;
+                    }
+                    updateStatus('rejeitado', motivoRejeicao);
+                  }}
+                  disabled={isUpdating}
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Rejeitar
+                </Button>
+              </div>
+            )}
+
+            {requisicao.status === 'em_analise' && (
               <div className="flex gap-2">
                 <Button
                   className="flex-1"
