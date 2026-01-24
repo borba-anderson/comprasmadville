@@ -132,6 +132,9 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Check if we have a verified domain - if using resend.dev, only works for test emails
+    const FROM_EMAIL = Deno.env.get("RESEND_FROM_EMAIL") || "Requisições <onboarding@resend.dev>";
+    
     // Send email via Resend API
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -140,7 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Requisições <onboarding@resend.dev>",
+        from: FROM_EMAIL,
         to: [data.to],
         subject: `[${data.protocolo}] Requisição ${statusLabel} - ${data.item_nome}`,
         html,
@@ -151,6 +154,21 @@ const handler = async (req: Request): Promise<Response> => {
     
     if (!response.ok) {
       console.error("Resend API error:", result);
+      
+      // If it's a domain verification error, log but don't fail the request
+      // This allows the app to work while email domain is not verified
+      if (result?.statusCode === 403 && result?.message?.includes("verify a domain")) {
+        console.warn("Email not sent - domain not verified. Configure RESEND_FROM_EMAIL with a verified domain.");
+        return new Response(
+          JSON.stringify({ 
+            success: true, 
+            warning: "Email not sent - domain verification required",
+            details: "Configure a verified domain at resend.com/domains and set RESEND_FROM_EMAIL secret"
+          }),
+          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+      
       return new Response(
         JSON.stringify({ success: false, error: result }),
         { status: response.status, headers: { "Content-Type": "application/json", ...corsHeaders } }
