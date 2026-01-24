@@ -45,18 +45,18 @@ import {
 } from "@/components/home";
 
 // ==========================================
-// 1. COMPONENTES VISUAIS (MOCKS) - RÉPLICAS FIÉIS
+// 1. COMPONENTES VISUAIS (MOCKS) - ESTILO CLEAN/MODERNO
 // ==========================================
 
 // MOCK 1: PAINEL DE REQUISIÇÕES
 const MockPainelScreen = () => (
-  <div className="w-full h-full bg-[#F3F4F6] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
+  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
     {/* Header Topo */}
     <div className="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-3 shrink-0">
       <div className="flex items-center gap-1.5">
         <div className="text-[8px] font-extrabold text-[#006746] tracking-tighter italic">GMAD</div>
         <div className="h-3 w-[1px] bg-slate-300"></div>
-        <span className="text-[7px] font-bold text-slate-700">Central de Compras Madville | Curitiba</span>
+        <span className="text-[7px] font-bold text-slate-700">Central de Compras</span>
       </div>
       <div className="flex gap-1.5 items-center">
         <Bell size={9} className="text-slate-400" />
@@ -68,7 +68,7 @@ const MockPainelScreen = () => (
     </div>
 
     {/* Linha de Cards de Status */}
-    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-[#F3F4F6]">
+    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-[#F8FAFC]">
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
         { l: "PENDENTES", v: "11", c: "orange", i: Clock },
@@ -142,104 +142,91 @@ const MockPainelScreen = () => (
         <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold shadow-sm">
           Status 4
         </div>
-        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center gap-0.5 text-[4.5px] font-bold text-slate-600 shadow-sm">
-          <Filter size={4} /> Mais filtros
-        </div>
       </div>
 
       {/* Cabeçalho Tabela */}
       <div className="flex bg-[#F9FAFB] px-3 py-1.5 border-b border-slate-200">
-        <div className="w-[30%] text-[4px] font-bold text-slate-400 uppercase flex items-center gap-0.5">
+        <div className="w-[35%] text-[4px] font-bold text-slate-400 uppercase flex items-center gap-0.5">
           Item <ArrowRight size={3} className="rotate-90" />
         </div>
-        <div className="w-[20%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Qtd</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Prioridade</div>
+        <div className="w-[25%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
         <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Status</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
+        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
+        <div className="w-[10%]"></div>
       </div>
 
       {/* Linhas */}
       <div className="flex-1 bg-white p-0 space-y-0 overflow-hidden">
         {/* Row 1 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
+          <div className="w-[35%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-700">Notebook Dell Latitude</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
               REQ-20260123{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[20%] pr-1">
+          <div className="w-[25%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Willian Henrique</div>
             <div className="text-[3.5px] text-slate-400">Comercial</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">1 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
           </div>
           <div className="w-[15%] text-center">
             <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
+          <div className="w-[10%] text-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
 
         {/* Row 2 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
+          <div className="w-[35%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente rosa</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
               REQ-20260123{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[20%] pr-1">
+          <div className="w-[25%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Eliane Cristina</div>
             <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">8 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
           </div>
           <div className="w-[15%] text-center">
             <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
+          <div className="w-[10%] text-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
 
         {/* Row 3 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Parafuso Phillips 6X</div>
+          <div className="w-[35%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-700">Alicate Universal</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
-              REQ-20260123{" "}
+              REQ-20260122{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Bruno Tarnowski</div>
-            <div className="text-[3.5px] text-slate-400">Manutenção</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">75 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
+          <div className="w-[25%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Kesia de Souza</div>
+            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
           </div>
           <div className="w-[15%] text-center">
-            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
-              PENDENTE
+            <span className="bg-purple-50 text-purple-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-purple-200 uppercase">
+              COTANDO
             </span>
           </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
+          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">22/01</div>
+          <div className="w-[10%] text-center text-slate-400">
+            <MoreHorizontal size={5} />
+          </div>
         </div>
       </div>
     </div>
@@ -450,7 +437,7 @@ const Hero3DComposition = () => {
 };
 
 // ==========================================
-// 3. NOVO SUBPAINEL GMAD (ELEMENTO ESTRUTURAL)
+// 3. NOVO SUBPAINEL GMAD (ADAPTADO PARA O CONTEXTO)
 // ==========================================
 const GMADHeaderBar = () => (
   // Fundo Verde Escuro GMAD (#006746)
@@ -512,12 +499,12 @@ const GMADHeaderBar = () => (
       </div>
     </div>
 
-    {/* Linha Inferior (Categorias de Suprimentos - ATUALIZADO) */}
+    {/* Linha Inferior (Menu de Categorias) */}
     <div className="bg-[#005c3e] border-t border-white/10">
       <div className="max-w-[1600px] mx-auto px-6 h-10 flex items-center justify-between text-white text-xs font-bold">
         <div className="flex items-center gap-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors">
           <Menu size={16} />
-          <span>Todos os Departamentos</span>
+          <span>Todas as Categorias</span>
         </div>
 
         <div className="flex items-center gap-8">
@@ -525,7 +512,6 @@ const GMADHeaderBar = () => (
           <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza e Copa</span>
         </div>
 
         <div className="flex items-center gap-6">
