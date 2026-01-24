@@ -53,195 +53,12 @@ import {
 } from "@/components/home";
 
 // ==================================================================================
-// OPÇÃO 1: HERO GLASS INTERFACE (Ativa por Padrão)
-// Foco: UI Limpa, Controle e Modernidade
-// ==================================================================================
-const HeroGlassInterface = () => {
-  return (
-    <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center lg:justify-end scale-[0.85] md:scale-100 origin-center lg:origin-right">
-      {/* Elemento Decorativo de Fundo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-green-100/40 rounded-full blur-3xl -z-10"></div>
-
-      {/* Janela Principal */}
-      <div className="relative w-[550px] h-[360px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform rotate-y-[-6deg] rotate-x-[4deg] transition-all hover:rotate-0 duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] group">
-        {/* Header da Janela */}
-        <div className="h-9 bg-slate-50 border-b border-slate-100 flex items-center px-4 gap-2">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-          </div>
-          <div className="mx-auto h-5 w-48 bg-white border border-slate-200 rounded-md text-[9px] flex items-center justify-center text-slate-400 font-mono">
-            central.gmad.com.br/dashboard
-          </div>
-        </div>
-
-        {/* Corpo do Dashboard Simulado */}
-        <div className="p-6 grid grid-cols-3 gap-4 bg-white/50 backdrop-blur-sm h-full">
-          {/* Card Principal (Economia) */}
-          <div className="col-span-2 h-32 bg-gradient-to-br from-[#f0fdf4] to-white rounded-xl border border-green-100 p-5 relative overflow-hidden shadow-sm">
-            <div className="absolute top-0 right-0 p-3 opacity-5">
-              <TrendingUp size={100} className="text-[#008651]" />
-            </div>
-            <div className="text-xs text-green-700 font-bold uppercase tracking-wider mb-1">Economia Gerada</div>
-            <div className="text-3xl font-extrabold text-[#008651] tracking-tight">R$ 142.500</div>
-            <div className="mt-4 flex flex-col gap-1">
-              <div className="flex justify-between text-[9px] text-green-600 font-bold">
-                <span>Meta</span>
-                <span>82%</span>
-              </div>
-              <div className="h-1.5 w-full bg-green-100 rounded-full overflow-hidden">
-                <div className="h-full w-[82%] bg-[#008651]"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card Secundário (SLA) */}
-          <div className="col-span-1 h-32 bg-white rounded-xl border border-slate-100 p-4 flex flex-col justify-center items-center shadow-sm relative">
-            <div className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-600 mb-2 border border-slate-100">
-              <Clock size={20} />
-            </div>
-            <div className="text-2xl font-extrabold text-slate-800">1.2d</div>
-            <div className="text-[9px] text-slate-400 font-bold text-center uppercase mt-1">Tempo Médio</div>
-          </div>
-
-          {/* Lista de Atividades */}
-          <div className="col-span-3 space-y-2.5 mt-1">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-10 w-full border border-slate-100 bg-white rounded-lg flex items-center px-3 gap-3 shadow-sm hover:border-green-200 transition-colors"
-              >
-                <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-[8px] font-bold text-slate-500">
-                  #{420 + i}
-                </div>
-                <div className="flex-1 space-y-1">
-                  <div className="h-1.5 w-24 bg-slate-200 rounded"></div>
-                  <div className="h-1 w-12 bg-slate-100 rounded"></div>
-                </div>
-                <div className="ml-auto px-2 py-0.5 bg-green-50 text-green-700 text-[8px] font-bold rounded border border-green-100">
-                  Aprovado
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Floating Card 1 - Notificação */}
-        <div className="absolute top-24 -left-8 bg-white p-3 rounded-lg shadow-[0_10px_30px_-5px_rgba(0,0,0,0.1)] border border-slate-100 flex items-center gap-3 animate-float z-20">
-          <div className="bg-green-100 p-2 rounded-full text-[#008651]">
-            <CheckCircle size={20} />
-          </div>
-          <div>
-            <div className="text-[9px] text-slate-400 font-bold uppercase">Status Atualizado</div>
-            <div className="text-xs font-bold text-slate-700">3 Ordens Aprovadas</div>
-          </div>
-        </div>
-
-        {/* Floating Card 2 - Segurança */}
-        <div className="absolute bottom-8 -right-6 bg-slate-900 p-3 rounded-lg shadow-2xl flex items-center gap-3 animate-float-delayed z-20">
-          <div className="bg-slate-700 p-2 rounded-full text-green-400">
-            <ShieldCheck size={18} />
-          </div>
-          <div>
-            <div className="text-[9px] text-slate-400 font-bold uppercase">Segurança</div>
-            <div className="text-xs font-bold text-white">Acesso Validado</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ==================================================================================
-// OPÇÃO 2: BENTO GRID
-// Foco: Agilidade, Números e Tecnologia
-// ==================================================================================
-const HeroBentoGrid = () => {
-  return (
-    <div className="w-full max-w-[550px] h-[400px] grid grid-cols-2 grid-rows-2 gap-4 lg:ml-auto scale-[0.9] md:scale-100 origin-center lg:origin-right">
-      {/* Bloco 1: Principal - Escuro (Destaque Marca) */}
-      <div className="row-span-2 bg-[#008651] rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group border border-green-700/50">
-        {/* Efeito de Fundo */}
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-all duration-500"></div>
-
-        <div>
-          <div className="bg-white/20 w-fit p-2.5 rounded-lg mb-4 backdrop-blur-md shadow-inner">
-            <Zap className="text-white fill-current" size={24} />
-          </div>
-          <h3 className="text-white text-2xl font-bold mb-1 tracking-tight">Agilidade</h3>
-          <p className="text-green-100 text-sm font-medium leading-relaxed">
-            Processos de compra reduzidos de dias para minutos.
-          </p>
-        </div>
-
-        <div className="space-y-2 relative z-10">
-          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300">
-            <CheckCircle size={14} className="text-green-300" /> Cotação Automática
-          </div>
-          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300 delay-75">
-            <CheckCircle size={14} className="text-green-300" /> Fluxo Integrado
-          </div>
-          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300 delay-100">
-            <CheckCircle size={14} className="text-green-300" /> Gestão Madville
-          </div>
-        </div>
-      </div>
-
-      {/* Bloco 2: Gráfico (Performance) */}
-      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
-        <div className="flex justify-between items-start">
-          <div className="bg-orange-50 p-2.5 rounded-lg text-orange-600 border border-orange-100">
-            <BarChart size={22} />
-          </div>
-          <span className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1 border border-green-100">
-            <ArrowUpRight size={10} /> +24%
-          </span>
-        </div>
-        <div>
-          <div className="text-3xl font-extrabold text-slate-900 tracking-tight">850+</div>
-          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Pedidos Processados/Mês</div>
-        </div>
-      </div>
-
-      {/* Bloco 3: Usuários/Conexão (Equipe) */}
-      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 delay-75">
-        {/* Pattern Fundo */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-70"></div>
-
-        <div className="bg-blue-50 w-fit p-2.5 rounded-lg text-blue-600 relative z-10 border border-blue-100">
-          <Users size={22} />
-        </div>
-
-        <div className="relative z-10">
-          <div className="flex -space-x-3 mb-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="w-9 h-9 rounded-full bg-slate-100 border-[3px] border-white flex items-center justify-center text-[10px] font-bold text-slate-600 shadow-sm"
-              >
-                U{i}
-              </div>
-            ))}
-            <div className="w-9 h-9 rounded-full bg-slate-800 border-[3px] border-white flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-              +50
-            </div>
-          </div>
-          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Equipes Conectadas</div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ==================================================================================
-// OPÇÃO 3: ABSTRACT NETWORK
+// OPÇÃO 3: ABSTRACT NETWORK (ATIVA)
 // Foco: Conexão Madville - Curitiba e Institucional
 // ==================================================================================
 const HeroNetworkMap = () => {
   return (
-    <div className="relative w-full h-[400px] flex items-center justify-center scale-[0.9] lg:scale-100">
+    <div className="relative w-full h-[400px] flex items-center justify-center scale-[0.85] lg:scale-100 origin-center lg:origin-right">
       {/* Background Map Grid (Técnico) */}
       <div className="absolute inset-0 grid grid-cols-8 grid-rows-6 gap-6 opacity-20 pointer-events-none">
         {[...Array(48)].map((_, i) => (
@@ -343,377 +160,142 @@ const HeroNetworkMap = () => {
 };
 
 // ==================================================================================
-// OPÇÃO 4 (Original): HERO 3D COMPOSITION
-// Foco: Realismo, Mostrar o Sistema "Ao Vivo"
+// OUTRAS OPÇÕES (DEFINIDAS MAS INATIVAS PARA FÁCIL TROCA)
 // ==================================================================================
 
-// MOCKS DE APOIO PARA A OPÇÃO 4
-const MockPainelScreen = () => (
-  <div className="w-full h-full bg-[#F3F4F6] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
-    <div className="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-3 shrink-0">
-      <div className="flex items-center gap-1.5">
-        <div className="text-[8px] font-extrabold text-[#008651] tracking-tighter italic">GMAD</div>
-        <div className="h-3 w-[1px] bg-slate-300"></div>
-        <span className="text-[7px] font-bold text-slate-700">Central de Compras Madville | Curitiba</span>
-      </div>
-      <div className="flex gap-1.5 items-center">
-        <Bell size={9} className="text-slate-400" />
-        <div className="flex items-center gap-1 bg-slate-50 px-1.5 py-0.5 rounded-full border border-slate-200">
-          <User size={8} className="text-slate-600" />
-          <span className="text-[6px] text-slate-700 font-bold">Ruan Wilt</span>
-        </div>
-      </div>
-    </div>
-    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-[#F3F4F6]">
-      {[
-        { l: "TOTAL", v: "76", c: "slate", i: FileText },
-        { l: "PENDENTES", v: "11", c: "orange", i: Clock },
-        { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp },
-        { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
-        { l: "COTANDO", v: "5", c: "slate", i: Package },
-        { l: "COMPRADOS", v: "37", c: "teal", i: ShoppingCart },
-        { l: "REJEITADOS", v: "1", c: "red", i: XCircle },
-      ].map((card, idx) => (
-        <div
-          key={idx}
-          className={`bg-white rounded-[3px] p-1.5 min-w-[35px] flex-1 shadow-sm border border-slate-100 flex flex-col justify-between h-9 relative overflow-hidden`}
-        >
-          <div className="flex justify-between items-start">
-            <span
-              className={`text-[3.5px] text-${card.c === "slate" ? "slate-400" : card.c + "-500"} font-bold uppercase`}
-            >
-              {card.l}
-            </span>
-            <card.i size={5} className={`text-${card.c === "slate" ? "slate-300" : card.c + "-400"}`} />
-          </div>
-          <div
-            className={`text-[11px] font-bold text-${card.c === "slate" ? "slate-700" : card.c + "-600"} leading-none`}
-          >
-            {card.v}
-          </div>
-        </div>
-      ))}
-    </div>
-    <div className="px-3 flex gap-1 mt-0">
-      <div className="bg-white px-2 py-1 rounded-t-[3px] flex items-center gap-1 shadow-sm border-t border-x border-slate-200 relative z-10 top-[1px]">
-        <FileText size={5} className="text-slate-700" />
-        <span className="text-[5px] font-bold text-slate-700">Requisições</span>
-      </div>
-      <div className="px-2 py-1 flex items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors">
-        <DollarSign size={5} />
-        <span className="text-[5px] font-bold">Dashboard</span>
-      </div>
-    </div>
-    <div className="bg-white flex-1 border-t border-slate-200 flex flex-col mx-0">
-      <div className="bg-white px-3 py-1.5 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex gap-1 items-center">
-          <span className="text-[4.5px] text-slate-400 mr-1 font-medium">Visões rápidas:</span>
-          <div className="bg-slate-800 text-white px-2 py-0.5 rounded-[2px] text-[4.5px] font-bold flex items-center gap-0.5">
-            <List size={4} /> Pendências
-          </div>
-          <div className="bg-white border border-slate-200 text-slate-500 px-2 py-0.5 rounded-[2px] text-[4.5px] font-bold">
-            Aguardando
-          </div>
-          <div className="bg-white border border-slate-200 text-slate-500 px-2 py-0.5 rounded-[2px] text-[4.5px] font-bold flex items-center gap-0.5">
-            <CheckCircle size={4} /> Finalizados
-          </div>
-        </div>
-        <span className="text-[4.5px] text-slate-400 font-bold">17 de 76</span>
-      </div>
-      <div className="bg-white px-3 py-1.5 border-b border-slate-100 flex gap-1 items-center">
-        <div className="h-5 flex-1 bg-white border border-slate-200 rounded-[3px] flex items-center px-1.5 gap-1 shadow-sm">
-          <Search size={6} className="text-slate-300" />
-          <span className="text-[4.5px] text-slate-300">Buscar item, solicitante...</span>
-        </div>
-        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold gap-0.5 shadow-sm">
-          <LayoutGrid size={4} /> Empresa
-        </div>
-        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold shadow-sm">
-          Status 4
-        </div>
-        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center gap-0.5 text-[4.5px] font-bold text-slate-600 shadow-sm">
-          <Filter size={4} /> Mais filtros
-        </div>
-      </div>
-      <div className="flex bg-[#F9FAFB] px-3 py-1.5 border-b border-slate-200">
-        <div className="w-[30%] text-[4px] font-bold text-slate-400 uppercase flex items-center gap-0.5">
-          Item <ArrowRight size={3} className="rotate-90" />
-        </div>
-        <div className="w-[20%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Qtd</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Prioridade</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Status</div>
-        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
-      </div>
-      <div className="flex-1 bg-white p-0 space-y-0 overflow-hidden">
-        <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Notebook Dell Latitude</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
-              REQ-20260123{" "}
-              <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
-            </div>
-          </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Willian Henrique</div>
-            <div className="text-[3.5px] text-slate-400">Comercial</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">1 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
-          </div>
-          <div className="w-[15%] text-center">
-            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
-              PENDENTE
-            </span>
-          </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
-        </div>
-        <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente rosa</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
-              REQ-20260123{" "}
-              <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
-            </div>
-          </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Eliane Cristina</div>
-            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">8 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
-          </div>
-          <div className="w-[15%] text-center">
-            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
-              PENDENTE
-            </span>
-          </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
-        </div>
-        <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[30%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Parafuso Phillips 6X</div>
-            <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
-              REQ-20260123{" "}
-              <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
-            </div>
-          </div>
-          <div className="w-[20%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Bruno Tarnowski</div>
-            <div className="text-[3.5px] text-slate-400">Manutenção</div>
-          </div>
-          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">75 un</div>
-          <div className="w-[15%] text-center">
-            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
-            </div>
-          </div>
-          <div className="w-[15%] text-center">
-            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
-              PENDENTE
-            </span>
-          </div>
-          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const MockFormScreen = () => (
-  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
-    <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
-      <ArrowRight size={5} className="rotate-180" /> Voltar ao início
-    </div>
-    <div className="px-4 py-1 border-b border-slate-50">
-      <div className="flex justify-between items-center relative z-10">
-        {[1, 2, 3, 4, 5].map((step) => (
-          <div
-            key={step}
-            className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[5px] font-bold ${step === 1 ? "bg-slate-800 text-white" : "bg-white border border-slate-200 text-slate-300"}`}
-          >
-            {step}
-          </div>
-        ))}
-      </div>
-      <div className="absolute top-[20px] left-[15%] w-[70%] h-[0.5px] bg-slate-100 -z-0"></div>
-    </div>
-    <div className="p-3 flex-1 flex flex-col">
-      <h3 className="text-[7px] font-bold text-slate-800 mb-0.5">Dados do Solicitante</h3>
-      <p className="text-[4.5px] text-slate-400 mb-2">Confirme seus dados para identificação</p>
-      <div className="grid grid-cols-2 gap-2 mb-2">
-        <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
-            GMAD Madville
-          </div>
-        </div>
-        <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
-            Ruan Wilt
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2 mb-2">
-        <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
-            ruan@madville...
-          </div>
-        </div>
-        <div className="space-y-0.5">
-          <div className="h-4 w-full border border-slate-200 rounded bg-white flex items-center px-1 text-[4px] text-slate-600">
-            (47) 99999-9999
-          </div>
-        </div>
-      </div>
-      <div className="mt-auto flex justify-between pt-1.5 border-t border-slate-50">
-        <div className="h-4 px-2 rounded border border-slate-200 flex items-center text-[4.5px] font-bold text-slate-500">
-          Voltar
-        </div>
-        <div className="h-4 px-2 rounded bg-slate-800 flex items-center text-[4.5px] font-bold text-white">Próximo</div>
-      </div>
-    </div>
-  </div>
-);
-
-const MockChartScreen = () => (
-  <div className="w-full h-full bg-[#F9FAFB] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-3 font-sans">
-    <div className="flex gap-2 h-[55%] mb-2">
-      <div className="w-[45%] bg-white rounded-lg border border-slate-100 p-2 flex flex-col">
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex items-center gap-1">
-            <div className="bg-purple-100 p-0.5 rounded">
-              <LayoutGrid size={4} className="text-purple-600" />
-            </div>
-            <span className="text-[5px] font-bold text-slate-800">Funil do Processo</span>
-          </div>
-          <span className="text-[3.5px] bg-red-100 text-red-600 px-1 py-0.5 rounded font-bold">20 atrasadas</span>
-        </div>
-        <div className="flex-1 flex flex-col gap-1 justify-center">
-          <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-5 text-slate-400">Pendentes</span>
-            <div className="flex-1 h-2 bg-orange-400 rounded-r relative w-[20%]">
-              <span className="absolute left-1 top-[1px] text-[3.5px] text-white font-bold">11</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-5 text-slate-400">Cotando</span>
-            <div className="flex-1 h-2 bg-purple-500 rounded-r relative w-[10%]">
-              <span className="absolute left-1 top-[1px] text-[3.5px] text-white font-bold">5</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-5 text-slate-400">Comprados</span>
-            <div className="flex-1 h-2 bg-cyan-500 rounded-r relative w-[80%]">
-              <span className="absolute left-1 top-[1px] text-[3.5px] text-white font-bold">37</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-[3.5px] w-5 text-slate-400">Recebidos</span>
-            <div className="flex-1 h-2 bg-green-600 rounded-r relative w-[30%]">
-              <span className="absolute left-1 top-[1px] text-[3.5px] text-white font-bold">12</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex-1 bg-white rounded-lg border border-slate-100 p-2 flex flex-col">
-        <div className="flex items-center gap-1 mb-1">
-          <div className="bg-slate-100 p-0.5 rounded">
-            <AlertCircle size={4} className="text-slate-600" />
-          </div>
-          <span className="text-[5px] font-bold text-slate-800">Indicadores</span>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5 flex-1">
-          <div className="bg-red-50 p-1 rounded border border-red-50 flex flex-col justify-center">
-            <span className="text-[3.5px] text-red-400 mb-0.5">Taxa Conclusão</span>
-            <span className="text-[8px] font-bold text-red-600 leading-none">17%</span>
-          </div>
-          <div className="bg-green-50 p-1 rounded border border-green-50 flex flex-col justify-center">
-            <span className="text-[3.5px] text-green-500 mb-0.5">Tempo Médio</span>
-            <span className="text-[8px] font-bold text-green-700 leading-none">1.6d</span>
-          </div>
-          <div className="bg-red-50 p-1 rounded border border-red-50 flex flex-col justify-center">
-            <span className="text-[3.5px] text-red-400 mb-0.5">Atrasadas</span>
-            <span className="text-[8px] font-bold text-red-600 leading-none">20</span>
-          </div>
-          <div className="bg-blue-50 p-1 rounded border border-blue-50 flex flex-col justify-center">
-            <span className="text-[3.5px] text-blue-400 mb-0.5">Aguardando</span>
-            <span className="text-[8px] font-bold text-blue-600 leading-none">40</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="flex gap-2 h-[45%]">
-      <div className="flex-1 bg-white rounded-lg border border-slate-100 p-2">
-        <div className="flex items-center gap-1 mb-1">
-          <div className="bg-green-50 p-0.5 rounded">
-            <Briefcase size={4} className="text-green-600" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[5px] font-bold text-slate-800 leading-none">Economia Gerada</span>
-            <span className="text-[3px] text-slate-400">18 compras analisadas</span>
-          </div>
-        </div>
-        <div className="flex gap-2 mt-1">
-          <div>
-            <span className="text-[3.5px] text-slate-400 block">Total Orçado</span>
-            <span className="text-[6px] font-bold text-slate-700">R$ 24,7k</span>
-          </div>
-          <div>
-            <span className="text-[3.5px] text-slate-400 block">Economia</span>
-            <span className="text-[6px] font-bold text-green-600">R$ 4,6k</span>
-          </div>
-        </div>
-        <div className="mt-1.5 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-          <div className="h-full w-[80%] bg-green-500 rounded-full"></div>
-        </div>
-      </div>
-      <div className="flex-1 bg-white rounded-lg border border-slate-100 p-2 flex flex-col">
-        <div className="flex items-center gap-1 mb-1">
-          <div className="bg-green-50 p-0.5 rounded">
-            <DollarSign size={4} className="text-green-600" />
-          </div>
-          <span className="text-[5px] font-bold text-slate-800">Por Empresa</span>
-        </div>
-        <div className="flex-1 flex items-end justify-around gap-1 pb-1">
-          <div className="w-1.5 h-[60%] bg-slate-400 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[50%] bg-green-500 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[30%] bg-slate-400 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[20%] bg-green-500 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[40%] bg-slate-400 rounded-t-[1px]"></div>
-          <div className="w-1.5 h-[35%] bg-green-500 rounded-t-[1px]"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const Hero3DComposition = () => {
+const HeroGlassInterface = () => {
   return (
-    <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
-      <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] bg-white rounded-xl z-10 transition-all duration-500">
-          <MockPainelScreen />
+    <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center lg:justify-end scale-[0.85] md:scale-100 origin-center lg:origin-right">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-green-100/40 rounded-full blur-3xl -z-10"></div>
+      <div className="relative w-[550px] h-[360px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform rotate-y-[-6deg] rotate-x-[4deg] transition-all hover:rotate-0 duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] group">
+        <div className="h-9 bg-slate-50 border-b border-slate-100 flex items-center px-4 gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+          </div>
+          <div className="mx-auto h-5 w-48 bg-white border border-slate-200 rounded-md text-[9px] flex items-center justify-center text-slate-400 font-mono">
+            central.gmad.com.br/dashboard
+          </div>
         </div>
-        <div className="absolute top-[10%] -right-[30%] w-[320px] md:w-[420px] h-[220px] md:h-[280px] transform [transform:translateZ(50px)] shadow-[0_40px_70px_rgba(0,0,0,0.15)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(70px)_scale(1.05)] border border-slate-200">
-          <MockChartScreen />
-        </div>
-        <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
-          <MockFormScreen />
+        <div className="p-6 grid grid-cols-3 gap-4 bg-white/50 backdrop-blur-sm h-full">
+          <div className="col-span-2 h-32 bg-gradient-to-br from-[#f0fdf4] to-white rounded-xl border border-green-100 p-5 relative overflow-hidden shadow-sm">
+            <div className="absolute top-0 right-0 p-3 opacity-5">
+              <TrendingUp size={100} className="text-[#008651]" />
+            </div>
+            <div className="text-xs text-green-700 font-bold uppercase tracking-wider mb-1">Economia Gerada</div>
+            <div className="text-3xl font-extrabold text-[#008651] tracking-tight">R$ 142.500</div>
+            <div className="mt-4 flex flex-col gap-1">
+              <div className="flex justify-between text-[9px] text-green-600 font-bold">
+                <span>Meta</span>
+                <span>82%</span>
+              </div>
+              <div className="h-1.5 w-full bg-green-100 rounded-full overflow-hidden">
+                <div className="h-full w-[82%] bg-[#008651]"></div>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-1 h-32 bg-white rounded-xl border border-slate-100 p-4 flex flex-col justify-center items-center shadow-sm relative">
+            <div className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-600 mb-2 border border-slate-100">
+              <Clock size={20} />
+            </div>
+            <div className="text-2xl font-extrabold text-slate-800">1.2d</div>
+            <div className="text-[9px] text-slate-400 font-bold text-center uppercase mt-1">Tempo Médio</div>
+          </div>
+          <div className="col-span-3 space-y-2.5 mt-1">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-10 w-full border border-slate-100 bg-white rounded-lg flex items-center px-3 gap-3 shadow-sm hover:border-green-200 transition-colors"
+              >
+                <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-[8px] font-bold text-slate-500">
+                  #{420 + i}
+                </div>
+                <div className="flex-1 space-y-1">
+                  <div className="h-1.5 w-24 bg-slate-200 rounded"></div>
+                  <div className="h-1 w-12 bg-slate-100 rounded"></div>
+                </div>
+                <div className="ml-auto px-2 py-0.5 bg-green-50 text-green-700 text-[8px] font-bold rounded border border-green-100">
+                  Aprovado
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 w-[60%] h-[20px] bg-black/20 blur-xl rounded-[100%] transform rotate-x-60"></div>
+    </div>
+  );
+};
+
+const HeroBentoGrid = () => {
+  return (
+    <div className="w-full max-w-[550px] h-[400px] grid grid-cols-2 grid-rows-2 gap-4 lg:ml-auto scale-[0.9] md:scale-100 origin-center lg:origin-right">
+      <div className="row-span-2 bg-[#008651] rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group border border-green-700/50">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-all duration-500"></div>
+        <div>
+          <div className="bg-white/20 w-fit p-2.5 rounded-lg mb-4 backdrop-blur-md shadow-inner">
+            <Zap className="text-white fill-current" size={24} />
+          </div>
+          <h3 className="text-white text-2xl font-bold mb-1 tracking-tight">Agilidade</h3>
+          <p className="text-green-100 text-sm font-medium leading-relaxed">
+            Processos de compra reduzidos de dias para minutos.
+          </p>
+        </div>
+        <div className="space-y-2 relative z-10">
+          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300">
+            <CheckCircle size={14} className="text-green-300" /> Cotação Automática
+          </div>
+          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300 delay-75">
+            <CheckCircle size={14} className="text-green-300" /> Fluxo Integrado
+          </div>
+          <div className="bg-black/20 p-2.5 rounded-lg flex items-center gap-3 text-white text-xs font-bold backdrop-blur-sm border border-white/5 transform transition-transform group-hover:translate-x-1 duration-300 delay-100">
+            <CheckCircle size={14} className="text-green-300" /> Gestão Madville
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
+        <div className="flex justify-between items-start">
+          <div className="bg-orange-50 p-2.5 rounded-lg text-orange-600 border border-orange-100">
+            <BarChart size={22} />
+          </div>
+          <span className="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1 border border-green-100">
+            <ArrowUpRight size={10} /> +24%
+          </span>
+        </div>
+        <div>
+          <div className="text-3xl font-extrabold text-slate-900 tracking-tight">850+</div>
+          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Pedidos Processados/Mês</div>
+        </div>
+      </div>
+      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 delay-75">
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-70"></div>
+        <div className="bg-blue-50 w-fit p-2.5 rounded-lg text-blue-600 relative z-10 border border-blue-100">
+          <Users size={22} />
+        </div>
+        <div className="relative z-10">
+          <div className="flex -space-x-3 mb-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="w-9 h-9 rounded-full bg-slate-100 border-[3px] border-white flex items-center justify-center text-[10px] font-bold text-slate-600 shadow-sm"
+              >
+                U{i}
+              </div>
+            ))}
+            <div className="w-9 h-9 rounded-full bg-slate-800 border-[3px] border-white flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+              +50
+            </div>
+          </div>
+          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Equipes Conectadas</div>
+        </div>
+      </div>
     </div>
   );
 };
 
 // ==========================================
-// 3. NOVO SUBPAINEL GMAD (ADAPTADO)
+// 3. NOVO SUBPAINEL GMAD (ADAPTADO PARA O CONTEXTO)
 // ==========================================
 const GMADHeaderBar = () => (
   <div className="w-full bg-[#006746] font-sans">
@@ -776,7 +358,7 @@ const GMADHeaderBar = () => (
           <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza e Copa</span>
         </div>
         <div className="flex items-center gap-6">
           <button className="bg-[#E85D4E] hover:bg-[#d64d3e] text-white px-4 py-1 rounded transition-colors text-xs font-bold shadow-sm flex items-center gap-1">
@@ -800,14 +382,13 @@ const Index = () => {
     <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'); .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; } body { font-family: 'Plus Jakarta Sans', sans-serif; }`}</style>
 
-      {/* Subpainel GMAD */}
       <div className="relative z-50 shadow-md">
         <GMADHeaderBar />
       </div>
       <div className="relative z-10">
         <Header />
         <main className="max-w-[1440px] mx-auto">
-          {/* === 1. HERO SECTION (OPÇÃO 1: GLASS INTERFACE) === */}
+          {/* === 1. HERO SECTION === */}
           <section className="px-6 md:px-12 pt-12 pb-16 lg:pt-24 lg:pb-24 flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[500px]">
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
               <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4.5rem] font-extrabold text-[#1A1A1A] mb-6 tracking-tight leading-[1.1] max-w-[700px]">
@@ -827,20 +408,14 @@ const Index = () => {
               </div>
             </div>
             <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20 lg:-mr-10">
-              {/* ESCOLHA AQUI O SEU HERO COMPONENT: */}
-              <HeroGlassInterface />
-              {/* <HeroBentoGrid /> */}
-              {/* <HeroNetworkMap /> */}
-              {/* <Hero3DComposition /> */}
+              {/* === OPÇÃO 3 ATIVA === */}
+              <HeroNetworkMap />
             </div>
           </section>
 
-          {/* Logos */}
           <div className="pb-12 relative z-20 border-b border-slate-200">
             <LogoMarquee />
           </div>
-
-          {/* === 2. SAUDAÇÃO E STATS === */}
           {user && (
             <section className="mt-12 mb-12 px-6 md:px-12 animate-fade-in relative z-20">
               <UserGreeting />
@@ -849,13 +424,9 @@ const Index = () => {
               </div>
             </section>
           )}
-
-          {/* === 3. AÇÕES RÁPIDAS === */}
           <div className="mb-20 px-6 md:px-12 relative z-20">
             <ActionCards />
           </div>
-
-          {/* === 4. COMO FUNCIONA === */}
           <section className="py-24 bg-[#F5F5F5] relative overflow-hidden border-t border-slate-200">
             <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -874,9 +445,7 @@ const Index = () => {
               </div>
             </div>
           </section>
-
           <WorkflowTimeline />
-
           <footer className="py-12 text-center mt-0 border-t border-slate-200 bg-white">
             <p className="text-slate-600 text-sm font-bold font-jakarta">
               © 2026 GMAD Madville | Curitiba - Central de Compras
