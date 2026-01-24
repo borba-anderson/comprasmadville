@@ -30,9 +30,6 @@ import {
   List,
   AlertCircle,
   Briefcase,
-  MapPin, // Adicionado (usado no GMADHeaderBar mas não estava no import original)
-  Heart, // Adicionado (usado no GMADHeaderBar mas não estava no import original)
-  ShoppingBag, // Adicionado (usado no GMADHeaderBar mas não estava no import original)
 } from "lucide-react";
 import {
   UserGreeting,
@@ -456,115 +453,25 @@ const Hero3DComposition = () => {
 };
 
 // ==========================================
-// 3. NOVO SUBPAINEL GMAD (ADAPTADO PARA O CONTEXTO)
-// ==========================================
-const GMADHeaderBar = () => (
-  // Fundo Verde Escuro GMAD (#006746)
-  <div className="w-full bg-[#006746] font-sans">
-    {/* Linha Superior (Links Pequenos) */}
-    <div className="max-w-[1600px] mx-auto px-6 h-8 flex items-center justify-between text-[10px] text-white/90 border-b border-white/10 hidden md:flex">
-      <div className="flex gap-4">
-        <span className="hover:text-white cursor-pointer">Grupo GMAD</span>
-        <span className="hover:text-white cursor-pointer">Soluções Financeiras G+</span>
-        <span className="hover:text-white cursor-pointer">Combinações MDF</span>
-      </div>
-      <div className="flex gap-4">
-        <span className="hover:text-white cursor-pointer">Atendimento</span>
-        <span className="hover:text-white cursor-pointer">Chamados</span>
-        <span className="hover:text-white cursor-pointer font-bold">Suporte TI</span>
-      </div>
-    </div>
-
-    {/* Linha Principal (Busca e Usuário) */}
-    <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
-      {/* Logo GMAD (Branco) */}
-      <div className="text-3xl font-extrabold text-white tracking-tighter italic">GMAD</div>
-
-      {/* Barra de Busca (Branca Centralizada) */}
-      <div className="flex-1 max-w-2xl relative hidden md:block">
-        <input
-          type="text"
-          placeholder="O que você está procurando?"
-          className="w-full h-10 pl-4 pr-10 rounded text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-        <Search className="absolute right-3 top-2.5 text-slate-400" size={18} />
-      </div>
-
-      {/* Ações (Ícones e Texto) - ADAPTADO PARA SISTEMA INTERNO */}
-      <div className="flex items-center gap-6 text-white">
-        <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-          <MapPin size={24} />
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-medium opacity-80">Unidade</span>
-            <span className="text-xs font-bold">Madville Joinville</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-          <User size={24} />
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-medium opacity-80">Departamento</span>
-            <span className="text-xs font-bold">Compras & TI</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 ml-2 border-l border-white/20 pl-6">
-          <Heart size={24} className="hover:opacity-80 cursor-pointer" />
-          <div className="relative cursor-pointer hover:opacity-80">
-            <ShoppingBag size={24} />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-              3
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Linha Inferior (Menu de Categorias) */}
-    <div className="bg-[#005c3e] border-t border-white/10 hidden md:block">
-      <div className="max-w-[1600px] mx-auto px-6 h-10 flex items-center justify-between text-white text-xs font-bold">
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors">
-          <Menu size={16} />
-          <span>Todas as Categorias</span>
-        </div>
-
-        <div className="flex items-center gap-8">
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Material de Escritório</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza e Copa</span>
-        </div>
-
-        <div className="flex items-center gap-6">
-          <button className="bg-[#E85D4E] hover:bg-[#d64d3e] text-white px-4 py-1 rounded transition-colors text-xs font-bold shadow-sm flex items-center gap-1">
-            <AlertCircle size={12} /> Solicitação Urgente
-          </button>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Itens Recorrentes</span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// ==========================================
-// 4. PÁGINA PRINCIPAL
+// 3. PÁGINA PRINCIPAL (INDEX)
 // ==========================================
 
 const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
+    <div className="min-h-screen bg-[#F8FAFC] relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
           .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-          body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+          body { font-family: 'Plus Jakarta Sans', sans-serif; }
         `}
       </style>
 
-      {/* HEADER + SUBPAINEL GMAD */}
-      <div className="relative z-50 shadow-md">
-        <GMADHeaderBar />
+      {/* Background Limpo */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/40 rounded-full blur-3xl opacity-50"></div>
       </div>
 
       <div className="relative z-10">
@@ -572,77 +479,73 @@ const Index = () => {
 
         <main className="max-w-[1440px] mx-auto">
           {/* === 1. HERO SECTION === */}
-          <section className="px-6 md:px-12 pt-16 pb-24 lg:pt-20 lg:pb-28 overflow-hidden">
-            <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-              {/* Texto Hero */}
-              <div className="flex-1 relative z-20 text-center lg:text-left">
-                {/* -------------------- MUDANÇA AQUI -------------------- */}
-                <h1 className="font-jakarta text-5xl sm:text-6xl lg:text-[5rem] font-bold text-slate-900 tracking-tight leading-[1.1] mb-6">
-                  Central de Compras <br />
-                  <span className="text-[#008651]">e Requisições.</span>
-                </h1>
-                {/* ------------------------------------------------------ */}
+          <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
+            {/* Texto Hero */}
+            <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
+              {/* Título Ajustado: CENTRAL DE COMPRAS E REQUISIÇÕES */}
+              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
+                Central de Compras <br />
+                <span className="text-[#008651]">e Requisições.</span>
+              </h1>
 
-                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl mb-10 mx-auto lg:mx-0">
-                  Plataforma unificada para gestão de suprimentos e requisições corporativas. Controle total para{" "}
-                  <strong>Madville</strong> e <strong>Curitiba</strong>.
-                </p>
+              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
+                Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
+                gestão.
+              </p>
 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                  <Link to="/painel" className="w-full sm:w-auto">
-                    <button className="w-full sm:w-auto bg-[#008651] hover:bg-[#006e42] text-white text-lg font-bold px-10 py-4 rounded-md shadow-lg shadow-green-900/20 transition-all hover:-translate-y-1 flex items-center justify-center gap-3">
-                      Acessar Painel <ArrowRight size={20} strokeWidth={3} />
-                    </button>
-                  </Link>
-                </div>
-              </div>
-
-              {/* 3D Composition */}
-              <div className="flex-1 w-full relative z-10 lg:h-[600px] flex items-center justify-center">
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-green-50/50 rounded-full blur-3xl -z-10 opacity-60 translate-x-1/3 -translate-y-1/4"></div>
-                <Hero3DComposition />
-              </div>
-            </div>
-          </section>
-
-          {/* === LOGOS === */}
-          <div className="border-y border-slate-100 bg-white py-12">
-            <div className="max-w-[1600px] mx-auto px-6">
-              <LogoMarquee />
-            </div>
-          </div>
-
-          {/* === SEÇÃO DE AÇÕES RÁPIDAS === */}
-          <section className="py-24 bg-white">
-            <div className="max-w-[1600px] mx-auto px-6 md:px-12">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-slate-100 pb-6">
-                <div>
-                  <span className="text-[#008651] font-bold text-sm uppercase tracking-wider mb-2 block">Atalhos</span>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">O que você precisa fazer hoje?</h2>
-                </div>
-                <Link to="/painel" className="text-[#008651] font-bold hover:underline flex items-center gap-1">
-                  Ver todas as ações <ArrowRight size={16} />
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <Link to="/painel">
+                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    Acessar o Painel <ArrowRight size={18} />
+                  </button>
                 </Link>
               </div>
+            </div>
 
-              <ActionCards />
+            {/* Composição 3D */}
+            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20">
+              <Hero3DComposition />
             </div>
           </section>
 
-          {/* === WORKFLOW === */}
-          <section className="py-24 bg-[#F8F9FA] relative overflow-hidden border-t border-slate-200">
-            <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <span className="bg-white text-[#008651] border border-green-200 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider">
-                  Processo
+          {/* Logos */}
+          <div className="pb-10 relative z-20 border-b border-slate-100/50">
+            <LogoMarquee />
+          </div>
+
+          {/* === 2. SAUDAÇÃO E STATS === */}
+          {user && (
+            <section className="mt-10 mb-8 px-6 md:px-12 animate-fade-in relative z-20">
+              <UserGreeting />
+              <div className="mt-6">
+                <QuickStats />
+              </div>
+            </section>
+          )}
+
+          {/* === 3. AÇÕES RÁPIDAS === */}
+          <div className="mb-16 px-6 md:px-12 relative z-20">
+            <ActionCards />
+          </div>
+
+          {/* === 4. COMO FUNCIONA === */}
+          <section className="py-16 bg-white relative overflow-hidden border-t border-slate-100">
+            <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
+
+            <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-[#008651] font-bold tracking-wider text-xs uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                  Workflow
                 </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mt-6 mb-6">Fluxo de Aprovação</h2>
-                <p className="text-slate-500 text-lg leading-relaxed">
-                  Cada requisição segue um caminho automatizado, garantindo compliance, rastreabilidade e agilidade.
+                <h2 className="text-3xl md:text-4xl font-extrabold font-jakarta text-slate-900 mt-4 mb-4 tracking-tight">
+                  Fluxo Inteligente
+                </h2>
+                <p className="text-base text-slate-600 font-medium leading-relaxed">
+                  Entenda como o portal conecta solicitantes, compradores e aprovadores.
                 </p>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-2xl p-8 md:p-12 shadow-sm">
+              <div className="flex justify-center scale-90 sm:scale-100">
                 <HeroFlowDiagram />
               </div>
             </div>
@@ -650,16 +553,21 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          <footer className="py-12 bg-white border-t border-slate-200">
-            <div className="max-w-[1600px] mx-auto px-6 text-center">
-              <div className="mb-6 flex justify-center">
-                <div className="h-10 w-10 bg-[#008651] rounded flex items-center justify-center text-white font-extrabold text-sm">
-                  GM
-                </div>
-              </div>
-              <p className="text-slate-900 text-sm font-bold mb-2">© 2026 GMAD Madville | Curitiba</p>
-              <p className="text-slate-500 text-xs">Central de Compras Corporativas • Acesso Restrito</p>
-            </div>
+          <footer className="py-10 text-center mt-12 border-t border-slate-200 bg-white">
+            <p className="text-slate-500 text-sm font-medium font-jakarta">
+              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
+            </p>
+            <p className="text-slate-400 text-xs mt-2 font-jakarta">
+              Versão Beta 2.1 | Suporte:{" "}
+              <a
+                href="https://wa.me/5547992189824"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#008651] hover:underline font-bold transition-colors"
+              >
+                WhatsApp
+              </a>
+            </p>
           </footer>
         </main>
       </div>
