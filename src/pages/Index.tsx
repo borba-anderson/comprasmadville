@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
-// CORREÇÃO: Adicionado 'AlertCircle' na importação abaixo
 import {
   FileText,
   CheckCircle,
@@ -454,7 +453,7 @@ const Hero3DComposition = () => {
 // 3. NOVO SUBPAINEL GMAD (ELEMENTO ESTRUTURAL)
 // ==========================================
 const GMADHeaderBar = () => (
-  // Fundo Verde Escuro GMAD (#006746 aproximado da imagem)
+  // Fundo Verde Escuro GMAD (#006746)
   <div className="w-full bg-[#006746] font-sans">
     {/* Linha Superior (Links Pequenos) */}
     <div className="max-w-[1600px] mx-auto px-6 h-8 flex items-center justify-between text-[10px] text-white/90 border-b border-white/10">
@@ -513,26 +512,27 @@ const GMADHeaderBar = () => (
       </div>
     </div>
 
-    {/* Linha Inferior (Menu de Categorias) */}
+    {/* Linha Inferior (Categorias de Suprimentos - ATUALIZADO) */}
     <div className="bg-[#005c3e] border-t border-white/10">
       <div className="max-w-[1600px] mx-auto px-6 h-10 flex items-center justify-between text-white text-xs font-bold">
         <div className="flex items-center gap-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors">
           <Menu size={16} />
-          <span>Todas as Categorias</span>
+          <span>Todos os Departamentos</span>
         </div>
 
         <div className="flex items-center gap-8">
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Requisições</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Cotações</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Ordens de Compra</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Notas Fiscais</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Material de Escritório</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza e Copa</span>
         </div>
 
         <div className="flex items-center gap-6">
-          <button className="bg-[#E85D4E] hover:bg-[#d64d3e] text-white px-4 py-1 rounded transition-colors text-xs font-bold shadow-sm">
-            Urgentes
+          <button className="bg-[#E85D4E] hover:bg-[#d64d3e] text-white px-4 py-1 rounded transition-colors text-xs font-bold shadow-sm flex items-center gap-1">
+            <AlertCircle size={12} /> Solicitação Urgente
           </button>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Promoções</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Itens Recorrentes</span>
         </div>
       </div>
     </div>
