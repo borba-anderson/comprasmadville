@@ -485,7 +485,7 @@ const Index = () => {
               {/* Título Ajustado: CENTRAL DE COMPRAS */}
               <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
                 Central de Compras <br />
-                <span className="text-[#008651]">e Requisições.</span>
+                <span className="text-[#0F172A]">e Requisições.</span>
               </h1>
 
               <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
