@@ -28,12 +28,8 @@ import {
   MoreHorizontal,
   Download,
   List,
-  MapPin,
-  Briefcase,
-  Heart,
-  ShoppingBag,
-  Phone,
   AlertCircle,
+  Briefcase,
 } from "lucide-react";
 import {
   UserGreeting,
@@ -45,18 +41,18 @@ import {
 } from "@/components/home";
 
 // ==========================================
-// 1. COMPONENTES VISUAIS (MOCKS) - ESTILO CLEAN/MODERNO
+// 1. COMPONENTES VISUAIS (MOCKS) - RÉPLICAS FIÉIS
 // ==========================================
 
-// MOCK 1: PAINEL DE REQUISIÇÕES (Branco/Clean)
+// MOCK 1: PAINEL DE REQUISIÇÕES (Fiel a image_6b4618.png)
 const MockPainelScreen = () => (
-  <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
+  <div className="w-full h-full bg-[#F3F4F6] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
     {/* Header Topo */}
     <div className="h-8 bg-white border-b border-slate-100 flex items-center justify-between px-3 shrink-0">
       <div className="flex items-center gap-1.5">
-        <div className="text-[8px] font-extrabold text-[#006746] tracking-tighter italic">GMAD</div>
+        <div className="text-[8px] font-extrabold text-[#008651] tracking-tighter italic">GMAD</div>
         <div className="h-3 w-[1px] bg-slate-300"></div>
-        <span className="text-[7px] font-bold text-slate-700">Central de Compras</span>
+        <span className="text-[7px] font-bold text-slate-700">Central de Compras Madville | Curitiba</span>
       </div>
       <div className="flex gap-1.5 items-center">
         <Bell size={9} className="text-slate-400" />
@@ -68,11 +64,11 @@ const MockPainelScreen = () => (
     </div>
 
     {/* Linha de Cards de Status */}
-    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-[#F8FAFC]">
+    <div className="px-3 py-2 flex gap-1 overflow-hidden bg-[#F3F4F6]">
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
         { l: "PENDENTES", v: "11", c: "orange", i: Clock },
-        { l: "ANÁLISE", v: "0", c: "blue", i: TrendingUp },
+        { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp },
         { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
         { l: "COTANDO", v: "5", c: "slate", i: Package },
         { l: "COMPRADOS", v: "37", c: "teal", i: ShoppingCart },
@@ -99,7 +95,7 @@ const MockPainelScreen = () => (
       ))}
     </div>
 
-    {/* Botões de Aba */}
+    {/* Botões de Aba e Dashboard */}
     <div className="px-3 flex gap-1 mt-0">
       <div className="bg-white px-2 py-1 rounded-t-[3px] flex items-center gap-1 shadow-sm border-t border-x border-slate-200 relative z-10 top-[1px]">
         <FileText size={5} className="text-slate-700" />
@@ -139,101 +135,117 @@ const MockPainelScreen = () => (
         <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold gap-0.5 shadow-sm">
           <LayoutGrid size={4} /> Empresa
         </div>
+        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold shadow-sm">
+          Status 4
+        </div>
         <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center gap-0.5 text-[4.5px] font-bold text-slate-600 shadow-sm">
-          <Filter size={4} /> Filtros
+          <Filter size={4} /> Mais filtros
+        </div>
+        <div className="h-5 w-5 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-slate-400 shadow-sm ml-auto">
+          <Download size={4} />
         </div>
       </div>
 
       {/* Cabeçalho Tabela */}
       <div className="flex bg-[#F9FAFB] px-3 py-1.5 border-b border-slate-200">
-        <div className="w-[35%] text-[4px] font-bold text-slate-400 uppercase flex items-center gap-0.5">
+        <div className="w-[30%] text-[4px] font-bold text-slate-400 uppercase flex items-center gap-0.5">
           Item <ArrowRight size={3} className="rotate-90" />
         </div>
-        <div className="w-[25%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
+        <div className="w-[20%] text-[4px] font-bold text-slate-400 uppercase">Solicitante</div>
+        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-center">Qtd</div>
+        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Prioridade</div>
         <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-center">Status</div>
-        <div className="w-[15%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
-        <div className="w-[10%]"></div>
+        <div className="w-[10%] text-[4px] font-bold text-slate-400 uppercase text-right">Data</div>
       </div>
 
       {/* Linhas */}
       <div className="flex-1 bg-white p-0 space-y-0 overflow-hidden">
         {/* Row 1 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[35%] pr-1">
+          <div className="w-[30%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-700">Notebook Dell Latitude</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
               REQ-20260123{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[25%] pr-1">
+          <div className="w-[20%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Willian Henrique</div>
             <div className="text-[3.5px] text-slate-400">Comercial</div>
+          </div>
+          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">1 un</div>
+          <div className="w-[15%] text-center">
+            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
+            </div>
           </div>
           <div className="w-[15%] text-center">
             <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
-          <div className="w-[10%] text-center text-slate-400">
-            <MoreHorizontal size={5} />
-          </div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
         </div>
 
         {/* Row 2 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[35%] pr-1">
+          <div className="w-[30%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-700">Anti-aderente rosa</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
               REQ-20260123{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[25%] pr-1">
+          <div className="w-[20%] pr-1">
             <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Eliane Cristina</div>
             <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
+          </div>
+          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">8 un</div>
+          <div className="w-[15%] text-center">
+            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
+            </div>
           </div>
           <div className="w-[15%] text-center">
             <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
               PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">23/01</div>
-          <div className="w-[10%] text-center text-slate-400">
-            <MoreHorizontal size={5} />
-          </div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
         </div>
 
         {/* Row 3 */}
         <div className="flex px-3 py-2 border-b border-slate-50 items-center hover:bg-slate-50 transition-colors">
-          <div className="w-[35%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-700">Alicate Universal</div>
+          <div className="w-[30%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-700">Parafuso Phillips 6X</div>
             <div className="text-[3.5px] text-slate-400 flex gap-1 mt-0.5 items-center">
-              REQ-20260122{" "}
+              REQ-20260123{" "}
               <span className="bg-slate-100 px-1 rounded text-slate-500 border border-slate-200">Madville</span>
             </div>
           </div>
-          <div className="w-[25%] pr-1">
-            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Kesia de Souza</div>
-            <div className="text-[3.5px] text-slate-400">Almoxarifado</div>
+          <div className="w-[20%] pr-1">
+            <div className="text-[5.5px] font-bold text-slate-600 leading-tight">Bruno Tarnowski</div>
+            <div className="text-[3.5px] text-slate-400">Manutenção</div>
+          </div>
+          <div className="w-[10%] text-center text-[5px] font-bold text-slate-600">75 un</div>
+          <div className="w-[15%] text-center">
+            <div className="inline-flex items-center gap-0.5 text-[4px] font-bold text-yellow-600">
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Média
+            </div>
           </div>
           <div className="w-[15%] text-center">
-            <span className="bg-purple-50 text-purple-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-purple-200 uppercase">
-              COTANDO
+            <span className="bg-orange-50 text-orange-700 text-[3.5px] font-bold px-1.5 py-0.5 rounded border border-orange-200 uppercase">
+              PENDENTE
             </span>
           </div>
-          <div className="w-[15%] text-[4.5px] text-slate-500 text-right">22/01</div>
-          <div className="w-[10%] text-center text-slate-400">
-            <MoreHorizontal size={5} />
-          </div>
+          <div className="w-[10%] text-[4.5px] text-slate-500 text-right">23/01/2026</div>
         </div>
       </div>
     </div>
   </div>
 );
 
-// MOCK 2: FORMULÁRIO (Clean)
+// MOCK 2: FORMULÁRIO (Mantido para contexto)
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
@@ -289,7 +301,7 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 3: DASHBOARD ANALYTICS (Clean)
+// MOCK 3: DASHBOARD ANALYTICS (AUMENTADO e FIEL A image_6b2c75.png)
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F9FAFB] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-3 font-sans">
     {/* Linha 1: Funil e KPIs */}
@@ -348,7 +360,7 @@ const MockChartScreen = () => (
           </div>
           <div className="bg-green-50 p-1 rounded border border-green-50 flex flex-col justify-center">
             <span className="text-[3.5px] text-green-500 mb-0.5">Tempo Médio</span>
-            <span className="text-[8px] font-bold text-green-700 leading-none">1.6d</span>
+            <span className="text-[8px] font-bold text-green-600 leading-none">1.6d</span>
           </div>
           <div className="bg-red-50 p-1 rounded border border-red-50 flex flex-col justify-center">
             <span className="text-[3.5px] text-red-400 mb-0.5">Atrasadas</span>
@@ -410,127 +422,45 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D (MANTIDA IGUAL AO BASE)
+// 2. COMPOSIÇÃO 3D (ATUALIZADA)
 // ==========================================
 
 const Hero3DComposition = () => {
   return (
     <div className="relative w-full h-[250px] md:h-[350px] flex items-center justify-center [perspective:1000px] overflow-visible mt-4 lg:mt-0 scale-[0.45] md:scale-[0.65] origin-center lg:origin-right">
       <div className="relative w-[280px] md:w-[550px] lg:w-[650px] h-[300px] md:h-[400px] transform [transform-style:preserve-3d] [transform:rotateX(10deg)_rotateY(-15deg)_rotateZ(2deg)] transition-transform duration-700 ease-out hover:[transform:rotateX(5deg)_rotateY(-5deg)_rotateZ(0deg)]">
-        {/* CAMADA BASE (FUNDO) */}
-        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] bg-white rounded-xl z-10 transition-all duration-500">
+        {/* 1. CAMADA BASE (FUNDO): PAINEL DE REQUISIÇÕES (Principal) */}
+        <div className="absolute top-0 left-0 w-full h-full transform [transform:translateZ(0px)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] bg-white rounded-xl z-10 transition-all duration-500">
           <MockPainelScreen />
         </div>
 
-        {/* DASHBOARD FRENTE */}
-        <div className="absolute top-[15%] -right-[25%] w-[280px] md:w-[380px] h-[200px] md:h-[260px] transform [transform:translateZ(60px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(80px)_scale(1.05)] border border-slate-100">
+        {/* 2. CAMADA FRENTE DIREITA: DASHBOARD ANALYTICS (AUMENTADO e REPOSICIONADO) */}
+        {/* Maior (w-320/420) e flutuando à frente */}
+        <div className="absolute top-[10%] -right-[30%] w-[320px] md:w-[420px] h-[220px] md:h-[280px] transform [transform:translateZ(50px)] shadow-[0_40px_70px_rgba(0,0,0,0.15)] z-30 bg-white rounded-xl transition-all duration-500 hover:[transform:translateZ(70px)_scale(1.05)] border border-slate-200">
           <MockChartScreen />
         </div>
 
-        {/* FORMULÁRIO */}
-        <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.25)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
+        {/* 3. CAMADA FLUTUANTE INFERIOR ESQUERDA: FORMULÁRIO */}
+        <div className="absolute bottom-[-15%] -left-[5%] w-[200px] md:w-[240px] h-[260px] md:h-[300px] transform [transform:translateZ(80px)] shadow-[0_30px_60px_rgba(0,0,0,0.2)] z-40 transition-all duration-500 hover:[transform:translateZ(100px)_scale(1.05)] animate-float-delayed">
           <MockFormScreen />
         </div>
       </div>
+
+      {/* Sombra de chão */}
       <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 w-[60%] h-[20px] bg-black/20 blur-xl rounded-[100%] transform rotate-x-60"></div>
     </div>
   );
 };
 
 // ==========================================
-// 3. SUBPAINEL GMAD (COR GMAD + DADOS USUÁRIO)
-// ==========================================
-const GMADHeaderBar = () => (
-  <div className="w-full bg-[#006746] font-sans">
-    {/* Topo Links */}
-    <div className="max-w-[1600px] mx-auto px-6 h-8 flex items-center justify-between text-[10px] text-white/90 border-b border-white/10 hidden md:flex">
-      <div className="flex gap-4">
-        <span className="hover:text-white cursor-pointer">Grupo GMAD</span>
-        <span className="hover:text-white cursor-pointer">Soluções Financeiras G+</span>
-        <span className="hover:text-white cursor-pointer">Combinações MDF</span>
-      </div>
-      <div className="flex gap-4">
-        <span className="hover:text-white cursor-pointer">Atendimento</span>
-        <span className="hover:text-white cursor-pointer">Chamados</span>
-        <span className="hover:text-white cursor-pointer font-bold">Suporte TI</span>
-      </div>
-    </div>
-
-    {/* Meio: Busca e Usuário */}
-    <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
-      <div className="text-3xl font-extrabold text-white tracking-tighter italic">GMAD</div>
-
-      <div className="flex-1 max-w-2xl relative hidden md:block">
-        <input
-          type="text"
-          placeholder="O que você está procurando?"
-          className="w-full h-10 pl-4 pr-10 rounded text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-        <Search className="absolute right-3 top-2.5 text-slate-400" size={18} />
-      </div>
-
-      <div className="flex items-center gap-6 text-white">
-        {/* Lógica de Usuário: Unidade e Departamento */}
-        <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-          <MapPin size={24} />
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-medium opacity-80">Unidade</span>
-            <span className="text-xs font-bold">Madville Joinville</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-          <User size={24} />
-          <div className="flex flex-col leading-tight">
-            <span className="text-[10px] font-medium opacity-80">Departamento</span>
-            <span className="text-xs font-bold">Compras & TI</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 ml-2 border-l border-white/20 pl-6">
-          <Heart size={24} className="hover:opacity-80 cursor-pointer" />
-          <div className="relative cursor-pointer hover:opacity-80">
-            <ShoppingBag size={24} />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-              3
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Baixo: Categorias */}
-    <div className="bg-[#005c3e] border-t border-white/10 hidden md:block">
-      <div className="max-w-[1600px] mx-auto px-6 h-10 flex items-center justify-between text-white text-xs font-bold">
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors">
-          <Menu size={16} />
-          <span>Todas as Categorias</span>
-        </div>
-        <div className="flex items-center gap-8">
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Material de Escritório</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <button className="bg-[#E85D4E] hover:bg-[#d64d3e] text-white px-4 py-1 rounded transition-colors text-xs font-bold shadow-sm flex items-center gap-1">
-            <AlertCircle size={12} /> Solicitação Urgente
-          </button>
-          <span className="cursor-pointer hover:text-green-200 transition-colors">Itens Recorrentes</span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// ==========================================
-// 4. PÁGINA PRINCIPAL
+// 3. PÁGINA PRINCIPAL (INDEX)
 // ==========================================
 
 const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
+    <div className="min-h-screen bg-[#F8FAFC] relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -539,9 +469,9 @@ const Index = () => {
         `}
       </style>
 
-      {/* Subpainel GMAD inserido no topo como Header adicional */}
-      <div className="relative z-50 shadow-md">
-        <GMADHeaderBar />
+      {/* Background Limpo */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/40 rounded-full blur-3xl opacity-50"></div>
       </div>
 
       <div className="relative z-10">
@@ -549,70 +479,73 @@ const Index = () => {
 
         <main className="max-w-[1440px] mx-auto">
           {/* === 1. HERO SECTION === */}
-          <section className="px-6 md:px-12 pt-12 pb-16 lg:pt-24 lg:pb-24 flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[500px]">
+          <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4.5rem] font-extrabold text-[#1A1A1A] mb-6 tracking-tight leading-[1.1] max-w-[700px]">
-                Central de <br />
-                <span className="text-[#008651]">Compras.</span>
+              {/* Título Ajustado: CENTRAL DE COMPRAS */}
+              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
+                Central de Compras <br />
+                <span className="text-[#0F172A]">e Requisições.</span>
               </h1>
 
-              <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-10">
+              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
                 Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
                 gestão.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link to="/painel">
-                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-lg font-bold px-10 py-4 rounded-md transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 shadow-sm">
-                    Acessar o Painel <ArrowRight size={20} />
+                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    Acessar o Painel <ArrowRight size={18} />
                   </button>
                 </Link>
               </div>
             </div>
 
             {/* Composição 3D */}
-            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20 lg:-mr-10">
+            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20">
               <Hero3DComposition />
             </div>
           </section>
 
           {/* Logos */}
-          <div className="pb-12 relative z-20 border-b border-slate-200">
+          <div className="pb-10 relative z-20 border-b border-slate-100/50">
             <LogoMarquee />
           </div>
 
           {/* === 2. SAUDAÇÃO E STATS === */}
           {user && (
-            <section className="mt-12 mb-12 px-6 md:px-12 animate-fade-in relative z-20">
+            <section className="mt-10 mb-8 px-6 md:px-12 animate-fade-in relative z-20">
               <UserGreeting />
-              <div className="mt-8">
+              <div className="mt-6">
                 <QuickStats />
               </div>
             </section>
           )}
 
           {/* === 3. AÇÕES RÁPIDAS === */}
-          <div className="mb-20 px-6 md:px-12 relative z-20">
+          <div className="mb-16 px-6 md:px-12 relative z-20">
             <ActionCards />
           </div>
 
           {/* === 4. COMO FUNCIONA === */}
-          <section className="py-24 bg-[#F5F5F5] relative overflow-hidden border-t border-slate-200">
+          <section className="py-16 bg-white relative overflow-hidden border-t border-slate-100">
+            <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
+
             <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <span className="text-[#008651] font-bold tracking-wider text-sm uppercase bg-white px-4 py-1.5 rounded-md border border-green-100 shadow-sm">
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-[#008651] font-bold tracking-wider text-xs uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
                   Workflow
                 </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold font-jakarta text-[#1A1A1A] mt-6 mb-6 tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold font-jakarta text-slate-900 mt-4 mb-4 tracking-tight">
                   Fluxo Inteligente
                 </h2>
-                <p className="text-lg text-slate-600 font-medium leading-relaxed">
-                  Entenda como o portal conecta solicitantes, compradores e aprovadores de forma eficiente.
+                <p className="text-base text-slate-600 font-medium leading-relaxed">
+                  Entenda como o portal conecta solicitantes, compradores e aprovadores.
                 </p>
               </div>
 
-              <div className="flex justify-center scale-90 sm:scale-100 bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+              <div className="flex justify-center scale-90 sm:scale-100">
                 <HeroFlowDiagram />
               </div>
             </div>
@@ -620,11 +553,11 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          <footer className="py-12 text-center mt-0 border-t border-slate-200 bg-white">
-            <p className="text-slate-600 text-sm font-bold font-jakarta">
-              © 2026 GMAD Madville | Curitiba - Central de Compras
+          <footer className="py-10 text-center mt-12 border-t border-slate-200 bg-white">
+            <p className="text-slate-500 text-sm font-medium font-jakarta">
+              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
             </p>
-            <p className="text-slate-500 text-xs mt-3 font-jakarta">
+            <p className="text-slate-400 text-xs mt-2 font-jakarta">
               Versão Beta 2.1 | Suporte:{" "}
               <a
                 href="https://wa.me/5547992189824"
