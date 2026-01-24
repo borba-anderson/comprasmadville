@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+// IMPORTAÇÃO CORRIGIDA: Todos os ícones necessários incluídos
 import {
   FileText,
   CheckCircle,
@@ -45,10 +46,10 @@ import {
 } from "@/components/home";
 
 // ==========================================
-// 1. COMPONENTES VISUAIS (MOCKS) - ESTILO CLEAN/MODERNO
+// 1. COMPONENTES VISUAIS (MOCKS) - ESTILO CLEAN
 // ==========================================
 
-// MOCK 1: PAINEL DE REQUISIÇÕES
+// MOCK 1: PAINEL DE REQUISIÇÕES (Branco/Clean)
 const MockPainelScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-2xl font-sans relative">
     {/* Header Topo */}
@@ -72,7 +73,7 @@ const MockPainelScreen = () => (
       {[
         { l: "TOTAL", v: "76", c: "slate", i: FileText },
         { l: "PENDENTES", v: "11", c: "orange", i: Clock },
-        { l: "EM ANÁLISE", v: "0", c: "blue", i: TrendingUp },
+        { l: "ANÁLISE", v: "0", c: "blue", i: TrendingUp },
         { l: "APROVADOS", v: "1", c: "green", i: CheckCircle },
         { l: "COTANDO", v: "5", c: "slate", i: Package },
         { l: "COMPRADOS", v: "37", c: "teal", i: ShoppingCart },
@@ -139,8 +140,8 @@ const MockPainelScreen = () => (
         <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold gap-0.5 shadow-sm">
           <LayoutGrid size={4} /> Empresa
         </div>
-        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center text-[4.5px] text-slate-600 font-bold shadow-sm">
-          Status 4
+        <div className="h-5 px-2 bg-white border border-slate-200 rounded-[3px] flex items-center justify-center gap-0.5 text-[4.5px] font-bold text-slate-600 shadow-sm">
+          <Filter size={4} /> Filtros
         </div>
       </div>
 
@@ -233,7 +234,7 @@ const MockPainelScreen = () => (
   </div>
 );
 
-// MOCK 2: FORMULÁRIO (Mantido para contexto)
+// MOCK 2: FORMULÁRIO (Clean)
 const MockFormScreen = () => (
   <div className="w-full h-full bg-white flex flex-col rounded-xl overflow-hidden border border-slate-100 shadow-xl relative font-sans">
     <div className="px-3 py-1.5 text-[5px] text-slate-400 flex items-center gap-1">
@@ -289,7 +290,7 @@ const MockFormScreen = () => (
   </div>
 );
 
-// MOCK 3: DASHBOARD ANALYTICS
+// MOCK 3: DASHBOARD ANALYTICS (Clean)
 const MockChartScreen = () => (
   <div className="w-full h-full bg-[#F9FAFB] flex flex-col rounded-xl overflow-hidden border border-slate-200 shadow-xl p-3 font-sans">
     {/* Linha 1: Funil e KPIs */}
@@ -410,7 +411,7 @@ const MockChartScreen = () => (
 );
 
 // ==========================================
-// 2. COMPOSIÇÃO 3D (REORGANIZADA)
+// 2. COMPOSIÇÃO 3D
 // ==========================================
 
 const Hero3DComposition = () => {
@@ -437,7 +438,7 @@ const Hero3DComposition = () => {
 };
 
 // ==========================================
-// 3. NOVO SUBPAINEL GMAD (ADAPTADO PARA O CONTEXTO)
+// 3. NOVO SUBPAINEL GMAD (COM LÓGICA DE USUÁRIO)
 // ==========================================
 const GMADHeaderBar = () => (
   // Fundo Verde Escuro GMAD (#006746)
@@ -512,6 +513,7 @@ const GMADHeaderBar = () => (
           <span className="cursor-pointer hover:text-green-200 transition-colors">Informática & TI</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">EPIs e Segurança</span>
           <span className="cursor-pointer hover:text-green-200 transition-colors">Ferramentas</span>
+          <span className="cursor-pointer hover:text-green-200 transition-colors">Limpeza e Copa</span>
         </div>
 
         <div className="flex items-center gap-6">
