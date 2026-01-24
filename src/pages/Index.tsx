@@ -28,20 +28,12 @@ import {
   MoreHorizontal,
   Download,
   List,
-  MapPin,
-  Briefcase,
-  Heart,
-  ShoppingBag,
-  Phone,
   AlertCircle,
-  ShieldCheck,
-  Zap,
-  BarChart,
-  Users,
-  ArrowUpRight,
-  Building2,
-  ArrowRightLeft,
-  Wifi,
+  Briefcase,
+  Zap, // Novo
+  BarChart, // Novo
+  Users, // Novo
+  ArrowUpRight, // Novo
 } from "lucide-react";
 import {
   UserGreeting,
@@ -53,14 +45,15 @@ import {
 } from "@/components/home";
 
 // ==================================================================================
-// OPÇÃO 2: BENTO GRID (ATIVA)
+// OPÇÃO 2: HERO BENTO GRID (SUBSTITUINDO OS MOCKS 3D)
 // Foco: Agilidade, Números e Tecnologia
 // ==================================================================================
+
 const HeroBentoGrid = () => {
   return (
-    <div className="w-full max-w-[550px] h-[400px] grid grid-cols-2 grid-rows-2 gap-4 lg:ml-auto scale-[0.9] md:scale-100 origin-center lg:origin-right">
+    <div className="w-full max-w-[550px] h-[400px] grid grid-cols-2 grid-rows-2 gap-4 lg:ml-auto scale-[0.9] md:scale-100 origin-center lg:origin-right select-none">
       {/* Bloco 1: Principal - Escuro (Destaque Marca) */}
-      <div className="row-span-2 bg-[#008651] rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group border border-green-700/50">
+      <div className="row-span-2 bg-[#008651] rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group border border-green-700/50 hover:shadow-green-900/20 transition-all duration-500">
         {/* Efeito de Fundo */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-all duration-500"></div>
 
@@ -88,8 +81,8 @@ const HeroBentoGrid = () => {
       </div>
 
       {/* Bloco 2: Gráfico (Performance) */}
-      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
-        <div className="flex justify-between items-start">
+      <div className="bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+        <div className="flex justify-between items-start relative z-10">
           <div className="bg-orange-50 p-2.5 rounded-lg text-orange-600 border border-orange-100">
             <BarChart size={22} />
           </div>
@@ -97,10 +90,12 @@ const HeroBentoGrid = () => {
             <ArrowUpRight size={10} /> +24%
           </span>
         </div>
-        <div>
+        <div className="relative z-10">
           <div className="text-3xl font-extrabold text-slate-900 tracking-tight">850+</div>
-          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Pedidos Processados/Mês</div>
+          <div className="text-xs text-slate-500 font-bold uppercase tracking-wide">Pedidos/Mês</div>
         </div>
+        {/* Decorativo */}
+        <div className="absolute bottom-0 right-0 w-16 h-16 bg-orange-50 rounded-full blur-2xl translate-y-1/2 translate-x-1/2"></div>
       </div>
 
       {/* Bloco 3: Usuários/Conexão (Equipe) */}
@@ -134,84 +129,111 @@ const HeroBentoGrid = () => {
 };
 
 // ==========================================
-// 4. PÁGINA PRINCIPAL
+// 3. PÁGINA PRINCIPAL (INDEX)
 // ==========================================
 
 const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'); .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; } body { font-family: 'Plus Jakarta Sans', sans-serif; }`}</style>
+    <div className="min-h-screen bg-[#F8FAFC] relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+          .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+          body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        `}
+      </style>
 
-      {/* GMADHeaderBar REMOVIDO conforme solicitado */}
+      {/* Background Limpo */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/40 rounded-full blur-3xl opacity-50"></div>
+      </div>
 
       <div className="relative z-10">
         <Header />
+
         <main className="max-w-[1440px] mx-auto">
           {/* === 1. HERO SECTION === */}
-          <section className="px-6 md:px-12 pt-12 pb-16 lg:pt-24 lg:pb-24 flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[500px]">
+          <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
+            {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
-              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4.5rem] font-extrabold text-[#1A1A1A] mb-6 tracking-tight leading-[1.1] max-w-[700px]">
-                Central de <br />
-                <span className="text-[#008651]">Compras.</span>
+              {/* Título Ajustado: CENTRAL DE COMPRAS */}
+              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-extrabold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
+                Central de Compras <br />
+                <span className="text-[#0F172A]">e Requisições.</span>
               </h1>
-              <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-10">
+
+              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
                 Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
                 gestão.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link to="/painel">
-                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-lg font-bold px-10 py-4 rounded-md transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 shadow-sm">
-                    Acessar o Painel <ArrowRight size={20} />
+                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    Acessar o Painel <ArrowRight size={18} />
                   </button>
                 </Link>
               </div>
             </div>
-            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20 lg:-mr-10">
-              {/* === OPÇÃO 2 ATIVA (Bento Grid) === */}
+
+            {/* Nova Composição: Bento Grid (Opção 2) */}
+            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20">
               <HeroBentoGrid />
             </div>
           </section>
 
-          <div className="pb-12 relative z-20 border-b border-slate-200">
+          {/* Logos */}
+          <div className="pb-10 relative z-20 border-b border-slate-100/50">
             <LogoMarquee />
           </div>
+
+          {/* === 2. SAUDAÇÃO E STATS === */}
           {user && (
-            <section className="mt-12 mb-12 px-6 md:px-12 animate-fade-in relative z-20">
+            <section className="mt-10 mb-8 px-6 md:px-12 animate-fade-in relative z-20">
               <UserGreeting />
-              <div className="mt-8">
+              <div className="mt-6">
                 <QuickStats />
               </div>
             </section>
           )}
-          <div className="mb-20 px-6 md:px-12 relative z-20">
+
+          {/* === 3. AÇÕES RÁPIDAS === */}
+          <div className="mb-16 px-6 md:px-12 relative z-20">
             <ActionCards />
           </div>
-          <section className="py-24 bg-[#F5F5F5] relative overflow-hidden border-t border-slate-200">
+
+          {/* === 4. COMO FUNCIONA === */}
+          <section className="py-16 bg-white relative overflow-hidden border-t border-slate-100">
+            <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
+
             <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <span className="text-[#008651] font-bold tracking-wider text-sm uppercase bg-white px-4 py-1.5 rounded-md border border-green-100 shadow-sm">
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-[#008651] font-bold tracking-wider text-xs uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
                   Workflow
                 </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold font-jakarta text-[#1A1A1A] mt-6 mb-6 tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold font-jakarta text-slate-900 mt-4 mb-4 tracking-tight">
                   Fluxo Inteligente
                 </h2>
-                <p className="text-lg text-slate-600 font-medium leading-relaxed">
-                  Entenda como o portal conecta solicitantes, compradores e aprovadores de forma eficiente.
+                <p className="text-base text-slate-600 font-medium leading-relaxed">
+                  Entenda como o portal conecta solicitantes, compradores e aprovadores.
                 </p>
               </div>
-              <div className="flex justify-center scale-90 sm:scale-100 bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+
+              <div className="flex justify-center scale-90 sm:scale-100">
                 <HeroFlowDiagram />
               </div>
             </div>
           </section>
+
           <WorkflowTimeline />
-          <footer className="py-12 text-center mt-0 border-t border-slate-200 bg-white">
-            <p className="text-slate-600 text-sm font-bold font-jakarta">
-              © 2026 GMAD Madville | Curitiba - Central de Compras
+
+          <footer className="py-10 text-center mt-12 border-t border-slate-200 bg-white">
+            <p className="text-slate-500 text-sm font-medium font-jakarta">
+              © 2026 GMAD Madville | Curitiba - Portal de Solicitações de Suprimentos
             </p>
-            <p className="text-slate-500 text-xs mt-3 font-jakarta">
+            <p className="text-slate-400 text-xs mt-2 font-jakarta">
               Versão Beta 2.1 | Suporte:{" "}
               <a
                 href="https://wa.me/5547992189824"
