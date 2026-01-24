@@ -108,14 +108,6 @@ export default function Painel() {
     [toast],
   );
 
-  // Realtime notifications - for solicitantes (status changes) and staff (new requisitions)
-  useRealtimeNotifications({
-    userEmail: profile?.email || null,
-    enabled: !!profile?.email,
-    onDataChange: () => fetchRequisicoes(true),
-    isStaff: isStaff,
-  });
-
   useEffect(() => {
     if (user) fetchRequisicoes();
   }, [user, fetchRequisicoes]);
@@ -125,6 +117,15 @@ export default function Painel() {
     const interval = setInterval(() => fetchRequisicoes(true), AUTO_REFRESH_INTERVAL);
     return () => clearInterval(interval);
   }, [user, fetchRequisicoes]);
+
+  // Realtime notifications - for solicitantes (status changes) and staff (new requisitions)
+  // Must be called unconditionally to respect rules of hooks
+  useRealtimeNotifications({
+    userEmail: profile?.email || null,
+    enabled: !!profile?.email,
+    onDataChange: useCallback(() => fetchRequisicoes(true), [fetchRequisicoes]),
+    isStaff: !!isStaff,
+  });
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return "-";
