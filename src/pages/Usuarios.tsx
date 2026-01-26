@@ -192,8 +192,9 @@ export default function Usuarios() {
       if (profileError) throw profileError;
 
       // Only update roles if they actually changed
-      const originalRoles = selectedUser.roles.sort().join(',');
-      const newRoles = editRoles.sort().join(',');
+      // IMPORTANT: Use spread to create copies before sorting to avoid mutating originals
+      const originalRoles = [...selectedUser.roles].sort().join(',');
+      const newRoles = [...editRoles].sort().join(',');
 
       if (originalRoles !== newRoles) {
         // Delete existing roles

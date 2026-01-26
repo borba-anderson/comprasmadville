@@ -41,7 +41,7 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             Empresa <span className="text-destructive">*</span>
           </Label>
           <Select
-            value={formData.solicitante_empresa}
+            value={formData.solicitante_empresa || undefined}
             onValueChange={(value) => onSelectChange('solicitante_empresa', value)}
           >
             <SelectTrigger className="mt-1.5">
@@ -122,7 +122,7 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             Setor / Departamento <span className="text-destructive">*</span>
           </Label>
           <Select
-            value={formData.solicitante_setor}
+            value={formData.solicitante_setor || undefined}
             onValueChange={(value) => onSelectChange('solicitante_setor', value)}
           >
             <SelectTrigger className="mt-1.5">

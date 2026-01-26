@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useNotificationSound } from '@/hooks/useNotificationSound';
 import { STATUS_CONFIG, Requisicao } from '@/types';
 
 interface UseRealtimeNotificationsOptions {
@@ -19,6 +20,7 @@ export function useRealtimeNotifications({
 }: UseRealtimeNotificationsOptions) {
   const { toast } = useToast();
   const { addNotification } = useNotifications();
+  const { playNotificationSound } = useNotificationSound();
 
   // Handle status changes for solicitantes (requesters)
   const handleStatusChange = useCallback((newData: Requisicao, oldData: Partial<Requisicao>) => {
@@ -39,6 +41,9 @@ export function useRealtimeNotifications({
       const title = `${emoji} ${newData.item_nome}`;
       const description = `Status alterado de "${oldStatusConfig?.label || oldData.status}" para "${statusConfig?.label || newData.status}"`;
       
+      // Play notification sound
+      playNotificationSound();
+      
       // Show toast notification
       toast({
         title,
@@ -58,13 +63,16 @@ export function useRealtimeNotifications({
       // Trigger data refresh
       onDataChange?.();
     }
-  }, [toast, addNotification, onDataChange]);
+  }, [toast, addNotification, onDataChange, playNotificationSound]);
 
   // Handle new requisitions for staff/compradores
   const handleNewRequisicao = useCallback((newData: Requisicao) => {
     const emoji = '🆕';
     const title = `${emoji} Nova Requisição`;
     const description = `${newData.solicitante_nome} solicitou: ${newData.item_nome}`;
+    
+    // Play notification sound
+    playNotificationSound();
     
     // Show toast notification
     toast({
@@ -84,7 +92,7 @@ export function useRealtimeNotifications({
 
     // Trigger data refresh
     onDataChange?.();
-  }, [toast, addNotification, onDataChange]);
+  }, [toast, addNotification, onDataChange, playNotificationSound]);
 
   useEffect(() => {
     if (!enabled) return;
