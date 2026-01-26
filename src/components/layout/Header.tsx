@@ -40,57 +40,62 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
         <div className="flex-1" />
 
         <nav className="flex items-center gap-2">
-          {user && <NotificationBell />}
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="w-4 h-4 text-primary" />
-                  </div>
-                  <span className="hidden md:inline-block font-medium">{profile?.nome || user.email}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col">
-                    <span>{profile?.nome || "Usuário"}</span>
-                    <span className="text-xs text-muted-foreground">{user.email}</span>
-                    <span className="mt-1 text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full w-fit">
-                      {getRoleBadge()}
-                    </span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {isStaff && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/painel">Painel Administrativo</Link>
+            <>
+              <Button asChild className="hidden sm:inline-flex">
+                <Link to="/requisicao">Fazer Solicitação</Link>
+              </Button>
+              <NotificationBell />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="gap-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="hidden md:inline-block font-medium">{profile?.nome || user.email}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col">
+                      <span>{profile?.nome || "Usuário"}</span>
+                      <span className="text-xs text-muted-foreground">{user.email}</span>
+                      <span className="mt-1 text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full w-fit">
+                        {getRoleBadge()}
+                      </span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {isStaff && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/painel">Painel Administrativo</Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/usuarios" className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        Gestão de Usuários
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild className="sm:hidden">
+                    <Link to="/requisicao">Nova Solicitação</Link>
                   </DropdownMenuItem>
-                )}
-                {isAdmin && (
                   <DropdownMenuItem asChild>
-                    <Link to="/usuarios" className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      Gestão de Usuários
+                    <Link to="/alterar-senha" className="flex items-center gap-2">
+                      <KeyRound className="w-4 h-4" />
+                      Alterar Senha
                     </Link>
                   </DropdownMenuItem>
-                )}
-                <DropdownMenuItem asChild>
-                  <Link to="/requisicao">Nova Solicitação</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/alterar-senha" className="flex items-center gap-2">
-                    <KeyRound className="w-4 h-4" />
-                    Alterar Senha
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut} className="text-destructive">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-destructive">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
