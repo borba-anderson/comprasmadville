@@ -298,6 +298,7 @@ export default function Painel() {
                 sortConfig={sortConfig}
                 onSort={handleSort}
                 readOnly={isReadOnly}
+                onUpdate={() => fetchRequisicoes(true)}
               />
 
               <PaginationControls pagination={pagination} onPageChange={goToPage} onPageSizeChange={changePageSize} />

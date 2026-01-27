@@ -1153,46 +1153,7 @@ Qualquer dúvida, estamos à disposição!`;
         {/* Actions Footer - only for staff */}
         {!readOnly && (
           <div className="p-4 border-t bg-muted/30 space-y-3">
-            {/* Seletor de Status Manual */}
-            {!['rejeitado', 'cancelado'].includes(requisicao.status) && (
-              <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground uppercase flex items-center gap-1.5">
-                  <RefreshCw className="w-3 h-3" />
-                  Alterar Status Manualmente
-                </Label>
-                <Select
-                  value={requisicao.status}
-                  onValueChange={(value) => {
-                    if (value === 'rejeitado') {
-                      if (!motivoRejeicao.trim()) {
-                        toast({ title: 'Informe o motivo da rejeição acima', variant: 'destructive' });
-                        return;
-                      }
-                      updateStatus(value as RequisicaoStatus, motivoRejeicao);
-                    } else {
-                      updateStatus(value as RequisicaoStatus);
-                    }
-                  }}
-                  disabled={isUpdating}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MANUAL_STATUS_OPTIONS.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        <div className="flex items-center gap-2">
-                          <span className={cn('w-2 h-2 rounded-full', STATUS_CONFIG[status].dotColor)} />
-                          {STATUS_CONFIG[status].label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            <Separator />
+            {/* Ações rápidas por status */}
 
             {/* Ações rápidas por status */}
             {requisicao.status === 'pendente' && (
@@ -1281,24 +1242,6 @@ Qualquer dúvida, estamos à disposição!`;
               </Button>
             )}
 
-            {/* Ação de Cancelar - disponível em todos os status exceto recebido, rejeitado e cancelado */}
-            {!['recebido', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
-              <div className="pt-2 border-t mt-2">
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={cancelRequisicao}
-                  disabled={isCanceling}
-                >
-                  {isCanceling ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Ban className="w-4 h-4 mr-2" />
-                  )}
-                  Cancelar Requisição
-                </Button>
-              </div>
-            )}
 
           </div>
         )}
