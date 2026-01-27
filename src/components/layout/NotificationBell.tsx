@@ -109,7 +109,7 @@ export function NotificationBell() {
         {/* Notifications List */}
         {notifications.length > 0 ? (
           <>
-            <ScrollArea className="max-h-80">
+            <ScrollArea className="max-h-80 overflow-y-auto" type="always">
               {notifications.map((notification) => (
                 <NotificationItem
                   key={notification.id}
