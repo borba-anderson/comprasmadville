@@ -42,7 +42,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
         <nav className="flex items-center gap-2">
           {user ? (
             <>
-              <Button asChild className="hidden sm:inline-flex">
+              <Button asChild className="hidden sm:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Link to="/requisicao">Fazer Solicitação</Link>
               </Button>
               <NotificationBell />
@@ -101,7 +101,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
               <Button variant="ghost" asChild>
                 <Link to="/auth">Entrar</Link>
               </Button>
-              <Button asChild>
+              <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Link to="/requisicao">Fazer Solicitação</Link>
               </Button>
             </div>
