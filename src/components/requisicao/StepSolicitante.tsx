@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,6 +26,55 @@ interface StepSolicitanteProps {
 }
 
 export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: StepSolicitanteProps) => {
+  // Refs for input fields to detect autofill
+  const nomeRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const telefoneRef = useRef<HTMLInputElement>(null);
+
+  // Effect to detect browser autofill and sync state
+  useEffect(() => {
+    const checkAutofill = () => {
+      const inputs = [
+        { ref: nomeRef, name: 'solicitante_nome' },
+        { ref: emailRef, name: 'solicitante_email' },
+        { ref: telefoneRef, name: 'solicitante_telefone' },
+      ];
+
+      inputs.forEach(({ ref, name }) => {
+        if (ref.current && ref.current.value && ref.current.value !== formData[name as keyof typeof formData]) {
+          // Create synthetic event to trigger onChange
+          const event = {
+            target: {
+              name,
+              value: ref.current.value,
+              type: 'text',
+            },
+          } as React.ChangeEvent<HTMLInputElement>;
+          onChange(event);
+        }
+      });
+    };
+
+    // Check on mount and after a short delay (for autofill)
+    const timer = setTimeout(checkAutofill, 100);
+    const timer2 = setTimeout(checkAutofill, 500);
+    const timer3 = setTimeout(checkAutofill, 1000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, []);
+
+  // Handler for input blur to catch autofilled values
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (value && value !== formData[name as keyof typeof formData]) {
+      onChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="mb-6">
@@ -66,10 +116,12 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             Nome Completo <span className="text-destructive">*</span>
           </Label>
           <Input
+            ref={nomeRef}
             id="solicitante_nome"
             name="solicitante_nome"
             value={formData.solicitante_nome}
             onChange={onChange}
+            onBlur={handleInputBlur}
             placeholder="Seu nome completo"
             className="mt-1.5"
           />
@@ -84,11 +136,13 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             Email Corporativo <span className="text-destructive">*</span>
           </Label>
           <Input
+            ref={emailRef}
             id="solicitante_email"
             name="solicitante_email"
             type="email"
             value={formData.solicitante_email}
             onChange={onChange}
+            onBlur={handleInputBlur}
             placeholder="seu.email@empresa.com"
             className="mt-1.5"
           />
@@ -103,10 +157,12 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
             Telefone / Ramal <span className="text-destructive">*</span>
           </Label>
           <Input
+            ref={telefoneRef}
             id="solicitante_telefone"
             name="solicitante_telefone"
             value={formData.solicitante_telefone}
             onChange={onChange}
+            onBlur={handleInputBlur}
             placeholder="(00) 00000-0000"
             maxLength={15}
             className="mt-1.5"

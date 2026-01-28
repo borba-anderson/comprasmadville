@@ -13,7 +13,7 @@ interface AuthContextType {
   isStaff: boolean;
   isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, nome: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, nome: string, telefone?: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -130,15 +130,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   };
 
-  const signUp = async (email: string, password: string, nome: string) => {
+  const signUp = async (email: string, password: string, nome: string, telefone?: string) => {
     const redirectUrl = `${window.location.origin}/`;
 
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email: email.trim(),
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { nome },
+        data: { nome, telefone },
       },
     });
 
@@ -148,6 +148,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         'Password should be at least 6 characters': 'A senha deve ter pelo menos 6 caracteres',
       };
       return { error: new Error(messages[error.message] || error.message) };
+    }
+
+    // Update profile with phone if user was created
+    if (data.user && telefone) {
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('auth_uid', data.user.id)
+        .maybeSingle();
+      
+      if (profileData) {
+        await supabase
+          .from('profiles')
+          .update({ telefone })
+          .eq('id', profileData.id);
+      }
     }
 
     return { error: null };

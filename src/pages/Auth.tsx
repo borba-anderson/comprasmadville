@@ -13,9 +13,17 @@ const loginSchema = z.object({
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
+const formatPhone = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
 const signupSchema = loginSchema
   .extend({
     nome: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+    telefone: z.string().min(14, "Telefone inválido (formato: (00) 00000-0000)"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -30,6 +38,7 @@ export default function Auth() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     nome: "",
+    telefone: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -44,6 +53,14 @@ export default function Auth() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'telefone') {
+      const formatted = formatPhone(value);
+      setFormData((prev) => ({ ...prev, [name]: formatted }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+      return;
+    }
+    
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
@@ -109,7 +126,7 @@ export default function Auth() {
         }
 
         const { error } = await withTimeout(
-          signUp(formData.email, formData.password, formData.nome),
+          signUp(formData.email, formData.password, formData.nome, formData.telefone),
           20000,
           "Tempo de resposta excedido.",
         );
@@ -141,8 +158,6 @@ export default function Auth() {
           .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
         `}
       </style>
-
-      {/* REMOVIDO: Bloco de Título e Logo flutuante */}
 
       {/* --- CARD BRANCO DO FORMULÁRIO --- */}
       <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
@@ -192,6 +207,28 @@ export default function Auth() {
                   className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
                 {errors.nome && <p className="text-xs text-red-500 font-medium ml-1">{errors.nome}</p>}
+              </div>
+            )}
+
+            {!isLogin && (
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="telefone"
+                  className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                >
+                  Telefone
+                </Label>
+                <Input
+                  id="telefone"
+                  name="telefone"
+                  type="tel"
+                  value={formData.telefone}
+                  onChange={handleChange}
+                  placeholder="(00) 00000-0000"
+                  maxLength={15}
+                  className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                />
+                {errors.telefone && <p className="text-xs text-red-500 font-medium ml-1">{errors.telefone}</p>}
               </div>
             )}
 
