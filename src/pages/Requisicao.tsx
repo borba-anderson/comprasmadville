@@ -147,9 +147,8 @@ export default function Requisicao() {
 
     const allowedTypes = [
       'application/pdf',
-      'image/jpeg',
+      'image/jpeg', // covers both .jpg and .jpeg
       'image/png',
-      'image/jpg',
       'application/vnd.ms-excel',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     ];
