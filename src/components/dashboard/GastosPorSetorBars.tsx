@@ -13,6 +13,7 @@ import { Building2 } from 'lucide-react';
 
 interface GastosPorSetorBarsProps {
   requisicoes: Requisicao[];
+  onSetorClick?: (setor: string) => void;
 }
 
 const COLORS = [
@@ -26,7 +27,7 @@ const COLORS = [
   'hsl(173, 80%, 40%)',  // Teal
 ];
 
-export function GastosPorSetorBars({ requisicoes }: GastosPorSetorBarsProps) {
+export function GastosPorSetorBars({ requisicoes, onSetorClick }: GastosPorSetorBarsProps) {
   const data = useMemo(() => {
     const grouped = requisicoes.reduce((acc, req) => {
       const setor = req.solicitante_setor;
@@ -135,9 +136,14 @@ export function GastosPorSetorBars({ requisicoes }: GastosPorSetorBarsProps) {
                 color: 'hsl(var(--muted-foreground))',
               }}
             />
-            <Bar dataKey="valor" radius={[6, 6, 0, 0]}>
+            <Bar dataKey="valor" radius={[6, 6, 0, 0]} style={{ cursor: onSetorClick ? 'pointer' : 'default' }}>
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]} 
+                  className={onSetorClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}
+                  onClick={() => onSetorClick?.(entry.setorFull)}
+                />
               ))}
             </Bar>
           </BarChart>
