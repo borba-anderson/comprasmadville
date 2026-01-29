@@ -4,6 +4,7 @@ import { Users } from 'lucide-react';
 
 interface GastosPorSolicitanteBarsProps {
   requisicoes: Requisicao[];
+  onSolicitanteClick?: (solicitanteNome: string) => void;
 }
 
 const COLORS = [
@@ -17,7 +18,7 @@ const COLORS = [
   'bg-orange-500',
 ];
 
-export function GastosPorSolicitanteBars({ requisicoes }: GastosPorSolicitanteBarsProps) {
+export function GastosPorSolicitanteBars({ requisicoes, onSolicitanteClick }: GastosPorSolicitanteBarsProps) {
   const data = useMemo(() => {
     const grouped = requisicoes.reduce((acc, req) => {
       const nome = req.solicitante_nome;
@@ -86,7 +87,11 @@ export function GastosPorSolicitanteBars({ requisicoes }: GastosPorSolicitanteBa
       
       <div className="space-y-4">
         {data.map((item, index) => (
-          <div key={item.nome} className="space-y-2">
+          <div 
+            key={item.nome} 
+            className={`space-y-2 ${onSolicitanteClick ? 'cursor-pointer hover:bg-muted/40 -mx-2 px-2 py-1 rounded-lg transition-colors' : ''}`}
+            onClick={() => onSolicitanteClick?.(item.nome)}
+          >
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-3">
                 <div className={`w-8 h-8 ${COLORS[index % COLORS.length]} rounded-lg flex items-center justify-center text-white text-xs font-bold`}>

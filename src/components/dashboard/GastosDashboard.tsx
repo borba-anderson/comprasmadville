@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { FileText } from 'lucide-react';
-import { Requisicao, RequisicaoStatus } from '@/types';
+import { FileText, X, ArrowLeft } from 'lucide-react';
+import { Requisicao, RequisicaoStatus, STATUS_CONFIG } from '@/types';
 import { HeroKPIs } from './HeroKPIs';
 import { GastosLineChart } from './GastosLineChart';
 import { GastosPorSetorBars } from './GastosPorSetorBars';
@@ -17,6 +17,9 @@ import { EfficiencyKPIs } from './EfficiencyKPIs';
 import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 import { GastosPorCentroCusto } from './GastosPorCentroCusto';
 import { TrendChart } from './TrendChart';
+import { Button } from '@/components/ui/button';
+import { StatusBadge } from '@/components/StatusBadge';
+import { PriorityBadge } from '@/components/PriorityBadge';
 
 interface GastosDashboardProps {
   requisicoes: Requisicao[];
@@ -28,6 +31,7 @@ const STORAGE_KEY = 'madville_dashboard_filters';
 export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardProps) {
   const [filters, setFilters] = useState<DashboardFiltersState>(DEFAULT_DASHBOARD_FILTERS);
   const [savedFilters, setSavedFilters] = useState<SavedDashboardFilter[]>([]);
+  const [selectedSolicitante, setSelectedSolicitante] = useState<string | null>(null);
 
   // Load saved filters
   useEffect(() => {
@@ -194,6 +198,35 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     // Show a toast to indicate what was filtered
   };
 
+  const handleSolicitanteClick = (solicitanteNome: string) => {
+    setSelectedSolicitante(solicitanteNome);
+  };
+
+  // Get requests for selected solicitante
+  const solicitanteRequests = useMemo(() => {
+    if (!selectedSolicitante) return [];
+    return filteredRequisicoes.filter((r) => r.solicitante_nome === selectedSolicitante);
+  }, [filteredRequisicoes, selectedSolicitante]);
+
+  const formatCurrency = (value: number | null | undefined) => {
+    if (value == null) return '-';
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+  };
+
+  // Get unique centros de custo for filter options
+  const centrosCustoOptions = useMemo(() => {
+    const centros = new Set<string>();
+    requisicoes.forEach((r) => {
+      if (r.centro_custo) centros.add(r.centro_custo);
+    });
+    return Array.from(centros).sort();
+  }, [requisicoes]);
+
   if (requisicoes.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -208,14 +241,75 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     );
   }
 
-  // Get unique centros de custo for filter options
-  const centrosCustoOptions = useMemo(() => {
-    const centros = new Set<string>();
-    requisicoes.forEach((r) => {
-      if (r.centro_custo) centros.add(r.centro_custo);
-    });
-    return Array.from(centros).sort();
-  }, [requisicoes]);
+  // Show selected solicitante's requests
+  if (selectedSolicitante) {
+    const totalValor = solicitanteRequests.reduce((sum, r) => sum + (r.valor || 0), 0);
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSelectedSolicitante(null)}
+              className="h-9 w-9"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight">{selectedSolicitante}</h2>
+              <p className="text-muted-foreground text-sm">
+                {solicitanteRequests.length} requisições • Total: {formatCurrency(totalValor)}
+              </p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setSelectedSolicitante(null)}>
+            <X className="w-4 h-4 mr-2" />
+            Fechar
+          </Button>
+        </div>
+
+        <div className="bg-card rounded-xl border border-border/50 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium">Protocolo</th>
+                <th className="text-left px-4 py-3 font-medium">Item</th>
+                <th className="text-center px-4 py-3 font-medium">Status</th>
+                <th className="text-center px-4 py-3 font-medium">Prioridade</th>
+                <th className="text-right px-4 py-3 font-medium">Valor</th>
+                <th className="text-center px-4 py-3 font-medium">Data</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/50">
+              {solicitanteRequests.map((req) => (
+                <tr key={req.id} className="hover:bg-muted/30 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs">{req.protocolo}</td>
+                  <td className="px-4 py-3">
+                    <p className="font-medium line-clamp-1">{req.item_nome}</p>
+                    <p className="text-xs text-muted-foreground">{req.solicitante_setor}</p>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <StatusBadge status={req.status} showIcon={false} />
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <PriorityBadge priority={req.prioridade} />
+                  </td>
+                  <td className="px-4 py-3 text-right font-semibold tabular-nums">
+                    {formatCurrency(req.valor)}
+                  </td>
+                  <td className="px-4 py-3 text-center text-muted-foreground">
+                    {formatDate(req.created_at)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -272,7 +366,7 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
       {/* Row 5: Evolução Temporal */}
       <GastosLineChart requisicoes={filteredRequisicoes} />
 
-      <GastosPorSolicitanteBars requisicoes={filteredRequisicoes} />
+      <GastosPorSolicitanteBars requisicoes={filteredRequisicoes} onSolicitanteClick={handleSolicitanteClick} />
       <StatusPainel requisicoes={filteredRequisicoes} />
       <AlertasInteligentes requisicoes={filteredRequisicoes} totalGasto={kpis.totalGasto} tendencia={kpis.tendenciaGasto} />
     </div>
