@@ -217,7 +217,6 @@ export function SidePanel({
 
       await sendNotification({ ...requisicao, ...updateData } as Requisicao, newStatus);
       onUpdate();
-      onClose();
     } catch (error) {
       console.error('Error updating status:', error);
       toast({
