@@ -57,6 +57,8 @@ export function SidePanel({
   profileId,
   readOnly = false,
 }: SidePanelProps) {
+  // Local state to hold the current requisicao data (updated after changes)
+  const [localRequisicao, setLocalRequisicao] = useState<Requisicao | null>(requisicao);
   const [valorInput, setValorInput] = useState('');
   const [valorOrcadoInput, setValorOrcadoInput] = useState('');
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
@@ -72,15 +74,35 @@ export function SidePanel({
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
+  // Sync localRequisicao with prop when prop changes (new requisicao selected)
+  useEffect(() => {
+    setLocalRequisicao(requisicao);
+  }, [requisicao]);
+
+  // Helper to refresh local requisicao data from database
+  const refreshLocalRequisicao = async () => {
+    if (!localRequisicao) return;
+    
+    const { data, error } = await supabase
+      .from('requisicoes')
+      .select('*')
+      .eq('id', localRequisicao.id)
+      .single();
+    
+    if (!error && data) {
+      setLocalRequisicao(data as Requisicao);
+    }
+  };
+
   // Fetch valor history
   useEffect(() => {
     const fetchValorHistory = async () => {
-      if (!requisicao) return;
+      if (!localRequisicao) return;
       
       const { data, error } = await supabase
         .from('valor_historico')
         .select('*')
-        .eq('requisicao_id', requisicao.id)
+        .eq('requisicao_id', localRequisicao.id)
         .order('created_at', { ascending: false });
 
       if (!error && data) {
@@ -88,15 +110,15 @@ export function SidePanel({
       }
     };
 
-    if (isOpen && requisicao) {
+    if (isOpen && localRequisicao) {
       fetchValorHistory();
-      setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
-      setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
+      setValorInput(localRequisicao.valor ? formatCurrencyInput(localRequisicao.valor) : '');
+      setValorOrcadoInput(localRequisicao.valor_orcado ? formatCurrencyInput(localRequisicao.valor_orcado) : '');
       setMotivoRejeicao('');
-      setObservacaoComprador(requisicao.observacao_comprador || '');
-      setCentroCustoInput(requisicao.centro_custo || '');
+      setObservacaoComprador(localRequisicao.observacao_comprador || '');
+      setCentroCustoInput(localRequisicao.centro_custo || '');
     }
-  }, [isOpen, requisicao]);
+  }, [isOpen, localRequisicao]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
@@ -174,7 +196,7 @@ export function SidePanel({
   };
 
   const updateStatus = async (newStatus: RequisicaoStatus, motivo?: string) => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       setIsUpdating(true);
@@ -206,7 +228,7 @@ export function SidePanel({
       const { error } = await supabase
         .from('requisicoes')
         .update(updateData)
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
 
@@ -215,7 +237,8 @@ export function SidePanel({
         description: `Status atualizado para ${STATUS_CONFIG[newStatus].label}`,
       });
 
-      await sendNotification({ ...requisicao, ...updateData } as Requisicao, newStatus);
+      await sendNotification({ ...localRequisicao, ...updateData } as Requisicao, newStatus);
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -230,7 +253,7 @@ export function SidePanel({
   };
 
   const updateComprador = async (compradorNome: string) => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       const { error } = await supabase
@@ -239,10 +262,11 @@ export function SidePanel({
           comprador_nome: compradorNome,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Comprador atualizado' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating comprador:', error);
@@ -251,7 +275,7 @@ export function SidePanel({
   };
 
   const updateFornecedor = async (fornecedorNome: string) => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       const { error } = await supabase
@@ -260,10 +284,11 @@ export function SidePanel({
           fornecedor_nome: fornecedorNome || null,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Fornecedor atualizado' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating fornecedor:', error);
@@ -272,7 +297,7 @@ export function SidePanel({
   };
 
   const updatePrevisaoEntrega = async (date: string) => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       const previsaoValue = date && date.trim() !== '' ? date : null;
@@ -283,10 +308,11 @@ export function SidePanel({
           previsao_entrega: previsaoValue,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Previsão atualizada' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating previsao:', error);
@@ -295,13 +321,13 @@ export function SidePanel({
   };
 
   const updateValor = async () => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       setIsUpdating(true);
       const valor = parseCurrencyInput(valorInput);
       const valorOrcado = valorOrcadoInput ? parseCurrencyInput(valorOrcadoInput) : null;
-      const valorAnterior = requisicao.valor;
+      const valorAnterior = localRequisicao.valor;
 
       const { error: updateError } = await supabase
         .from('requisicoes')
@@ -310,12 +336,12 @@ export function SidePanel({
           valor_orcado: valorOrcado,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (updateError) throw updateError;
 
       await supabase.from('valor_historico').insert({
-        requisicao_id: requisicao.id,
+        requisicao_id: localRequisicao.id,
         valor_anterior: valorAnterior,
         valor_novo: valor,
         alterado_por: profileNome || 'Sistema',
@@ -326,13 +352,14 @@ export function SidePanel({
       const { data: historyData } = await supabase
         .from('valor_historico')
         .select('*')
-        .eq('requisicao_id', requisicao.id)
+        .eq('requisicao_id', localRequisicao.id)
         .order('created_at', { ascending: false });
       
       if (historyData) {
         setValorHistory(historyData as ValorHistorico[]);
       }
       
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating valor:', error);
@@ -347,12 +374,12 @@ export function SidePanel({
   };
 
   const handleOrcamentoUpload = async () => {
-    if (!orcamentoFile || !requisicao) return;
+    if (!orcamentoFile || !localRequisicao) return;
 
     try {
       setIsUploadingOrcamento(true);
       const fileExt = orcamentoFile.name.split('.').pop();
-      const fileName = `orcamentos/${requisicao.id}/${Date.now()}.${fileExt}`;
+      const fileName = `orcamentos/${localRequisicao.id}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('requisicoes-anexos')
@@ -371,12 +398,13 @@ export function SidePanel({
           orcamento_nome: orcamentoFile.name,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (updateError) throw updateError;
 
       toast({ title: 'Orçamento anexado com sucesso' });
       setOrcamentoFile(null);
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error uploading orcamento:', error);
@@ -387,7 +415,7 @@ export function SidePanel({
   };
 
   const updateObservacaoComprador = async () => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       setIsUpdating(true);
@@ -397,10 +425,11 @@ export function SidePanel({
           observacao_comprador: observacaoComprador || null,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Observação atualizada' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating observacao:', error);
@@ -411,7 +440,7 @@ export function SidePanel({
   };
 
   const updateCentroCusto = async () => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       setIsUpdating(true);
@@ -421,10 +450,11 @@ export function SidePanel({
           centro_custo: centroCustoInput || null,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Centro de custo atualizado' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error updating centro_custo:', error);
@@ -435,13 +465,13 @@ export function SidePanel({
   };
 
   const deleteAnexo = async (indexToDelete?: number) => {
-    if (!requisicao || !requisicao.arquivo_url) return;
+    if (!localRequisicao || !localRequisicao.arquivo_url) return;
     
     try {
       setIsDeletingAnexo(true);
       
-      const urls = requisicao.arquivo_url.split(',');
-      const nomes = requisicao.arquivo_nome?.split(',') || [];
+      const urls = localRequisicao.arquivo_url.split(',');
+      const nomes = localRequisicao.arquivo_nome?.split(',') || [];
       
       if (indexToDelete !== undefined && urls.length > 1) {
         // Delete single file from multiple
@@ -464,7 +494,7 @@ export function SidePanel({
             arquivo_nome: remainingNomes.length > 0 ? remainingNomes.join(',') : null,
             updated_at: new Date().toISOString() 
           })
-          .eq('id', requisicao.id);
+          .eq('id', localRequisicao.id);
 
         if (error) throw error;
       } else {
@@ -486,12 +516,13 @@ export function SidePanel({
             arquivo_nome: null,
             updated_at: new Date().toISOString() 
           })
-          .eq('id', requisicao.id);
+          .eq('id', localRequisicao.id);
 
         if (error) throw error;
       }
       
       toast({ title: 'Anexo excluído com sucesso' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error deleting anexo:', error);
@@ -502,13 +533,13 @@ export function SidePanel({
   };
 
   const deleteOrcamento = async () => {
-    if (!requisicao || !(requisicao as any).orcamento_url) return;
+    if (!localRequisicao || !(localRequisicao as any).orcamento_url) return;
     
     try {
       setIsDeletingOrcamento(true);
       
       // Extract path from URL for storage deletion
-      const url = (requisicao as any).orcamento_url;
+      const url = (localRequisicao as any).orcamento_url;
       const urlParts = url.split('/requisicoes-anexos/');
       if (urlParts.length > 1) {
         const filePath = urlParts[1];
@@ -525,10 +556,11 @@ export function SidePanel({
           orcamento_nome: null,
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Orçamento excluído com sucesso' });
+      await refreshLocalRequisicao();
       onUpdate();
     } catch (error) {
       console.error('Error deleting orcamento:', error);
@@ -539,7 +571,7 @@ export function SidePanel({
   };
 
   const cancelRequisicao = async () => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     try {
       setIsCanceling(true);
@@ -550,11 +582,11 @@ export function SidePanel({
           status: 'cancelado',
           updated_at: new Date().toISOString() 
         })
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Requisição cancelada com sucesso' });
-      await sendNotification({ ...requisicao, status: 'cancelado' } as Requisicao, 'cancelado');
+      await sendNotification({ ...localRequisicao, status: 'cancelado' } as Requisicao, 'cancelado');
       onUpdate();
       onClose();
     } catch (error) {
@@ -566,7 +598,7 @@ export function SidePanel({
   };
 
   const deleteRequisicao = async () => {
-    if (!requisicao) return;
+    if (!localRequisicao) return;
     
     const confirmed = window.confirm('Tem certeza que deseja excluir permanentemente esta requisição? Esta ação não pode ser desfeita.');
     if (!confirmed) return;
@@ -575,13 +607,13 @@ export function SidePanel({
       setIsDeleting(true);
       
       // Delete related records first
-      await supabase.from('valor_historico').delete().eq('requisicao_id', requisicao.id);
-      await supabase.from('comentarios').delete().eq('requisicao_id', requisicao.id);
-      await supabase.from('audit_logs').delete().eq('requisicao_id', requisicao.id);
+      await supabase.from('valor_historico').delete().eq('requisicao_id', localRequisicao.id);
+      await supabase.from('comentarios').delete().eq('requisicao_id', localRequisicao.id);
+      await supabase.from('audit_logs').delete().eq('requisicao_id', localRequisicao.id);
       
       // Delete files from storage if they exist (multiple files support)
-      if (requisicao.arquivo_url) {
-        const urls = requisicao.arquivo_url.split(',');
+      if (localRequisicao.arquivo_url) {
+        const urls = localRequisicao.arquivo_url.split(',');
         for (const url of urls) {
           const urlParts = url.trim().split('/requisicoes-anexos/');
           if (urlParts.length > 1) {
@@ -590,8 +622,8 @@ export function SidePanel({
         }
       }
       
-      if ((requisicao as any).orcamento_url) {
-        const urlParts = (requisicao as any).orcamento_url.split('/requisicoes-anexos/');
+      if ((localRequisicao as any).orcamento_url) {
+        const urlParts = (localRequisicao as any).orcamento_url.split('/requisicoes-anexos/');
         if (urlParts.length > 1) {
           await supabase.storage.from('requisicoes-anexos').remove([urlParts[1]]);
         }
@@ -601,7 +633,7 @@ export function SidePanel({
       const { error } = await supabase
         .from('requisicoes')
         .delete()
-        .eq('id', requisicao.id);
+        .eq('id', localRequisicao.id);
 
       if (error) throw error;
       toast({ title: 'Requisição excluída com sucesso' });
@@ -620,37 +652,37 @@ export function SidePanel({
   };
 
   const sendEmailToSolicitante = async () => {
-    if (!requisicao) return;
-    await sendNotification(requisicao, requisicao.status);
+    if (!localRequisicao) return;
+    await sendNotification(localRequisicao, localRequisicao.status);
     toast({ title: 'E-mail enviado ao solicitante' });
   };
 
   const sendWhatsAppToSolicitante = () => {
-    if (!requisicao || !requisicao.solicitante_telefone) {
+    if (!localRequisicao || !localRequisicao.solicitante_telefone) {
       toast({ title: 'Telefone não cadastrado', variant: 'destructive' });
       return;
     }
     
-    const phone = requisicao.solicitante_telefone.replace(/\D/g, '');
+    const phone = localRequisicao.solicitante_telefone.replace(/\D/g, '');
     const phoneWithCountry = phone.startsWith('55') ? phone : `55${phone}`;
     
-    const statusLabel = STATUS_CONFIG[requisicao.status]?.label || requisicao.status;
-    const previsao = requisicao.previsao_entrega 
-      ? `\n📅 Previsão de entrega: ${formatDate(requisicao.previsao_entrega)}` 
+    const statusLabel = STATUS_CONFIG[localRequisicao.status]?.label || localRequisicao.status;
+    const previsao = localRequisicao.previsao_entrega 
+      ? `\n📅 Previsão de entrega: ${formatDate(localRequisicao.previsao_entrega)}` 
       : '';
-    const comprador = requisicao.comprador_nome 
-      ? `\n👤 Comprador: ${requisicao.comprador_nome}` 
+    const comprador = localRequisicao.comprador_nome 
+      ? `\n👤 Comprador: ${localRequisicao.comprador_nome}` 
       : '';
-    const valor = requisicao.valor 
-      ? `\n💰 Valor: ${formatCurrency(requisicao.valor)}` 
+    const valor = localRequisicao.valor 
+      ? `\n💰 Valor: ${formatCurrency(localRequisicao.valor)}` 
       : '';
     
-    const message = `Olá ${requisicao.solicitante_nome}! 👋
+    const message = `Olá ${localRequisicao.solicitante_nome}! 👋
 
 Atualização da sua requisição:
 
-📋 *Protocolo:* ${requisicao.protocolo}
-📦 *Item:* ${requisicao.item_nome}
+📋 *Protocolo:* ${localRequisicao.protocolo}
+📦 *Item:* ${localRequisicao.item_nome}
 📊 *Status:* ${statusLabel}${comprador}${previsao}${valor}
 
 Qualquer dúvida, estamos à disposição!`;
@@ -662,7 +694,7 @@ Qualquer dúvida, estamos à disposição!`;
     toast({ title: 'WhatsApp aberto' });
   };
 
-  if (!requisicao) return null;
+  if (!localRequisicao) return null;
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -675,10 +707,10 @@ Qualquer dúvida, estamos à disposição!`;
             </SheetTitle>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-sm font-mono text-muted-foreground">{requisicao.protocolo}</span>
+            <span className="text-sm font-mono text-muted-foreground">{localRequisicao.protocolo}</span>
             <div className="flex items-center gap-2">
-              <span className={cn('w-2.5 h-2.5 rounded-full', STATUS_CONFIG[requisicao.status].dotColor)} />
-              <StatusBadge status={requisicao.status} />
+              <span className={cn('w-2.5 h-2.5 rounded-full', STATUS_CONFIG[localRequisicao.status].dotColor)} />
+              <StatusBadge status={localRequisicao.status} />
             </div>
           </div>
         </SheetHeader>
@@ -687,7 +719,7 @@ Qualquer dúvida, estamos à disposição!`;
           <div className="p-6 space-y-6">
             {/* Timeline - disable revert for read-only */}
             <RequisicaoTimeline 
-              requisicao={requisicao} 
+              requisicao={localRequisicao} 
               onRevertStatus={readOnly ? undefined : updateStatus}
               isUpdating={isUpdating}
             />
@@ -698,17 +730,17 @@ Qualquer dúvida, estamos à disposição!`;
             <div className="space-y-4">
               <div>
                 <Label className="text-xs text-muted-foreground uppercase">Item</Label>
-                <p className="font-semibold text-lg">{requisicao.item_nome}</p>
+                <p className="font-semibold text-lg">{localRequisicao.item_nome}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-xs text-muted-foreground uppercase">Quantidade</Label>
-                  <p className="font-semibold">{requisicao.quantidade} {requisicao.unidade}</p>
+                  <p className="font-semibold">{localRequisicao.quantidade} {localRequisicao.unidade}</p>
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground uppercase">Prioridade</Label>
                   <div className="mt-1">
-                    <PriorityBadge priority={requisicao.prioridade} />
+                    <PriorityBadge priority={localRequisicao.prioridade} />
                   </div>
                 </div>
               </div>
@@ -720,18 +752,18 @@ Qualquer dúvida, estamos à disposição!`;
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground uppercase">Solicitante</Label>
               <div className="bg-muted/50 rounded-lg p-3 space-y-1">
-                <p className="font-medium">{requisicao.solicitante_nome}</p>
-                <p className="text-sm text-muted-foreground">{requisicao.solicitante_email}</p>
-                {requisicao.solicitante_telefone && (
-                  <p className="text-sm text-muted-foreground">{requisicao.solicitante_telefone}</p>
+                <p className="font-medium">{localRequisicao.solicitante_nome}</p>
+                <p className="text-sm text-muted-foreground">{localRequisicao.solicitante_email}</p>
+                {localRequisicao.solicitante_telefone && (
+                  <p className="text-sm text-muted-foreground">{localRequisicao.solicitante_telefone}</p>
                 )}
-                <p className="text-sm text-muted-foreground">Setor: {requisicao.solicitante_setor}</p>
-                {requisicao.solicitante_empresa && (
-                  <p className="text-sm text-muted-foreground font-medium">Empresa: {requisicao.solicitante_empresa}</p>
+                <p className="text-sm text-muted-foreground">Setor: {localRequisicao.solicitante_setor}</p>
+                {localRequisicao.solicitante_empresa && (
+                  <p className="text-sm text-muted-foreground font-medium">Empresa: {localRequisicao.solicitante_empresa}</p>
                 )}
-                {readOnly && requisicao.centro_custo && (
+                {readOnly && localRequisicao.centro_custo && (
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-primary">Centro de Custo:</span> {requisicao.centro_custo}
+                    <span className="font-medium text-primary">Centro de Custo:</span> {localRequisicao.centro_custo}
                   </p>
                 )}
               </div>
@@ -770,7 +802,7 @@ Qualquer dúvida, estamos à disposição!`;
                   />
                   <Button 
                     onClick={updateCentroCusto} 
-                    disabled={isUpdating || centroCustoInput === (requisicao.centro_custo || '')}
+                    disabled={isUpdating || centroCustoInput === (localRequisicao.centro_custo || '')}
                     size="sm"
                   >
                     {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
@@ -784,26 +816,26 @@ Qualquer dúvida, estamos à disposição!`;
             {/* Justificativa */}
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground uppercase">Justificativa</Label>
-              <p className="text-sm bg-muted/50 rounded-lg p-3">{requisicao.justificativa}</p>
+              <p className="text-sm bg-muted/50 rounded-lg p-3">{localRequisicao.justificativa}</p>
             </div>
 
             {/* Especificações */}
-            {requisicao.especificacoes && (
+            {localRequisicao.especificacoes && (
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground uppercase">Especificações</Label>
-                <p className="text-sm bg-muted/50 rounded-lg p-3 whitespace-pre-wrap">{requisicao.especificacoes}</p>
+                <p className="text-sm bg-muted/50 rounded-lg p-3 whitespace-pre-wrap">{localRequisicao.especificacoes}</p>
               </div>
             )}
 
             {/* Anexos */}
-            {requisicao.arquivo_url && (
+            {localRequisicao.arquivo_url && (
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground uppercase">
-                  Anexos ({requisicao.arquivo_url.split(',').length} {requisicao.arquivo_url.split(',').length === 1 ? 'arquivo' : 'arquivos'})
+                  Anexos ({localRequisicao.arquivo_url.split(',').length} {localRequisicao.arquivo_url.split(',').length === 1 ? 'arquivo' : 'arquivos'})
                 </Label>
                 <div className="space-y-2">
-                  {requisicao.arquivo_url.split(',').map((url, index) => {
-                    const nomes = requisicao.arquivo_nome?.split(',') || [];
+                  {localRequisicao.arquivo_url.split(',').map((url, index) => {
+                    const nomes = localRequisicao.arquivo_nome?.split(',') || [];
                     const nome = nomes[index] || `arquivo-${index + 1}`;
                     const trimmedUrl = url.trim();
                     
@@ -871,17 +903,17 @@ Qualquer dúvida, estamos à disposição!`;
             <Separator />
 
             {/* Observação do comprador - read-only display or editable */}
-            {requisicao.observacao_comprador && readOnly && (
+            {localRequisicao.observacao_comprador && readOnly && (
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground uppercase flex items-center gap-1.5">
                   <StickyNote className="w-4 h-4" />
                   Observação do Comprador
                 </Label>
-                <p className="text-sm bg-muted/50 rounded-lg p-3">{requisicao.observacao_comprador}</p>
+                <p className="text-sm bg-muted/50 rounded-lg p-3">{localRequisicao.observacao_comprador}</p>
               </div>
             )}
 
-            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(localRequisicao.status) && (
               <div className="space-y-2">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <StickyNote className="w-4 h-4" />
@@ -907,67 +939,67 @@ Qualquer dúvida, estamos à disposição!`;
             <Separator />
 
             {/* Comprador, Fornecedor & Previsão - only for staff */}
-            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(requisicao.status) && (
+            {!readOnly && !['pendente', 'rejeitado', 'cancelado'].includes(localRequisicao.status) && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <BuyerSelector
-                    value={requisicao.comprador_nome}
+                    value={localRequisicao.comprador_nome}
                     onChange={updateComprador}
                   />
                   <DeliveryDatePicker
-                    value={requisicao.previsao_entrega}
+                    value={localRequisicao.previsao_entrega}
                     onChange={updatePrevisaoEntrega}
                   />
                 </div>
                 <FornecedorSelector
-                  value={requisicao.fornecedor_nome}
+                  value={localRequisicao.fornecedor_nome}
                   onChange={updateFornecedor}
                 />
               </div>
             )}
 
             {/* Read-only view of comprador/fornecedor/previsao */}
-            {readOnly && (requisicao.comprador_nome || requisicao.fornecedor_nome || requisicao.previsao_entrega) && (
+            {readOnly && (localRequisicao.comprador_nome || localRequisicao.fornecedor_nome || localRequisicao.previsao_entrega) && (
               <div className="space-y-3">
-                {requisicao.comprador_nome && (
+                {localRequisicao.comprador_nome && (
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Comprador</Label>
-                    <p className="font-medium">{requisicao.comprador_nome}</p>
+                    <p className="font-medium">{localRequisicao.comprador_nome}</p>
                   </div>
                 )}
-                {requisicao.fornecedor_nome && (
+                {localRequisicao.fornecedor_nome && (
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Fornecedor</Label>
-                    <p className="font-medium">{requisicao.fornecedor_nome}</p>
+                    <p className="font-medium">{localRequisicao.fornecedor_nome}</p>
                   </div>
                 )}
-                {requisicao.previsao_entrega && (
+                {localRequisicao.previsao_entrega && (
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Previsão de Entrega</Label>
-                    <p className="font-medium">{new Date(requisicao.previsao_entrega + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
+                    <p className="font-medium">{new Date(localRequisicao.previsao_entrega + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                   </div>
                 )}
               </div>
             )}
 
             {/* Valores - read-only for solicitantes */}
-            {readOnly && (requisicao.valor || requisicao.valor_orcado) && (
+            {readOnly && (localRequisicao.valor || localRequisicao.valor_orcado) && (
               <div className="space-y-3 pt-4 border-t">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <DollarSign className="w-4 h-4" />
                   Valores
                 </Label>
                 <div className="grid grid-cols-2 gap-4">
-                  {requisicao.valor_orcado && (
+                  {localRequisicao.valor_orcado && (
                     <div>
                       <Label className="text-xs text-muted-foreground uppercase">Valor Orçado</Label>
-                      <p className="font-semibold">{formatCurrency(requisicao.valor_orcado)}</p>
+                      <p className="font-semibold">{formatCurrency(localRequisicao.valor_orcado)}</p>
                     </div>
                   )}
-                  {requisicao.valor && (
+                  {localRequisicao.valor && (
                     <div>
                       <Label className="text-xs text-muted-foreground uppercase">Valor Final</Label>
-                      <p className="font-semibold">{formatCurrency(requisicao.valor)}</p>
+                      <p className="font-semibold">{formatCurrency(localRequisicao.valor)}</p>
                     </div>
                   )}
                 </div>
@@ -975,7 +1007,7 @@ Qualquer dúvida, estamos à disposição!`;
             )}
 
             {/* Valores - editable for staff */}
-            {!readOnly && canEditValor(requisicao.status) && (
+            {!readOnly && canEditValor(localRequisicao.status) && (
               <div className="space-y-4 pt-4 border-t">
                 <Label className="text-sm font-semibold flex items-center gap-2">
                   <DollarSign className="w-4 h-4" />
@@ -1013,8 +1045,8 @@ Qualquer dúvida, estamos à disposição!`;
                 {/* Economia Calculada */}
                 {(() => {
                   const economia = calculateEconomia(
-                    valorOrcadoInput ? parseCurrencyInput(valorOrcadoInput) : requisicao.valor_orcado,
-                    valorInput ? parseCurrencyInput(valorInput) : requisicao.valor
+                    valorOrcadoInput ? parseCurrencyInput(valorOrcadoInput) : localRequisicao.valor_orcado,
+                    valorInput ? parseCurrencyInput(valorInput) : localRequisicao.valor
                   );
                   if (!economia) return null;
                   
@@ -1052,29 +1084,29 @@ Qualquer dúvida, estamos à disposição!`;
                     Anexar Orçamento/Cotação
                   </Label>
                   
-                  {(requisicao as any).orcamento_url ? (
+                  {(localRequisicao as any).orcamento_url ? (
                     <div className="flex gap-2">
                       <button
                         onClick={async () => {
                           try {
-                            const response = await fetch((requisicao as any).orcamento_url);
+                            const response = await fetch((localRequisicao as any).orcamento_url);
                             const blob = await response.blob();
                             const url = window.URL.createObjectURL(blob);
                             const link = document.createElement('a');
                             link.href = url;
-                            link.download = (requisicao as any).orcamento_nome || 'orcamento';
+                            link.download = (localRequisicao as any).orcamento_nome || 'orcamento';
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
                             window.URL.revokeObjectURL(url);
                           } catch {
-                            window.open((requisicao as any).orcamento_url, '_blank');
+                            window.open((localRequisicao as any).orcamento_url, '_blank');
                           }
                         }}
                         className="flex-1 flex items-center gap-2 p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg text-sm font-medium text-emerald-600 transition-colors"
                       >
                         <Paperclip className="w-4 h-4" />
-                        {(requisicao as any).orcamento_nome || 'Baixar orçamento'}
+                        {(localRequisicao as any).orcamento_nome || 'Baixar orçamento'}
                         <Download className="w-4 h-4 ml-auto" />
                       </button>
                       <Button
@@ -1135,7 +1167,7 @@ Qualquer dúvida, estamos à disposição!`;
             )}
 
             {/* Rejeição - only for staff */}
-            {!readOnly && requisicao.status === 'pendente' && (
+            {!readOnly && localRequisicao.status === 'pendente' && (
               <div className="space-y-2 pt-4 border-t">
                 <Label className="text-sm font-medium">Motivo da Rejeição (se aplicável)</Label>
                 <Textarea
@@ -1155,7 +1187,7 @@ Qualquer dúvida, estamos à disposição!`;
             {/* Ações rápidas por status */}
 
             {/* Ações rápidas por status */}
-            {requisicao.status === 'pendente' && (
+            {localRequisicao.status === 'pendente' && (
               <div className="flex gap-2">
                 <Button
                   className="flex-1"
@@ -1184,7 +1216,7 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {requisicao.status === 'em_analise' && (
+            {localRequisicao.status === 'em_analise' && (
               <div className="flex gap-2">
                 <Button
                   className="flex-1"
@@ -1213,28 +1245,28 @@ Qualquer dúvida, estamos à disposição!`;
               </div>
             )}
 
-            {requisicao.status === 'aprovado' && (
+            {localRequisicao.status === 'aprovado' && (
               <Button className="w-full" onClick={() => updateStatus('cotando')} disabled={isUpdating}>
                 <Package className="w-4 h-4 mr-2" />
                 Iniciar Cotação
               </Button>
             )}
 
-            {requisicao.status === 'cotando' && (
+            {localRequisicao.status === 'cotando' && (
               <Button className="w-full" variant="success" onClick={() => updateStatus('comprado')} disabled={isUpdating}>
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Marcar como Comprado
               </Button>
             )}
 
-            {requisicao.status === 'comprado' && (
+            {localRequisicao.status === 'comprado' && (
               <Button className="w-full" onClick={() => updateStatus('em_entrega')} disabled={isUpdating}>
                 <Truck className="w-4 h-4 mr-2" />
                 Marcar em Entrega
               </Button>
             )}
 
-            {requisicao.status === 'em_entrega' && (
+            {localRequisicao.status === 'em_entrega' && (
               <Button className="w-full" variant="success" onClick={() => updateStatus('recebido')} disabled={isUpdating}>
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Confirmar Entrega
