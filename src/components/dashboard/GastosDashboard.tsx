@@ -85,6 +85,7 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
   const [selectedSolicitante, setSelectedSolicitante] = useState<string | null>(null);
   const [selectedSetor, setSelectedSetor] = useState<string | null>(null);
   const [selectedEmpresa, setSelectedEmpresa] = useState<string | null>(null);
+  const [selectedCentroCusto, setSelectedCentroCusto] = useState<string | null>(null);
 
   // Load saved filters
   useEffect(() => {
@@ -263,6 +264,10 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     setSelectedEmpresa(empresa);
   };
 
+  const handleCentroCustoClick = (centroCusto: string) => {
+    setSelectedCentroCusto(centroCusto);
+  };
+
   // Get requests for selected solicitante
   const solicitanteRequests = useMemo(() => {
     if (!selectedSolicitante) return [];
@@ -280,6 +285,12 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     if (!selectedEmpresa) return [];
     return filteredRequisicoes.filter((r) => r.solicitante_empresa === selectedEmpresa);
   }, [filteredRequisicoes, selectedEmpresa]);
+
+  // Get requests for selected centro de custo
+  const centroCustoRequests = useMemo(() => {
+    if (!selectedCentroCusto) return [];
+    return filteredRequisicoes.filter((r) => r.centro_custo === selectedCentroCusto);
+  }, [filteredRequisicoes, selectedCentroCusto]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
@@ -416,6 +427,40 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
     );
   }
 
+  // Show selected centro de custo's requests
+  if (selectedCentroCusto) {
+    const totalValor = centroCustoRequests.reduce((sum, r) => sum + (r.valor || 0), 0);
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSelectedCentroCusto(null)}
+              className="h-9 w-9"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight">Centro de Custo: {selectedCentroCusto}</h2>
+              <p className="text-muted-foreground text-sm">
+                {centroCustoRequests.length} requisições • Total: {formatCurrency(totalValor)}
+              </p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setSelectedCentroCusto(null)}>
+            <X className="w-4 h-4 mr-2" />
+            Fechar
+          </Button>
+        </div>
+
+        <DrillDownTable requests={centroCustoRequests} formatCurrency={formatCurrency} formatDate={formatDate} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -465,7 +510,7 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
       {/* Row 4: Gastos por Setor + Centro de Custo */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GastosPorSetorBars requisicoes={filteredRequisicoes} onSetorClick={handleSetorClick} />
-        <GastosPorCentroCusto requisicoes={filteredRequisicoes} />
+        <GastosPorCentroCusto requisicoes={filteredRequisicoes} onDrillDown={handleCentroCustoClick} />
       </div>
 
       {/* Row 5: Evolução Temporal */}
