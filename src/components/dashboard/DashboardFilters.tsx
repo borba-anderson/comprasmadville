@@ -9,6 +9,7 @@ import {
   Trash2,
   Filter,
   Wallet,
+  UserCheck,
 } from 'lucide-react';
 import {
   Select,
@@ -43,6 +44,7 @@ export interface DashboardFiltersState {
   setores: string[];
   status: string[];
   centrosCusto: string[];
+  compradores: string[];
   dateFrom: string;
   dateTo: string;
 }
@@ -53,12 +55,16 @@ export interface SavedDashboardFilter {
   filters: DashboardFiltersState;
 }
 
+// Lista fixa de compradores
+export const COMPRADORES_LIST = ['Anderson', 'Mariana', 'Geovani', 'Ruan'];
+
 export const DEFAULT_DASHBOARD_FILTERS: DashboardFiltersState = {
   periodo: '30d',
   empresas: [],
   setores: [],
   status: [],
   centrosCusto: [],
+  compradores: [],
   dateFrom: '',
   dateTo: '',
 };
@@ -185,6 +191,7 @@ export function DashboardFilters({
     filters.setores.length > 0 ||
     filters.status.length > 0 ||
     filters.centrosCusto.length > 0 ||
+    filters.compradores.length > 0 ||
     filters.dateFrom !== '' ||
     filters.dateTo !== '';
   
@@ -207,6 +214,11 @@ export function DashboardFilters({
     value: key,
     label: config.label,
     dotColor: config.dotColor,
+  }));
+
+  const compradorOptions = COMPRADORES_LIST.map((comprador) => ({
+    value: comprador,
+    label: comprador,
   }));
 
   return (
@@ -268,6 +280,15 @@ export function DashboardFilters({
           onChange={(centrosCusto) => onChange({ ...filters, centrosCusto })}
         />
       )}
+
+      {/* Comprador Multi-select */}
+      <MultiSelectDropdown
+        label="Compradores"
+        icon={UserCheck}
+        options={compradorOptions}
+        value={filters.compradores}
+        onChange={(compradores) => onChange({ ...filters, compradores })}
+      />
 
       {/* Saved Filters */}
       {savedFilters.length > 0 && (
