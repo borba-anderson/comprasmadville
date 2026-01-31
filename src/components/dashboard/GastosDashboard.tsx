@@ -198,6 +198,12 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
       previous = previous.filter((r) => r.centro_custo && filters.centrosCusto.includes(r.centro_custo));
     }
 
+    // Apply comprador filter
+    if (filters.compradores.length > 0) {
+      filtered = filtered.filter((r) => r.comprador_nome && filters.compradores.includes(r.comprador_nome));
+      previous = previous.filter((r) => r.comprador_nome && filters.compradores.includes(r.comprador_nome));
+    }
+
     return { filteredRequisicoes: filtered, previousPeriodRequisicoes: previous };
   }, [requisicoes, filters]);
 
