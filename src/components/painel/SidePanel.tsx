@@ -694,11 +694,24 @@ Qualquer dúvida, estamos à disposição!`;
     toast({ title: 'WhatsApp aberto' });
   };
 
+  // Combined loading state for overlay
+  const isAnyLoading = isUpdating || isUploadingOrcamento || isDeletingAnexo || isDeletingOrcamento || isCanceling || isDeleting;
+
   if (!localRequisicao) return null;
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
+      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col relative">
+        {/* Loading Overlay */}
+        {isAnyLoading && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <span className="text-sm font-medium text-muted-foreground">Atualizando...</span>
+            </div>
+          </div>
+        )}
+        
         <SheetHeader className="px-6 py-4 border-b">
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center gap-2 text-lg">
