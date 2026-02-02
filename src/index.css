@@ -523,9 +523,11 @@
     opacity: 0;
   }
 
-  /* ==================== APENAS BOTÕES DE AÇÃO LARANJA -> VERDE ==================== */
+  /* ==================== DESIGN SYSTEM ATUALIZADO - MODERN CLEAN UI ==================== */
 
-  /* Botões de visão rápida e ação */
+  /* Adicione ESTE CSS ao final do seu index.css existente */
+
+  /* ==================== APENAS BOTÕES LARANJA -> VERDE ==================== */
   button.bg-orange-500,
   button.bg-orange-600,
   a.bg-orange-500,
@@ -534,61 +536,338 @@
   }
 
   button.hover\:bg-orange-600:hover,
-  button.hover\:bg-orange-700:hover,
-  a.hover\:bg-orange-600:hover,
-  a.hover\:bg-orange-700:hover {
+  button.hover\:bg-orange-700:hover {
     background-color: #059669 !important;
   }
 
-  /* Bordas de botões laranja -> verde */
-  button.border-orange-500,
-  button.border-orange-600,
-  a.border-orange-500,
-  a.border-orange-600 {
-    border-color: #10b981 !important;
+  /* ==================== TIPOGRAFIA MODERNA ==================== */
+  @layer base {
+    body {
+      font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.01em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
   }
 
-  button.hover\:border-orange-600:hover,
-  button.hover\:border-orange-700:hover {
-    border-color: #059669 !important;
+  /* ==================== TABELAS MODERNAS ==================== */
+  @layer components {
+    /* Container da tabela */
+    .modern-table-container {
+      @apply bg-white rounded-xl border border-slate-200 overflow-hidden;
+    }
+
+    /* Cabeçalho da tabela */
+    .modern-table thead {
+      @apply bg-slate-50 border-b border-slate-200;
+    }
+
+    .modern-table thead th {
+      @apply px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider;
+    }
+
+    /* Corpo da tabela */
+    .modern-table tbody tr {
+      @apply border-b border-slate-100 hover:bg-slate-50 transition-colors duration-150;
+    }
+
+    .modern-table tbody tr:last-child {
+      @apply border-b-0;
+    }
+
+    .modern-table tbody td {
+      @apply px-6 py-4 text-sm text-slate-700;
+    }
+
+    /* Linha selecionada */
+    .modern-table tbody tr.selected {
+      @apply bg-emerald-50 border-l-4 border-l-emerald-500;
+    }
+
+    /* ==================== BADGES MODERNOS ==================== */
+    .modern-badge {
+      @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border;
+    }
+
+    /* Badge verde (sem marcador, uso e consumo, etc) */
+    .badge-green {
+      @apply bg-emerald-50 text-emerald-700 border-emerald-200;
+    }
+
+    /* Badge vermelho (sem marcador) */
+    .badge-red {
+      @apply bg-red-50 text-red-700 border-red-200;
+    }
+
+    /* Badge cinza (CFOP) */
+    .badge-gray {
+      @apply bg-slate-100 text-slate-600 border-slate-200;
+    }
+
+    /* ==================== BOTÕES MODERNOS ==================== */
+    .modern-button {
+      @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg;
+      @apply transition-all duration-200 ease-out;
+      @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
+
+    .modern-button-primary {
+      @apply modern-button bg-emerald-600 text-white hover:bg-emerald-700;
+      @apply focus:ring-emerald-500 shadow-sm;
+    }
+
+    .modern-button-secondary {
+      @apply modern-button bg-white text-slate-700 border border-slate-300 hover:bg-slate-50;
+      @apply focus:ring-slate-500;
+    }
+
+    .modern-button-ghost {
+      @apply modern-button bg-transparent text-slate-600 hover:bg-slate-100;
+    }
+
+    /* ==================== INPUTS MODERNOS ==================== */
+    .modern-input {
+      @apply w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg;
+      @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent;
+      @apply transition-all duration-200;
+      @apply placeholder:text-slate-400;
+    }
+
+    .modern-select {
+      @apply modern-input appearance-none bg-white;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+    }
+
+    /* ==================== CARDS MODERNOS ==================== */
+    .modern-card {
+      @apply bg-white rounded-xl border border-slate-200 p-6;
+      @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+    }
+
+    .modern-card-header {
+      @apply flex items-center justify-between mb-4 pb-4 border-b border-slate-200;
+    }
+
+    .modern-card-title {
+      @apply text-lg font-semibold text-slate-900;
+    }
+
+    /* ==================== FILTROS MODERNOS ==================== */
+    .modern-filters {
+      @apply bg-white rounded-xl border border-slate-200 p-6 mb-6;
+    }
+
+    .modern-filters-grid {
+      @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+    }
+
+    /* ==================== STATS CARDS MODERNOS ==================== */
+    .modern-stat-card {
+      @apply bg-white rounded-xl border border-slate-200 p-6;
+      @apply hover:border-emerald-300 transition-all duration-200;
+    }
+
+    .modern-stat-value {
+      @apply text-3xl font-bold text-slate-900 mb-1;
+    }
+
+    .modern-stat-label {
+      @apply text-sm font-medium text-slate-600;
+    }
+
+    .modern-stat-icon {
+      @apply w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4;
+    }
+
+    /* ==================== HEADER MODERNO ==================== */
+    .modern-header {
+      @apply bg-white border-b border-slate-200 sticky top-0 z-50;
+    }
+
+    .modern-header-content {
+      @apply max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between;
+    }
+
+    .modern-logo {
+      @apply flex items-center gap-3;
+    }
+
+    .modern-nav {
+      @apply flex items-center gap-6;
+    }
+
+    .modern-nav-item {
+      @apply text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors;
+    }
+
+    .modern-nav-item.active {
+      @apply text-emerald-600 border-b-2 border-emerald-600 pb-1;
+    }
+
+    /* ==================== TABS MODERNOS ==================== */
+    .modern-tabs {
+      @apply flex gap-1 bg-slate-100 p-1 rounded-lg;
+    }
+
+    .modern-tab {
+      @apply px-4 py-2 text-sm font-medium rounded-md transition-all;
+      @apply text-slate-600 hover:text-slate-900;
+    }
+
+    .modern-tab.active {
+      @apply bg-white text-slate-900 shadow-sm;
+    }
+
+    /* ==================== PAGINAÇÃO MODERNA ==================== */
+    .modern-pagination {
+      @apply flex items-center justify-between px-6 py-4 bg-white border-t border-slate-200;
+    }
+
+    .modern-pagination-button {
+      @apply px-3 py-2 text-sm font-medium rounded-lg;
+      @apply border border-slate-300 bg-white text-slate-700;
+      @apply hover:bg-slate-50 transition-colors;
+      @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .modern-pagination-button.active {
+      @apply bg-emerald-600 text-white border-emerald-600;
+    }
+
+    /* ==================== DROPDOWN MODERNO ==================== */
+    .modern-dropdown {
+      @apply absolute right-0 mt-2 w-56 origin-top-right;
+      @apply bg-white rounded-lg shadow-lg border border-slate-200;
+      @apply divide-y divide-slate-100;
+    }
+
+    .modern-dropdown-item {
+      @apply flex items-center gap-3 px-4 py-3 text-sm text-slate-700;
+      @apply hover:bg-slate-50 transition-colors cursor-pointer;
+    }
+
+    /* ==================== LOADING STATES ==================== */
+    .modern-skeleton {
+      @apply animate-pulse bg-slate-200 rounded;
+    }
+
+    /* ==================== RESPONSIVIDADE ==================== */
+    @media (max-width: 768px) {
+      .modern-table thead {
+        @apply hidden;
+      }
+
+      .modern-table tbody tr {
+        @apply block mb-4 border border-slate-200 rounded-lg;
+      }
+
+      .modern-table tbody td {
+        @apply block text-right px-4 py-3;
+        @apply before:content-[attr(data-label)] before:float-left before:font-semibold before:text-slate-600;
+      }
+    }
   }
 
-  /* Texto dentro de botões laranja -> verde (mas mantém branco se já for branco) */
-  button.bg-orange-500 .text-orange-500,
-  button.bg-orange-600 .text-orange-600 {
-    color: white !important;
+  /* ==================== MELHORIAS VISUAIS GLOBAIS ==================== */
+  @layer utilities {
+    /* Sombras modernas e sutis */
+    .shadow-soft {
+      box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.04),
+        0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    }
+
+    .shadow-soft-lg {
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.04),
+        0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Transições suaves */
+    .transition-smooth {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Foco visível */
+    .focus-ring {
+      @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+    }
+
+    /* Hover elevação */
+    .hover-lift {
+      @apply transition-transform duration-200 hover:-translate-y-0.5;
+    }
+
+    /* Texto truncado com tooltip */
+    .text-truncate-tooltip {
+      @apply truncate cursor-help;
+    }
+
+    /* Divisor sutil */
+    .divider-subtle {
+      @apply border-t border-slate-100 my-4;
+    }
   }
 
-  /* Ring/focus de botões laranja -> verde */
-  button.ring-orange-500,
-  button.focus\:ring-orange-500:focus,
-  a.ring-orange-500,
-  a.focus\:ring-orange-500:focus {
-    --tw-ring-color: #10b981 !important;
+  /* ==================== ANIMAÇÕES PERSONALIZADAS ==================== */
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 
-  button.ring-orange-600,
-  button.focus\:ring-orange-600:focus {
-    --tw-ring-color: #059669 !important;
+  @keyframes fade-in-up {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
-  /* Estados ativos de botões */
-  button.active\:bg-orange-500:active,
-  button.active\:bg-orange-600:active {
-    background-color: #059669 !important;
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
   }
 
-  /* Seleção de produtos/linhas - bordas laranja -> verde */
-  tr.border-orange-500,
-  tr.border-l-orange-500,
-  div.border-orange-500,
-  div.border-l-orange-500 {
-    border-color: #10b981 !important;
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s ease-out;
   }
 
-  /* Backgrounds de seleção laranja -> verde (não cards) */
-  tr.bg-orange-50,
-  div[role="row"].bg-orange-50 {
-    background-color: #ecfdf5 !important;
+  /* ==================== OTIMIZAÇÕES DE PERFORMANCE ==================== */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  img,
+  svg {
+    @apply select-none;
+  }
+
+  button,
+  a {
+    @apply select-none;
   }
 }
