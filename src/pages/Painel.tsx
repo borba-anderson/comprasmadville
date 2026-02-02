@@ -176,71 +176,59 @@ export default function Painel() {
     <div className="min-h-screen bg-slate-50">
       <style>
         {`
-          /* Sobrescrever cores laranja/warning para verde */
-          .bg-orange-100,
-          .bg-yellow-100,
-          .bg-amber-100 {
-            background-color: #d1fae5 !important;
-          }
+          /* Sobrescrever cores laranja em botões de visão rápida e seleção */
           
-          .text-orange-800,
-          .text-yellow-800,
-          .text-amber-800 {
-            color: #065f46 !important;
-          }
-          
-          .border-orange-200,
-          .border-yellow-200,
-          .border-amber-200 {
-            border-color: #a7f3d0 !important;
-          }
-          
-          .hover\\:bg-orange-50:hover,
-          .hover\\:bg-yellow-50:hover,
-          .hover\\:bg-amber-50:hover {
-            background-color: #ecfdf5 !important;
-          }
-          
-          .ring-orange-500,
-          .ring-yellow-500,
-          .ring-amber-500 {
-            --tw-ring-color: #10b981 !important;
-          }
-          
-          .text-orange-500,
-          .text-yellow-500,
-          .text-amber-500 {
-            color: #10b981 !important;
-          }
-          
-          .text-orange-600,
-          .text-yellow-600,
-          .text-amber-600 {
-            color: #059669 !important;
-          }
-          
-          .bg-orange-500,
-          .bg-yellow-500,
-          .bg-amber-500 {
-            background-color: #10b981 !important;
-          }
-          
-          .bg-orange-600,
-          .bg-yellow-600,
-          .bg-amber-600 {
-            background-color: #059669 !important;
-          }
-          
+          /* Botões de ação laranja -> verde */
           button.bg-orange-500,
-          button.bg-yellow-500,
-          button.bg-amber-500 {
+          button.bg-orange-600,
+          .bg-orange-500:not([class*="card"]):not([class*="stat"]),
+          .bg-orange-600:not([class*="card"]):not([class*="stat"]) {
             background-color: #10b981 !important;
           }
           
           button.hover\\:bg-orange-600:hover,
-          button.hover\\:bg-yellow-600:hover,
-          button.hover\\:bg-amber-600:hover {
+          button.hover\\:bg-orange-700:hover {
             background-color: #059669 !important;
+          }
+          
+          /* Bordas de seleção laranja -> verde */
+          .border-orange-500,
+          .border-orange-600,
+          .ring-orange-500 {
+            border-color: #10b981 !important;
+            --tw-ring-color: #10b981 !important;
+          }
+          
+          /* Texto de botões laranja -> verde */
+          button .text-orange-500,
+          button .text-orange-600,
+          a .text-orange-500,
+          a .text-orange-600 {
+            color: #10b981 !important;
+          }
+          
+          /* Backgrounds de seleção/hover laranja -> verde */
+          .hover\\:bg-orange-50:hover:not([class*="card"]):not([class*="stat"]) {
+            background-color: #ecfdf5 !important;
+          }
+          
+          .bg-orange-50:not([class*="card"]):not([class*="stat"]) {
+            background-color: #ecfdf5 !important;
+          }
+          
+          /* Ícones e SVG laranja -> verde */
+          .text-orange-500:not([class*="card"] *):not([class*="stat"] *) {
+            color: #10b981 !important;
+          }
+          
+          /* Links e elementos interativos */
+          a.text-orange-600,
+          a.text-orange-500 {
+            color: #10b981 !important;
+          }
+          
+          a.hover\\:text-orange-700:hover {
+            color: #059669 !important;
           }
         `}
       </style>
