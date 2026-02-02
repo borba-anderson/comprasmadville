@@ -8,7 +8,6 @@ import { GastosDashboard } from "@/components/dashboard";
 import {
   FiltersBar,
   RequisicaoTable,
-  SidePanel,
   PaginationControls,
   usePainelFilters,
   useSorting,
@@ -37,7 +36,6 @@ export default function Painel() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedRequisicao, setSelectedRequisicao] = useState<Requisicao | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [valorHistoryMap, _setValorHistoryMap] = useState<Record<string, ValorHistorico[]>>({});
 
   const { user, profile, isStaff, isLoading: authLoading, rolesLoaded } = useAuth();
@@ -152,8 +150,7 @@ export default function Painel() {
   };
 
   const handleViewDetails = (req: Requisicao) => {
-    setSelectedRequisicao(req);
-    setIsPanelOpen(true);
+    navigate(`/painel/${req.id}`);
   };
 
   const hasActiveFilters =
@@ -314,16 +311,6 @@ export default function Painel() {
           )}
         </Tabs>
       </main>
-
-      <SidePanel
-        requisicao={selectedRequisicao}
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        onUpdate={() => fetchRequisicoes(true)}
-        profileNome={profile?.nome}
-        profileId={profile?.id}
-        readOnly={isReadOnly}
-      />
     </div>
   );
 }
