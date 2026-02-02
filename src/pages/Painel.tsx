@@ -176,59 +176,43 @@ export default function Painel() {
     <div className="min-h-screen bg-slate-50">
       <style>
         {`
-          /* Sobrescrever cores laranja em botões de visão rápida e seleção */
-          
-          /* Botões de ação laranja -> verde */
-          button.bg-orange-500,
-          button.bg-orange-600,
-          .bg-orange-500:not([class*="card"]):not([class*="stat"]),
-          .bg-orange-600:not([class*="card"]):not([class*="stat"]) {
+          /* Botões de visão rápida laranja -> verde */
+          button[class*="bg-orange"],
+          .bg-orange-500,
+          .bg-orange-600 {
             background-color: #10b981 !important;
           }
           
-          button.hover\\:bg-orange-600:hover,
-          button.hover\\:bg-orange-700:hover {
+          button[class*="hover:bg-orange"]:hover,
+          .hover\\:bg-orange-600:hover,
+          .hover\\:bg-orange-700:hover {
             background-color: #059669 !important;
           }
           
-          /* Bordas de seleção laranja -> verde */
-          .border-orange-500,
-          .border-orange-600,
-          .ring-orange-500 {
+          /* Texto dos botões laranja */
+          button[class*="text-orange"],
+          .text-orange-500,
+          .text-orange-600,
+          .text-orange-700 {
+            color: white !important;
+          }
+          
+          /* Bordas e rings laranja -> verde */
+          [class*="border-orange"],
+          [class*="ring-orange"] {
             border-color: #10b981 !important;
             --tw-ring-color: #10b981 !important;
           }
           
-          /* Texto de botões laranja -> verde */
-          button .text-orange-500,
-          button .text-orange-600,
-          a .text-orange-500,
-          a .text-orange-600 {
-            color: #10b981 !important;
+          /* Background de hover laranja -> verde */
+          [class*="hover:bg-orange"]:hover {
+            background-color: #059669 !important;
           }
           
-          /* Backgrounds de seleção/hover laranja -> verde */
-          .hover\\:bg-orange-50:hover:not([class*="card"]):not([class*="stat"]) {
-            background-color: #ecfdf5 !important;
-          }
-          
-          .bg-orange-50:not([class*="card"]):not([class*="stat"]) {
-            background-color: #ecfdf5 !important;
-          }
-          
-          /* Ícones e SVG laranja -> verde */
-          .text-orange-500:not([class*="card"] *):not([class*="stat"] *) {
-            color: #10b981 !important;
-          }
-          
-          /* Links e elementos interativos */
-          a.text-orange-600,
-          a.text-orange-500 {
-            color: #10b981 !important;
-          }
-          
-          a.hover\\:text-orange-700:hover {
-            color: #059669 !important;
+          /* Para badges e pills laranja */
+          span[class*="bg-orange"],
+          div[class*="bg-orange"] {
+            background-color: #10b981 !important;
           }
         `}
       </style>
