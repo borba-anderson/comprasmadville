@@ -166,16 +166,15 @@ export default function Painel() {
 
   if (authLoading || !rolesLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#107c50]">
-        <div className="spinner w-8 h-8 border-white" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="spinner w-8 h-8 border-[#107c50]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#107c50] text-slate-50">
-      {/* HEADER: Corrigido para texto PRETO (slate-900) */}
-      <div className="bg-white sticky top-0 z-50 shadow-sm text-slate-900 [&_*]:text-slate-900 [&_button]:text-slate-900 [&_svg]:text-slate-900">
+    <div className="min-h-screen bg-slate-50">
+      <div className="bg-white sticky top-0 z-50 shadow-sm">
         <Header />
       </div>
 
