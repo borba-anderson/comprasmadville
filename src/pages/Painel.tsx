@@ -176,43 +176,58 @@ export default function Painel() {
     <div className="min-h-screen bg-slate-50">
       <style>
         {`
-          /* Botões de visão rápida laranja -> verde */
-          button[class*="bg-orange"],
-          .bg-orange-500,
-          .bg-orange-600 {
+          /* Substituir TODAS as cores laranja por verde - Abordagem agressiva */
+          
+          /* Todos os backgrounds laranja */
+          *[class*="bg-orange"],
+          *[style*="background-color: rgb(249, 115, 22)"],
+          *[style*="background-color: rgb(251, 146, 60)"],
+          *[style*="background: rgb(249, 115, 22)"],
+          *[style*="background: rgb(251, 146, 60)"] {
             background-color: #10b981 !important;
+            background: #10b981 !important;
           }
           
-          button[class*="hover:bg-orange"]:hover,
-          .hover\\:bg-orange-600:hover,
-          .hover\\:bg-orange-700:hover {
-            background-color: #059669 !important;
+          /* Todos os textos laranja */
+          *[class*="text-orange"] {
+            color: #10b981 !important;
           }
           
-          /* Texto dos botões laranja */
-          button[class*="text-orange"],
-          .text-orange-500,
-          .text-orange-600,
-          .text-orange-700 {
-            color: white !important;
-          }
-          
-          /* Bordas e rings laranja -> verde */
-          [class*="border-orange"],
-          [class*="ring-orange"] {
+          /* Todas as bordas laranja */
+          *[class*="border-orange"] {
             border-color: #10b981 !important;
+          }
+          
+          /* Todos os hovers laranja */
+          *[class*="hover:bg-orange"]:hover {
+            background-color: #059669 !important;
+            background: #059669 !important;
+          }
+          
+          *[class*="hover:text-orange"]:hover {
+            color: #059669 !important;
+          }
+          
+          *[class*="hover:border-orange"]:hover {
+            border-color: #059669 !important;
+          }
+          
+          /* Ring/outline laranja */
+          *[class*="ring-orange"] {
             --tw-ring-color: #10b981 !important;
           }
           
-          /* Background de hover laranja -> verde */
-          [class*="hover:bg-orange"]:hover {
-            background-color: #059669 !important;
+          /* Focus laranja */
+          *[class*="focus:bg-orange"]:focus {
+            background-color: #10b981 !important;
           }
           
-          /* Para badges e pills laranja */
-          span[class*="bg-orange"],
-          div[class*="bg-orange"] {
-            background-color: #10b981 !important;
+          *[class*="focus:border-orange"]:focus {
+            border-color: #10b981 !important;
+          }
+          
+          *[class*="focus:ring-orange"]:focus {
+            --tw-ring-color: #10b981 !important;
           }
         `}
       </style>
