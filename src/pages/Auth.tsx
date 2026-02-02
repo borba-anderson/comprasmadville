@@ -169,7 +169,7 @@ export default function Auth() {
         </h1>
       </div>
 
-      <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
+      <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden animate-scale-in">
         <div className="p-8 md:p-10">
           <div className="flex mb-8 bg-slate-100/80 p-1.5 rounded-xl">
             <button
