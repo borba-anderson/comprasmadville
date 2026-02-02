@@ -152,7 +152,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-[#107c50] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -164,7 +164,9 @@ export default function Auth() {
         <div className="flex items-center justify-center gap-4 mb-3">
           <img src={gmadLogo} alt="GMAD Logo" className="h-16 w-auto" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-white font-jakarta tracking-tight">Central de Compras</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-[#107c50] font-jakarta tracking-tight">
+          Central de Compras
+        </h1>
       </div>
 
       <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
@@ -347,7 +349,7 @@ export default function Auth() {
       <div className="mt-8 text-center animate-fade-in delay-100">
         <Link
           to="/"
-          className="inline-flex items-center text-white/80 hover:text-white text-sm font-medium transition-colors px-4 py-2 rounded-full hover:bg-white/10"
+          className="inline-flex items-center text-slate-600 hover:text-[#107c50] text-sm font-medium transition-colors px-4 py-2 rounded-full hover:bg-slate-100"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Voltar ao início
