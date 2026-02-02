@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Requisicao from "./pages/Requisicao";
 import Painel from "./pages/Painel";
+import RequisicaoDetalhe from "./pages/RequisicaoDetalhe";
 import Usuarios from "./pages/Usuarios";
 import AlterarSenha from "./pages/AlterarSenha";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/requisicao" element={<Requisicao />} />
               <Route path="/painel" element={<Painel />} />
+              <Route path="/painel/:id" element={<RequisicaoDetalhe />} />
               <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/alterar-senha" element={<AlterarSenha />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
