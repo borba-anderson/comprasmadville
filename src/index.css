@@ -123,7 +123,9 @@
     --chart-4: 84 18.9% 82.8%;
     --chart-5: 70 18.8% 76.9%;
     --sidebar: 248 0.3% 98.4%;
-    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+      ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+      "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -388,7 +390,8 @@
   }
 
   @keyframes pulseUrgent {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 0 0 hsl(var(--priority-alta) / 0.4);
     }
     50% {
@@ -425,19 +428,15 @@
   }
 
   .animate-shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      hsl(0 0% 100% / 0.15) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(90deg, transparent 0%, hsl(0 0% 100% / 0.15) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 3s ease-in-out infinite;
   }
 
   /* Pulse Glow - Brilho pulsante */
   @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 5px hsl(var(--info) / 0.3);
     }
     50% {
@@ -451,7 +450,8 @@
 
   /* Float - Flutuação suave */
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0px);
     }
     50% {
@@ -479,7 +479,8 @@
 
   /* Bounce Subtle - Pequeno pulo */
   @keyframes bounce-subtle {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -522,72 +523,72 @@
     opacity: 0;
   }
 
-/* ==================== APENAS BOTÕES DE AÇÃO LARANJA -> VERDE ==================== */
+  /* ==================== APENAS BOTÕES DE AÇÃO LARANJA -> VERDE ==================== */
 
-/* Botões de visão rápida e ação */
-button.bg-orange-500,
-button.bg-orange-600,
-a.bg-orange-500,
-a.bg-orange-600 {
-  background-color: #10b981 !important;
-}
+  /* Botões de visão rápida e ação */
+  button.bg-orange-500,
+  button.bg-orange-600,
+  a.bg-orange-500,
+  a.bg-orange-600 {
+    background-color: #10b981 !important;
+  }
 
-button.hover\:bg-orange-600:hover,
-button.hover\:bg-orange-700:hover,
-a.hover\:bg-orange-600:hover,
-a.hover\:bg-orange-700:hover {
-  background-color: #059669 !important;
-}
+  button.hover\:bg-orange-600:hover,
+  button.hover\:bg-orange-700:hover,
+  a.hover\:bg-orange-600:hover,
+  a.hover\:bg-orange-700:hover {
+    background-color: #059669 !important;
+  }
 
-/* Bordas de botões laranja -> verde */
-button.border-orange-500,
-button.border-orange-600,
-a.border-orange-500,
-a.border-orange-600 {
-  border-color: #10b981 !important;
-}
+  /* Bordas de botões laranja -> verde */
+  button.border-orange-500,
+  button.border-orange-600,
+  a.border-orange-500,
+  a.border-orange-600 {
+    border-color: #10b981 !important;
+  }
 
-button.hover\:border-orange-600:hover,
-button.hover\:border-orange-700:hover {
-  border-color: #059669 !important;
-}
+  button.hover\:border-orange-600:hover,
+  button.hover\:border-orange-700:hover {
+    border-color: #059669 !important;
+  }
 
-/* Texto dentro de botões laranja -> verde (mas mantém branco se já for branco) */
-button.bg-orange-500 .text-orange-500,
-button.bg-orange-600 .text-orange-600 {
-  color: white !important;
-}
+  /* Texto dentro de botões laranja -> verde (mas mantém branco se já for branco) */
+  button.bg-orange-500 .text-orange-500,
+  button.bg-orange-600 .text-orange-600 {
+    color: white !important;
+  }
 
-/* Ring/focus de botões laranja -> verde */
-button.ring-orange-500,
-button.focus\:ring-orange-500:focus,
-a.ring-orange-500,
-a.focus\:ring-orange-500:focus {
-  --tw-ring-color: #10b981 !important;
-}
+  /* Ring/focus de botões laranja -> verde */
+  button.ring-orange-500,
+  button.focus\:ring-orange-500:focus,
+  a.ring-orange-500,
+  a.focus\:ring-orange-500:focus {
+    --tw-ring-color: #10b981 !important;
+  }
 
-button.ring-orange-600,
-button.focus\:ring-orange-600:focus {
-  --tw-ring-color: #059669 !important;
-}
+  button.ring-orange-600,
+  button.focus\:ring-orange-600:focus {
+    --tw-ring-color: #059669 !important;
+  }
 
-/* Estados ativos de botões */
-button.active\:bg-orange-500:active,
-button.active\:bg-orange-600:active {
-  background-color: #059669 !important;
-}
+  /* Estados ativos de botões */
+  button.active\:bg-orange-500:active,
+  button.active\:bg-orange-600:active {
+    background-color: #059669 !important;
+  }
 
-/* Seleção de produtos/linhas - bordas laranja -> verde */
-tr.border-orange-500,
-tr.border-l-orange-500,
-div.border-orange-500,
-div.border-l-orange-500 {
-  border-color: #10b981 !important;
-}
+  /* Seleção de produtos/linhas - bordas laranja -> verde */
+  tr.border-orange-500,
+  tr.border-l-orange-500,
+  div.border-orange-500,
+  div.border-l-orange-500 {
+    border-color: #10b981 !important;
+  }
 
-/* Backgrounds de seleção laranja -> verde (não cards) */
-tr.bg-orange-50,
-div[role="row"].bg-orange-50 {
-  background-color: #ecfdf5 !important;
-
+  /* Backgrounds de seleção laranja -> verde (não cards) */
+  tr.bg-orange-50,
+  div[role="row"].bg-orange-50 {
+    background-color: #ecfdf5 !important;
+  }
 }
