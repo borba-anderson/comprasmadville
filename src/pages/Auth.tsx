@@ -24,9 +24,7 @@ const formatPhone = (value: string) => {
 const signupSchema = loginSchema
   .extend({
     nome: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-    telefone: z
-      .string()
-      .min(14, "Telefone inválido (formato: (00) 00000-0000)"),
+    telefone: z.string().min(14, "Telefone inválido (formato: (00) 00000-0000)"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -68,11 +66,7 @@ export default function Auth() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const withTimeout = async <T,>(
-    promise: Promise<T>,
-    ms: number,
-    timeoutMessage: string
-  ): Promise<T> => {
+  const withTimeout = async <T,>(promise: Promise<T>, ms: number, timeoutMessage: string): Promise<T> => {
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error(timeoutMessage));
@@ -110,22 +104,15 @@ export default function Auth() {
         const { error } = await withTimeout(
           signIn(formData.email, formData.password),
           15000,
-          "Tempo de resposta excedido."
+          "Tempo de resposta excedido.",
         );
         if (error) {
-          toast({
-            title: "Erro no login",
-            description: error.message,
-            variant: "destructive",
-          });
+          toast({ title: "Erro no login", description: error.message, variant: "destructive" });
           setIsLoading(false);
           return;
         }
 
-        toast({
-          title: "Login realizado!",
-          description: "Bem-vindo de volta.",
-        });
+        toast({ title: "Login realizado!", description: "Bem-vindo de volta." });
         setTimeout(() => navigate(redirectUrl), 500);
       } else {
         const result = signupSchema.safeParse(formData);
@@ -140,36 +127,23 @@ export default function Auth() {
         }
 
         const { error } = await withTimeout(
-          signUp(
-            formData.email,
-            formData.password,
-            formData.nome,
-            formData.telefone
-          ),
+          signUp(formData.email, formData.password, formData.nome, formData.telefone),
           20000,
-          "Tempo de resposta excedido."
+          "Tempo de resposta excedido.",
         );
         if (error) {
-          toast({
-            title: "Erro no cadastro",
-            description: error.message,
-            variant: "destructive",
-          });
+          toast({ title: "Erro no cadastro", description: error.message, variant: "destructive" });
           setIsLoading(false);
           return;
         }
 
-        toast({
-          title: "Conta criada!",
-          description: "Você já pode acessar o sistema.",
-        });
+        toast({ title: "Conta criada!", description: "Você já pode acessar o sistema." });
         setTimeout(() => navigate(redirectUrl), 500);
       }
     } catch (error) {
       toast({
         title: "Erro",
-        description:
-          error instanceof Error ? error.message : "Ocorreu um erro inesperado.",
+        description: error instanceof Error ? error.message : "Ocorreu um erro inesperado.",
         variant: "destructive",
       });
     } finally {
@@ -190,9 +164,7 @@ export default function Auth() {
         <div className="flex items-center justify-center gap-4 mb-3">
           <img src={gmadLogo} alt="GMAD Logo" className="h-16 w-auto" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-white font-jakarta tracking-tight">
-          Central de Compras
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-white font-jakarta tracking-tight">Central de Compras</h1>
       </div>
 
       <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
@@ -240,11 +212,7 @@ export default function Auth() {
                   placeholder="Ex: João Silva"
                   className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
-                {errors.nome && (
-                  <p className="text-xs text-red-500 font-medium ml-1">
-                    {errors.nome}
-                  </p>
-                )}
+                {errors.nome && <p className="text-xs text-red-500 font-medium ml-1">{errors.nome}</p>}
               </div>
             )}
 
@@ -266,11 +234,7 @@ export default function Auth() {
                   maxLength={15}
                   className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
-                {errors.telefone && (
-                  <p className="text-xs text-red-500 font-medium ml-1">
-                    {errors.telefone}
-                  </p>
-                )}
+                {errors.telefone && <p className="text-xs text-red-500 font-medium ml-1">{errors.telefone}</p>}
               </div>
             )}
 
@@ -290,11 +254,7 @@ export default function Auth() {
                 placeholder="seu.email@empresa.com"
                 className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
               />
-              {errors.email && (
-                <p className="text-xs text-red-500 font-medium ml-1">
-                  {errors.email}
-                </p>
-              )}
+              {errors.email && <p className="text-xs text-red-500 font-medium ml-1">{errors.email}</p>}
             </div>
 
             <div className="space-y-1.5">
@@ -319,18 +279,10 @@ export default function Auth() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#107c50] transition-colors"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-xs text-red-500 font-medium ml-1">
-                  {errors.password}
-                </p>
-              )}
+              {errors.password && <p className="text-xs text-red-500 font-medium ml-1">{errors.password}</p>}
             </div>
 
             {!isLogin && (
@@ -351,9 +303,7 @@ export default function Auth() {
                   className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-xs text-red-500 font-medium ml-1">
-                    {errors.confirmPassword}
-                  </p>
+                  <p className="text-xs text-red-500 font-medium ml-1">{errors.confirmPassword}</p>
                 )}
               </div>
             )}
@@ -381,7 +331,7 @@ export default function Auth() {
           <div className="mt-8 pt-6 border-t border-slate-100 text-center">
             <p className="text-sm text-slate-500 font-medium">
               Problemas com acesso?{" "}
-              
+              <a
                 href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
