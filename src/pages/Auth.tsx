@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import gmadLogo from '@/assets/gmad-logo.png';
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -158,6 +159,20 @@ export default function Auth() {
           .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
         `}
       </style>
+
+      {/* --- CABEÇALHO COM LOGO E NOME --- */}
+      <div className="mb-8 text-center animate-fade-in">
+        <div className="flex items-center justify-center gap-4 mb-3">
+          <img 
+            src={Gmadlogo} 
+            alt="GMAD Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-white font-jakarta tracking-tight">
+          Central de Compras
+        </h1>
+      </div>
 
       {/* --- CARD BRANCO DO FORMULÁRIO --- */}
       <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-2xl shadow-emerald-950/20 overflow-hidden animate-scale-in">
@@ -326,7 +341,7 @@ export default function Auth() {
           <div className="mt-8 pt-6 border-t border-slate-100 text-center">
             <p className="text-sm text-slate-500 font-medium">
               Problemas com acesso?{" "}
-              <a
+              
                 href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
