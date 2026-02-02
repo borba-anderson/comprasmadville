@@ -123,7 +123,9 @@
     --chart-4: 84 18.9% 82.8%;
     --chart-5: 70 18.8% 76.9%;
     --sidebar: 248 0.3% 98.4%;
-    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+      ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+      "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -388,7 +390,8 @@
   }
 
   @keyframes pulseUrgent {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 0 0 hsl(var(--priority-alta) / 0.4);
     }
     50% {
@@ -425,19 +428,15 @@
   }
 
   .animate-shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      hsl(0 0% 100% / 0.15) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(90deg, transparent 0%, hsl(0 0% 100% / 0.15) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 3s ease-in-out infinite;
   }
 
   /* Pulse Glow - Brilho pulsante */
   @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 5px hsl(var(--info) / 0.3);
     }
     50% {
@@ -451,7 +450,8 @@
 
   /* Float - Flutuação suave */
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0px);
     }
     50% {
@@ -479,7 +479,8 @@
 
   /* Bounce Subtle - Pequeno pulo */
   @keyframes bounce-subtle {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -522,4 +523,284 @@
     opacity: 0;
   }
 
+  /* ==================== BACKGROUNDS LARANJA -> VERDE ==================== */
+  .bg-orange-50 {
+    background-color: #ecfdf5 !important;
+  }
+  .bg-orange-100 {
+    background-color: #d1fae5 !important;
+  }
+  .bg-orange-200 {
+    background-color: #a7f3d0 !important;
+  }
+  .bg-orange-300 {
+    background-color: #6ee7b7 !important;
+  }
+  .bg-orange-400 {
+    background-color: #34d399 !important;
+  }
+  .bg-orange-500 {
+    background-color: #10b981 !important;
+  }
+  .bg-orange-600 {
+    background-color: #059669 !important;
+  }
+  .bg-orange-700 {
+    background-color: #047857 !important;
+  }
+  .bg-orange-800 {
+    background-color: #065f46 !important;
+  }
+  .bg-orange-900 {
+    background-color: #064e3b !important;
+  }
+
+  /* ==================== TEXTO LARANJA -> VERDE ==================== */
+  .text-orange-50 {
+    color: #ecfdf5 !important;
+  }
+  .text-orange-100 {
+    color: #d1fae5 !important;
+  }
+  .text-orange-200 {
+    color: #a7f3d0 !important;
+  }
+  .text-orange-300 {
+    color: #6ee7b7 !important;
+  }
+  .text-orange-400 {
+    color: #34d399 !important;
+  }
+  .text-orange-500 {
+    color: #10b981 !important;
+  }
+  .text-orange-600 {
+    color: #059669 !important;
+  }
+  .text-orange-700 {
+    color: #047857 !important;
+  }
+  .text-orange-800 {
+    color: #065f46 !important;
+  }
+  .text-orange-900 {
+    color: #064e3b !important;
+  }
+
+  /* ==================== BORDAS LARANJA -> VERDE ==================== */
+  .border-orange-50 {
+    border-color: #ecfdf5 !important;
+  }
+  .border-orange-100 {
+    border-color: #d1fae5 !important;
+  }
+  .border-orange-200 {
+    border-color: #a7f3d0 !important;
+  }
+  .border-orange-300 {
+    border-color: #6ee7b7 !important;
+  }
+  .border-orange-400 {
+    border-color: #34d399 !important;
+  }
+  .border-orange-500 {
+    border-color: #10b981 !important;
+  }
+  .border-orange-600 {
+    border-color: #059669 !important;
+  }
+  .border-orange-700 {
+    border-color: #047857 !important;
+  }
+  .border-orange-800 {
+    border-color: #065f46 !important;
+  }
+  .border-orange-900 {
+    border-color: #064e3b !important;
+  }
+
+  /* ==================== HOVER BACKGROUNDS ==================== */
+  .hover\:bg-orange-50:hover {
+    background-color: #ecfdf5 !important;
+  }
+  .hover\:bg-orange-100:hover {
+    background-color: #d1fae5 !important;
+  }
+  .hover\:bg-orange-200:hover {
+    background-color: #a7f3d0 !important;
+  }
+  .hover\:bg-orange-300:hover {
+    background-color: #6ee7b7 !important;
+  }
+  .hover\:bg-orange-400:hover {
+    background-color: #34d399 !important;
+  }
+  .hover\:bg-orange-500:hover {
+    background-color: #10b981 !important;
+  }
+  .hover\:bg-orange-600:hover {
+    background-color: #059669 !important;
+  }
+  .hover\:bg-orange-700:hover {
+    background-color: #047857 !important;
+  }
+  .hover\:bg-orange-800:hover {
+    background-color: #065f46 !important;
+  }
+  .hover\:bg-orange-900:hover {
+    background-color: #064e3b !important;
+  }
+
+  /* ==================== HOVER TEXTO ==================== */
+  .hover\:text-orange-50:hover {
+    color: #ecfdf5 !important;
+  }
+  .hover\:text-orange-100:hover {
+    color: #d1fae5 !important;
+  }
+  .hover\:text-orange-200:hover {
+    color: #a7f3d0 !important;
+  }
+  .hover\:text-orange-300:hover {
+    color: #6ee7b7 !important;
+  }
+  .hover\:text-orange-400:hover {
+    color: #34d399 !important;
+  }
+  .hover\:text-orange-500:hover {
+    color: #10b981 !important;
+  }
+  .hover\:text-orange-600:hover {
+    color: #059669 !important;
+  }
+  .hover\:text-orange-700:hover {
+    color: #047857 !important;
+  }
+  .hover\:text-orange-800:hover {
+    color: #065f46 !important;
+  }
+  .hover\:text-orange-900:hover {
+    color: #064e3b !important;
+  }
+
+  /* ==================== HOVER BORDAS ==================== */
+  .hover\:border-orange-50:hover {
+    border-color: #ecfdf5 !important;
+  }
+  .hover\:border-orange-100:hover {
+    border-color: #d1fae5 !important;
+  }
+  .hover\:border-orange-200:hover {
+    border-color: #a7f3d0 !important;
+  }
+  .hover\:border-orange-300:hover {
+    border-color: #6ee7b7 !important;
+  }
+  .hover\:border-orange-400:hover {
+    border-color: #34d399 !important;
+  }
+  .hover\:border-orange-500:hover {
+    border-color: #10b981 !important;
+  }
+  .hover\:border-orange-600:hover {
+    border-color: #059669 !important;
+  }
+  .hover\:border-orange-700:hover {
+    border-color: #047857 !important;
+  }
+  .hover\:border-orange-800:hover {
+    border-color: #065f46 !important;
+  }
+  .hover\:border-orange-900:hover {
+    border-color: #064e3b !important;
+  }
+
+  /* ==================== FOCUS STATES ==================== */
+  .focus\:bg-orange-500:focus {
+    background-color: #10b981 !important;
+  }
+  .focus\:bg-orange-600:focus {
+    background-color: #059669 !important;
+  }
+  .focus\:border-orange-500:focus {
+    border-color: #10b981 !important;
+  }
+  .focus\:border-orange-600:focus {
+    border-color: #059669 !important;
+  }
+  .focus\:text-orange-500:focus {
+    color: #10b981 !important;
+  }
+  .focus\:text-orange-600:focus {
+    color: #059669 !important;
+  }
+
+  /* ==================== RING COLORS ==================== */
+  .ring-orange-50 {
+    --tw-ring-color: #ecfdf5 !important;
+  }
+  .ring-orange-100 {
+    --tw-ring-color: #d1fae5 !important;
+  }
+  .ring-orange-200 {
+    --tw-ring-color: #a7f3d0 !important;
+  }
+  .ring-orange-300 {
+    --tw-ring-color: #6ee7b7 !important;
+  }
+  .ring-orange-400 {
+    --tw-ring-color: #34d399 !important;
+  }
+  .ring-orange-500 {
+    --tw-ring-color: #10b981 !important;
+  }
+  .ring-orange-600 {
+    --tw-ring-color: #059669 !important;
+  }
+  .ring-orange-700 {
+    --tw-ring-color: #047857 !important;
+  }
+  .ring-orange-800 {
+    --tw-ring-color: #065f46 !important;
+  }
+  .ring-orange-900 {
+    --tw-ring-color: #064e3b !important;
+  }
+
+  .focus\:ring-orange-500:focus {
+    --tw-ring-color: #10b981 !important;
+  }
+  .focus\:ring-orange-600:focus {
+    --tw-ring-color: #059669 !important;
+  }
+
+  /* ==================== ACTIVE STATES ==================== */
+  .active\:bg-orange-500:active {
+    background-color: #10b981 !important;
+  }
+  .active\:bg-orange-600:active {
+    background-color: #059669 !important;
+  }
+  .active\:text-orange-500:active {
+    color: #10b981 !important;
+  }
+  .active\:text-orange-600:active {
+    color: #059669 !important;
+  }
+
+  /* ==================== OUTLINE COLORS ==================== */
+  .outline-orange-500 {
+    outline-color: #10b981 !important;
+  }
+  .outline-orange-600 {
+    outline-color: #059669 !important;
+  }
+
+  /* ==================== DIVIDE COLORS ==================== */
+  .divide-orange-500 > * + * {
+    border-color: #10b981 !important;
+  }
+  .divide-orange-600 > * + * {
+    border-color: #059669 !important;
+  }
 }
