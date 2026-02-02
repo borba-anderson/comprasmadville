@@ -701,22 +701,16 @@ Qualquer dúvida, estamos à disposição!`;
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col relative">
+      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col overflow-hidden">
         {/* Loading Overlay with smooth transition */}
-        <div 
-          className={`absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center transition-all duration-300 ease-in-out ${
-            isAnyLoading 
-              ? 'opacity-100 pointer-events-auto' 
-              : 'opacity-0 pointer-events-none'
-          }`}
-        >
-          <div className={`flex flex-col items-center gap-3 transition-transform duration-300 ease-out ${
-            isAnyLoading ? 'scale-100' : 'scale-95'
-          }`}>
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">Atualizando...</span>
+        {isAnyLoading && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center animate-fade-in">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <span className="text-sm font-medium text-muted-foreground">Atualizando...</span>
+            </div>
           </div>
-        </div>
+        )}
         
         <SheetHeader className="px-6 py-4 border-b">
           <div className="flex items-center justify-between">
