@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { gmadLogo } from '@/assets/gmad-logo.png';
 import { z } from "zod";
+import gmadLogo from '@/assets/gmad-logo.png';
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -164,7 +164,7 @@ export default function Auth() {
       <div className="mb-8 text-center animate-fade-in">
         <div className="flex items-center justify-center gap-4 mb-3">
           <img 
-            src={Gmadlogo} 
+            src={gmadLogo} 
             alt="GMAD Logo" 
             className="h-16 w-auto"
           />
