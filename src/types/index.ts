@@ -63,6 +63,8 @@ export interface Requisicao {
   fornecedor_nome?: string;
   arquivo_url?: string;
   arquivo_nome?: string;
+  orcamento_url?: string;
+  orcamento_nome?: string;
   created_at: string;
   updated_at: string;
   aprovado_em?: string;
