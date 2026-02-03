@@ -661,12 +661,10 @@ Qualquer dúvida, estamos à disposição!`;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#107c50]">
-        <div className="bg-white sticky top-0 z-50 shadow-sm text-slate-900 [&_*]:text-slate-900">
-          <Header />
-        </div>
+      <div className="min-h-screen bg-background">
+        <Header />
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <Loader2 className="w-8 h-8 animate-spin text-white" />
+          <Loader2 className="w-8 h-8 animate-spin text-success" />
         </div>
       </div>
     );
@@ -674,11 +672,9 @@ Qualquer dúvida, estamos à disposição!`;
 
   if (!requisicao) {
     return (
-      <div className="min-h-screen bg-[#107c50]">
-        <div className="bg-white sticky top-0 z-50 shadow-sm text-slate-900 [&_*]:text-slate-900">
-          <Header />
-        </div>
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-white">
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-muted-foreground">
           <FileText className="w-16 h-16 mb-4 opacity-50" />
           <p className="text-lg">Requisição não encontrada</p>
           <Button variant="outline" className="mt-4" onClick={() => navigate('/painel')}>
@@ -692,20 +688,21 @@ Qualquer dúvida, estamos à disposição!`;
   const economia = calculateEconomia(requisicao.valor_orcado, requisicao.valor);
 
   return (
-    <div className="min-h-screen bg-[#107c50]">
+    <div className="min-h-screen bg-muted/30">
       {/* Loading Overlay */}
       {isAnyLoading && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <Loader2 className="w-8 h-8 animate-spin text-success" />
             <span className="text-sm font-medium text-muted-foreground">Atualizando...</span>
           </div>
         </div>
       )}
 
-      <div className="bg-white sticky top-0 z-40 shadow-sm text-slate-900 [&_*]:text-slate-900">
-        <Header />
-      </div>
+      <Header />
+
+      {/* Green accent bar */}
+      <div className="h-1 bg-success" />
 
       <main className="max-w-5xl mx-auto px-4 py-6">
         {/* Breadcrumb */}
@@ -713,27 +710,27 @@ Qualquer dúvida, estamos à disposição!`;
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/" className="text-white/70 hover:text-white flex items-center gap-1">
+                <Link to="/" className="text-muted-foreground hover:text-success flex items-center gap-1">
                   <Home className="w-4 h-4" />
                   Início
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-white/50">
+            <BreadcrumbSeparator className="text-muted-foreground/50">
               <ChevronRight className="w-4 h-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/painel" className="text-white/70 hover:text-white">
+                <Link to="/painel" className="text-muted-foreground hover:text-success">
                   Painel
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-white/50">
+            <BreadcrumbSeparator className="text-muted-foreground/50">
               <ChevronRight className="w-4 h-4" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-white font-medium">
+              <BreadcrumbPage className="text-foreground font-medium">
                 {requisicao.protocolo}
               </BreadcrumbPage>
             </BreadcrumbItem>
@@ -746,15 +743,15 @@ Qualquer dúvida, estamos à disposição!`;
             variant="outline" 
             size="sm" 
             onClick={() => navigate('/painel')}
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            className="border-success/30 text-success hover:bg-success/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>
           <div className="flex-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-white">Requisição</h1>
-              <span className="font-mono text-white/80 text-lg">{requisicao.protocolo}</span>
+              <h1 className="text-2xl font-bold text-foreground">Requisição</h1>
+              <span className="font-mono text-success text-lg">{requisicao.protocolo}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -767,7 +764,7 @@ Qualquer dúvida, estamos à disposição!`;
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Timeline */}
-            <Card className="bg-white">
+            <Card className="border-t-4 border-t-success">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Linha do Tempo</CardTitle>
               </CardHeader>
@@ -781,7 +778,7 @@ Qualquer dúvida, estamos à disposição!`;
             </Card>
 
             {/* Item Info */}
-            <Card className="bg-white">
+            <Card className="border-t-4 border-t-success">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Informações do Item</CardTitle>
               </CardHeader>
@@ -798,10 +795,10 @@ Qualquer dúvida, estamos à disposição!`;
                         autoFocus
                       />
                       <Button size="icon" variant="ghost" onClick={() => saveInlineEdit('item_nome')} disabled={isUpdating}>
-                        <Check className="w-4 h-4 text-green-600" />
+                        <Check className="w-4 h-4 text-success" />
                       </Button>
                       <Button size="icon" variant="ghost" onClick={cancelEditing}>
-                        <X className="w-4 h-4 text-red-600" />
+                        <X className="w-4 h-4 text-destructive" />
                       </Button>
                     </div>
                   ) : (
@@ -836,10 +833,10 @@ Qualquer dúvida, estamos à disposição!`;
                           autoFocus
                         />
                         <Button size="icon" variant="ghost" onClick={() => saveInlineEdit('quantidade')} disabled={isUpdating}>
-                          <Check className="w-4 h-4 text-green-600" />
+                          <Check className="w-4 h-4 text-success" />
                         </Button>
                         <Button size="icon" variant="ghost" onClick={cancelEditing}>
-                          <X className="w-4 h-4 text-red-600" />
+                          <X className="w-4 h-4 text-destructive" />
                         </Button>
                       </div>
                     ) : (
@@ -1016,21 +1013,21 @@ Qualquer dúvida, estamos à disposição!`;
                         return (
                           <div
                             key={index}
-                            className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg text-sm"
+                            className="flex items-center gap-2 p-3 bg-warning/10 rounded-lg text-sm"
                           >
-                            <Receipt className="w-4 h-4 flex-shrink-0 text-amber-600" />
+                            <Receipt className="w-4 h-4 flex-shrink-0 text-warning" />
                             <a
                               href={trimmedUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="truncate flex-1 font-medium text-amber-700 hover:underline"
+                              className="truncate flex-1 font-medium text-warning hover:underline"
                             >
                               {nome}
                             </a>
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                               onClick={() => deleteOrcamentoFile(index)}
                               disabled={isDeletingAnexo}
                             >
@@ -1054,7 +1051,7 @@ Qualquer dúvida, estamos à disposição!`;
                     />
                     <Button
                       variant="outline"
-                      className="w-full gap-2"
+                      className="w-full gap-2 border-success/30 text-success hover:bg-success/10"
                       onClick={() => orcamentoInputRef.current?.click()}
                       disabled={isUploadingOrcamento}
                     >
@@ -1075,7 +1072,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Display orcamento for read-only users */}
             {readOnly && requisicao.orcamento_url && (
-              <Card className="bg-white">
+              <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Receipt className="w-5 h-5" />
@@ -1095,7 +1092,7 @@ Qualquer dúvida, estamos à disposição!`;
                           href={trimmedUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 rounded-lg text-sm font-medium text-amber-700 transition-colors"
+                          className="flex items-center gap-2 p-3 bg-warning/10 hover:bg-warning/20 rounded-lg text-sm font-medium text-warning transition-colors"
                         >
                           <Receipt className="w-4 h-4 flex-shrink-0" />
                           <span className="truncate flex-1">{nome}</span>
@@ -1137,7 +1134,7 @@ Qualquer dúvida, estamos à disposição!`;
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex-1 gap-2 text-green-600 border-green-600 hover:bg-green-50 hover:text-green-700" 
+                      className="flex-1 gap-2 text-success border-success hover:bg-success/10" 
                       onClick={sendWhatsAppToSolicitante}
                     >
                       <MessageCircle className="w-4 h-4" />
@@ -1234,7 +1231,7 @@ Qualquer dúvida, estamos à disposição!`;
                   {economia && (
                     <div className={cn(
                       'p-3 rounded-lg text-sm',
-                      economia.valor >= 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                      economia.valor >= 0 ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
                     )}>
                       <p className="font-medium">
                         {economia.valor >= 0 ? 'Economia: ' : 'Excedente: '}
