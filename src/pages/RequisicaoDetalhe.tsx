@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   ArrowLeft, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, 
   DollarSign, Paperclip, Download, Mail, Loader2, MessageCircle, 
-  StickyNote, Wallet 
+  StickyNote, Wallet, ChevronRight, Home, Pencil, Check, X, Upload, Trash2,
+  Receipt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import {
   Select,
   SelectContent,
@@ -60,8 +69,19 @@ export default function RequisicaoDetalhe() {
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Inline editing states
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editItemNome, setEditItemNome] = useState('');
+  const [editQuantidade, setEditQuantidade] = useState('');
+  const [editJustificativa, setEditJustificativa] = useState('');
+  const [editEspecificacoes, setEditEspecificacoes] = useState('');
+  
+  // Orcamento upload
+  const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
+  const orcamentoInputRef = useRef<HTMLInputElement>(null);
 
-  const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting;
+  const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting || isUploadingOrcamento;
 
   const fetchRequisicao = useCallback(async () => {
     if (!id) return;
@@ -450,6 +470,191 @@ Qualquer dúvida, estamos à disposição!`;
     toast({ title: 'WhatsApp aberto' });
   };
 
+  // Inline editing functions
+  const startEditing = (field: string) => {
+    if (!requisicao || readOnly) return;
+    setEditingField(field);
+    switch (field) {
+      case 'item_nome':
+        setEditItemNome(requisicao.item_nome);
+        break;
+      case 'quantidade':
+        setEditQuantidade(String(requisicao.quantidade));
+        break;
+      case 'justificativa':
+        setEditJustificativa(requisicao.justificativa);
+        break;
+      case 'especificacoes':
+        setEditEspecificacoes(requisicao.especificacoes || '');
+        break;
+    }
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+  };
+
+  const saveInlineEdit = async (field: string) => {
+    if (!requisicao) return;
+    
+    try {
+      setIsUpdating(true);
+      let updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
+      
+      switch (field) {
+        case 'item_nome':
+          if (!editItemNome.trim()) {
+            toast({ title: 'Nome do item é obrigatório', variant: 'destructive' });
+            return;
+          }
+          updateData.item_nome = editItemNome.trim();
+          break;
+        case 'quantidade':
+          const qty = parseFloat(editQuantidade);
+          if (isNaN(qty) || qty <= 0) {
+            toast({ title: 'Quantidade inválida', variant: 'destructive' });
+            return;
+          }
+          updateData.quantidade = qty;
+          break;
+        case 'justificativa':
+          if (!editJustificativa.trim()) {
+            toast({ title: 'Justificativa é obrigatória', variant: 'destructive' });
+            return;
+          }
+          updateData.justificativa = editJustificativa.trim();
+          break;
+        case 'especificacoes':
+          updateData.especificacoes = editEspecificacoes.trim() || null;
+          break;
+      }
+
+      const { error } = await supabase
+        .from('requisicoes')
+        .update(updateData)
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      
+      toast({ title: 'Atualizado com sucesso' });
+      setEditingField(null);
+      await fetchRequisicao();
+    } catch (error) {
+      console.error('Error saving inline edit:', error);
+      toast({ title: 'Erro ao salvar', variant: 'destructive' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Orcamento upload functions
+  const handleOrcamentoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!requisicao || !e.target.files || e.target.files.length === 0) return;
+    
+    const files = Array.from(e.target.files);
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    
+    for (const file of files) {
+      if (!allowedTypes.includes(file.type)) {
+        toast({ 
+          title: 'Tipo de arquivo não permitido', 
+          description: 'Apenas PDF, JPG, PNG e Excel são aceitos.',
+          variant: 'destructive' 
+        });
+        return;
+      }
+    }
+    
+    try {
+      setIsUploadingOrcamento(true);
+      
+      const existingUrls = requisicao.orcamento_url ? requisicao.orcamento_url.split(',').map(u => u.trim()) : [];
+      const existingNomes = requisicao.orcamento_nome ? requisicao.orcamento_nome.split(',').map(n => n.trim()) : [];
+      
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${requisicao.id}/orcamento_${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('requisicoes-anexos')
+          .upload(fileName, file);
+        
+        if (uploadError) throw uploadError;
+        
+        const { data: urlData } = supabase.storage
+          .from('requisicoes-anexos')
+          .getPublicUrl(fileName);
+        
+        existingUrls.push(urlData.publicUrl);
+        existingNomes.push(file.name);
+      }
+      
+      const { error: updateError } = await supabase
+        .from('requisicoes')
+        .update({
+          orcamento_url: existingUrls.join(','),
+          orcamento_nome: existingNomes.join(','),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requisicao.id);
+      
+      if (updateError) throw updateError;
+      
+      toast({ title: 'Orçamento anexado com sucesso' });
+      await fetchRequisicao();
+    } catch (error) {
+      console.error('Error uploading orcamento:', error);
+      toast({ title: 'Erro ao anexar orçamento', variant: 'destructive' });
+    } finally {
+      setIsUploadingOrcamento(false);
+      if (orcamentoInputRef.current) {
+        orcamentoInputRef.current.value = '';
+      }
+    }
+  };
+
+  const deleteOrcamentoFile = async (index: number) => {
+    if (!requisicao || !requisicao.orcamento_url) return;
+    
+    try {
+      setIsDeletingAnexo(true);
+      
+      const urls = requisicao.orcamento_url.split(',').map(u => u.trim());
+      const nomes = requisicao.orcamento_nome ? requisicao.orcamento_nome.split(',').map(n => n.trim()) : [];
+      
+      // Extract file path from URL for deletion
+      const urlToDelete = urls[index];
+      const urlPath = new URL(urlToDelete).pathname;
+      const filePath = urlPath.split('/requisicoes-anexos/')[1];
+      
+      if (filePath) {
+        await supabase.storage.from('requisicoes-anexos').remove([filePath]);
+      }
+      
+      urls.splice(index, 1);
+      nomes.splice(index, 1);
+      
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({
+          orcamento_url: urls.length > 0 ? urls.join(',') : null,
+          orcamento_nome: nomes.length > 0 ? nomes.join(',') : null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requisicao.id);
+      
+      if (error) throw error;
+      
+      toast({ title: 'Arquivo removido' });
+      await fetchRequisicao();
+    } catch (error) {
+      console.error('Error deleting orcamento file:', error);
+      toast({ title: 'Erro ao remover arquivo', variant: 'destructive' });
+    } finally {
+      setIsDeletingAnexo(false);
+    }
+  };
+
   const canEditValor = (status: RequisicaoStatus) => {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
@@ -503,6 +708,38 @@ Qualquer dúvida, estamos à disposição!`;
       </div>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
+        {/* Breadcrumb */}
+        <Breadcrumb className="mb-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/" className="text-white/70 hover:text-white flex items-center gap-1">
+                  <Home className="w-4 h-4" />
+                  Início
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-white/50">
+              <ChevronRight className="w-4 h-4" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/painel" className="text-white/70 hover:text-white">
+                  Painel
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-white/50">
+              <ChevronRight className="w-4 h-4" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-white font-medium">
+                {requisicao.protocolo}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         {/* Back Button & Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button 
@@ -549,14 +786,77 @@ Qualquer dúvida, estamos à disposição!`;
                 <CardTitle className="text-lg">Informações do Item</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* Item Nome - Editable */}
                 <div>
                   <Label className="text-xs text-muted-foreground uppercase">Item</Label>
-                  <p className="font-semibold text-lg">{requisicao.item_nome}</p>
+                  {editingField === 'item_nome' ? (
+                    <div className="flex items-center gap-2 mt-1">
+                      <Input
+                        value={editItemNome}
+                        onChange={(e) => setEditItemNome(e.target.value)}
+                        className="flex-1"
+                        autoFocus
+                      />
+                      <Button size="icon" variant="ghost" onClick={() => saveInlineEdit('item_nome')} disabled={isUpdating}>
+                        <Check className="w-4 h-4 text-green-600" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={cancelEditing}>
+                        <X className="w-4 h-4 text-red-600" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 group">
+                      <p className="font-semibold text-lg flex-1">{requisicao.item_nome}</p>
+                      {!readOnly && (
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => startEditing('item_nome')}
+                        >
+                          <Pencil className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
+                  {/* Quantidade - Editable */}
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Quantidade</Label>
-                    <p className="font-semibold">{requisicao.quantidade} {requisicao.unidade}</p>
+                    {editingField === 'quantidade' ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <Input
+                          value={editQuantidade}
+                          onChange={(e) => setEditQuantidade(e.target.value)}
+                          type="number"
+                          min="1"
+                          className="flex-1"
+                          autoFocus
+                        />
+                        <Button size="icon" variant="ghost" onClick={() => saveInlineEdit('quantidade')} disabled={isUpdating}>
+                          <Check className="w-4 h-4 text-green-600" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={cancelEditing}>
+                          <X className="w-4 h-4 text-red-600" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 group">
+                        <p className="font-semibold flex-1">{requisicao.quantidade} {requisicao.unidade}</p>
+                        {!readOnly && (
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => startEditing('quantidade')}
+                          >
+                            <Pencil className="w-4 h-4 text-muted-foreground" />
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Prioridade</Label>
@@ -568,21 +868,94 @@ Qualquer dúvida, estamos à disposição!`;
 
                 <Separator />
 
+                {/* Justificativa - Editable */}
                 <div>
                   <Label className="text-xs text-muted-foreground uppercase">Justificativa</Label>
-                  <p className="text-sm bg-muted/50 rounded-lg p-3 mt-1">{requisicao.justificativa}</p>
+                  {editingField === 'justificativa' ? (
+                    <div className="mt-1 space-y-2">
+                      <Textarea
+                        value={editJustificativa}
+                        onChange={(e) => setEditJustificativa(e.target.value)}
+                        rows={3}
+                        autoFocus
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button size="sm" variant="ghost" onClick={cancelEditing}>
+                          <X className="w-4 h-4 mr-1" />
+                          Cancelar
+                        </Button>
+                        <Button size="sm" onClick={() => saveInlineEdit('justificativa')} disabled={isUpdating}>
+                          <Check className="w-4 h-4 mr-1" />
+                          Salvar
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative group">
+                      <p className="text-sm bg-muted/50 rounded-lg p-3 mt-1">{requisicao.justificativa}</p>
+                      {!readOnly && (
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => startEditing('justificativa')}
+                        >
+                          <Pencil className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {requisicao.especificacoes && (
-                  <div>
-                    <Label className="text-xs text-muted-foreground uppercase">Especificações</Label>
-                    <p className="text-sm bg-muted/50 rounded-lg p-3 mt-1 whitespace-pre-wrap">{requisicao.especificacoes}</p>
-                  </div>
-                )}
+                {/* Especificações - Editable */}
+                <div>
+                  <Label className="text-xs text-muted-foreground uppercase">Especificações</Label>
+                  {editingField === 'especificacoes' ? (
+                    <div className="mt-1 space-y-2">
+                      <Textarea
+                        value={editEspecificacoes}
+                        onChange={(e) => setEditEspecificacoes(e.target.value)}
+                        rows={3}
+                        placeholder="Adicionar especificações..."
+                        autoFocus
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button size="sm" variant="ghost" onClick={cancelEditing}>
+                          <X className="w-4 h-4 mr-1" />
+                          Cancelar
+                        </Button>
+                        <Button size="sm" onClick={() => saveInlineEdit('especificacoes')} disabled={isUpdating}>
+                          <Check className="w-4 h-4 mr-1" />
+                          Salvar
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative group">
+                      {requisicao.especificacoes ? (
+                        <p className="text-sm bg-muted/50 rounded-lg p-3 mt-1 whitespace-pre-wrap">{requisicao.especificacoes}</p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3 mt-1 italic">
+                          Sem especificações
+                        </p>
+                      )}
+                      {!readOnly && (
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => startEditing('especificacoes')}
+                        >
+                          <Pencil className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
-            {/* Anexos */}
+            {/* Anexos do Solicitante */}
             {requisicao.arquivo_url && (
               <Card className="bg-white">
                 <CardHeader className="pb-3">
@@ -607,6 +980,124 @@ Qualquer dúvida, estamos à disposição!`;
                           className="flex items-center gap-2 p-3 bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-medium text-primary transition-colors"
                         >
                           <Paperclip className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate flex-1">{nome}</span>
+                          <Download className="w-4 h-4 flex-shrink-0" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Orçamentos do Comprador */}
+            {!readOnly && (
+              <Card className="bg-white">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Receipt className="w-5 h-5" />
+                    Orçamentos
+                    {requisicao.orcamento_url && (
+                      <span className="text-sm font-normal text-muted-foreground">
+                        ({requisicao.orcamento_url.split(',').length})
+                      </span>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Lista de orçamentos existentes */}
+                  {requisicao.orcamento_url && (
+                    <div className="space-y-2">
+                      {requisicao.orcamento_url.split(',').map((url, index) => {
+                        const nomes = requisicao.orcamento_nome?.split(',') || [];
+                        const nome = nomes[index] || `orcamento-${index + 1}`;
+                        const trimmedUrl = url.trim();
+                        
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg text-sm"
+                          >
+                            <Receipt className="w-4 h-4 flex-shrink-0 text-amber-600" />
+                            <a
+                              href={trimmedUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="truncate flex-1 font-medium text-amber-700 hover:underline"
+                            >
+                              {nome}
+                            </a>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => deleteOrcamentoFile(index)}
+                              disabled={isDeletingAnexo}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Upload button */}
+                  <div>
+                    <input
+                      ref={orcamentoInputRef}
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx"
+                      multiple
+                      onChange={handleOrcamentoUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      className="w-full gap-2"
+                      onClick={() => orcamentoInputRef.current?.click()}
+                      disabled={isUploadingOrcamento}
+                    >
+                      {isUploadingOrcamento ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4" />
+                      )}
+                      Anexar Orçamento
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2 text-center">
+                      PDF, JPG, PNG ou Excel
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Display orcamento for read-only users */}
+            {readOnly && requisicao.orcamento_url && (
+              <Card className="bg-white">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Receipt className="w-5 h-5" />
+                    Orçamentos ({requisicao.orcamento_url.split(',').length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {requisicao.orcamento_url.split(',').map((url, index) => {
+                      const nomes = requisicao.orcamento_nome?.split(',') || [];
+                      const nome = nomes[index] || `orcamento-${index + 1}`;
+                      const trimmedUrl = url.trim();
+                      
+                      return (
+                        <a
+                          key={index}
+                          href={trimmedUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 p-3 bg-amber-50 hover:bg-amber-100 rounded-lg text-sm font-medium text-amber-700 transition-colors"
+                        >
+                          <Receipt className="w-4 h-4 flex-shrink-0" />
                           <span className="truncate flex-1">{nome}</span>
                           <Download className="w-4 h-4 flex-shrink-0" />
                         </a>
