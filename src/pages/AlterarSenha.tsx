@@ -117,8 +117,12 @@ export default function AlterarSenha() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <Header />
+    <div className="min-h-screen bg-white">
+      {/* Green accent bar at top */}
+      <div className="h-1 bg-success w-full" />
+      <div className="border-b border-success/20">
+        <Header />
+      </div>
 
       <main className="max-w-md mx-auto px-4 py-12">
         <Button
@@ -131,11 +135,11 @@ export default function AlterarSenha() {
           Voltar
         </Button>
 
-        <Card>
+        <Card className="border-t-4 border-t-success">
           <CardHeader className="space-y-1">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <KeyRound className="w-5 h-5 text-primary" />
+              <div className="p-2 rounded-lg bg-success/10">
+                <KeyRound className="w-5 h-5 text-success" />
               </div>
               <CardTitle className="text-xl">Alterar Senha</CardTitle>
             </div>

@@ -460,7 +460,9 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
+    <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-green-100 selection:text-green-900">
+      {/* Green accent bar at top */}
+      <div className="h-1 bg-success w-full" />
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -471,11 +473,13 @@ const Index = () => {
 
       {/* Background Limpo */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-50/40 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-success/5 rounded-full blur-3xl opacity-50"></div>
       </div>
 
       <div className="relative z-10">
-        <Header />
+        <div className="border-b border-success/20">
+          <Header />
+        </div>
 
         <main className="max-w-[1440px] mx-auto">
           {/* === 1. HERO SECTION === */}

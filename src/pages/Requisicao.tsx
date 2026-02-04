@@ -445,8 +445,12 @@ export default function Requisicao() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white">
+      {/* Green accent bar at top */}
+      <div className="h-1 bg-success w-full" />
+      <div className="border-b border-success/20">
+        <Header />
+      </div>
       <main className="page-container">
         <div className="max-w-3xl mx-auto">
           <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 text-sm">
@@ -454,8 +458,8 @@ export default function Requisicao() {
             Voltar ao início
           </Link>
 
-          <div className="bg-card rounded-2xl shadow-lg border overflow-hidden">
-            <div className="p-6 border-b bg-muted/30">
+          <div className="bg-white rounded-2xl shadow-lg border border-success/20 overflow-hidden">
+            <div className="p-6 border-b border-success/10 bg-success/5">
               <FormStepper steps={STEPS} currentStep={currentStep} onStepClick={handleStepClick} />
             </div>
 

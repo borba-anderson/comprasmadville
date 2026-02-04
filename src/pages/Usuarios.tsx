@@ -333,8 +333,12 @@ export default function Usuarios() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <Header />
+    <div className="min-h-screen bg-white">
+      {/* Green accent bar at top */}
+      <div className="h-1 bg-success w-full" />
+      <div className="border-b border-success/20">
+        <Header />
+      </div>
 
       <main className="max-w-[1400px] mx-auto px-4 py-6">
         {/* Header */}
@@ -363,7 +367,7 @@ export default function Usuarios() {
         </div>
 
         {/* Filters */}
-        <div className="bg-card rounded-xl border p-4 mb-4">
+        <div className="bg-white rounded-xl border border-success/20 p-4 mb-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -381,7 +385,7 @@ export default function Usuarios() {
         </div>
 
         {/* Table */}
-        <div className="bg-card rounded-xl border overflow-hidden">
+        <div className="bg-white rounded-xl border border-success/20 overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
