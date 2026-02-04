@@ -173,7 +173,9 @@ export default function Painel() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
+      {/* Green accent bar at top */}
+      <div className="h-1 bg-success w-full" />
       <style>
         {`
           /* Substituir TODAS as cores laranja por verde - Abordagem agressiva */
@@ -231,7 +233,7 @@ export default function Painel() {
           }
         `}
       </style>
-      <div className="bg-white sticky top-0 z-50 shadow-sm">
+      <div className="bg-white sticky top-0 z-50 shadow-sm border-b border-success/20">
         <Header />
       </div>
 
@@ -317,7 +319,7 @@ export default function Painel() {
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            <div className="bg-white text-slate-900 rounded-xl border-none overflow-hidden shadow-lg">
+            <div className="bg-white text-slate-900 rounded-xl border border-success/20 overflow-hidden shadow-lg">
               <FiltersBar
                 filters={filters}
                 onFilterChange={updateFilter}
