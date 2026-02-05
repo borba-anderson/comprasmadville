@@ -69,6 +69,7 @@ export default function RequisicaoDetalhe() {
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // Inline editing states
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -657,6 +658,68 @@ Qualquer dúvida, estamos à disposição!`;
 
   const canEditValor = (status: RequisicaoStatus) => {
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
+  };
+
+  const handleDeleteRequisicao = async () => {
+    if (!requisicao || requisicao.status !== 'cancelado') return;
+    
+    try {
+      setIsDeleting(true);
+      
+      // Delete related files from storage if they exist
+      if (requisicao.arquivo_url) {
+        const urls = requisicao.arquivo_url.split(',');
+        for (const url of urls) {
+          try {
+            const urlPath = new URL(url.trim()).pathname;
+            const filePath = urlPath.split('/requisicoes-anexos/')[1];
+            if (filePath) {
+              await supabase.storage.from('requisicoes-anexos').remove([filePath]);
+            }
+          } catch (e) {
+            console.error('Error deleting file:', e);
+          }
+        }
+      }
+      
+      if (requisicao.orcamento_url) {
+        const urls = requisicao.orcamento_url.split(',');
+        for (const url of urls) {
+          try {
+            const urlPath = new URL(url.trim()).pathname;
+            const filePath = urlPath.split('/requisicoes-anexos/')[1];
+            if (filePath) {
+              await supabase.storage.from('requisicoes-anexos').remove([filePath]);
+            }
+          } catch (e) {
+            console.error('Error deleting file:', e);
+          }
+        }
+      }
+      
+      // Delete valor_historico records
+      await supabase.from('valor_historico').delete().eq('requisicao_id', requisicao.id);
+      
+      // Delete comentarios records
+      await supabase.from('comentarios').delete().eq('requisicao_id', requisicao.id);
+      
+      // Delete audit_logs records
+      await supabase.from('audit_logs').delete().eq('requisicao_id', requisicao.id);
+      
+      // Delete the requisicao
+      const { error } = await supabase.from('requisicoes').delete().eq('id', requisicao.id);
+      
+      if (error) throw error;
+      
+      toast({ title: 'Requisição excluída com sucesso' });
+      navigate('/painel');
+    } catch (error) {
+      console.error('Error deleting requisicao:', error);
+      toast({ title: 'Erro ao excluir requisição', variant: 'destructive' });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   if (isLoading) {
@@ -1410,6 +1473,59 @@ Qualquer dúvida, estamos à disposição!`;
                   <p className="text-sm">
                     <span className="font-medium text-primary">Centro de Custo:</span> {requisicao.centro_custo}
                   </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Delete Button - Only for canceled requisitions */}
+            {!readOnly && requisicao.status === 'cancelado' && (
+              <Card className="bg-destructive/5 border-destructive/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-destructive flex items-center gap-2">
+                    <Trash2 className="w-5 h-5" />
+                    Excluir Requisição
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Esta ação é irreversível. Todos os dados, anexos e histórico desta requisição serão permanentemente excluídos.
+                  </p>
+                  
+                  {!showDeleteConfirm ? (
+                    <Button 
+                      variant="destructive" 
+                      className="w-full"
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Excluir Permanentemente
+                    </Button>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-destructive">
+                        Tem certeza que deseja excluir esta requisição?
+                      </p>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={() => setShowDeleteConfirm(false)}
+                          disabled={isDeleting}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          className="flex-1"
+                          onClick={handleDeleteRequisicao}
+                          disabled={isDeleting}
+                        >
+                          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                          Confirmar Exclusão
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
