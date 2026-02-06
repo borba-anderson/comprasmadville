@@ -488,8 +488,8 @@ const Index = () => {
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
               {/* Título Ajustado: Cor removida e peso da fonte reduzido */}
               <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-bold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
-                Central de Compras <br />
-                <span className="text-[#0F172A]">e Requisições.</span>
+                Sistema de Requisições <br />
+                <span className="text-[#0F172A]">de Compras.</span>
               </h1>
 
               <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
