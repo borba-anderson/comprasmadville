@@ -487,7 +487,7 @@ const Index = () => {
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
               {/* Título Ajustado: Cor removida e peso da fonte reduzido */}
-              <h1 className="font-jakarta text-[3rem] sm:text-5xl lg:text-[4rem] font-bold text-[#0F172A] mb-5 tracking-tight leading-[1.1] max-w-[700px]">
+              <h1 className="font-jakarta text-[2.5rem] sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold text-[#0F172A] mb-5 tracking-tight leading-[1.15] max-w-[700px]">
                 Sistema de Requisições <br />
                 <span className="text-[#0F172A]">de Compras.</span>
               </h1>
