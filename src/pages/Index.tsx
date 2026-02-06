@@ -483,73 +483,73 @@ const Index = () => {
 
         <main className="max-w-[1440px] mx-auto">
           {/* === 1. HERO SECTION === */}
-          <section className="px-6 md:px-12 pt-10 pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 min-h-[420px]">
+          <section className="px-4 sm:px-6 md:px-12 pt-6 sm:pt-10 pb-4 sm:pb-8 lg:pt-16 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 lg:gap-12 min-h-[320px] sm:min-h-[420px]">
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
               {/* Título Ajustado: Cor removida e peso da fonte reduzido */}
-              <h1 className="font-jakarta text-[2.5rem] sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold text-[#0F172A] mb-5 tracking-tight leading-[1.15] max-w-[700px]">
+              <h1 className="font-jakarta text-[2rem] sm:text-[2.5rem] md:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold text-[#0F172A] mb-3 sm:mb-5 tracking-tight leading-[1.15] max-w-[700px]">
                 Sistema de Requisições <br />
                 <span className="text-[#0F172A]">de Compras.</span>
               </h1>
 
-              <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
+              <p className="text-slate-500 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-8">
                 Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
                 gestão.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link to="/painel">
-                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-base font-bold px-8 py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                  <button className="bg-[#008651] hover:bg-[#006e42] text-white text-sm sm:text-base font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto lg:mx-0">
                     Acessar o Painel <ArrowRight size={18} />
                   </button>
                 </Link>
               </div>
             </div>
 
-            {/* Composição 3D */}
-            <div className="flex-1 w-full flex justify-center lg:justify-end relative z-20">
+            {/* Composição 3D - Hidden on mobile, shown from sm breakpoint */}
+            <div className="hidden sm:flex flex-1 w-full justify-center lg:justify-end relative z-20">
               <Hero3DComposition />
             </div>
           </section>
 
           {/* Logos */}
-          <div className="pb-10 relative z-20 border-b border-slate-100/50">
+          <div className="pb-6 sm:pb-10 relative z-20 border-b border-slate-100/50">
             <LogoMarquee />
           </div>
 
           {/* === 2. SAUDAÇÃO E STATS === */}
           {user && (
-            <section className="mt-10 mb-8 px-6 md:px-12 animate-fade-in relative z-20">
+            <section className="mt-6 sm:mt-10 mb-6 sm:mb-8 px-4 sm:px-6 md:px-12 animate-fade-in relative z-20">
               <UserGreeting />
-              <div className="mt-6">
+              <div className="mt-4 sm:mt-6">
                 <QuickStats />
               </div>
             </section>
           )}
 
           {/* === 3. AÇÕES RÁPIDAS === */}
-          <div className="mb-16 px-6 md:px-12 relative z-20">
+          <div className="mb-10 sm:mb-16 px-4 sm:px-6 md:px-12 relative z-20">
             <ActionCards />
           </div>
 
           {/* === 4. COMO FUNCIONA === */}
-          <section className="py-16 bg-white relative overflow-hidden border-t border-slate-100">
+          <section className="py-10 sm:py-16 bg-white relative overflow-hidden border-t border-slate-100">
             <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
 
-            <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-12">
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+              <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
                 <span className="text-[#008651] font-bold tracking-wider text-xs uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
                   Workflow
                 </span>
-                <h2 className="text-3xl md:text-4xl font-extrabold font-jakarta text-slate-900 mt-4 mb-4 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-jakarta text-slate-900 mt-4 mb-3 sm:mb-4 tracking-tight">
                   Fluxo Inteligente
                 </h2>
-                <p className="text-base text-slate-600 font-medium leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed px-4 sm:px-0">
                   Entenda como o portal conecta solicitantes, compradores e aprovadores.
                 </p>
               </div>
 
-              <div className="flex justify-center scale-90 sm:scale-100">
+              <div className="flex justify-center scale-[0.85] sm:scale-90 md:scale-100 -mx-4 sm:mx-0">
                 <HeroFlowDiagram />
               </div>
             </div>
@@ -557,11 +557,11 @@ const Index = () => {
 
           <WorkflowTimeline />
 
-          <footer className="py-10 text-center mt-12 border-t border-slate-200 bg-white">
-            <p className="text-slate-500 text-sm font-medium font-jakarta">
+          <footer className="py-8 sm:py-10 text-center mt-8 sm:mt-12 border-t border-slate-200 bg-white px-4">
+            <p className="text-slate-500 text-xs sm:text-sm font-medium font-jakarta">
               © 2026 GMAD Madville | Curitiba - Central de Compras
             </p>
-            <p className="text-slate-400 text-xs mt-2 font-jakarta">
+            <p className="text-slate-400 text-[10px] sm:text-xs mt-2 font-jakarta">
               Versão Beta 2.1 | Suporte:{" "}
               <a
                 href="https://wa.me/5547992189824"
