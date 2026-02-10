@@ -70,6 +70,7 @@ export default function RequisicaoDetalhe() {
   const [isCanceling, setIsCanceling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isConfirmingReceipt, setIsConfirmingReceipt] = useState(false);
   
   // Inline editing states
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -82,7 +83,7 @@ export default function RequisicaoDetalhe() {
   const [isUploadingOrcamento, setIsUploadingOrcamento] = useState(false);
   const orcamentoInputRef = useRef<HTMLInputElement>(null);
 
-  const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting || isUploadingOrcamento;
+  const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting || isUploadingOrcamento || isConfirmingReceipt;
 
   const fetchRequisicao = useCallback(async () => {
     if (!id) return;
@@ -653,6 +654,35 @@ Qualquer dúvida, estamos à disposição!`;
       toast({ title: 'Erro ao remover arquivo', variant: 'destructive' });
     } finally {
       setIsDeletingAnexo(false);
+    }
+  };
+
+  const handleConfirmarRecebimento = async () => {
+    if (!requisicao) return;
+    
+    try {
+      setIsConfirmingReceipt(true);
+      const { error } = await supabase.rpc('confirmar_recebimento', {
+        req_id: requisicao.id,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Recebimento confirmado!',
+        description: 'O status foi atualizado para Recebido.',
+      });
+
+      await fetchRequisicao();
+    } catch (error: any) {
+      console.error('Error confirming receipt:', error);
+      toast({
+        title: 'Erro ao confirmar recebimento',
+        description: error?.message || 'Tente novamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsConfirmingReceipt(false);
     }
   };
 
@@ -1473,6 +1503,36 @@ Qualquer dúvida, estamos à disposição!`;
                   <p className="text-sm">
                     <span className="font-medium text-primary">Centro de Custo:</span> {requisicao.centro_custo}
                   </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Confirmar Recebimento - Only for solicitante when status is comprado or em_entrega */}
+            {readOnly && (requisicao.status === 'comprado' || requisicao.status === 'em_entrega') && (
+              <Card className="bg-success/5 border-success/30 border-2">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-success flex items-center gap-2">
+                    <Package className="w-5 h-5" />
+                    Confirmar Recebimento
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Recebeu o item? Confirme abaixo para atualizar o status da requisição para <strong>Recebido</strong>.
+                  </p>
+                  <Button
+                    variant="success"
+                    className="w-full gap-2"
+                    onClick={handleConfirmarRecebimento}
+                    disabled={isConfirmingReceipt}
+                  >
+                    {isConfirmingReceipt ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <CheckCircle className="w-4 h-4" />
+                    )}
+                    Confirmar Recebimento
+                  </Button>
                 </CardContent>
               </Card>
             )}

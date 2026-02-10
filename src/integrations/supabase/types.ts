@@ -353,6 +353,7 @@ export type Database = {
     }
     Functions: {
       can_view_requisicao: { Args: { req_email: string }; Returns: boolean }
+      confirmar_recebimento: { Args: { req_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
