@@ -167,6 +167,7 @@ export type Database = {
           created_at: string | null
           entregue_em: string | null
           especificacoes: string | null
+          forma_pagamento: string | null
           fornecedor_nome: string | null
           id: string
           item_nome: string
@@ -204,6 +205,7 @@ export type Database = {
           created_at?: string | null
           entregue_em?: string | null
           especificacoes?: string | null
+          forma_pagamento?: string | null
           fornecedor_nome?: string | null
           id?: string
           item_nome: string
@@ -241,6 +243,7 @@ export type Database = {
           created_at?: string | null
           entregue_em?: string | null
           especificacoes?: string | null
+          forma_pagamento?: string | null
           fornecedor_nome?: string | null
           id?: string
           item_nome?: string

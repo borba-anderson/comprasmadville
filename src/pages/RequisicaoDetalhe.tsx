@@ -4,7 +4,7 @@ import {
   ArrowLeft, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, 
   DollarSign, Paperclip, Download, Mail, Loader2, MessageCircle, 
   StickyNote, Wallet, ChevronRight, Home, Pencil, Check, X, Upload, Trash2,
-  Receipt
+  Receipt, CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { Header } from '@/components/layout/Header';
 import { RequisicaoTimeline, BuyerSelector, FornecedorSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
-import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico } from '@/types';
+import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico, FORMAS_PAGAMENTO } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -66,6 +66,8 @@ export default function RequisicaoDetalhe() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [observacaoComprador, setObservacaoComprador] = useState('');
   const [centroCustoInput, setCentroCustoInput] = useState('');
+  const [formaPagamento, setFormaPagamento] = useState('');
+  const [formaPagamentoOutro, setFormaPagamentoOutro] = useState('');
   const [isDeletingAnexo, setIsDeletingAnexo] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -133,6 +135,15 @@ export default function RequisicaoDetalhe() {
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
       setCentroCustoInput(requisicao.centro_custo || '');
+      const fp = requisicao.forma_pagamento || '';
+      const isPreset = FORMAS_PAGAMENTO.filter(f => f !== 'Outro').includes(fp as any);
+      if (fp && !isPreset) {
+        setFormaPagamento('Outro');
+        setFormaPagamentoOutro(fp);
+      } else {
+        setFormaPagamento(fp);
+        setFormaPagamentoOutro('');
+      }
     }
   }, [requisicao]);
 
@@ -405,7 +416,32 @@ export default function RequisicaoDetalhe() {
     }
   };
 
-  const updateCentroCusto = async () => {
+  const updateFormaPagamento = async () => {
+    if (!requisicao) return;
+    
+    try {
+      setIsUpdating(true);
+      const value = formaPagamento === 'Outro' ? formaPagamentoOutro : formaPagamento;
+      const { error } = await supabase
+        .from('requisicoes')
+        .update({ 
+          forma_pagamento: value || null,
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', requisicao.id);
+
+      if (error) throw error;
+      toast({ title: 'Forma de pagamento atualizada' });
+      await fetchRequisicao();
+    } catch (error) {
+      console.error('Error updating forma_pagamento:', error);
+      toast({ title: 'Erro ao atualizar forma de pagamento', variant: 'destructive' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+
     if (!requisicao) return;
     
     try {
@@ -1399,6 +1435,60 @@ Qualquer dúvida, estamos à disposição!`;
                     {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                     Salvar Observação
                   </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Forma de Pagamento */}
+            {!readOnly && (
+              <Card className="bg-white">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CreditCard className="w-5 h-5" />
+                    Forma de Pagamento
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Select value={formaPagamento} onValueChange={(v) => { setFormaPagamento(v); if (v !== 'Outro') setFormaPagamentoOutro(''); }}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a forma de pagamento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FORMAS_PAGAMENTO.map((fp) => (
+                        <SelectItem key={fp} value={fp}>{fp}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {formaPagamento === 'Outro' && (
+                    <Input
+                      value={formaPagamentoOutro}
+                      onChange={(e) => setFormaPagamentoOutro(e.target.value)}
+                      placeholder="Especifique a forma de pagamento..."
+                    />
+                  )}
+                  <Button 
+                    onClick={updateFormaPagamento} 
+                    disabled={isUpdating || (!formaPagamento)}
+                    className="w-full"
+                  >
+                    {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    Salvar Forma de Pagamento
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Read-only display for solicitante */}
+            {readOnly && requisicao.forma_pagamento && (
+              <Card className="bg-white">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CreditCard className="w-5 h-5" />
+                    Forma de Pagamento
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">{requisicao.forma_pagamento}</p>
                 </CardContent>
               </Card>
             )}
