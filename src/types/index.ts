@@ -74,6 +74,7 @@ export interface Requisicao {
   previsao_entrega?: string;
   valor?: number;
   valor_orcado?: number;
+  forma_pagamento?: string;
 }
 
 export interface ValorHistorico {
@@ -223,6 +224,15 @@ export const MOTIVOS_COMPRA = [
   "Projeto especial",
   "Melhoria de processo",
   "Outros",
+] as const;
+
+export const FORMAS_PAGAMENTO = [
+  "PIX",
+  "Boleto",
+  "Cartão Corporativo",
+  "Transferência",
+  "Dinheiro",
+  "Outro",
 ] as const;
 
 export const STATUS_CONFIG: Record<RequisicaoStatus, { label: string; icon: string; color: string; dotColor: string }> =

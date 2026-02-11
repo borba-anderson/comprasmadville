@@ -16,6 +16,7 @@ export { EfficiencyKPIs } from './EfficiencyKPIs';
 export { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 export { GastosPorCentroCusto } from './GastosPorCentroCusto';
 export { TrendChart } from './TrendChart';
+export { PagamentoPieChart } from './PagamentoPieChart';
 
 // Legacy exports for compatibility
 export { OverviewCards } from './OverviewCards';

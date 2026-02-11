@@ -17,6 +17,7 @@ import { EfficiencyKPIs } from './EfficiencyKPIs';
 import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
 import { GastosPorCentroCusto } from './GastosPorCentroCusto';
 import { TrendChart } from './TrendChart';
+import { PagamentoPieChart } from './PagamentoPieChart';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
@@ -519,8 +520,11 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
         <GastosPorCentroCusto requisicoes={filteredRequisicoes} onDrillDown={handleCentroCustoClick} />
       </div>
 
-      {/* Row 5: Evolução Temporal */}
-      <GastosLineChart requisicoes={filteredRequisicoes} />
+      {/* Row 5: Evolução Temporal + Formas de Pagamento */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <GastosLineChart requisicoes={filteredRequisicoes} />
+        <PagamentoPieChart requisicoes={filteredRequisicoes} />
+      </div>
 
       <GastosPorSolicitanteBars requisicoes={filteredRequisicoes} onSolicitanteClick={handleSolicitanteClick} />
       <StatusPainel requisicoes={filteredRequisicoes} />
