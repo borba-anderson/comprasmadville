@@ -1507,8 +1507,8 @@ Qualquer dúvida, estamos à disposição!`;
               </Card>
             )}
 
-            {/* Confirmar Recebimento - Only for solicitante when status is comprado or em_entrega */}
-            {readOnly && (requisicao.status === 'comprado' || requisicao.status === 'em_entrega') && (
+            {/* Confirmar Recebimento - Available for all users when status is comprado or em_entrega */}
+            {(requisicao.status === 'comprado' || requisicao.status === 'em_entrega') && (
               <Card className="bg-success/5 border-success/30 border-2">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg text-success flex items-center gap-2">
