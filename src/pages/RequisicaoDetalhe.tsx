@@ -673,6 +673,32 @@ Qualquer dúvida, estamos à disposição!`;
         description: 'O status foi atualizado para Recebido.',
       });
 
+      // Notify buyer via email that the item was received
+      if (requisicao.comprador_id) {
+        try {
+          const { data: compradorProfile } = await supabase
+            .from('profiles')
+            .select('email, nome')
+            .eq('id', requisicao.comprador_id)
+            .maybeSingle();
+
+          if (compradorProfile?.email) {
+            await supabase.functions.invoke('send-notification', {
+              body: {
+                to: compradorProfile.email,
+                solicitante_nome: compradorProfile.nome || 'Comprador',
+                item_nome: requisicao.item_nome,
+                protocolo: requisicao.protocolo || requisicao.id,
+                status: 'recebido',
+                comprador_nome: requisicao.solicitante_nome,
+              },
+            });
+          }
+        } catch (notifError) {
+          console.warn('Failed to notify buyer:', notifError);
+        }
+      }
+
       await fetchRequisicao();
     } catch (error: any) {
       console.error('Error confirming receipt:', error);
