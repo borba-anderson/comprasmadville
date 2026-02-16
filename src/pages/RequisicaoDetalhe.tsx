@@ -441,7 +441,7 @@ export default function RequisicaoDetalhe() {
     }
   };
 
-
+  const updateCentroCusto = async () => {
     if (!requisicao) return;
     
     try {
