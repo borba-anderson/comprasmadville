@@ -355,6 +355,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_edit_own_requisicao: {
+        Args: { _solicitante_email: string; _status: string }
+        Returns: boolean
+      }
       can_view_requisicao: { Args: { req_email: string }; Returns: boolean }
       confirmar_recebimento: { Args: { req_id: string }; Returns: boolean }
       has_role: {

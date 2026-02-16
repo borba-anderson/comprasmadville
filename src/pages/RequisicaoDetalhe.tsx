@@ -4,7 +4,7 @@ import {
   ArrowLeft, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, 
   DollarSign, Paperclip, Download, Mail, Loader2, MessageCircle, 
   StickyNote, Wallet, ChevronRight, Home, Pencil, Check, X, Upload, Trash2,
-  Receipt, CreditCard
+  Receipt, CreditCard, History
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { Header } from '@/components/layout/Header';
 import { RequisicaoTimeline, BuyerSelector, FornecedorSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
-import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico, FORMAS_PAGAMENTO } from '@/types';
+import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico, FORMAS_PAGAMENTO, AuditLog } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -56,6 +56,7 @@ export default function RequisicaoDetalhe() {
   const readOnly = !isStaff;
   const profileNome = profile?.nome;
   const profileId = profile?.id;
+  const profileEmail = profile?.email;
 
   const [requisicao, setRequisicao] = useState<Requisicao | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +74,7 @@ export default function RequisicaoDetalhe() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isConfirmingReceipt, setIsConfirmingReceipt] = useState(false);
+  const [editHistory, setEditHistory] = useState<AuditLog[]>([]);
   
   // Inline editing states
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -86,6 +88,12 @@ export default function RequisicaoDetalhe() {
   const orcamentoInputRef = useRef<HTMLInputElement>(null);
 
   const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting || isUploadingOrcamento || isConfirmingReceipt;
+
+  // Solicitantes can edit their own requisitions when status allows
+  const EDITABLE_STATUSES: RequisicaoStatus[] = ['pendente', 'em_analise', 'aprovado', 'cotando'];
+  const canSolicitanteEdit = !isStaff && !!requisicao && !!profileEmail 
+    && requisicao.solicitante_email === profileEmail 
+    && EDITABLE_STATUSES.includes(requisicao.status);
 
   const fetchRequisicao = useCallback(async () => {
     if (!id) return;
@@ -130,6 +138,19 @@ export default function RequisicaoDetalhe() {
 
     if (requisicao) {
       fetchValorHistory();
+      // Fetch edit history for staff
+      if (isStaff) {
+        const fetchEditHistory = async () => {
+          const { data } = await supabase
+            .from('audit_logs')
+            .select('*')
+            .eq('requisicao_id', requisicao.id)
+            .eq('acao', 'edicao_solicitante')
+            .order('created_at', { ascending: false });
+          if (data) setEditHistory(data as AuditLog[]);
+        };
+        fetchEditHistory();
+      }
       setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
       setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
       setMotivoRejeicao('');
@@ -510,7 +531,7 @@ Qualquer dúvida, estamos à disposição!`;
 
   // Inline editing functions
   const startEditing = (field: string) => {
-    if (!requisicao || readOnly) return;
+    if (!requisicao || (readOnly && !canSolicitanteEdit)) return;
     setEditingField(field);
     switch (field) {
       case 'item_nome':
@@ -567,12 +588,30 @@ Qualquer dúvida, estamos à disposição!`;
           break;
       }
 
+      // Build audit data for edit history
+      const dadosAnteriores: Record<string, unknown> = {};
+      const dadosNovos: Record<string, unknown> = {};
+      for (const key of Object.keys(updateData)) {
+        if (key === 'updated_at') continue;
+        dadosAnteriores[key] = (requisicao as any)[key];
+        dadosNovos[key] = updateData[key];
+      }
+
       const { error } = await supabase
         .from('requisicoes')
         .update(updateData)
         .eq('id', requisicao.id);
 
       if (error) throw error;
+
+      // Log the edit in audit_logs
+      await supabase.from('audit_logs').insert([{
+        requisicao_id: requisicao.id,
+        usuario_id: profileId || null,
+        acao: 'edicao_solicitante',
+        dados_anteriores: dadosAnteriores as any,
+        dados_novos: dadosNovos as any,
+      }]);
       
       toast({ title: 'Atualizado com sucesso' });
       setEditingField(null);
@@ -915,6 +954,13 @@ Qualquer dúvida, estamos à disposição!`;
           </div>
         </div>
 
+        {canSolicitanteEdit && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-2 flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
+            <Pencil className="w-4 h-4 flex-shrink-0" />
+            <span>Você pode editar o nome, quantidade, justificativa e especificações desta requisição. As alterações ficarão registradas.</span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -959,7 +1005,7 @@ Qualquer dúvida, estamos à disposição!`;
                   ) : (
                     <div className="flex items-center gap-2 group">
                       <p className="font-semibold text-lg flex-1">{requisicao.item_nome}</p>
-                      {!readOnly && (
+                      {(!readOnly || canSolicitanteEdit) && (
                         <Button 
                           size="icon" 
                           variant="ghost" 
@@ -997,7 +1043,7 @@ Qualquer dúvida, estamos à disposição!`;
                     ) : (
                       <div className="flex items-center gap-2 group">
                         <p className="font-semibold flex-1">{requisicao.quantidade} {requisicao.unidade}</p>
-                        {!readOnly && (
+                        {(!readOnly || canSolicitanteEdit) && (
                           <Button 
                             size="icon" 
                             variant="ghost" 
@@ -1045,7 +1091,7 @@ Qualquer dúvida, estamos à disposição!`;
                   ) : (
                     <div className="relative group">
                       <p className="text-sm bg-muted/50 rounded-lg p-3 mt-1">{requisicao.justificativa}</p>
-                      {!readOnly && (
+                      {(!readOnly || canSolicitanteEdit) && (
                         <Button 
                           size="icon" 
                           variant="ghost" 
@@ -1091,7 +1137,7 @@ Qualquer dúvida, estamos à disposição!`;
                           Sem especificações
                         </p>
                       )}
-                      {!readOnly && (
+                      {(!readOnly || canSolicitanteEdit) && (
                         <Button 
                           size="icon" 
                           variant="ghost" 
@@ -1106,6 +1152,56 @@ Qualquer dúvida, estamos à disposição!`;
                 </div>
               </CardContent>
             </Card>
+
+            {/* Histórico de Edições do Solicitante */}
+            {isStaff && editHistory.length > 0 && (
+              <Card className="border-t-4 border-t-amber-400">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <History className="w-5 h-5 text-amber-500" />
+                    Edições do Solicitante
+                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                      {editHistory.length}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-60 overflow-y-auto">
+                    {editHistory.map((log) => {
+                      const fieldLabels: Record<string, string> = {
+                        item_nome: 'Nome do Item',
+                        quantidade: 'Quantidade',
+                        justificativa: 'Justificativa',
+                        especificacoes: 'Especificações',
+                      };
+                      const anterior = log.dados_anteriores as Record<string, unknown> | null;
+                      const novo = log.dados_novos as Record<string, unknown> | null;
+                      
+                      return (
+                        <div key={log.id} className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800 text-sm space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-amber-700 dark:text-amber-400">
+                              {anterior && Object.keys(anterior).map(k => fieldLabels[k] || k).join(', ')}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(log.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                          {anterior && Object.keys(anterior).map(key => (
+                            <div key={key} className="text-xs">
+                              <span className="text-muted-foreground">{fieldLabels[key] || key}: </span>
+                              <span className="line-through text-red-500">{String(anterior[key] ?? '-')}</span>
+                              {' → '}
+                              <span className="text-emerald-600 font-medium">{String(novo?.[key] ?? '-')}</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Anexos do Solicitante */}
             {requisicao.arquivo_url && (
