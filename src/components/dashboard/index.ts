@@ -1,5 +1,11 @@
 export { GastosDashboard } from './GastosDashboard';
 export { HeroKPIs } from './HeroKPIs';
+export { ExecutiveKPIs } from './ExecutiveKPIs';
+export { SpendIntelligence } from './SpendIntelligence';
+export { SupplierPerformance } from './SupplierPerformance';
+export { OperationalEfficiency } from './OperationalEfficiency';
+export { PredictiveInsights } from './PredictiveInsights';
+export { SmartActionCenter } from './SmartActionCenter';
 export { GastosLineChart } from './GastosLineChart';
 export { GastosPorSetorBars } from './GastosPorSetorBars';
 export { GastosPorSolicitanteBars } from './GastosPorSolicitanteBars';
