@@ -20,6 +20,7 @@ export { LeadTimeAnalysis } from './LeadTimeAnalysis';
 export { ProcessFunnel } from './ProcessFunnel';
 export { EfficiencyKPIs } from './EfficiencyKPIs';
 export { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
+export { EconomiaPorComprador } from './EconomiaPorComprador';
 export { GastosPorCentroCusto } from './GastosPorCentroCusto';
 export { TrendChart } from './TrendChart';
 export { PagamentoPieChart } from './PagamentoPieChart';
