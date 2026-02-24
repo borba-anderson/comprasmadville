@@ -19,6 +19,7 @@ import { LeadTimeAnalysis } from './LeadTimeAnalysis';
 import { ProcessFunnel } from './ProcessFunnel';
 import { EfficiencyKPIs } from './EfficiencyKPIs';
 import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
+import { EconomiaPorComprador } from './EconomiaPorComprador';
 import { GastosPorCentroCusto } from './GastosPorCentroCusto';
 import { TrendChart } from './TrendChart';
 import { PagamentoPieChart } from './PagamentoPieChart';
@@ -374,9 +375,10 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
         {/* Financial Spend Intelligence */}
         <TabsContent value="financial" className="space-y-6 mt-6">
           <SpendIntelligence requisicoes={filteredRequisicoes} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <EconomiaSummary requisicoes={filteredRequisicoes} />
             <EconomiaPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleEmpresaClick} />
+            <EconomiaPorComprador requisicoes={filteredRequisicoes} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GastosPorSetorBars requisicoes={filteredRequisicoes} onSetorClick={handleSetorClick} />
