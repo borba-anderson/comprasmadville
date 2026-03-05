@@ -1,5 +1,5 @@
-import { Check, Clock, Package, ShoppingCart, Truck, FileCheck, XCircle, Search, RotateCcw } from 'lucide-react';
-import { Requisicao, RequisicaoStatus } from '@/types';
+import { Check, Clock, Package, ShoppingCart, Truck, FileCheck, XCircle, Search, RotateCcw, User } from 'lucide-react';
+import { Requisicao, RequisicaoStatus, AuditLog } from '@/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +13,7 @@ interface RequisicaoTimelineProps {
   requisicao: Requisicao;
   onRevertStatus?: (status: RequisicaoStatus) => void;
   isUpdating?: boolean;
+  actionLog?: AuditLog | null;
 }
 
 interface TimelineStep {
@@ -56,7 +57,7 @@ const REVERT_STATUS_MAP: Record<string, RequisicaoStatus> = {
   'recebido': 'recebido',
 };
 
-export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating }: RequisicaoTimelineProps) {
+export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating, actionLog }: RequisicaoTimelineProps) {
   const isRejected = requisicao.status === 'rejeitado' || requisicao.status === 'cancelado';
   const currentStepIndex = STATUS_ORDER[requisicao.status] ?? 0;
 
