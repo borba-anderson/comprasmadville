@@ -1,5 +1,5 @@
-import { Check, Clock, Package, ShoppingCart, Truck, FileCheck, XCircle, Search, RotateCcw } from 'lucide-react';
-import { Requisicao, RequisicaoStatus } from '@/types';
+import { Check, Clock, Package, ShoppingCart, Truck, FileCheck, XCircle, Search, RotateCcw, User } from 'lucide-react';
+import { Requisicao, RequisicaoStatus, AuditLog } from '@/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +13,7 @@ interface RequisicaoTimelineProps {
   requisicao: Requisicao;
   onRevertStatus?: (status: RequisicaoStatus) => void;
   isUpdating?: boolean;
+  actionLog?: AuditLog | null;
 }
 
 interface TimelineStep {
@@ -56,7 +57,7 @@ const REVERT_STATUS_MAP: Record<string, RequisicaoStatus> = {
   'recebido': 'recebido',
 };
 
-export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating }: RequisicaoTimelineProps) {
+export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating, actionLog }: RequisicaoTimelineProps) {
   const isRejected = requisicao.status === 'rejeitado' || requisicao.status === 'cancelado';
   const currentStepIndex = STATUS_ORDER[requisicao.status] ?? 0;
 
@@ -80,6 +81,11 @@ export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating }: R
   };
 
   if (isRejected) {
+    const usuarioNome = (actionLog?.dados_novos as any)?.usuario_nome;
+    const actionDate = actionLog?.created_at
+      ? new Date(actionLog.created_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })
+      : null;
+
     return (
       <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-xl p-4">
         <div className="flex items-center gap-3">
@@ -90,6 +96,15 @@ export function RequisicaoTimeline({ requisicao, onRevertStatus, isUpdating }: R
             <p className="font-semibold text-red-700 dark:text-red-400">
               Requisição {requisicao.status === 'rejeitado' ? 'Rejeitada' : 'Cancelada'}
             </p>
+            {usuarioNome && (
+              <div className="flex items-center gap-1.5 mt-1">
+                <User className="w-3.5 h-3.5 text-red-500" />
+                <p className="text-sm text-red-600 dark:text-red-300">
+                  {requisicao.status === 'rejeitado' ? 'Rejeitado por' : 'Cancelado por'}: <span className="font-semibold">{usuarioNome}</span>
+                  {actionDate && <span className="text-xs text-red-400 ml-2">{actionDate}</span>}
+                </p>
+              </div>
+            )}
             {requisicao.motivo_rejeicao && (
               <p className="text-sm text-red-600 dark:text-red-300 mt-1">
                 Motivo: {requisicao.motivo_rejeicao}
