@@ -1001,6 +1001,7 @@ Qualquer dúvida, estamos à disposição!`;
                   requisicao={requisicao} 
                   onRevertStatus={readOnly ? undefined : updateStatus}
                   isUpdating={isUpdating}
+                  actionLog={actionLog}
                 />
               </CardContent>
             </Card>
