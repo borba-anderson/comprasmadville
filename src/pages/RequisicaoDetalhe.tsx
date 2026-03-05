@@ -75,6 +75,7 @@ export default function RequisicaoDetalhe() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isConfirmingReceipt, setIsConfirmingReceipt] = useState(false);
   const [editHistory, setEditHistory] = useState<AuditLog[]>([]);
+  const [actionLog, setActionLog] = useState<AuditLog | null>(null);
   
   // Inline editing states
   const [editingField, setEditingField] = useState<string | null>(null);
