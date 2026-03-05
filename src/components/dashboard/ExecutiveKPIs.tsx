@@ -182,7 +182,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
             <Gauge className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold tracking-tight">Executive Procurement Overview</h3>
+            <h3 className="text-lg font-semibold tracking-tight">Visão Executiva de Compras</h3>
             <p className="text-sm text-muted-foreground">KPIs estratégicos com metas e semáforo</p>
           </div>
         </div>

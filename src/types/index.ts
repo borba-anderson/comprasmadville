@@ -181,19 +181,22 @@ export const QUICK_VIEWS = {
 
 export const SETORES = [
   "Almoxarifado",
+  "Assistência/Garantia",
   "Comercial",
   "Compras",
   "Diretoria",
   "Eventos",
   "Financeiro",
+  "Limpeza",
   "Logística",
   "Manutenção Predial",
   "Marketing",
-  "Recursos Humanos",
+  "RH",
   "SAC",
   "Showroom",
   "TI",
   "Uso/Consumo",
+  "Zeladoria",
 ] as const;
 
 export const UNIDADES = ["unidade", "peça", "kit", "litro", "metro", "kg", "par", "rolo"] as const;

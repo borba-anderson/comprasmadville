@@ -146,7 +146,7 @@ export function SupplierPerformance({ requisicoes }: SupplierPerformanceProps) {
             <Truck className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h4 className="font-semibold">Supplier Performance & Risk</h4>
+          <h4 className="font-semibold">Performance e Risco de Fornecedores</h4>
             <p className="text-sm text-muted-foreground">Nenhum fornecedor atribuído ainda</p>
           </div>
         </div>
@@ -162,7 +162,7 @@ export function SupplierPerformance({ requisicoes }: SupplierPerformanceProps) {
             <Truck className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h4 className="font-semibold">Supplier Performance & Risk</h4>
+            <h4 className="font-semibold">Performance e Risco de Fornecedores</h4>
             <p className="text-sm text-muted-foreground">
               {suppliers.length} fornecedores • Score médio: <span className={scoreColor(avgScore)}>{avgScore}</span>
             </p>
@@ -209,7 +209,7 @@ export function SupplierPerformance({ requisicoes }: SupplierPerformanceProps) {
               <th className="text-center px-3 py-2 text-xs font-medium text-muted-foreground">Score</th>
               <th className="text-center px-3 py-2 text-xs font-medium text-muted-foreground">OTIF</th>
               <th className="text-center px-3 py-2 text-xs font-medium text-muted-foreground">Lead Time</th>
-              <th className="text-right px-3 py-2 text-xs font-medium text-muted-foreground">Spend</th>
+              <th className="text-right px-3 py-2 text-xs font-medium text-muted-foreground">Gasto</th>
               <th className="text-center px-3 py-2 text-xs font-medium text-muted-foreground">Risco</th>
             </tr>
           </thead>

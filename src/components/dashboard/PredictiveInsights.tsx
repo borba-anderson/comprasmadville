@@ -141,7 +141,7 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
           <Brain className="w-5 h-5 text-violet-600" />
         </div>
         <div>
-          <h4 className="font-semibold">Predictive Intelligence</h4>
+          <h4 className="font-semibold">Inteligência Preditiva</h4>
           <p className="text-sm text-muted-foreground">Previsão de gastos e detecção de anomalias</p>
         </div>
       </div>
@@ -188,7 +188,7 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
 
         {/* Insights sidebar */}
         <div className="space-y-3">
-          <h5 className="text-xs font-semibold uppercase text-muted-foreground">Insights & Alertas</h5>
+          <h5 className="text-xs font-semibold uppercase text-muted-foreground">Insights e Alertas</h5>
 
           {insights.length === 0 && (
             <p className="text-xs text-muted-foreground">Sem insights suficientes no momento</p>

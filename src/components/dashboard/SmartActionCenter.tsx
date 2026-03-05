@@ -171,7 +171,7 @@ export function SmartActionCenter({ requisicoes, onFilterStatus }: SmartActionCe
             <Zap className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <h4 className="font-semibold">Smart Action Center</h4>
+            <h4 className="font-semibold">Central de Ações Prioritárias</h4>
             <p className="text-sm text-muted-foreground">✓ Nenhuma ação prioritária no momento</p>
           </div>
         </div>
@@ -187,7 +187,7 @@ export function SmartActionCenter({ requisicoes, onFilterStatus }: SmartActionCe
             <Zap className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h4 className="font-semibold">Smart Action Center</h4>
+            <h4 className="font-semibold">Central de Ações Prioritárias</h4>
             <p className="text-sm text-muted-foreground">{actions.length} decisões prioritárias</p>
           </div>
         </div>

@@ -338,23 +338,23 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
         <TabsList className="grid w-full grid-cols-5 h-12">
           <TabsTrigger value="executive" className="gap-1.5 text-xs">
             <Gauge className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Overview</span>
+            <span className="hidden sm:inline">Visão Geral</span>
           </TabsTrigger>
           <TabsTrigger value="financial" className="gap-1.5 text-xs">
             <BarChart3 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Financial</span>
+            <span className="hidden sm:inline">Financeiro</span>
           </TabsTrigger>
           <TabsTrigger value="supplier" className="gap-1.5 text-xs">
             <Truck className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Suppliers</span>
+            <span className="hidden sm:inline">Fornecedores</span>
           </TabsTrigger>
           <TabsTrigger value="operational" className="gap-1.5 text-xs">
             <Settings className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Ops</span>
+            <span className="hidden sm:inline">Operacional</span>
           </TabsTrigger>
           <TabsTrigger value="predictive" className="gap-1.5 text-xs">
             <Brain className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Predictive</span>
+            <span className="hidden sm:inline">Preditivo</span>
           </TabsTrigger>
         </TabsList>
 
