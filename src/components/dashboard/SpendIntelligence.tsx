@@ -98,7 +98,7 @@ export function SpendIntelligence({ requisicoes }: SpendIntelligenceProps) {
           <BarChart3 className="w-5 h-5 text-blue-600" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold tracking-tight">Financial Spend Intelligence</h3>
+          <h3 className="text-lg font-semibold tracking-tight">Inteligência Financeira de Gastos</h3>
           <p className="text-sm text-muted-foreground">Análise de concentração e Pareto</p>
         </div>
       </div>
@@ -106,8 +106,8 @@ export function SpendIntelligence({ requisicoes }: SpendIntelligenceProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pareto Chart */}
         <div className="bg-card rounded-xl border border-border/50 p-5">
-          <h4 className="text-sm font-semibold mb-1">Spend por Categoria (Pareto)</h4>
-          <p className="text-xs text-muted-foreground mb-4">80/20 analysis — concentração de gastos</p>
+          <h4 className="text-sm font-semibold mb-1">Gasto por Categoria (Pareto)</h4>
+          <p className="text-xs text-muted-foreground mb-4">Análise 80/20 — concentração de gastos</p>
           {paretoData.length > 0 ? (
             <div className="h-52">
               <ResponsiveContainer width="100%" height="100%">
@@ -188,7 +188,7 @@ export function SpendIntelligence({ requisicoes }: SpendIntelligenceProps) {
 
           {/* Savings Waterfall Summary */}
           <div className="bg-card rounded-xl border border-border/50 p-5">
-            <h4 className="text-sm font-semibold mb-3">Savings Waterfall</h4>
+            <h4 className="text-sm font-semibold mb-3">Cascata de Economia</h4>
             <div className="flex gap-2">
               {savingsWaterfall.map((item) => (
                 <div key={item.name} className="flex-1 text-center">

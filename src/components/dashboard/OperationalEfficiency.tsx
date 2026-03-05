@@ -124,7 +124,7 @@ export function OperationalEfficiency({ requisicoes }: OperationalEfficiencyProp
           <Settings className="w-5 h-5 text-orange-600" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold tracking-tight">Operational Process Efficiency</h3>
+          <h3 className="text-lg font-semibold tracking-tight">Eficiência Operacional do Processo</h3>
           <p className="text-sm text-muted-foreground">Tempo por etapa, produtividade e gargalos</p>
         </div>
       </div>

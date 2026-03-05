@@ -49,29 +49,24 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
     const withValue = requisicoes.filter((r) => r.valor && r.valor > 0);
     const totalSpend = withValue.reduce((sum, r) => sum + (r.valor || 0), 0);
 
-    // Previous period spend
     const prevWithValue = previousPeriod.filter((r) => r.valor && r.valor > 0);
     const prevTotalSpend = prevWithValue.reduce((sum, r) => sum + (r.valor || 0), 0);
     const spendTrend = prevTotalSpend > 0 ? ((totalSpend - prevTotalSpend) / prevTotalSpend) * 100 : 0;
 
-    // Savings realized
     const withBoth = requisicoes.filter((r) => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0);
     const totalBudgeted = withBoth.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
     const totalNegotiated = withBoth.reduce((sum, r) => sum + (r.valor || 0), 0);
     const savingsRealized = totalBudgeted - totalNegotiated;
     const savingsPct = totalBudgeted > 0 ? (savingsRealized / totalBudgeted) * 100 : 0;
 
-    // Cost avoidance (rejected + cancelled that had budgeted value)
     const avoided = requisicoes.filter((r) =>
       ['rejeitado', 'cancelado'].includes(r.status) && r.valor_orcado && r.valor_orcado > 0
     );
     const costAvoidance = avoided.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
 
-    // Spend under management (% with fornecedor assigned)
     const managed = withValue.filter((r) => r.fornecedor_nome && r.fornecedor_nome.trim() !== '');
     const spendUnderMgmt = withValue.length > 0 ? (managed.length / withValue.length) * 100 : 0;
 
-    // Maverick spend (requisitions without approval that are comprado+)
     const maverickStatuses = ['comprado', 'em_entrega', 'recebido'];
     const maverickReqs = requisicoes.filter(
       (r) => maverickStatuses.includes(r.status) && !r.aprovado_em
@@ -79,10 +74,8 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
     const maverickSpend = maverickReqs.reduce((sum, r) => sum + (r.valor || 0), 0);
     const maverickPct = totalSpend > 0 ? (maverickSpend / totalSpend) * 100 : 0;
 
-    // Procurement ROI
-    const procROI = savingsRealized > 0 ? savingsRealized / Math.max(totalSpend * 0.03, 1) : 0; // assume 3% proc cost
+    const procROI = savingsRealized > 0 ? savingsRealized / Math.max(totalSpend * 0.03, 1) : 0;
 
-    // Performance Index (composite score 0-100)
     const completionRate = total > 0 ? (requisicoes.filter((r) => r.status === 'recebido').length / total) * 100 : 0;
     const today = new Date();
     const overdueCount = requisicoes.filter((r) => {
@@ -94,80 +87,80 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
 
     return [
       {
-        title: 'Total Spend YTD',
+        title: 'Gasto Total no Período',
         value: formatCompact(totalSpend),
         fullValue: formatFull(totalSpend),
         target: formatCompact(totalBudgeted),
         targetLabel: 'vs Orçamento',
         trend: spendTrend,
         trendInverted: true,
-        status: spendTrend > 10 ? 'red' : spendTrend > 0 ? 'yellow' : 'green',
+        status: (spendTrend > 10 ? 'red' : spendTrend > 0 ? 'yellow' : 'green') as TrafficLight,
         icon: DollarSign,
-        description: 'Gasto total no período',
+        description: 'Gasto total no período analisado',
       },
       {
-        title: 'Savings Realized',
+        title: 'Economia Realizada',
         value: savingsRealized > 0 ? formatCompact(savingsRealized) : '—',
         fullValue: savingsRealized > 0 ? formatFull(savingsRealized) : undefined,
         target: `${savingsPct.toFixed(1)}%`,
         targetLabel: 'do orçado',
-        status: savingsPct >= 10 ? 'green' : savingsPct >= 5 ? 'yellow' : 'red',
+        status: (savingsPct >= 10 ? 'green' : savingsPct >= 5 ? 'yellow' : 'red') as TrafficLight,
         icon: PiggyBank,
         description: 'Economia negociada vs orçado',
       },
       {
-        title: 'Cost Avoidance',
+        title: 'Custo Evitado',
         value: costAvoidance > 0 ? formatCompact(costAvoidance) : '—',
         fullValue: costAvoidance > 0 ? formatFull(costAvoidance) : undefined,
         target: `${avoided.length} itens`,
         targetLabel: 'evitados',
-        status: costAvoidance > 0 ? 'green' : 'yellow',
+        status: (costAvoidance > 0 ? 'green' : 'yellow') as TrafficLight,
         icon: ShieldCheck,
         description: 'Custo evitado (rejeitados/cancelados)',
       },
       {
-        title: 'Spend Under Mgmt',
+        title: 'Compras Gerenciadas',
         value: `${spendUnderMgmt.toFixed(0)}%`,
         target: '100%',
         targetLabel: 'meta',
-        status: spendUnderMgmt >= 80 ? 'green' : spendUnderMgmt >= 50 ? 'yellow' : 'red',
+        status: (spendUnderMgmt >= 80 ? 'green' : spendUnderMgmt >= 50 ? 'yellow' : 'red') as TrafficLight,
         icon: Target,
         description: 'Compras com fornecedor atribuído',
       },
       {
-        title: 'Maverick Spend',
+        title: 'Compras Sem Política',
         value: `${maverickPct.toFixed(1)}%`,
         fullValue: maverickSpend > 0 ? formatFull(maverickSpend) : undefined,
         target: '< 5%',
         targetLabel: 'meta',
-        status: maverickPct <= 5 ? 'green' : maverickPct <= 15 ? 'yellow' : 'red',
+        status: (maverickPct <= 5 ? 'green' : maverickPct <= 15 ? 'yellow' : 'red') as TrafficLight,
         icon: Wallet,
         description: 'Compras sem aprovação formal',
       },
       {
-        title: 'Procurement ROI',
+        title: 'ROI de Compras',
         value: `${procROI.toFixed(1)}x`,
         target: '> 3x',
         targetLabel: 'meta',
-        status: procROI >= 3 ? 'green' : procROI >= 1.5 ? 'yellow' : 'red',
+        status: (procROI >= 3 ? 'green' : procROI >= 1.5 ? 'yellow' : 'red') as TrafficLight,
         icon: TrendingUp,
         description: 'Retorno sobre custo de procurement',
       },
       {
-        title: 'Working Capital',
+        title: 'Capital de Giro',
         value: formatCompact(totalSpend - totalNegotiated),
         target: formatCompact(totalBudgeted - totalSpend),
         targetLabel: 'disponível',
-        status: totalSpend <= totalBudgeted * 0.9 ? 'green' : totalSpend <= totalBudgeted ? 'yellow' : 'red',
+        status: (totalSpend <= totalBudgeted * 0.9 ? 'green' : totalSpend <= totalBudgeted ? 'yellow' : 'red') as TrafficLight,
         icon: DollarSign,
         description: 'Impacto no capital de giro',
       },
       {
-        title: 'Performance Index',
+        title: 'Índice de Performance',
         value: `${perfIndex}`,
         target: '> 70',
         targetLabel: 'meta',
-        status: perfIndex >= 70 ? 'green' : perfIndex >= 50 ? 'yellow' : 'red',
+        status: (perfIndex >= 70 ? 'green' : perfIndex >= 50 ? 'yellow' : 'red') as TrafficLight,
         icon: Gauge,
         description: 'Score composto de performance',
       },
@@ -182,7 +175,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
             <Gauge className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold tracking-tight">Executive Procurement Overview</h3>
+            <h3 className="text-lg font-semibold tracking-tight">Visão Executiva de Compras</h3>
             <p className="text-sm text-muted-foreground">KPIs estratégicos com metas e semáforo</p>
           </div>
         </div>
@@ -195,8 +188,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
             return (
               <Tooltip key={kpi.title}>
                 <TooltipTrigger asChild>
-                  <div className={`relative bg-card rounded-xl border border-border/50 p-4 hover:shadow-md transition-all duration-200 cursor-default overflow-hidden`}>
-                    {/* Status indicator bar */}
+                  <div className="relative bg-card rounded-xl border border-border/50 p-4 hover:shadow-md transition-all duration-200 cursor-default overflow-hidden">
                     <div className={`absolute top-0 left-0 right-0 h-1 ${colors.dot}`} />
 
                     <div className="flex items-start justify-between mb-3 mt-1">
@@ -211,7 +203,6 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
                     </p>
                     <p className="text-xs font-medium text-foreground/80 mt-0.5">{kpi.title}</p>
 
-                    {/* Target comparison */}
                     {kpi.target && (
                       <div className="flex items-center gap-1.5 mt-2">
                         <span className="text-[10px] text-muted-foreground">{kpi.targetLabel}:</span>
@@ -219,7 +210,6 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
                       </div>
                     )}
 
-                    {/* Trend */}
                     {kpi.trend !== undefined && kpi.trend !== 0 && (
                       <div className="flex items-center gap-1 mt-1.5">
                         {kpi.trend > 0 ? (
