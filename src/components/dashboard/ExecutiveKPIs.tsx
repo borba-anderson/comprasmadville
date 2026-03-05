@@ -92,9 +92,8 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
     const overdueRate = total > 0 ? (1 - overdueCount / total) * 100 : 100;
     const perfIndex = Math.round((completionRate * 0.3 + Math.min(savingsPct * 2, 30) + spendUnderMgmt * 0.2 + overdueRate * 0.2));
 
-    return [
       {
-        title: 'Total Spend YTD',
+        title: 'Gasto Total no Período',
         value: formatCompact(totalSpend),
         fullValue: formatFull(totalSpend),
         target: formatCompact(totalBudgeted),
@@ -103,10 +102,10 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         trendInverted: true,
         status: spendTrend > 10 ? 'red' : spendTrend > 0 ? 'yellow' : 'green',
         icon: DollarSign,
-        description: 'Gasto total no período',
+        description: 'Gasto total no período analisado',
       },
       {
-        title: 'Savings Realized',
+        title: 'Economia Realizada',
         value: savingsRealized > 0 ? formatCompact(savingsRealized) : '—',
         fullValue: savingsRealized > 0 ? formatFull(savingsRealized) : undefined,
         target: `${savingsPct.toFixed(1)}%`,
@@ -116,7 +115,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Economia negociada vs orçado',
       },
       {
-        title: 'Cost Avoidance',
+        title: 'Custo Evitado',
         value: costAvoidance > 0 ? formatCompact(costAvoidance) : '—',
         fullValue: costAvoidance > 0 ? formatFull(costAvoidance) : undefined,
         target: `${avoided.length} itens`,
@@ -126,7 +125,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Custo evitado (rejeitados/cancelados)',
       },
       {
-        title: 'Spend Under Mgmt',
+        title: 'Compras Gerenciadas',
         value: `${spendUnderMgmt.toFixed(0)}%`,
         target: '100%',
         targetLabel: 'meta',
@@ -135,7 +134,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Compras com fornecedor atribuído',
       },
       {
-        title: 'Maverick Spend',
+        title: 'Compras Sem Política',
         value: `${maverickPct.toFixed(1)}%`,
         fullValue: maverickSpend > 0 ? formatFull(maverickSpend) : undefined,
         target: '< 5%',
@@ -145,7 +144,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Compras sem aprovação formal',
       },
       {
-        title: 'Procurement ROI',
+        title: 'ROI de Compras',
         value: `${procROI.toFixed(1)}x`,
         target: '> 3x',
         targetLabel: 'meta',
@@ -154,7 +153,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Retorno sobre custo de procurement',
       },
       {
-        title: 'Working Capital',
+        title: 'Capital de Giro',
         value: formatCompact(totalSpend - totalNegotiated),
         target: formatCompact(totalBudgeted - totalSpend),
         targetLabel: 'disponível',
@@ -163,7 +162,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         description: 'Impacto no capital de giro',
       },
       {
-        title: 'Performance Index',
+        title: 'Índice de Performance',
         value: `${perfIndex}`,
         target: '> 70',
         targetLabel: 'meta',
