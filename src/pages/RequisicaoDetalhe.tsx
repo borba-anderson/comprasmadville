@@ -139,7 +139,7 @@ export default function RequisicaoDetalhe() {
 
     if (requisicao) {
       fetchValorHistory();
-      // Fetch edit history for staff
+      // Fetch edit history and action log for staff
       if (isStaff) {
         const fetchEditHistory = async () => {
           const { data } = await supabase
@@ -152,6 +152,18 @@ export default function RequisicaoDetalhe() {
         };
         fetchEditHistory();
       }
+      // Fetch cancel/reject action log (visible to all)
+      const fetchActionLog = async () => {
+        const { data } = await supabase
+          .from('audit_logs')
+          .select('*')
+          .eq('requisicao_id', requisicao.id)
+          .in('acao', ['cancelado', 'rejeitado'])
+          .order('created_at', { ascending: false })
+          .limit(1);
+        if (data && data.length > 0) setActionLog(data[0] as AuditLog);
+      };
+      fetchActionLog();
       setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
       setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
       setMotivoRejeicao('');
@@ -277,6 +289,20 @@ export default function RequisicaoDetalhe() {
         .eq('id', requisicao.id);
 
       if (error) throw error;
+
+      // Register who cancelled or rejected
+      if (newStatus === 'cancelado' || newStatus === 'rejeitado') {
+        await supabase.from('audit_logs').insert({
+          requisicao_id: requisicao.id,
+          usuario_id: profileId || null,
+          acao: newStatus,
+          dados_novos: {
+            usuario_nome: profileNome || 'Usuário',
+            motivo: motivo || null,
+            data: new Date().toISOString(),
+          } as any,
+        });
+      }
 
       toast({
         title: 'Sucesso',
