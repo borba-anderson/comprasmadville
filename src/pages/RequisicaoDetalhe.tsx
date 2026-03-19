@@ -273,9 +273,25 @@ export default function RequisicaoDetalhe() {
         updateData.aprovado_por = profileId;
       }
 
+      if (newStatus === 'cotando') {
+        // Keep existing comprador or set from profile
+        if (!requisicao.comprador_nome && profileNome) {
+          updateData.comprador_nome = profileNome;
+          updateData.comprador_id = profileId;
+        }
+      }
+
       if (newStatus === 'comprado') {
         updateData.comprado_em = new Date().toISOString();
         updateData.comprador_id = profileId;
+        // Preserve existing comprador_nome or set from current profile
+        updateData.comprador_nome = requisicao.comprador_nome || profileNome || null;
+      }
+
+      if (newStatus === 'em_entrega') {
+        // Keep all existing purchase data intact
+        updateData.comprador_id = requisicao.comprador_id || profileId;
+        updateData.comprador_nome = requisicao.comprador_nome || profileNome || null;
       }
 
       if (newStatus === 'recebido') {
