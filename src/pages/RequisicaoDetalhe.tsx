@@ -818,6 +818,123 @@ Qualquer dúvida, estamos à disposição!`;
     return ['cotando', 'comprado', 'em_entrega', 'recebido'].includes(status);
   };
 
+  const handlePrint = () => {
+    if (!requisicao) return;
+    const statusLabel = STATUS_CONFIG[requisicao.status]?.label || requisicao.status;
+    const formatC = (v: number | null | undefined) =>
+      v == null ? '-' : v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const formatD = (d: string | null | undefined) =>
+      d ? new Date(d).toLocaleDateString('pt-BR') : '-';
+
+    const content = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Requisição ${requisicao.protocolo}</title>
+  <style>
+    @media print { body { margin: 0; } }
+    body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; color: #1a1a1a; }
+    h1 { color: #333; border-bottom: 3px solid #22c55e; padding-bottom: 10px; margin-bottom: 4px; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .protocolo { font-size: 13px; color: #666; margin-bottom: 4px; }
+    .status { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block; }
+    .section { margin: 20px 0; }
+    .section-title { font-weight: bold; color: #333; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-left: 3px solid #22c55e; padding-left: 8px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .info-item { margin-bottom: 8px; }
+    .info-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.04em; }
+    .info-value { font-size: 14px; color: #1a1a1a; font-weight: 500; margin-top: 2px; }
+    .box { background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin-top: 6px; }
+    .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #aaa; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Requisição de Compra</h1>
+      <div class="protocolo">${requisicao.protocolo}</div>
+    </div>
+    <div style="text-align:right">
+      <div class="status">${statusLabel.toUpperCase()}</div>
+      <div style="font-size:11px;color:#aaa;margin-top:6px">Impresso em ${new Date().toLocaleString('pt-BR')}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Item Solicitado</div>
+    <div class="box">
+      <div class="info-item" style="margin-bottom:12px">
+        <div class="info-label">Item</div>
+        <div class="info-value" style="font-size:18px">${requisicao.item_nome}</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Quantidade</div><div class="info-value">${requisicao.quantidade} ${requisicao.unidade}</div></div>
+        <div class="info-item"><div class="info-label">Prioridade</div><div class="info-value">${requisicao.prioridade}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Solicitante</div>
+    <div class="box">
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Nome</div><div class="info-value">${requisicao.solicitante_nome}</div></div>
+        <div class="info-item"><div class="info-label">E-mail</div><div class="info-value">${requisicao.solicitante_email}</div></div>
+        <div class="info-item"><div class="info-label">Setor</div><div class="info-value">${requisicao.solicitante_setor}</div></div>
+        <div class="info-item"><div class="info-label">Empresa</div><div class="info-value">${requisicao.solicitante_empresa || '-'}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Justificativa</div>
+    <div class="box"><p style="margin:0">${requisicao.justificativa}</p></div>
+  </div>
+
+  ${requisicao.especificacoes ? `<div class="section"><div class="section-title">Especificações</div><div class="box"><p style="margin:0">${requisicao.especificacoes}</p></div></div>` : ''}
+
+  <div class="section">
+    <div class="section-title">Informações de Compra</div>
+    <div class="box">
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Comprador</div><div class="info-value">${requisicao.comprador_nome || '-'}</div></div>
+        <div class="info-item"><div class="info-label">Fornecedor</div><div class="info-value">${requisicao.fornecedor_nome || '-'}</div></div>
+        <div class="info-item"><div class="info-label">Valor Orçado</div><div class="info-value">${formatC(requisicao.valor_orcado)}</div></div>
+        <div class="info-item"><div class="info-label">Valor Final</div><div class="info-value">${formatC(requisicao.valor)}</div></div>
+        <div class="info-item"><div class="info-label">Previsão de Entrega</div><div class="info-value">${formatD(requisicao.previsao_entrega)}</div></div>
+        <div class="info-item"><div class="info-label">Centro de Custo</div><div class="info-value">${requisicao.centro_custo || '-'}</div></div>
+        <div class="info-item"><div class="info-label">Forma de Pagamento</div><div class="info-value">${requisicao.forma_pagamento || '-'}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Datas</div>
+    <div class="box">
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Criado em</div><div class="info-value">${formatD(requisicao.created_at)}</div></div>
+        <div class="info-item"><div class="info-label">Aprovado em</div><div class="info-value">${formatD(requisicao.aprovado_em)}</div></div>
+        <div class="info-item"><div class="info-label">Comprado em</div><div class="info-value">${formatD(requisicao.comprado_em)}</div></div>
+        <div class="info-item"><div class="info-label">Recebido em</div><div class="info-value">${formatD(requisicao.recebido_em)}</div></div>
+      </div>
+    </div>
+  </div>
+
+  ${requisicao.observacao_comprador ? `<div class="section"><div class="section-title">Observação do Comprador</div><div class="box"><p style="margin:0">${requisicao.observacao_comprador}</p></div></div>` : ''}
+
+  <div class="footer">Documento gerado pelo sistema de compras — ${new Date().toLocaleString('pt-BR')}</div>
+</body>
+</html>`;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(content);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => printWindow.print(), 300);
+    }
+  };
+
   const handleDeleteRequisicao = async () => {
     if (!requisicao || requisicao.status !== 'cancelado') return;
     
