@@ -14,7 +14,7 @@ export function FornecedorSelector({ value, onChange, disabled, className }: For
   const [localValue, setLocalValue] = useState(value || '');
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync local value when prop changes (e.g., when switching requisitions)
   useEffect(() => {
