@@ -4,7 +4,7 @@ import {
   ArrowLeft, FileText, CheckCircle, XCircle, Package, ShoppingCart, Truck, 
   DollarSign, Paperclip, Download, Mail, Loader2, MessageCircle, 
   StickyNote, Wallet, ChevronRight, Home, Pencil, Check, X, Upload, Trash2,
-  Receipt, CreditCard, History
+  Receipt, CreditCard, History, Printer
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
