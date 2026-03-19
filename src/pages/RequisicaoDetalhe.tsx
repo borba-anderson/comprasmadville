@@ -164,8 +164,22 @@ export default function RequisicaoDetalhe() {
         if (data && data.length > 0) setActionLog(data[0] as AuditLog);
       };
       fetchActionLog();
-      setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
-      setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
+
+      // Only reset form inputs if not currently being edited by user
+      // This prevents losing unsaved changes during background refreshes
+      setValorInput(prev => {
+        const fromDb = requisicao.valor ? formatCurrencyInput(requisicao.valor) : '';
+        // Only reset if current value represents a different DB value or is empty
+        const currentParsed = parseCurrencyInput(prev);
+        const dbValue = requisicao.valor || 0;
+        return Math.abs(currentParsed - dbValue) > 0.005 ? fromDb : prev;
+      });
+      setValorOrcadoInput(prev => {
+        const fromDb = requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '';
+        const currentParsed = parseCurrencyInput(prev);
+        const dbValue = requisicao.valor_orcado || 0;
+        return Math.abs(currentParsed - dbValue) > 0.005 ? fromDb : prev;
+      });
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
       setCentroCustoInput(requisicao.centro_custo || '');
@@ -179,7 +193,7 @@ export default function RequisicaoDetalhe() {
         setFormaPagamentoOutro('');
       }
     }
-  }, [requisicao]);
+  }, [requisicao, isStaff]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
