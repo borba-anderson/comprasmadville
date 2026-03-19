@@ -123,63 +123,47 @@ export default function RequisicaoDetalhe() {
   }, [fetchRequisicao]);
 
   useEffect(() => {
-    const fetchValorHistory = async () => {
+    const fetchSideData = async () => {
       if (!requisicao) return;
       
-      const { data, error } = await supabase
+      // Fetch valor history
+      const { data: histData, error: histError } = await supabase
         .from('valor_historico')
         .select('*')
         .eq('requisicao_id', requisicao.id)
         .order('created_at', { ascending: false });
+      if (!histError && histData) setValorHistory(histData as ValorHistorico[]);
 
-      if (!error && data) {
-        setValorHistory(data as ValorHistorico[]);
-      }
-    };
-
-    if (requisicao) {
-      fetchValorHistory();
-      // Fetch edit history and action log for staff
+      // Fetch edit history (staff only)
       if (isStaff) {
-        const fetchEditHistory = async () => {
-          const { data } = await supabase
-            .from('audit_logs')
-            .select('*')
-            .eq('requisicao_id', requisicao.id)
-            .eq('acao', 'edicao_solicitante')
-            .order('created_at', { ascending: false });
-          if (data) setEditHistory(data as AuditLog[]);
-        };
-        fetchEditHistory();
-      }
-      // Fetch cancel/reject action log (visible to all)
-      const fetchActionLog = async () => {
-        const { data } = await supabase
+        const { data: editData } = await supabase
           .from('audit_logs')
           .select('*')
           .eq('requisicao_id', requisicao.id)
-          .in('acao', ['cancelado', 'rejeitado'])
-          .order('created_at', { ascending: false })
-          .limit(1);
-        if (data && data.length > 0) setActionLog(data[0] as AuditLog);
-      };
-      fetchActionLog();
+          .eq('acao', 'edicao_solicitante')
+          .order('created_at', { ascending: false });
+        if (editData) setEditHistory(editData as AuditLog[]);
+      }
 
-      // Only reset form inputs if not currently being edited by user
-      // This prevents losing unsaved changes during background refreshes
-      setValorInput(prev => {
-        const fromDb = requisicao.valor ? formatCurrencyInput(requisicao.valor) : '';
-        // Only reset if current value represents a different DB value or is empty
-        const currentParsed = parseCurrencyInput(prev);
-        const dbValue = requisicao.valor || 0;
-        return Math.abs(currentParsed - dbValue) > 0.005 ? fromDb : prev;
-      });
-      setValorOrcadoInput(prev => {
-        const fromDb = requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '';
-        const currentParsed = parseCurrencyInput(prev);
-        const dbValue = requisicao.valor_orcado || 0;
-        return Math.abs(currentParsed - dbValue) > 0.005 ? fromDb : prev;
-      });
+      // Fetch cancel/reject action log
+      const { data: actionData } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .eq('requisicao_id', requisicao.id)
+        .in('acao', ['cancelado', 'rejeitado'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (actionData && actionData.length > 0) setActionLog(actionData[0] as AuditLog);
+    };
+
+    if (requisicao) {
+      fetchSideData();
+
+      // Sync form inputs with DB values
+      const toInput = (v: number | null | undefined) =>
+        v != null ? v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
+      setValorInput(toInput(requisicao.valor));
+      setValorOrcadoInput(toInput(requisicao.valor_orcado));
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
       setCentroCustoInput(requisicao.centro_custo || '');
@@ -193,7 +177,7 @@ export default function RequisicaoDetalhe() {
         setFormaPagamentoOutro('');
       }
     }
-  }, [requisicao, isStaff]);
+  }, [requisicao?.id, requisicao?.status, isStaff]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
