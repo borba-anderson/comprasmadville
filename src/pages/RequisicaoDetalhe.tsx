@@ -1092,9 +1092,20 @@ Qualquer dúvida, estamos à disposição!`;
               <span className="font-mono text-success text-lg">{requisicao.protocolo}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className={cn('w-3 h-3 rounded-full', STATUS_CONFIG[requisicao.status].dotColor)} />
-            <StatusBadge status={requisicao.status} />
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrint}
+              className="border-border/60 hover:bg-muted/50 gap-2"
+            >
+              <Printer className="w-4 h-4" />
+              Imprimir
+            </Button>
+            <div className="flex items-center gap-2">
+              <span className={cn('w-3 h-3 rounded-full', STATUS_CONFIG[requisicao.status].dotColor)} />
+              <StatusBadge status={requisicao.status} />
+            </div>
           </div>
         </div>
 
