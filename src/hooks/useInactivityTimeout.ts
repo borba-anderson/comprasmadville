@@ -6,7 +6,7 @@ const INACTIVITY_TIMEOUT = 60 * 60 * 1000; // 1 hora em milissegundos
 
 export function useInactivityTimeout() {
   const { user, signOut } = useAuth();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = useCallback(async () => {
     toast.info('Sessão expirada por inatividade. Faça login novamente.');
