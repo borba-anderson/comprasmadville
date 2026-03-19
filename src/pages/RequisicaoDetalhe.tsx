@@ -123,49 +123,47 @@ export default function RequisicaoDetalhe() {
   }, [fetchRequisicao]);
 
   useEffect(() => {
-    const fetchValorHistory = async () => {
+    const fetchSideData = async () => {
       if (!requisicao) return;
       
-      const { data, error } = await supabase
+      // Fetch valor history
+      const { data: histData, error: histError } = await supabase
         .from('valor_historico')
         .select('*')
         .eq('requisicao_id', requisicao.id)
         .order('created_at', { ascending: false });
+      if (!histError && histData) setValorHistory(histData as ValorHistorico[]);
 
-      if (!error && data) {
-        setValorHistory(data as ValorHistorico[]);
-      }
-    };
-
-    if (requisicao) {
-      fetchValorHistory();
-      // Fetch edit history and action log for staff
+      // Fetch edit history (staff only)
       if (isStaff) {
-        const fetchEditHistory = async () => {
-          const { data } = await supabase
-            .from('audit_logs')
-            .select('*')
-            .eq('requisicao_id', requisicao.id)
-            .eq('acao', 'edicao_solicitante')
-            .order('created_at', { ascending: false });
-          if (data) setEditHistory(data as AuditLog[]);
-        };
-        fetchEditHistory();
-      }
-      // Fetch cancel/reject action log (visible to all)
-      const fetchActionLog = async () => {
-        const { data } = await supabase
+        const { data: editData } = await supabase
           .from('audit_logs')
           .select('*')
           .eq('requisicao_id', requisicao.id)
-          .in('acao', ['cancelado', 'rejeitado'])
-          .order('created_at', { ascending: false })
-          .limit(1);
-        if (data && data.length > 0) setActionLog(data[0] as AuditLog);
-      };
-      fetchActionLog();
-      setValorInput(requisicao.valor ? formatCurrencyInput(requisicao.valor) : '');
-      setValorOrcadoInput(requisicao.valor_orcado ? formatCurrencyInput(requisicao.valor_orcado) : '');
+          .eq('acao', 'edicao_solicitante')
+          .order('created_at', { ascending: false });
+        if (editData) setEditHistory(editData as AuditLog[]);
+      }
+
+      // Fetch cancel/reject action log
+      const { data: actionData } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .eq('requisicao_id', requisicao.id)
+        .in('acao', ['cancelado', 'rejeitado'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (actionData && actionData.length > 0) setActionLog(actionData[0] as AuditLog);
+    };
+
+    if (requisicao) {
+      fetchSideData();
+
+      // Sync form inputs with DB values
+      const toInput = (v: number | null | undefined) =>
+        v != null ? v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
+      setValorInput(toInput(requisicao.valor));
+      setValorOrcadoInput(toInput(requisicao.valor_orcado));
       setMotivoRejeicao('');
       setObservacaoComprador(requisicao.observacao_comprador || '');
       setCentroCustoInput(requisicao.centro_custo || '');
@@ -179,7 +177,7 @@ export default function RequisicaoDetalhe() {
         setFormaPagamentoOutro('');
       }
     }
-  }, [requisicao]);
+  }, [requisicao?.id, requisicao?.status, isStaff]);
 
   const formatCurrency = (value: number | null | undefined) => {
     if (value == null) return '-';
@@ -273,9 +271,25 @@ export default function RequisicaoDetalhe() {
         updateData.aprovado_por = profileId;
       }
 
+      if (newStatus === 'cotando') {
+        // Keep existing comprador or set from profile
+        if (!requisicao.comprador_nome && profileNome) {
+          updateData.comprador_nome = profileNome;
+          updateData.comprador_id = profileId;
+        }
+      }
+
       if (newStatus === 'comprado') {
         updateData.comprado_em = new Date().toISOString();
         updateData.comprador_id = profileId;
+        // Preserve existing comprador_nome or set from current profile
+        updateData.comprador_nome = requisicao.comprador_nome || profileNome || null;
+      }
+
+      if (newStatus === 'em_entrega') {
+        // Keep all existing purchase data intact
+        updateData.comprador_id = requisicao.comprador_id || profileId;
+        updateData.comprador_nome = requisicao.comprador_nome || profileNome || null;
       }
 
       if (newStatus === 'recebido') {
