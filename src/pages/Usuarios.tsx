@@ -66,6 +66,7 @@ export default function Usuarios() {
   const [editSetor, setEditSetor] = useState('');
   const [editGestorId, setEditGestorId] = useState('');
   const [editRoles, setEditRoles] = useState<AppRole[]>([]);
+  const [editNome, setEditNome] = useState('');
   
   // Temporary password state
   const [tempPassword, setTempPassword] = useState('');
