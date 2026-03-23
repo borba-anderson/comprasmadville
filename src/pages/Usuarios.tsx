@@ -183,6 +183,7 @@ export default function Usuarios() {
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
+          nome: editNome.trim(),
           empresa: editEmpresa === 'none' ? null : editEmpresa,
           setor: editSetor === 'none' ? null : editSetor,
           gestor_id: editGestorId === 'none' ? null : editGestorId,
