@@ -158,10 +158,11 @@ export default function Usuarios() {
 
   const openEditDialog = (userToEdit: UserWithRoles) => {
     setSelectedUser(userToEdit);
+    setEditNome(userToEdit.nome);
     setEditEmpresa(userToEdit.empresa || 'none');
     setEditSetor(userToEdit.setor || 'none');
     setEditGestorId(userToEdit.gestor_id || 'none');
-    setEditRoles([...userToEdit.roles]); // Create a copy to avoid mutation
+    setEditRoles([...userToEdit.roles]);
     setTempPassword('');
     setShowTempPassword(false);
     setIsEditDialogOpen(true);
