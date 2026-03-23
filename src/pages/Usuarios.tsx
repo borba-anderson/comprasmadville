@@ -66,6 +66,7 @@ export default function Usuarios() {
   const [editSetor, setEditSetor] = useState('');
   const [editGestorId, setEditGestorId] = useState('');
   const [editRoles, setEditRoles] = useState<AppRole[]>([]);
+  const [editNome, setEditNome] = useState('');
   
   // Temporary password state
   const [tempPassword, setTempPassword] = useState('');
@@ -157,10 +158,11 @@ export default function Usuarios() {
 
   const openEditDialog = (userToEdit: UserWithRoles) => {
     setSelectedUser(userToEdit);
+    setEditNome(userToEdit.nome);
     setEditEmpresa(userToEdit.empresa || 'none');
     setEditSetor(userToEdit.setor || 'none');
     setEditGestorId(userToEdit.gestor_id || 'none');
-    setEditRoles([...userToEdit.roles]); // Create a copy to avoid mutation
+    setEditRoles([...userToEdit.roles]);
     setTempPassword('');
     setShowTempPassword(false);
     setIsEditDialogOpen(true);
@@ -182,6 +184,7 @@ export default function Usuarios() {
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
+          nome: editNome.trim(),
           empresa: editEmpresa === 'none' ? null : editEmpresa,
           setor: editSetor === 'none' ? null : editSetor,
           gestor_id: editGestorId === 'none' ? null : editGestorId,
@@ -470,9 +473,17 @@ export default function Usuarios() {
 
           {selectedUser && (
             <div className="space-y-5 py-4">
-              {/* User info (read-only) */}
-              <div className="bg-muted/50 rounded-lg p-3">
-                <p className="font-medium">{selectedUser.nome}</p>
+              {/* User info */}
+              <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Nome</Label>
+                  <Input
+                    value={editNome}
+                    onChange={(e) => setEditNome(e.target.value)}
+                    placeholder="Nome do usuário"
+                    className="h-8"
+                  />
+                </div>
                 <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
               </div>
 
