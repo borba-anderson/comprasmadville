@@ -472,9 +472,17 @@ export default function Usuarios() {
 
           {selectedUser && (
             <div className="space-y-5 py-4">
-              {/* User info (read-only) */}
-              <div className="bg-muted/50 rounded-lg p-3">
-                <p className="font-medium">{selectedUser.nome}</p>
+              {/* User info */}
+              <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                <div className="space-y-1">
+                  <Label className="text-xs text-muted-foreground">Nome</Label>
+                  <Input
+                    value={editNome}
+                    onChange={(e) => setEditNome(e.target.value)}
+                    placeholder="Nome do usuário"
+                    className="h-8"
+                  />
+                </div>
                 <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
               </div>
 
