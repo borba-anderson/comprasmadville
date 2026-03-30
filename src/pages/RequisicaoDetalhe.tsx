@@ -1228,9 +1228,51 @@ Qualquer dúvida, estamos à disposição!`;
                   </div>
                   <div>
                     <Label className="text-xs text-muted-foreground uppercase">Prioridade</Label>
-                    <div className="mt-1">
-                      <PriorityBadge priority={requisicao.prioridade} />
-                    </div>
+                    {(isStaff || canSolicitanteEdit) ? (
+                      <Select
+                        value={requisicao.prioridade}
+                        onValueChange={async (value: RequisicaoPrioridade) => {
+                          if (value === requisicao.prioridade) return;
+                          try {
+                            setIsUpdating(true);
+                            const { error } = await supabase
+                              .from('requisicoes')
+                              .update({ prioridade: value, updated_at: new Date().toISOString() })
+                              .eq('id', requisicao.id);
+                            if (error) throw error;
+                            await supabase.from('audit_logs').insert([{
+                              requisicao_id: requisicao.id,
+                              usuario_id: profileId || null,
+                              acao: 'alteracao_prioridade',
+                              dados_anteriores: { prioridade: requisicao.prioridade } as any,
+                              dados_novos: { prioridade: value } as any,
+                            }]);
+                            toast({ title: 'Prioridade atualizada' });
+                            await fetchRequisicao();
+                          } catch (error) {
+                            console.error('Error updating priority:', error);
+                            toast({ title: 'Erro ao atualizar prioridade', variant: 'destructive' });
+                          } finally {
+                            setIsUpdating(false);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="mt-1 w-auto">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(Object.entries(PRIORIDADE_CONFIG) as [RequisicaoPrioridade, typeof PRIORIDADE_CONFIG[RequisicaoPrioridade]][]).map(([key, config]) => (
+                            <SelectItem key={key} value={key}>
+                              {config.icon} {config.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="mt-1">
+                        <PriorityBadge priority={requisicao.prioridade} />
+                      </div>
+                    )}
                   </div>
                 </div>
 
