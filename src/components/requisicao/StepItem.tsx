@@ -120,6 +120,36 @@ export const StepItem = ({ formData, errors, onChange, onSelectChange }: StepIte
             Quanto mais detalhado, mais precisa será a cotação
           </p>
         </div>
+
+        <div>
+          <Label className="flex items-center gap-2 mb-3">
+            <AlertTriangle className="w-4 h-4 text-muted-foreground" />
+            Prioridade <span className="text-destructive">*</span>
+          </Label>
+          <RadioGroup
+            value={formData.prioridade}
+            onValueChange={(value) => onSelectChange('prioridade', value)}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3"
+          >
+            {(Object.entries(PRIORIDADE_CONFIG) as [RequisicaoPrioridade, typeof PRIORIDADE_CONFIG[RequisicaoPrioridade]][]).map(([key, config]) => (
+              <Label
+                key={key}
+                htmlFor={`prioridade-${key}`}
+                className={`flex items-center gap-3 rounded-lg border-2 p-3 cursor-pointer transition-colors ${
+                  formData.prioridade === key
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/30'
+                }`}
+              >
+                <RadioGroupItem value={key} id={`prioridade-${key}`} />
+                <div>
+                  <span className="font-medium">{config.icon} {config.label}</span>
+                  <p className="text-xs text-muted-foreground">{config.prazo}</p>
+                </div>
+              </Label>
+            ))}
+          </RadioGroup>
+        </div>
       </div>
     </div>
   );
