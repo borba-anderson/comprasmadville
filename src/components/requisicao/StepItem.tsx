@@ -8,8 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { UNIDADES_CONFIG } from '@/types';
-import { Package, Hash, Ruler, FileText, Lightbulb } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { UNIDADES_CONFIG, PRIORIDADE_CONFIG, RequisicaoPrioridade } from '@/types';
+import { Package, Hash, Ruler, FileText, Lightbulb, AlertTriangle } from 'lucide-react';
 
 interface StepItemProps {
   formData: {
@@ -17,6 +18,7 @@ interface StepItemProps {
     quantidade: number;
     unidade: string;
     especificacoes: string;
+    prioridade: RequisicaoPrioridade;
   };
   errors: Record<string, string>;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
