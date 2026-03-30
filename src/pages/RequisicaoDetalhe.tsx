@@ -16,7 +16,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { Header } from '@/components/layout/Header';
 import { RequisicaoTimeline, BuyerSelector, FornecedorSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
-import { Requisicao, RequisicaoStatus, STATUS_CONFIG, ValorHistorico, FORMAS_PAGAMENTO, AuditLog } from '@/types';
+import { Requisicao, RequisicaoStatus, RequisicaoPrioridade, STATUS_CONFIG, PRIORIDADE_CONFIG, ValorHistorico, FORMAS_PAGAMENTO, AuditLog } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
