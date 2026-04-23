@@ -92,9 +92,11 @@ export default function RequisicaoDetalhe() {
 
   // Solicitantes can edit their own requisitions when status allows
   const EDITABLE_STATUSES: RequisicaoStatus[] = ['pendente', 'em_analise', 'aprovado', 'cotando', 'comprado', 'em_entrega'];
-  const canSolicitanteEdit = !isStaff && !!requisicao && !!profileEmail 
+  const canSolicitanteEditByStatus = !isStaff && !!requisicao && !!profileEmail 
     && requisicao.solicitante_email === profileEmail 
     && EDITABLE_STATUSES.includes(requisicao.status);
+  const [solicitanteEditMode, setSolicitanteEditMode] = useState(false);
+  const canSolicitanteEdit = canSolicitanteEditByStatus && solicitanteEditMode;
 
   const fetchRequisicao = useCallback(async () => {
     if (!id) return;
@@ -1123,10 +1125,39 @@ Qualquer dúvida, estamos à disposição!`;
           </div>
         </div>
 
-        {canSolicitanteEdit && (
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-2 flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
-            <Pencil className="w-4 h-4 flex-shrink-0" />
-            <span>Você pode editar o nome, quantidade, justificativa e especificações desta requisição. As alterações ficarão registradas.</span>
+        {canSolicitanteEditByStatus && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-2 flex items-center justify-between gap-3 text-sm text-amber-700 dark:text-amber-400">
+            <div className="flex items-center gap-2">
+              <Pencil className="w-4 h-4 flex-shrink-0" />
+              <span>
+                {solicitanteEditMode
+                  ? 'Modo de edição ativo: clique no ícone de lápis ao lado de cada campo para alterar.'
+                  : 'Você pode editar item, quantidade, justificativa, especificações e prioridade desta requisição.'}
+              </span>
+            </div>
+            <Button
+              size="sm"
+              variant={solicitanteEditMode ? 'outline' : 'default'}
+              onClick={() => {
+                setSolicitanteEditMode(prev => {
+                  if (prev) setEditingField(null);
+                  return !prev;
+                });
+              }}
+              className="gap-2 flex-shrink-0"
+            >
+              {solicitanteEditMode ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  Concluir edição
+                </>
+              ) : (
+                <>
+                  <Pencil className="w-4 h-4" />
+                  Editar requisição
+                </>
+              )}
+            </Button>
           </div>
         )}
 
