@@ -91,7 +91,7 @@ export default function RequisicaoDetalhe() {
   const isAnyLoading = isUpdating || isDeletingAnexo || isCanceling || isDeleting || isUploadingOrcamento || isConfirmingReceipt;
 
   // Solicitantes can edit their own requisitions when status allows
-  const EDITABLE_STATUSES: RequisicaoStatus[] = ['pendente', 'em_analise', 'aprovado', 'cotando'];
+  const EDITABLE_STATUSES: RequisicaoStatus[] = ['pendente', 'em_analise', 'aprovado', 'cotando', 'comprado', 'em_entrega'];
   const canSolicitanteEdit = !isStaff && !!requisicao && !!profileEmail 
     && requisicao.solicitante_email === profileEmail 
     && EDITABLE_STATUSES.includes(requisicao.status);
