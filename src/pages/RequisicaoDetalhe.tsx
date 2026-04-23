@@ -92,9 +92,11 @@ export default function RequisicaoDetalhe() {
 
   // Solicitantes can edit their own requisitions when status allows
   const EDITABLE_STATUSES: RequisicaoStatus[] = ['pendente', 'em_analise', 'aprovado', 'cotando', 'comprado', 'em_entrega'];
-  const canSolicitanteEdit = !isStaff && !!requisicao && !!profileEmail 
+  const canSolicitanteEditByStatus = !isStaff && !!requisicao && !!profileEmail 
     && requisicao.solicitante_email === profileEmail 
     && EDITABLE_STATUSES.includes(requisicao.status);
+  const [solicitanteEditMode, setSolicitanteEditMode] = useState(false);
+  const canSolicitanteEdit = canSolicitanteEditByStatus && solicitanteEditMode;
 
   const fetchRequisicao = useCallback(async () => {
     if (!id) return;
