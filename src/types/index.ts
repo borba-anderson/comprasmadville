@@ -185,6 +185,7 @@ export const SETORES = [
   "Comercial",
   "Compras",
   "Diretoria",
+  "Endomarketing",
   "Eventos",
   "Financeiro",
   "Limpeza",
