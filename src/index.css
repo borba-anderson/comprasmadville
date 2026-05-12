@@ -903,4 +903,70 @@
   a {
     @apply select-none;
   }
+
+  /* ==================== PREMIUM ENTERPRISE UTILITIES ==================== */
+  .surface-1 { background-color: hsl(var(--surface-1)); }
+  .surface-2 { background-color: hsl(var(--surface-2)); }
+  .surface-3 { background-color: hsl(var(--surface-3)); }
+  .surface-inset { background-color: hsl(var(--surface-inset)); }
+
+  .border-subtle { border-color: hsl(var(--border-subtle)); }
+  .border-strong { border-color: hsl(var(--border-strong)); }
+
+  .text-primary-fg { color: hsl(var(--text-primary)); }
+  .text-secondary-fg { color: hsl(var(--text-secondary)); }
+  .text-tertiary-fg { color: hsl(var(--text-tertiary)); }
+  .text-quaternary-fg { color: hsl(var(--text-quaternary)); }
+
+  .shadow-elegant-sm { box-shadow: var(--shadow-elegant-sm); }
+  .shadow-elegant { box-shadow: var(--shadow-elegant); }
+  .shadow-elegant-lg { box-shadow: var(--shadow-elegant-lg); }
+  .shadow-overlay { box-shadow: var(--shadow-overlay); }
+
+  /* Card premium — base unificada */
+  .card-premium {
+    @apply rounded-xl border bg-card transition-all duration-200;
+    border-color: hsl(var(--border-subtle));
+    box-shadow: var(--shadow-elegant-sm);
+  }
+  .card-premium:hover {
+    border-color: hsl(var(--border-strong));
+    box-shadow: var(--shadow-elegant);
+  }
+
+  /* Section header premium */
+  .section-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em];
+    color: hsl(var(--text-tertiary));
+  }
+
+  /* Kbd premium (atalhos) */
+  .kbd-premium {
+    @apply inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-medium rounded;
+    background: hsl(var(--surface-3));
+    color: hsl(var(--text-secondary));
+    border: 1px solid hsl(var(--border-subtle));
+    box-shadow: 0 1px 0 0 hsl(var(--border-subtle));
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Focus ring premium */
+  .focus-ring-premium:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-ring-primary);
+  }
+
+  /* Hairline divider */
+  .hairline { border-color: hsl(var(--border-subtle)); }
+
+  /* Gradient subtle backgrounds */
+  .bg-gradient-surface {
+    background: linear-gradient(180deg, hsl(var(--surface-1)) 0%, hsl(var(--surface-2)) 100%);
+  }
+  .bg-gradient-mesh {
+    background:
+      radial-gradient(at 0% 0%, hsl(var(--primary) / 0.04) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsl(220 80% 50% / 0.03) 0px, transparent 50%),
+      hsl(var(--surface-1));
+  }
 }
