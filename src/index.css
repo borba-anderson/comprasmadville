@@ -570,25 +570,28 @@
     background-color: #059669 !important;
   }
 
-  /* ==================== TIPOGRAFIA MODERNA ==================== */
+  /* ==================== TIPOGRAFIA PREMIUM ==================== */
   @layer base {
     body {
-      font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-        "Droid Sans", "Helvetica Neue", sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.011em;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    h1, h2, h3, h4, h5, h6 {
       font-weight: 600;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.022em;
+      color: hsl(var(--text-primary));
+    }
+
+    h1 { letter-spacing: -0.028em; }
+
+    /* Números tabulares para dashboards/KPIs */
+    .tabular-nums, .font-numeric {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum", "cv11";
     }
   }
 
