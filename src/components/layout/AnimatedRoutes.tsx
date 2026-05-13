@@ -6,6 +6,7 @@ import Painel from '@/pages/Painel';
 import RequisicaoDetalhe from '@/pages/RequisicaoDetalhe';
 import Usuarios from '@/pages/Usuarios';
 import AlterarSenha from '@/pages/AlterarSenha';
+import Operacoes from '@/pages/Operacoes';
 import NotFound from '@/pages/NotFound';
 
 export function AnimatedRoutes() {
@@ -17,6 +18,7 @@ export function AnimatedRoutes() {
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/requisicao" element={<Requisicao />} />
+        <Route path="/operacoes" element={<Operacoes />} />
         <Route path="/painel" element={<Painel />} />
         <Route path="/painel/:id" element={<RequisicaoDetalhe />} />
         <Route path="/usuarios" element={<Usuarios />} />

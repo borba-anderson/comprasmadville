@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LogOut, User, Users, KeyRound, Search, LayoutGrid, Home, Plus } from "lucide-react";
+import { LogOut, User, Users, KeyRound, Search, LayoutGrid, Home, Plus, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
 import { NotificationBell } from "./NotificationBell";
@@ -34,6 +34,7 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
 
   const navItems = [
     { to: "/", label: "Início", icon: Home, show: !!user },
+    { to: "/operacoes", label: "Operações", icon: Activity, show: !!user },
     { to: "/painel", label: "Painel", icon: LayoutGrid, show: isStaff },
     { to: "/requisicao", label: "Nova requisição", icon: Plus, show: !!user },
   ].filter((i) => i.show);

@@ -19,6 +19,7 @@ import {
   LogOut,
   Search,
   Bell,
+  Activity,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -46,6 +47,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           <CommandItem onSelect={() => go("/")}>
             <Home className="mr-2 h-4 w-4" />
             <span>Início</span>
+          </CommandItem>
+          <CommandItem onSelect={() => go("/operacoes")}>
+            <Activity className="mr-2 h-4 w-4" />
+            <span>Procurement Command Center</span>
           </CommandItem>
           <CommandItem onSelect={() => go("/requisicao")}>
             <Plus className="mr-2 h-4 w-4" />
