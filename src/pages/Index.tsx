@@ -487,20 +487,29 @@ const Index = () => {
             {/* Texto Hero */}
             <div className="flex-1 text-center lg:text-left max-w-[650px] relative z-30">
               {/* Título Ajustado: Cor removida e peso da fonte reduzido */}
-              <h1 className="font-jakarta text-[2rem] sm:text-[2.5rem] md:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold text-[#0F172A] mb-3 sm:mb-5 tracking-tight leading-[1.15] max-w-[700px]">
-                Sistema de Requisições <br />
-                <span className="text-[#0F172A]">de Compras.</span>
+              <div className="inline-flex items-center gap-2 mb-4 sm:mb-5 px-3 py-1 rounded-full bg-success/8 border border-success/20 text-[11px] sm:text-xs font-semibold tracking-wide text-success uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                Procurement Intelligence
+              </div>
+              <h1 className="font-jakarta text-[2rem] sm:text-[2.5rem] md:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold text-[#0F172A] mb-3 sm:mb-5 tracking-tight leading-[1.1] max-w-[720px]">
+                Central inteligente <br />
+                <span className="text-[#0F172A]">de compras.</span>
               </h1>
 
-              <p className="text-slate-500 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-lg mx-auto lg:mx-0 mb-5 sm:mb-8">
-                Centralize seus pedidos de compra em um único lugar. Mais agilidade, transparência e controle para sua
-                gestão.
+              <p className="text-slate-500 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 mb-5 sm:mb-8">
+                Mais controle, previsibilidade e inteligência operacional para sua cadeia de compras —
+                decisões orientadas por dados em tempo real.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link to="/painel">
+                <Link to="/operacoes">
                   <button className="bg-[#008651] hover:bg-[#006e42] text-white text-sm sm:text-base font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full shadow-lg shadow-green-900/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto lg:mx-0">
-                    Acessar o Painel <ArrowRight size={18} />
+                    Abrir Command Center <ArrowRight size={18} />
+                  </button>
+                </Link>
+                <Link to="/painel">
+                  <button className="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 text-sm sm:text-base font-semibold px-6 sm:px-7 py-3 sm:py-3.5 rounded-full transition-all hover:bg-slate-50 flex items-center gap-2 mx-auto lg:mx-0">
+                    Ver requisições
                   </button>
                 </Link>
               </div>
