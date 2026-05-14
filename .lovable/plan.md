@@ -1,96 +1,87 @@
+# Evolução Enterprise Premium — Procurement Intelligence
 
-# Procurement Intelligence Platform — Roadmap de Evolução
+Sem destruir o que já existe. Refinar, aprofundar e maturar.
 
-Você selecionou as 4 frentes principais + redesign de áreas-chave. Isso é trabalho de várias semanas. Para entregar com qualidade enterprise (e não virar uma reforma "meio pronta" em todo lugar), proponho executar em **5 fases incrementais**, cada uma entregável e testável de ponta a ponta.
+## Fase 1 — Design System: Profundidade Visual Enterprise
+Refinar `index.css` e tokens sem mudar a identidade (verde Madville #008651 mantido).
+- Surface stack em 3 camadas (`--surface-base`, `--surface-raised`, `--surface-overlay`) com leve shift de luminosidade — efeito Stripe/Linear.
+- Sombras compostas multi-layer (`--shadow-card`, `--shadow-card-hover`, `--shadow-elevated`) com tint do primary em hover.
+- Borders refinadas com gradiente sutil (top lighter / bottom darker) para dar peso aos cards.
+- Tipografia: refinar tracking dos números tabulares e dos eyebrows (uppercase 10px com letter-spacing maior).
+- Novo utilitário `.card-elevated` substituindo cards "leves demais".
+- Skeleton loaders premium com shimmer suave.
 
----
+## Fase 2 — KPIs Decisórios (não meramente informativos)
+Criar componente `DecisionKPI` reutilizável que substitui/complementa `StatsCard`/`HeroKPIs` nas telas-chave (Operações + Painel header).
+Cada KPI passa a ter:
+- Valor principal + unidade
+- Delta % vs período anterior (com seta + cor semântica)
+- **Impacto financeiro estimado** (ex: "R$ 12,4k em risco")
+- **Semáforo de criticidade** (low/medium/high) — barra lateral colorida
+- Microsparkline opcional (7 pontos)
+- Tooltip rico com contexto
 
-## Filosofia de execução
+Exemplo: "7 entregas atrasadas · +18% vs semana · Impacto R$ 12,4k · Risco médio".
 
-- **Reaproveitar o que já existe**: `SmartActionCenter`, `AlertasInteligentes`, `InsightsInteligentes`, `SupplierPerformance`, `PredictiveInsights`, `SpendIntelligence` já existem. Vamos consolidar, não duplicar.
-- **Linguagem visual única**: criar tokens de design "premium enterprise" (Stripe/Linear/Ramp) — densidade alta controlada, tipografia refinada, cor com restrição, microanimações sutis.
-- **IA invisível**: insights aparecem como cards/badges contextuais, nunca como chatbot.
-- **Zero regressão**: cada fase mantém todos os fluxos atuais (requisição/aprovação/cotação) intactos.
+## Fase 3 — Feed Operacional Vivo (evolução da página /operacoes)
+Refinar `Operacoes.tsx`:
+- **Agrupamento temporal**: "Agora", "Últimas 2h", "Hoje", "Esta semana".
+- **Severidade visual**: borda lateral colorida + ícone com halo por severidade.
+- **Ações inline contextuais** por tipo de evento: `Aprovar`, `Ver fornecedor`, `Negociar`, `Resolver atraso`, `Recalcular previsão`.
+- **Badges inteligentes**: SLA restante, valor em risco, fornecedor crítico.
+- Timeline refinada com conector vertical sutil entre eventos do mesmo grupo.
+- Filtros sticky com contadores.
 
----
+## Fase 4 — IA Embarcada (não isolada em um card)
+Criar componente `AIInsightInline` leve que pode ser injetado em qualquer contexto:
+- Aparece como linha sutil com ícone Sparkles + texto de insight + ação.
+- Variantes: `risk`, `opportunity`, `trend`, `anomaly`.
+- Embarcar nos pontos:
+  - Topo de cada KPI crítico no Painel
+  - Acima da tabela de requisições (interpretação automática)
+  - Dentro do detalhe de requisição (sugestão de fornecedor / preço)
+  - No Feed (resumo executivo do momento)
+- Reutiliza lógica heurística client-side já presente; sem necessidade de edge function nova nesta fase (evita custo desnecessário).
 
-## Fase 1 — Design System Premium + App Shell (base de tudo)
-
-Sem isso, qualquer redesign vira "remendo bonito".
-
-- Refinar `index.css`: nova escala tipográfica (Inter tight + display variant), hierarquia de superfícies (`surface-1/2/3`), sombras enterprise (sutis, em camadas), espaçamento e raios padronizados, paleta neutra fria + accent #008651 mantido.
-- Novo **App Shell**: sidebar colapsável (shadcn sidebar) substituindo o header atual, com command palette (⌘K) para navegação e ações rápidas.
-- Skeletons consistentes, transições de página refinadas, estados vazios premium.
-
-**Entregável**: app inteiro com nova "casca", mesma funcionalidade.
-
----
-
-## Fase 2 — Feed Operacional Inteligente (Command Center)
-
-Nova rota `/operacoes` (ou substitui a Home atual para staff).
+## Fase 5 — Procurement Command Center (tela assinatura)
+Evoluir `/operacoes` para "Command Center" — ou criar `/command` se preferir manter ambas. Proposta: **promover /operacoes para Command Center** com layout denso tipo Bloomberg/Ramp:
 
 ```text
-┌─────────────────────────────────────────────────┐
-│  Pulso Operacional         [hoje · 7d · 30d]   │
-├─────────────────────────────────────────────────┤
-│  KPIs vivos (4 tiles densos, com sparkline)    │
-├─────────────────────────────────────────────────┤
-│  FEED                          │  AÇÕES        │
-│  • BONAPEL atrasou 3 entregas │  • 4 aprovar  │
-│  • Economia R$ 3.240 detectada│  • 2 cotar    │
-│  • Lead time +18% almox.      │  • 1 receber  │
-│  • Compra 2.4x acima da média │               │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ Command Center · Live  ·  ⏱ atualizado há 12s               │
+├──────────┬──────────┬──────────┬──────────┬─────────────────┤
+│ DecKPI 1 │ DecKPI 2 │ DecKPI 3 │ DecKPI 4 │ AI Pulse        │
+├──────────┴──────────┴──────────┴──────────┤ (insight        │
+│ Decisões Prioritárias (top 5 acionáveis)  │  executivo      │
+├───────────────────────────────────────────┤  do momento)    │
+│ Feed Vivo (agrupado + ações inline)       │                 │
+│                                           ├─────────────────┤
+│                                           │ Fornecedores    │
+│                                           │ Críticos        │
+│                                           ├─────────────────┤
+│                                           │ Oportunidades   │
+│                                           │ Savings         │
+└───────────────────────────────────────────┴─────────────────┘
 ```
 
-- Engine de detecção de eventos (client-side, sobre as requisições já carregadas): atrasos consecutivos por fornecedor, anomalias de preço (z-score), variação de lead time por setor, concentração, recorrência emergencial.
-- Feed cronológico com filtro por severidade, fornecedor, setor.
-- Cada item leva ao contexto correspondente (requisição/fornecedor).
+Elementos: KPIs decisórios no topo, painel "Decisões Prioritárias" (top N ações que destravam fluxo), feed vivo central, AI Pulse + Críticos + Savings na coluna direita.
 
----
+## Fase 6 — Mobile Premium
+- Command Center: stack vertical com KPIs em carrossel horizontal snap.
+- Feed: cards full-width com ação primária visível (swipe não, mas tap direto).
+- Header: trigger ⌘K vira ícone de busca; navegação primária colapsa.
 
-## Fase 3 — Supplier Intelligence
+## Detalhes técnicos
+- Arquivos novos: `src/components/intelligence/DecisionKPI.tsx`, `src/components/intelligence/AIInsightInline.tsx`, `src/components/operacoes/PriorityDecisions.tsx`, `src/components/operacoes/EventGroup.tsx`.
+- Arquivos editados: `src/index.css` (tokens de profundidade), `src/pages/Operacoes.tsx` (Command Center layout), `src/pages/Painel.tsx` (DecisionKPI no header), `src/components/dashboard/HeroKPIs.tsx` (refino visual).
+- Sem mudanças em backend, schema, RLS ou edge functions nesta entrega.
+- Sem mudança de rotas existentes; identidade visual (verde Madville, Inter, radius) preservada.
 
-Nova rota `/fornecedores` + página `/fornecedores/:nome`.
+## Ordem de execução proposta
+1. Fase 1 (tokens + sombras) — base de tudo
+2. Fase 2 (DecisionKPI) — reutilizado nas demais
+3. Fase 3 + 5 (Feed vivo + Command Center) — entregues juntos pois compartilham componentes
+4. Fase 4 (AIInsightInline) — injeta nos lugares certos
+5. Fase 6 (mobile refinements)
 
-- Lista com **score de risco** (0–100), OTIF, lead time médio, dependência (% do gasto), tendência (▲▼).
-- Página individual: histórico de entregas, evolução de preço por item, comparativo com peers, economia gerada, alertas ativos.
-- Score derivado de: % atrasos, variância de lead time, variação de preço, recência de problemas.
-
----
-
-## Fase 4 — Dashboard Executivo (modo diretoria)
-
-Rota `/executivo` — visual Bloomberg/Ramp.
-
-- Layout minimalista, monoespaçado para números, foco em decisão.
-- Tiles: ROI de compras, economia acumulada, capital comprometido, lead time médio, curva ABC de fornecedores, índice de risco operacional, previsão 30/60/90 dias.
-- Insights automáticos no topo (3–5 frases curtas geradas pelo motor de detecção).
-
----
-
-## Fase 5 — IA Operacional embarcada (Lovable AI)
-
-Edge function `procurement-ai` usando `google/gemini-3-flash-preview` via Lovable AI Gateway.
-
-Casos de uso (todos contextuais, sem chatbot):
-- **Resumo inteligente** de requisição (botão discreto na página de detalhe).
-- **Sugestão de prioridade** ao criar requisição (analisa item + justificativa).
-- **Previsão de atraso** por requisição em curso (badge no painel).
-- **Sugestão de fornecedor ideal** com base em histórico (na cotação).
-- **Insights executivos** narrativos no dashboard executivo.
-
-Output estruturado via tool calling, cache local, fallback gracioso.
-
----
-
-## Como vamos trabalhar
-
-Vou implementar **uma fase por vez**, parar, você valida no preview, e seguimos. Isso evita um PR gigante impossível de revisar e mantém o sistema sempre estável.
-
-## Próximo passo
-
-Confirme que esse roadmap faz sentido e eu começo pela **Fase 1 (Design System Premium + App Shell)** — que é pré-requisito para tudo o resto ficar coerente.
-
-Se quiser inverter prioridade (por exemplo começar pelo Feed Operacional sem mexer no shell ainda), me diga.
+Posso começar pela Fase 1+2 (fundamento + KPIs decisórios) e seguir em sequência, ou prefere que eu entregue tudo (1→6) numa leva só?
