@@ -395,3 +395,11 @@ export default function Painel() {
     </div>
   );
 }
+
+function AnalyticCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+      {children}
+    </div>
+  );
+}
