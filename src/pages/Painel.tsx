@@ -1,10 +1,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, DollarSign } from "lucide-react";
+import { FileText, DollarSign, Activity, Truck, Users, Brain } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/layout/Header";
-import { StatsCard } from "@/components/StatsCard";
-import { GastosDashboard } from "@/components/dashboard";
+import {
+  EconomiaSummary,
+  GastosLineChart,
+  StatusPainel,
+  ProcessFunnel,
+  OperationalEfficiency,
+  SupplierPerformance,
+  EconomiaPorComprador,
+  GastosPorSolicitanteBars,
+  PredictiveInsights,
+  GastosPorSetorBars,
+} from "@/components/dashboard";
 import {
   FiltersBar,
   RequisicaoTable,
@@ -18,7 +28,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { Requisicao, RequisicaoStats, ValorHistorico } from "@/types";
-import { Clock, CheckCircle, XCircle, TrendingUp, Package, ShoppingCart } from "lucide-react";
 
 const AUTO_REFRESH_INTERVAL = 15000;
 
