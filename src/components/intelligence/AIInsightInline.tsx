@@ -32,9 +32,9 @@ const VARIANT_CFG: Record<InsightVariant, { icon: any; ring: string; iconBg: str
   },
   anomaly: {
     icon: Sparkles,
-    ring: "border-violet-200/70 bg-gradient-to-r from-violet-50/60 to-transparent",
-    iconBg: "bg-violet-100 text-violet-700",
-    dot: "bg-violet-500",
+    ring: "border-slate-200/70 bg-gradient-to-r from-slate-50/70 to-transparent",
+    iconBg: "bg-slate-900 text-white",
+    dot: "bg-slate-700",
   },
   neutral: {
     icon: Sparkles,
