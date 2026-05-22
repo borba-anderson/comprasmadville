@@ -180,8 +180,8 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {kpis.map((kpi) => {
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {kpis.slice(0, 4).map((kpi) => {
             const Icon = kpi.icon;
             const colors = STATUS_COLORS[kpi.status];
 
