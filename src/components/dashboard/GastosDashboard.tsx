@@ -1,28 +1,20 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FileText, X, ArrowLeft } from 'lucide-react';
-import { Requisicao, RequisicaoStatus, STATUS_CONFIG } from '@/types';
+import { Requisicao, RequisicaoStatus } from '@/types';
 import { ExecutiveKPIs } from './ExecutiveKPIs';
 import { SpendIntelligence } from './SpendIntelligence';
 import { SupplierPerformance } from './SupplierPerformance';
 import { OperationalEfficiency } from './OperationalEfficiency';
 import { PredictiveInsights } from './PredictiveInsights';
-import { SmartActionCenter } from './SmartActionCenter';
 import { GastosLineChart } from './GastosLineChart';
 import { GastosPorSetorBars } from './GastosPorSetorBars';
 import { GastosPorSolicitanteBars } from './GastosPorSolicitanteBars';
-import { StatusPainel } from './StatusPainel';
 import { AlertasInteligentes } from './AlertasInteligentes';
 import { EconomiaSummary } from './EconomiaSummary';
 import { DashboardFilters, DashboardFiltersState, SavedDashboardFilter, DEFAULT_DASHBOARD_FILTERS } from './DashboardFilters';
-import { GastosPorEmpresa } from './GastosPorEmpresa';
 import { LeadTimeAnalysis } from './LeadTimeAnalysis';
 import { ProcessFunnel } from './ProcessFunnel';
-import { EfficiencyKPIs } from './EfficiencyKPIs';
-import { EconomiaPorEmpresa } from './EconomiaPorEmpresa';
-import { EconomiaPorComprador } from './EconomiaPorComprador';
-import { GastosPorCentroCusto } from './GastosPorCentroCusto';
 import { TrendChart } from './TrendChart';
-import { PagamentoPieChart } from './PagamentoPieChart';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
@@ -327,15 +319,12 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
         />
       </div>
 
-      {/* Smart Action Center - always visible at top */}
-      <SmartActionCenter requisicoes={filteredRequisicoes} onFilterStatus={handleFilterByStatuses} />
-
-      {/* Executive KPIs - always visible */}
+      {/* Executive KPIs */}
       <ExecutiveKPIs requisicoes={filteredRequisicoes} previousPeriod={previousPeriodRequisicoes} />
 
       {/* Tabbed dashboard layers */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 h-12">
+        <TabsList className="grid w-full grid-cols-5 h-11 bg-slate-50/80 border border-slate-100">
           <TabsTrigger value="executive" className="gap-1.5 text-xs">
             <Gauge className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Visão Geral</span>
@@ -358,52 +347,39 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
           </TabsTrigger>
         </TabsList>
 
-        {/* Executive Overview */}
-        <TabsContent value="executive" className="space-y-6 mt-6">
+        {/* Visão Geral — apenas o essencial estratégico */}
+        <TabsContent value="executive" className="space-y-8 mt-8">
           <TrendChart requisicoes={filteredRequisicoes} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GastosPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleEmpresaClick} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <ProcessFunnel requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownStatus} />
             <LeadTimeAnalysis requisicoes={filteredRequisicoes} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ProcessFunnel requisicoes={filteredRequisicoes} onDrillDown={handleDrillDownStatus} />
-            <EfficiencyKPIs requisicoes={filteredRequisicoes} />
-          </div>
-          <StatusPainel requisicoes={filteredRequisicoes} />
         </TabsContent>
 
-        {/* Financial Spend Intelligence */}
-        <TabsContent value="financial" className="space-y-6 mt-6">
+        {/* Financeiro — economia + spend em foco */}
+        <TabsContent value="financial" className="space-y-8 mt-8">
           <SpendIntelligence requisicoes={filteredRequisicoes} />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <EconomiaSummary requisicoes={filteredRequisicoes} />
-            <EconomiaPorEmpresa requisicoes={filteredRequisicoes} onDrillDown={handleEmpresaClick} />
-            <EconomiaPorComprador requisicoes={filteredRequisicoes} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GastosPorSetorBars requisicoes={filteredRequisicoes} onSetorClick={handleSetorClick} />
-            <GastosPorCentroCusto requisicoes={filteredRequisicoes} onDrillDown={handleCentroCustoClick} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GastosLineChart requisicoes={filteredRequisicoes} />
-            <PagamentoPieChart requisicoes={filteredRequisicoes} />
-          </div>
+          <GastosLineChart requisicoes={filteredRequisicoes} />
         </TabsContent>
 
-        {/* Supplier Performance */}
-        <TabsContent value="supplier" className="space-y-6 mt-6">
+        {/* Fornecedores */}
+        <TabsContent value="supplier" className="space-y-8 mt-8">
           <SupplierPerformance requisicoes={filteredRequisicoes} />
           <GastosPorSolicitanteBars requisicoes={filteredRequisicoes} onSolicitanteClick={handleSolicitanteClick} />
         </TabsContent>
 
-        {/* Operational Efficiency */}
-        <TabsContent value="operational" className="space-y-6 mt-6">
+        {/* Operacional */}
+        <TabsContent value="operational" className="space-y-8 mt-8">
           <OperationalEfficiency requisicoes={filteredRequisicoes} />
           <AlertasInteligentes requisicoes={filteredRequisicoes} totalGasto={filteredRequisicoes.reduce((s, r) => s + (r.valor || 0), 0)} tendencia={0} />
         </TabsContent>
 
-        {/* Predictive Intelligence */}
-        <TabsContent value="predictive" className="space-y-6 mt-6">
+        {/* Preditivo */}
+        <TabsContent value="predictive" className="space-y-6 mt-8">
           <PredictiveInsights requisicoes={filteredRequisicoes} />
         </TabsContent>
       </Tabs>

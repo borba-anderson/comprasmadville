@@ -180,33 +180,33 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {kpis.map((kpi) => {
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {kpis.slice(0, 4).map((kpi) => {
             const Icon = kpi.icon;
             const colors = STATUS_COLORS[kpi.status];
 
             return (
               <Tooltip key={kpi.title}>
                 <TooltipTrigger asChild>
-                  <div className="relative bg-card rounded-xl border border-border/50 p-4 hover:shadow-md transition-all duration-200 cursor-default overflow-hidden">
-                    <div className={`absolute top-0 left-0 right-0 h-1 ${colors.dot}`} />
+                  <div className="relative bg-card rounded-2xl border border-slate-100 p-5 hover:border-slate-200 transition-all duration-200 cursor-default overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                    <div className={`absolute top-0 left-0 bottom-0 w-[3px] ${colors.dot}`} />
 
-                    <div className="flex items-start justify-between mb-3 mt-1">
+                    <div className="flex items-start justify-between mb-4 pl-1">
                       <div className={`w-9 h-9 ${colors.bg} rounded-lg flex items-center justify-center`}>
                         <Icon className={`w-4 h-4 ${colors.text}`} />
                       </div>
-                      <div className={`w-2.5 h-2.5 rounded-full ${colors.dot} ring-2 ${colors.ring} animate-pulse`} />
+                      <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
                     </div>
 
-                    <p className="text-2xl font-bold tracking-tight" title={kpi.fullValue}>
+                    <p className="text-[32px] font-semibold tracking-[-0.02em] num-tabular leading-none text-slate-900 pl-1" title={kpi.fullValue}>
                       {kpi.value}
                     </p>
-                    <p className="text-xs font-medium text-foreground/80 mt-0.5">{kpi.title}</p>
+                    <p className="text-[12px] font-medium text-slate-600 mt-2 pl-1">{kpi.title}</p>
 
                     {kpi.target && (
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <span className="text-[10px] text-muted-foreground">{kpi.targetLabel}:</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground">{kpi.target}</span>
+                      <div className="flex items-center gap-1.5 mt-3 pl-1">
+                        <span className="text-[10px] text-slate-400">{kpi.targetLabel}:</span>
+                        <span className="text-[10px] font-semibold text-slate-500">{kpi.target}</span>
                       </div>
                     )}
 

@@ -170,13 +170,21 @@ export function PriorityDecisions({ reqs, limit = 5 }: Props) {
                   {d.meta && <span className="text-slate-400"> · {d.meta}</span>}
                 </div>
               </div>
-              <button
-                onClick={() => navigate(`/painel/${d.reqId}`)}
-                className="flex-shrink-0 inline-flex items-center gap-1 text-[11.5px] font-semibold text-slate-700 hover:text-white bg-white hover:bg-slate-900 border border-slate-200 hover:border-slate-900 px-2.5 py-1.5 rounded-md transition-colors"
-              >
-                {d.actionLabel}
-                <ArrowRight className="w-3 h-3" />
-              </button>
+              <div className="flex-shrink-0 flex items-center gap-1">
+                <button
+                  onClick={() => navigate(`/painel/${d.reqId}`)}
+                  className="hidden sm:inline-flex items-center text-[11.5px] font-medium text-slate-500 hover:text-slate-900 px-2 py-1.5 rounded-md hover:bg-slate-100 transition-colors"
+                >
+                  Ver
+                </button>
+                <button
+                  onClick={() => navigate(`/painel/${d.reqId}`)}
+                  className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-white bg-slate-900 hover:bg-slate-800 px-3 py-1.5 rounded-md transition-colors"
+                >
+                  {d.actionLabel}
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </li>
           );
         })}
