@@ -1,20 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, DollarSign, Activity, Truck, Users, Brain } from "lucide-react";
+import { FileText, DollarSign } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/layout/Header";
-import {
-  EconomiaSummary,
-  GastosLineChart,
-  StatusPainel,
-  ProcessFunnel,
-  OperationalEfficiency,
-  SupplierPerformance,
-  EconomiaPorComprador,
-  GastosPorSolicitanteBars,
-  PredictiveInsights,
-  GastosPorSetorBars,
-} from "@/components/dashboard";
+import { StatsCard } from "@/components/StatsCard";
+import { GastosDashboard } from "@/components/dashboard";
 import {
   FiltersBar,
   RequisicaoTable,
@@ -28,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { Requisicao, RequisicaoStats, ValorHistorico } from "@/types";
+import { Clock, CheckCircle, XCircle, TrendingUp, Package, ShoppingCart } from "lucide-react";
 
 const AUTO_REFRESH_INTERVAL = 15000;
 
@@ -256,72 +247,79 @@ export default function Painel() {
           </div>
         )}
 
-        {/* Compact status strip — quiet, executive */}
-        <div className="grid grid-cols-3 md:grid-cols-7 gap-2 mb-6">
-          {[
-            { label: "Total", value: stats.total, tone: "slate" },
-            { label: "Pendentes", value: stats.pendente, tone: "amber" },
-            { label: "Em análise", value: stats.em_analise, tone: "blue" },
-            { label: "Aprovados", value: stats.aprovado, tone: "emerald" },
-            { label: "Cotando", value: stats.cotando, tone: "slate" },
-            { label: "Comprados", value: stats.comprado, tone: "emerald" },
-            { label: "Rejeitados", value: stats.rejeitado, tone: "red" },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="bg-white border border-slate-100 rounded-lg px-3 py-2.5"
-            >
-              <div className="text-[10px] font-semibold tracking-wide uppercase text-slate-400">
-                {s.label}
-              </div>
-              <div
-                className={`text-[20px] font-semibold num-tabular leading-tight mt-0.5 ${
-                  s.tone === "red"
-                    ? "text-red-600"
-                    : s.tone === "amber"
-                      ? "text-amber-700"
-                      : s.tone === "blue"
-                        ? "text-blue-700"
-                        : s.tone === "emerald"
-                          ? "text-emerald-700"
-                          : "text-slate-900"
-                }`}
-              >
-                {s.value}
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
+          <StatsCard
+            title="Total"
+            value={stats.total}
+            icon={FileText}
+            className="col-span-1 bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Pendentes"
+            value={stats.pendente}
+            variant="warning"
+            icon={Clock}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Em Análise"
+            value={stats.em_analise}
+            variant="info"
+            icon={TrendingUp}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Aprovados"
+            value={stats.aprovado}
+            variant="success"
+            icon={CheckCircle}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Cotando"
+            value={stats.cotando}
+            variant="primary"
+            icon={Package}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Comprados"
+            value={stats.comprado}
+            variant="success"
+            icon={ShoppingCart}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
+          <StatsCard
+            title="Rejeitados"
+            value={stats.rejeitado}
+            variant="danger"
+            icon={XCircle}
+            className="bg-white text-slate-900 shadow-sm border-none"
+          />
         </div>
 
-        <Tabs defaultValue="requisicoes" className="space-y-5">
-          <TabsList className="bg-white border border-slate-100 shadow-sm text-slate-600 h-auto p-1">
-            <TabsTrigger value="requisicoes" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
+        <Tabs defaultValue="requisicoes" className="space-y-4">
+          <TabsList className="bg-white border shadow-sm text-slate-600">
+            <TabsTrigger
+              value="requisicoes"
+              className="gap-2 data-[state=active]:bg-slate-100 data-[state=active]:text-[#107c50]"
+            >
               <FileText className="w-4 h-4" />
               {isReadOnly ? "Minhas Requisições" : "Requisições"}
             </TabsTrigger>
             {!isReadOnly && (
-              <>
-                <TabsTrigger value="financeiro" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                  <DollarSign className="w-4 h-4" /> Financeiro
-                </TabsTrigger>
-                <TabsTrigger value="operacional" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                  <Activity className="w-4 h-4" /> Operacional
-                </TabsTrigger>
-                <TabsTrigger value="fornecedores" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                  <Truck className="w-4 h-4" /> Fornecedores
-                </TabsTrigger>
-                <TabsTrigger value="compradores" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                  <Users className="w-4 h-4" /> Compradores
-                </TabsTrigger>
-                <TabsTrigger value="preditivo" className="gap-2 data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                  <Brain className="w-4 h-4" /> Preditivo
-                </TabsTrigger>
-              </>
+              <TabsTrigger
+                value="dashboard"
+                className="gap-2 data-[state=active]:bg-slate-100 data-[state=active]:text-[#107c50]"
+              >
+                <DollarSign className="w-4 h-4" />
+                Dashboard
+              </TabsTrigger>
             )}
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            <div className="bg-white text-slate-900 rounded-xl border border-slate-100 overflow-hidden shadow-sm">
+            <div className="bg-white text-slate-900 rounded-xl border border-success/20 overflow-hidden shadow-lg">
               <FiltersBar
                 filters={filters}
                 onFilterChange={updateFilter}
@@ -363,43 +361,14 @@ export default function Painel() {
           </TabsContent>
 
           {!isReadOnly && (
-            <>
-              <TabsContent value="financeiro" className="space-y-5">
-                <AnalyticCard><EconomiaSummary requisicoes={requisicoes} /></AnalyticCard>
-                <AnalyticCard><GastosLineChart requisicoes={requisicoes} /></AnalyticCard>
-                <AnalyticCard><GastosPorSetorBars requisicoes={requisicoes} /></AnalyticCard>
-              </TabsContent>
-
-              <TabsContent value="operacional" className="space-y-5">
-                <AnalyticCard><StatusPainel requisicoes={requisicoes} /></AnalyticCard>
-                <AnalyticCard><ProcessFunnel requisicoes={requisicoes} /></AnalyticCard>
-                <AnalyticCard><OperationalEfficiency requisicoes={requisicoes} /></AnalyticCard>
-              </TabsContent>
-
-              <TabsContent value="fornecedores" className="space-y-5">
-                <AnalyticCard><SupplierPerformance requisicoes={requisicoes} /></AnalyticCard>
-              </TabsContent>
-
-              <TabsContent value="compradores" className="space-y-5">
-                <AnalyticCard><EconomiaPorComprador requisicoes={requisicoes} /></AnalyticCard>
-                <AnalyticCard><GastosPorSolicitanteBars requisicoes={requisicoes} /></AnalyticCard>
-              </TabsContent>
-
-              <TabsContent value="preditivo" className="space-y-5">
-                <AnalyticCard><PredictiveInsights requisicoes={requisicoes} /></AnalyticCard>
-              </TabsContent>
-            </>
+            <TabsContent value="dashboard">
+              <div className="bg-white text-slate-900 rounded-xl p-4 shadow-lg">
+                <GastosDashboard requisicoes={requisicoes} />
+              </div>
+            </TabsContent>
           )}
         </Tabs>
       </main>
-    </div>
-  );
-}
-
-function AnalyticCard({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-      {children}
     </div>
   );
 }
