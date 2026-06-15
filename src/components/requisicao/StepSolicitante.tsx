@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SETORES, EMPRESAS } from '@/types';
-import { User, Mail, Phone, Building2, Building, Wallet } from 'lucide-react';
+import { User, Mail, Phone, Building2, Building, Wallet, UserCircle2 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface StepSolicitanteProps {
   formData: {
@@ -76,15 +77,15 @@ export const StepSolicitante = ({ formData, errors, onChange, onSelectChange }: 
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Dados do Solicitante</h2>
-        <p className="text-sm text-muted-foreground">
-          Confirme seus dados para identificação da requisição
-        </p>
-      </div>
+    <div className="space-y-8 animate-fade-in">
+      <SectionHeader
+        icon={UserCircle2}
+        title="Dados do Solicitante"
+        subtitle="Confirme seus dados para identificação da requisição"
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+
         <div>
           <Label htmlFor="solicitante_empresa" className="flex items-center gap-2">
             <Building className="w-4 h-4 text-muted-foreground" />
