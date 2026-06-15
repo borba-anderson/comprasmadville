@@ -57,19 +57,7 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="hidden lg:flex justify-center items-center group [perspective:1200px]">
-              <img
-                src={heroDashboard}
-                alt="Dashboards do sistema"
-                width={1280}
-                height={960}
-                className="w-full max-w-[640px] h-auto transition-all duration-700 ease-out will-change-transform
-                  group-hover:scale-[1.04] group-hover:-translate-y-2
-                  group-hover:[transform:perspective(1200px)_rotateX(2deg)_rotateY(-6deg)_scale(1.04)]
-                  drop-shadow-[0_25px_45px_rgba(15,23,42,0.18)]
-                  group-hover:drop-shadow-[0_35px_60px_rgba(0,134,81,0.25)]"
-              />
-            </div>
+            <HeroComposition />
           </section>
 
           {/* LOGO MARQUEE */}
