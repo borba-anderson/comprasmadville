@@ -176,7 +176,7 @@ function FloatingKPI({
   value: string;
   trend?: string;
   className?: string;
-  style?: React.CSSProperties;
+  style?: any;
 }) {
   return (
     <motion.div
