@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Send, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, FileText, Loader2, CheckCircle2, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
 import { supabase } from "@/integrations/supabase/client";
@@ -372,36 +373,133 @@ export default function Requisicao() {
   };
 
   if (isSuccess) {
+    const now = new Date();
+    const dataHora = now.toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+    const timeline = [
+      { label: 'Requisição criada', done: true },
+      { label: 'Em análise', done: false },
+      { label: 'Em cotação', done: false },
+      { label: 'Pedido emitido', done: false },
+      { label: 'Concluído', done: false },
+    ];
+
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-b from-success/5 via-background to-background">
+        <div className="h-1 bg-success w-full" />
         <Header />
         <main className="page-container">
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-success/10 border-2 border-success/30 rounded-2xl p-8 text-center animate-scale-in">
-              <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
-                <FileText className="w-8 h-8 text-success-foreground" />
+          <div className="max-w-2xl mx-auto animate-fade-in">
+            {/* Hero confirmation */}
+            <div className="text-center mb-8">
+              <div className="relative inline-flex mb-6">
+                <div className="absolute inset-0 bg-success/30 rounded-full blur-2xl animate-pulse" />
+                <div className="relative w-20 h-20 bg-gradient-to-br from-success to-success/80 rounded-full flex items-center justify-center shadow-xl shadow-success/30 animate-scale-in">
+                  <CheckCircle2 className="w-10 h-10 text-success-foreground" strokeWidth={2.5} />
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">Requisição Enviada!</h2>
-              <p className="text-muted-foreground mb-4">Sua requisição foi recebida e está aguardando análise.</p>
-              <div className="bg-card rounded-lg p-4 mb-6 border">
-                <p className="text-sm text-muted-foreground">Protocolo</p>
-                <p className="text-2xl font-bold font-mono text-primary">{protocolo}</p>
-              </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                Você receberá atualizações no email: <strong>{formData.solicitante_email}</strong>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+                Requisição enviada com sucesso
+              </h1>
+              <p className="text-muted-foreground">
+                Sua requisição foi recebida e está aguardando análise.
               </p>
-              <div className="flex gap-4 justify-center">
-                <Button onClick={() => window.location.reload()}>Nova Requisição</Button>
-                <Button variant="outline" asChild>
-                  <Link to="/">Voltar ao Início</Link>
-                </Button>
+            </div>
+
+            {/* Protocol card */}
+            <div className="bg-card border border-border/70 rounded-2xl shadow-sm overflow-hidden mb-6">
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 border-b border-border/60 p-6 text-center">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                  Protocolo
+                </p>
+                <p className="text-4xl font-bold font-mono text-primary tabular-nums">
+                  {protocolo}
+                </p>
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/60">
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-1">Data/Hora</p>
+                  <p className="font-semibold text-foreground">{dataHora}</p>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-1">Solicitante</p>
+                  <p className="font-semibold text-foreground truncate">{formData.solicitante_nome}</p>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-1">Status</p>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning/10 text-warning text-xs font-semibold border border-warning/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
+                    Aguardando análise
+                  </span>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-1">Próxima etapa</p>
+                  <p className="font-semibold text-foreground">Análise da equipe de compras</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="bg-card border border-border/70 rounded-2xl p-6 shadow-sm mb-6">
+              <h3 className="text-sm font-semibold text-foreground mb-5 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-primary" />
+                Acompanhe sua requisição
+              </h3>
+              <div className="relative">
+                <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-border" />
+                <ul className="space-y-4">
+                  {timeline.map((item, idx) => (
+                    <li key={item.label} className="flex items-center gap-4 relative">
+                      <div className={cn(
+                        "relative z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
+                        item.done
+                          ? "bg-success border-success text-success-foreground shadow-sm shadow-success/30"
+                          : "bg-background border-border"
+                      )}>
+                        {item.done ? (
+                          <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
+                        )}
+                      </div>
+                      <span className={cn(
+                        "text-sm transition-colors",
+                        item.done ? "font-semibold text-foreground" : "text-muted-foreground"
+                      )}>
+                        {item.label}
+                      </span>
+                      {idx === 1 && (
+                        <span className="ml-auto text-[11px] uppercase tracking-wider font-semibold text-warning">
+                          Próxima
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <p className="text-sm text-muted-foreground text-center mb-6">
+              Você receberá atualizações em <strong className="text-foreground">{formData.solicitante_email}</strong>
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={() => window.location.reload()} size="lg" className="gap-2">
+                <FileText className="w-4 h-4" />
+                Nova Requisição
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/">Voltar ao Início</Link>
+              </Button>
             </div>
           </div>
         </main>
       </div>
     );
   }
+
 
   const renderStep = () => {
     switch (currentStep) {
