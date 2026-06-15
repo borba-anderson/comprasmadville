@@ -4,6 +4,7 @@ export { FornecedorSelector } from './FornecedorSelector';
 export { DeliveryDatePicker } from './DeliveryDatePicker';
 export { ValueHistoryList } from './ValueHistoryList';
 export { FormStepper } from './FormStepper';
+export { SectionHeader } from './SectionHeader';
 export { StepSolicitante } from './StepSolicitante';
 export { StepItem } from './StepItem';
 export { StepJustificativa } from './StepJustificativa';
