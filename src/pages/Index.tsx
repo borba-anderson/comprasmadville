@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { LogoMarquee, UserGreeting, QuickStats, ActionCards } from "@/components/home";
-import heroDashboard from "@/assets/hero-dashboard.png";
+import { HeroComposition } from "@/components/home/HeroComposition";
 
 const Index = () => {
   const { user } = useAuth();
