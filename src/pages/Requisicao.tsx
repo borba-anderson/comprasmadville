@@ -543,48 +543,61 @@ export default function Requisicao() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Green accent bar at top */}
+    <div className="min-h-screen bg-gradient-to-b from-muted/30 via-background to-background">
       <div className="h-1 bg-success w-full" />
-      <div className="border-b border-success/20">
+      <div className="border-b border-border/60 bg-background/80 backdrop-blur-sm">
         <Header />
       </div>
       <main className="page-container">
-        <div className="max-w-3xl mx-auto">
-          <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 text-sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar ao início
-          </Link>
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao início
+            </Link>
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+              Rascunho salvo localmente
+            </div>
+          </div>
 
-          <div className="bg-white rounded-2xl shadow-lg border border-success/20 overflow-hidden">
-            <div className="p-6 border-b border-success/10 bg-success/5">
+          {/* Page intro */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Nova Requisição de Compra</h1>
+            <p className="text-muted-foreground mt-1">
+              Preencha as etapas abaixo. Você pode revisar antes do envio final.
+            </p>
+          </div>
+
+          <div className="bg-card rounded-2xl shadow-sm border border-border/70 overflow-hidden">
+            <div className="px-6 md:px-10 py-6 border-b border-border/60 bg-gradient-to-b from-muted/40 to-transparent">
               <FormStepper steps={STEPS} currentStep={currentStep} onStepClick={handleStepClick} />
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="p-8">{renderStep()}</div>
+              <div className="px-6 md:px-10 py-10">{renderStep()}</div>
 
-              <div className="p-6 border-t bg-muted/20 flex justify-between items-center">
+              <div className="px-6 md:px-10 py-5 border-t border-border/60 bg-muted/20 flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={currentStep === 1}
-                  className="gap-2"
+                  className="gap-2 w-full sm:w-auto"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Anterior
                 </Button>
-                <span className="text-sm text-muted-foreground">
-                  Etapa {currentStep} de {STEPS.length}
+                <span className="text-xs text-muted-foreground font-medium tabular-nums">
+                  Etapa {currentStep} de {STEPS.length} · {Math.round(((currentStep - 1) / (STEPS.length - 1)) * 100)}% concluído
                 </span>
                 {currentStep < STEPS.length ? (
-                  <Button type="button" onClick={handleNext} className="gap-2">
+                  <Button type="button" onClick={handleNext} className="gap-2 w-full sm:w-auto">
                     Próximo
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isLoading} className="gap-2 bg-success hover:bg-success/90">
+                  <Button type="submit" disabled={isLoading} className="gap-2 w-full sm:w-auto bg-success hover:bg-success/90 shadow-md shadow-success/20">
                     {isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -606,3 +619,4 @@ export default function Requisicao() {
     </div>
   );
 }
+
