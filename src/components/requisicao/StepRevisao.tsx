@@ -12,11 +12,13 @@ import {
   Paperclip,
   Edit3,
   CheckCircle2,
-  Wallet
+  Wallet,
+  ClipboardCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RequisicaoPrioridade } from '@/types';
 import { cn } from '@/lib/utils';
+import { SectionHeader } from './SectionHeader';
 
 interface StepRevisaoProps {
   formData: {
@@ -49,15 +51,14 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
   
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Revisão da Requisição</h2>
-        <p className="text-sm text-muted-foreground">
-          Confira os dados antes de enviar
-        </p>
-      </div>
+      <SectionHeader
+        icon={ClipboardCheck}
+        title="Revisão da Requisição"
+        subtitle="Confira os dados antes de enviar"
+      />
 
       {/* Confirmation Banner */}
-      <div className="p-4 bg-success/10 border border-success/30 rounded-lg flex items-center gap-3">
+      <div className="p-4 bg-success/10 border border-success/30 rounded-xl flex items-center gap-3">
         <CheckCircle2 className="w-5 h-5 text-success shrink-0" />
         <p className="text-sm text-foreground">
           Todos os campos obrigatórios foram preenchidos. Revise e confirme o envio.
@@ -65,10 +66,12 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
       </div>
 
       {/* Section: Solicitante */}
-      <div className="bg-muted/30 rounded-xl p-5 border">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-foreground flex items-center gap-2">
-            <User className="w-4 h-4 text-primary" />
+      <div className="bg-card rounded-2xl p-6 border border-border/70 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/60">
+          <h3 className="font-semibold text-foreground flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <User className="w-4 h-4 text-primary" />
+            </span>
             Solicitante
           </h3>
           <Button 
@@ -119,10 +122,12 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
       </div>
 
       {/* Section: Item */}
-      <div className="bg-muted/30 rounded-xl p-5 border">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-foreground flex items-center gap-2">
-            <Package className="w-4 h-4 text-primary" />
+      <div className="bg-card rounded-2xl p-6 border border-border/70 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/60">
+          <h3 className="font-semibold text-foreground flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Package className="w-4 h-4 text-primary" />
+            </span>
             Item Solicitado
           </h3>
           <Button 
@@ -163,10 +168,12 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
       </div>
 
       {/* Section: Justificativa */}
-      <div className="bg-muted/30 rounded-xl p-5 border">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-foreground flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-primary" />
+      <div className="bg-card rounded-2xl p-6 border border-border/70 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/60">
+          <h3 className="font-semibold text-foreground flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <MessageSquare className="w-4 h-4 text-primary" />
+            </span>
             Justificativa
           </h3>
           <Button 
@@ -205,10 +212,12 @@ export const StepRevisao = ({ formData, files, onEditStep }: StepRevisaoProps) =
 
       {/* Section: Anexos */}
       {files.length > 0 && (
-        <div className="bg-muted/30 rounded-xl p-5 border">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <Paperclip className="w-4 h-4 text-primary" />
+        <div className="bg-card rounded-2xl p-6 border border-border/70 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/60">
+            <h3 className="font-semibold text-foreground flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Paperclip className="w-4 h-4 text-primary" />
+              </span>
               Anexos ({files.length})
             </h3>
             <Button 

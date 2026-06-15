@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UNIDADES_CONFIG } from '@/types';
-import { Package, Hash, Ruler, FileText, Lightbulb } from 'lucide-react';
+import { Package, Hash, Ruler, FileText, Lightbulb, PackageSearch } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface StepItemProps {
   formData: {
@@ -25,15 +26,15 @@ interface StepItemProps {
 
 export const StepItem = ({ formData, errors, onChange, onSelectChange }: StepItemProps) => {
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Detalhes do Item</h2>
-        <p className="text-sm text-muted-foreground">
-          Descreva o item de forma clara para facilitar a cotação
-        </p>
-      </div>
+    <div className="space-y-8 animate-fade-in">
+      <SectionHeader
+        icon={PackageSearch}
+        title="Detalhes do Item"
+        subtitle="Descreva o item de forma clara para facilitar a cotação"
+      />
 
       <div className="space-y-5">
+
         <div>
           <Label htmlFor="item_nome" className="flex items-center gap-2">
             <Package className="w-4 h-4 text-muted-foreground" />

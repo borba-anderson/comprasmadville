@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Upload, FileText, X, Image, FileSpreadsheet, Info, AlertCircle } from 'lucide-react';
+import { Upload, FileText, X, Image, FileSpreadsheet, Info, AlertCircle, Paperclip } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 
@@ -55,12 +56,12 @@ export const StepAnexo = ({ files, onFilesChange, onFileRemove, formData, totalS
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Anexos</h2>
-        <p className="text-sm text-muted-foreground">
-          Adicione documentos que auxiliem na cotação
-        </p>
-      </div>
+      <SectionHeader
+        icon={Paperclip}
+        title="Anexos"
+        subtitle="Adicione documentos que auxiliem na cotação"
+      />
+
 
       {/* Usage Indicator */}
       <div className="p-4 bg-muted/30 rounded-lg border">

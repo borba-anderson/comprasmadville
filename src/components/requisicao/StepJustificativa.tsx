@@ -8,8 +8,10 @@ import {
   Clock, 
   CheckCircle2,
   Zap,
-  AlertCircle
+  AlertCircle,
+  ClipboardEdit
 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 import { cn } from '@/lib/utils';
 
 interface StepJustificativaProps {
@@ -58,13 +60,13 @@ export const StepJustificativa = ({ formData, errors, onChange, onSelectChange }
   const minJustificativaLength = isHighPriority ? 50 : 10;
   
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground mb-1">Justificativa e Prioridade</h2>
-        <p className="text-sm text-muted-foreground">
-          Explique a necessidade para agilizar a aprovação
-        </p>
-      </div>
+    <div className="space-y-8 animate-fade-in">
+      <SectionHeader
+        icon={ClipboardEdit}
+        title="Justificativa e Prioridade"
+        subtitle="Explique a necessidade para agilizar a aprovação"
+      />
+
 
       {/* Prioridade Selection */}
       <div>
