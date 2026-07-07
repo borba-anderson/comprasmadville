@@ -1,26 +1,65 @@
 import { useMemo } from "react";
 import { Requisicao } from "@/types";
-import { Brain, TrendingUp, AlertTriangle, Activity, Sparkles, ArrowUpRight } from "lucide-react";
 import {
-  AreaChart,
+  Brain,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  Activity,
+  Sparkles,
+  ArrowUpRight,
+  Target,
+  Gauge,
+  CalendarClock,
+} from "lucide-react";
+import {
+  ComposedChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  ReferenceLine,
+  ReferenceDot,
 } from "recharts";
 
 interface PredictiveInsightsProps {
   requisicoes: Requisicao[];
 }
 
+type ForecastPoint = {
+  month: string;
+  fullLabel: string;
+  actual: number | null;
+  projected: number | null;
+  forecast: number | null;
+  bandLow: number | null;
+  bandHigh: number | null;
+  isCurrent: boolean;
+  isFuture: boolean;
+};
+
 export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
-  const { forecast, anomalies, insights, riskScore, riskBreakdown, supplierTrend } = useMemo(() => {
+  const {
+    forecast,
+    anomalies,
+    insights,
+    riskScore,
+    riskBreakdown,
+    supplierTrend,
+    nextMonthValue,
+    monthOverMonth,
+    confidence,
+    currentMonthProjection,
+    currentMonthActual,
+    monthProgressPct,
+  } = useMemo(() => {
     const now = new Date();
 
-    // Monthly spend (last 6 months)
-    const monthlySpend: { month: string; spend: number; count: number }[] = [];
+    // ---------- Monthly spend (últimos 6 meses, incluindo o vigente) ----------
+    const monthlySpend: { month: string; fullLabel: string; spend: number; count: number }[] = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
@@ -29,13 +68,14 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         return created >= d && created < nextMonth;
       });
       monthlySpend.push({
-        month: d.toLocaleDateString("pt-BR", { month: "short" }),
+        month: d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+        fullLabel: d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
         spend: monthReqs.reduce((s, r) => s + (r.valor || 0), 0),
         count: monthReqs.length,
       });
     }
 
-    // Linear regression for forecast
+    // ---------- Regressão linear (para tendência) ----------
     const n = monthlySpend.length;
     const xSum = monthlySpend.reduce((s, _, i) => s + i, 0);
     const ySum = monthlySpend.reduce((s, d) => s + d.spend, 0);
@@ -44,54 +84,91 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
     const slope = n > 1 ? (n * xySum - xSum * ySum) / (n * x2Sum - xSum * xSum) : 0;
     const intercept = n > 0 ? (ySum - slope * xSum) / n : 0;
 
-    // Proporção do mês vigente já decorrida (para projetar o mês inteiro)
+    // Coeficiente de determinação (R²) — confiança do modelo
+    const meanY = n > 0 ? ySum / n : 0;
+    const ssTot = monthlySpend.reduce((s, d) => s + Math.pow(d.spend - meanY, 2), 0);
+    const ssRes = monthlySpend.reduce(
+      (s, d, i) => s + Math.pow(d.spend - (intercept + slope * i), 2),
+      0,
+    );
+    const r2 = ssTot > 0 ? Math.max(0, 1 - ssRes / ssTot) : 0;
+    const confidencePct = Math.round(r2 * 100);
+
+    // ---------- Progresso do mês vigente ----------
     const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
     const dayOfMonth = now.getDate();
     const monthProgress = Math.min(1, Math.max(0.05, dayOfMonth / daysInCurrentMonth));
+    const currentActual = monthlySpend[n - 1]?.spend ?? 0;
+    const trendPredicted = Math.max(0, intercept + slope * (n - 1));
+    // Projeção do mês vigente = 60% extrapolação linear × 40% tendência
+    const currentProjected = Math.round(
+      (currentActual / monthProgress) * 0.6 + trendPredicted * 0.4,
+    );
 
-    // Realizado + previsão sobrepostos no mês vigente
-    const forecastData = monthlySpend.map((d, i) => {
+    // ---------- Desvio padrão para banda de confiança ----------
+    const residualStd = Math.sqrt(ssRes / Math.max(1, n - 1));
+
+    // ---------- Série do gráfico (realizado + projeção + previsão + banda) ----------
+    const forecastData: ForecastPoint[] = monthlySpend.map((d, i) => {
       const isCurrent = i === n - 1;
-      const predicted = Math.max(0, intercept + slope * i);
-      // Projeção do mês vigente = realizado até agora extrapolado para o mês completo,
-      // combinado com a tendência da regressão (média ponderada)
-      const projectedCurrent = isCurrent
-        ? Math.round(d.spend / monthProgress * 0.6 + predicted * 0.4)
-        : undefined;
       return {
-        ...d,
-        forecast: projectedCurrent,
-      } as { month: string; spend: number; count: number; forecast: number | undefined };
+        month: d.month,
+        fullLabel: d.fullLabel,
+        actual: isCurrent ? null : d.spend,
+        projected: isCurrent ? currentProjected : null,
+        forecast: null,
+        bandLow: null,
+        bandHigh: null,
+        isCurrent,
+        isFuture: false,
+      };
     });
+    // conecta a linha realizada até o mês vigente
+    if (n >= 2) forecastData[n - 2].projected = monthlySpend[n - 2].spend;
 
+    // Próximos 3 meses (previsão pura + banda)
     for (let i = 1; i <= 3; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const predicted = Math.max(0, intercept + slope * (n - 1 + i));
+      const spread = residualStd * (1 + i * 0.25);
       forecastData.push({
-        month: d.toLocaleDateString("pt-BR", { month: "short" }),
-        spend: 0,
-        count: 0,
+        month: d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+        fullLabel: d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
+        actual: null,
+        projected: null,
         forecast: Math.round(predicted),
+        bandLow: Math.max(0, Math.round(predicted - spread)),
+        bandHigh: Math.round(predicted + spread),
+        isCurrent: false,
+        isFuture: true,
       });
     }
+    // conecta linha de previsão ao ponto projetado do mês vigente
+    forecastData[n - 1].forecast = currentProjected;
 
-    // Anomalies
-    const mean = n > 0 ? ySum / n : 0;
-    const variance = n > 1 ? monthlySpend.reduce((s, d) => s + Math.pow(d.spend - mean, 2), 0) / n : 0;
-    const stdDev = Math.sqrt(variance);
+    const nextMonth = Math.max(0, intercept + slope * n);
+    const prevMonthSpend = monthlySpend[n - 2]?.spend ?? 0;
+    const momPct =
+      prevMonthSpend > 0
+        ? ((currentProjected - prevMonthSpend) / prevMonthSpend) * 100
+        : 0;
+
+    // ---------- Anomalias ----------
+    const stdDev = Math.sqrt(ssTot / Math.max(1, n));
     const anomalyList = monthlySpend
-      .filter((d) => Math.abs(d.spend - mean) > stdDev * 1.5 && d.spend > 0)
+      .slice(0, n - 1) // ignora mês vigente incompleto
+      .filter((d) => Math.abs(d.spend - meanY) > stdDev * 1.5 && d.spend > 0)
       .map((d) => ({
         month: d.month,
         spend: d.spend,
-        deviation: ((d.spend - mean) / mean) * 100,
+        deviation: ((d.spend - meanY) / meanY) * 100,
       }));
 
-    // Insights
+    // ---------- Insights ----------
     const insightList: { text: string; type: "positive" | "negative" | "neutral" }[] = [];
     if (slope > 0) {
       insightList.push({
-        text: `Tendência de alta nos gastos: +${formatCurrency(Math.abs(slope))}/mês`,
+        text: `Tendência de alta: +${formatCurrency(Math.abs(slope))}/mês`,
         type: "negative",
       });
     } else if (slope < 0) {
@@ -104,9 +181,16 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
     // Supplier risk
     const overdueBySupplier = new Map<string, number>();
     requisicoes.forEach((r) => {
-      if (r.fornecedor_nome && r.previsao_entrega && !["recebido", "rejeitado", "cancelado"].includes(r.status)) {
+      if (
+        r.fornecedor_nome &&
+        r.previsao_entrega &&
+        !["recebido", "rejeitado", "cancelado"].includes(r.status)
+      ) {
         if (new Date(r.previsao_entrega) < now) {
-          overdueBySupplier.set(r.fornecedor_nome, (overdueBySupplier.get(r.fornecedor_nome) || 0) + 1);
+          overdueBySupplier.set(
+            r.fornecedor_nome,
+            (overdueBySupplier.get(r.fornecedor_nome) || 0) + 1,
+          );
         }
       }
     });
@@ -122,7 +206,6 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       });
     }
 
-    // Pending bottleneck
     const pendingCount = requisicoes.filter((r) => r.status === "pendente").length;
     if (pendingCount > 10) {
       insightList.push({
@@ -131,8 +214,9 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       });
     }
 
-    // Savings
-    const withBoth = requisicoes.filter((r) => r.valor_orcado && r.valor && r.valor > 0 && r.valor_orcado > 0);
+    const withBoth = requisicoes.filter(
+      (r) => r.valor_orcado && r.valor && r.valor > 0 && r.valor_orcado > 0,
+    );
     const totalBudget = withBoth.reduce((s, r) => s + (r.valor_orcado || 0), 0);
     const totalActual = withBoth.reduce((s, r) => s + (r.valor || 0), 0);
     const savingsPct = totalBudget > 0 ? ((totalBudget - totalActual) / totalBudget) * 100 : 0;
@@ -143,17 +227,18 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       });
     }
 
-    // Risk score 0-100
+    // ---------- Risk score ----------
     const overdueRatio =
       requisicoes.length > 0
         ? requisicoes.filter((r) => {
-            if (!r.previsao_entrega || ["recebido", "rejeitado", "cancelado"].includes(r.status)) return false;
+            if (!r.previsao_entrega || ["recebido", "rejeitado", "cancelado"].includes(r.status))
+              return false;
             return new Date(r.previsao_entrega) < now;
           }).length / requisicoes.length
         : 0;
     const pendingRatio = requisicoes.length > 0 ? pendingCount / requisicoes.length : 0;
     const supplierRisk = Math.min(supplierTrendList.length / 3, 1);
-    const spendRisk = slope > 0 ? Math.min(slope / (mean || 1), 1) : 0;
+    const spendRisk = slope > 0 ? Math.min(slope / (meanY || 1), 1) : 0;
 
     const score = Math.round(
       overdueRatio * 40 + pendingRatio * 20 + supplierRisk * 25 + spendRisk * 15,
@@ -173,25 +258,52 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       riskScore: score,
       riskBreakdown: breakdown,
       supplierTrend: supplierTrendList,
+      nextMonthValue: Math.round(nextMonth),
+      monthOverMonth: momPct,
+      confidence: confidencePct,
+      currentMonthProjection: currentProjected,
+      currentMonthActual: currentActual,
+      monthProgressPct: Math.round(monthProgress * 100),
     };
   }, [requisicoes]);
 
   const riskLevel = riskScore >= 60 ? "high" : riskScore >= 30 ? "medium" : "low";
   const riskCfg = {
-    high: { text: "Risco elevado", color: "text-red-600", bg: "bg-red-50", bar: "bg-red-500" },
-    medium: { text: "Risco moderado", color: "text-amber-700", bg: "bg-amber-50", bar: "bg-amber-500" },
-    low: { text: "Risco baixo", color: "text-emerald-700", bg: "bg-emerald-50", bar: "bg-emerald-500" },
+    high: {
+      text: "Risco elevado",
+      color: "text-red-600",
+      bg: "bg-red-50",
+      bar: "bg-red-500",
+      ring: "ring-red-200",
+    },
+    medium: {
+      text: "Risco moderado",
+      color: "text-amber-700",
+      bg: "bg-amber-50",
+      bar: "bg-amber-500",
+      ring: "ring-amber-200",
+    },
+    low: {
+      text: "Risco baixo",
+      color: "text-emerald-700",
+      bg: "bg-emerald-50",
+      bar: "bg-emerald-500",
+      ring: "ring-emerald-200",
+    },
   }[riskLevel];
+
+  const currentMonthLabel = forecast.find((f) => f.isCurrent)?.month ?? "";
 
   return (
     <div className="space-y-6">
-      {/* Header com pulso "IA analisando" */}
+      {/* ============ HEADER ============ */}
       <div className="card-elevated-static p-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(220_85%_60%/0.06),transparent_70%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(220_85%_60%/0.08),transparent_70%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,hsl(156_100%_26%/0.05),transparent_60%)] pointer-events-none" />
         <div className="relative flex items-start justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center">
+              <div className="w-11 h-11 bg-gradient-to-br from-slate-900 to-slate-700 rounded-xl flex items-center justify-center shadow-lg shadow-slate-900/20">
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
@@ -201,17 +313,21 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
                 <h4 className="font-semibold text-slate-900 text-[15px]">Inteligência Preditiva</h4>
                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-[0.1em] uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  IA · Análise ativa
+                  IA · Modelo ativo
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                  <Gauge className="w-3 h-3" />
+                  Confiança {confidence}%
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Previsão de gastos · Risco operacional · Detecção de anomalias
+                Regressão linear · Banda de confiança · Detecção de anomalias · 6M histórico
               </p>
             </div>
           </div>
 
           {/* Risk score */}
-          <div className={`flex items-center gap-4 ${riskCfg.bg} rounded-xl px-5 py-3`}>
+          <div className={`flex items-center gap-4 ${riskCfg.bg} rounded-xl px-5 py-3 ring-1 ${riskCfg.ring}`}>
             <div>
               <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-500">
                 Score de Risco
@@ -238,45 +354,186 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         </div>
       </div>
 
+      {/* ============ KPI CHIPS ============ */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <PredictiveKPI
+          icon={CalendarClock}
+          label="Mês vigente · projeção"
+          value={formatCurrency(currentMonthProjection)}
+          hint={`Realizado ${formatCurrency(currentMonthActual)} · ${monthProgressPct}% do mês`}
+          accent="slate"
+        />
+        <PredictiveKPI
+          icon={Target}
+          label="Próximo mês · previsão"
+          value={formatCurrency(nextMonthValue)}
+          hint={`Modelo IA · confiança ${confidence}%`}
+          accent="blue"
+        />
+        <PredictiveKPI
+          icon={monthOverMonth >= 0 ? TrendingUp : TrendingDown}
+          label="Variação vs. mês anterior"
+          value={`${monthOverMonth >= 0 ? "+" : ""}${monthOverMonth.toFixed(1)}%`}
+          hint="Projetado vs. realizado do mês anterior"
+          accent={monthOverMonth >= 0 ? "red" : "emerald"}
+        />
+        <PredictiveKPI
+          icon={AlertTriangle}
+          label="Anomalias detectadas"
+          value={String(anomalies.length)}
+          hint={anomalies.length === 0 ? "Nenhum outlier nos últimos 5 meses" : "Meses fora do padrão histórico"}
+          accent={anomalies.length > 0 ? "amber" : "emerald"}
+        />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Forecast */}
+        {/* ============ FORECAST CHART ============ */}
         <div className="lg:col-span-2 card-elevated-static p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-start justify-between mb-5 gap-4 flex-wrap">
             <div>
               <h5 className="text-sm font-semibold text-slate-900">Previsão de Gastos</h5>
-              <p className="text-xs text-slate-500 mt-0.5">Realizado · Projeção próximos 3 meses</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Realizado · Projeção do mês vigente · Previsão IA com banda de confiança
+              </p>
             </div>
-            <div className="flex items-center gap-3 text-[11px] text-slate-500">
+            <div className="flex items-center gap-4 text-[11px] text-slate-500">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-sm bg-success" /> Realizado
+                <span className="w-2.5 h-2.5 rounded-sm bg-[hsl(156,100%,26%)]" /> Realizado
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-sm bg-blue-500 opacity-60" /> Previsão IA
+                <span className="w-2.5 h-2.5 rounded-sm bg-slate-400" /> Projeção mês
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-blue-500 opacity-60" /> Previsão IA
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-blue-200" /> Banda ±σ
               </span>
             </div>
           </div>
-          <div className="h-56">
+
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={forecast} margin={{ top: 5, right: 8, bottom: 0, left: -10 }}>
+              <ComposedChart data={forecast} margin={{ top: 8, right: 12, bottom: 0, left: -8 }}>
+                <defs>
+                  <linearGradient id="actualFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(156,100%,26%)" stopOpacity={0.28} />
+                    <stop offset="100%" stopColor="hsl(156,100%,26%)" stopOpacity={0.02} />
+                  </linearGradient>
+                  <linearGradient id="bandFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(220,85%,55%)" stopOpacity={0.18} />
+                    <stop offset="100%" stopColor="hsl(220,85%,55%)" stopOpacity={0.03} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.4} vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: "hsl(var(--text-tertiary))" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--text-tertiary))" }} tickFormatter={(v) => formatCurrency(v)} axisLine={false} tickLine={false} />
-                <Tooltip
-                  formatter={(v: number, name: string) => [formatCurrency(v), name === "forecast" ? "Previsão" : "Realizado"]}
-                  contentStyle={{ borderRadius: 10, border: "1px solid hsl(var(--border))", fontSize: 12 }}
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: "hsl(var(--text-tertiary))" }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <Area type="monotone" dataKey="spend" fill="hsl(156,100%,26%)" fillOpacity={0.12} stroke="hsl(156,100%,26%)" strokeWidth={2} />
-                <Area type="monotone" dataKey="forecast" fill="hsl(220,85%,55%)" fillOpacity={0.08} stroke="hsl(220,85%,55%)" strokeWidth={2} strokeDasharray="5 4" />
-              </AreaChart>
+                <YAxis
+                  tick={{ fontSize: 11, fill: "hsl(var(--text-tertiary))" }}
+                  tickFormatter={(v) => formatCurrency(v)}
+                  axisLine={false}
+                  tickLine={false}
+                  width={60}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: "hsl(var(--border))", strokeWidth: 1 }} />
+
+                {/* Marca do mês vigente */}
+                {currentMonthLabel && (
+                  <ReferenceLine
+                    x={currentMonthLabel}
+                    stroke="hsl(220,85%,55%)"
+                    strokeDasharray="4 3"
+                    strokeOpacity={0.55}
+                    label={{
+                      value: "Hoje",
+                      position: "top",
+                      fill: "hsl(220,85%,55%)",
+                      fontSize: 10,
+                      fontWeight: 600,
+                    }}
+                  />
+                )}
+
+                {/* Banda de confiança (invisível → area entre bandLow e bandHigh) */}
+                <Area
+                  type="monotone"
+                  dataKey="bandHigh"
+                  stroke="none"
+                  fill="url(#bandFill)"
+                  connectNulls
+                  isAnimationActive={false}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="bandLow"
+                  stroke="none"
+                  fill="hsl(var(--card))"
+                  fillOpacity={1}
+                  connectNulls
+                  isAnimationActive={false}
+                />
+
+                {/* Realizado */}
+                <Area
+                  type="monotone"
+                  dataKey="actual"
+                  stroke="hsl(156,100%,26%)"
+                  strokeWidth={2.5}
+                  fill="url(#actualFill)"
+                  connectNulls
+                  dot={{ r: 3, fill: "hsl(156,100%,26%)", strokeWidth: 0 }}
+                  activeDot={{ r: 5, fill: "hsl(156,100%,26%)", stroke: "white", strokeWidth: 2 }}
+                />
+
+                {/* Projeção do mês vigente (linha tracejada slate) */}
+                <Line
+                  type="monotone"
+                  dataKey="projected"
+                  stroke="hsl(215,20%,55%)"
+                  strokeWidth={2}
+                  strokeDasharray="4 3"
+                  dot={{ r: 3.5, fill: "hsl(215,20%,55%)", strokeWidth: 0 }}
+                  connectNulls
+                />
+
+                {/* Previsão IA */}
+                <Line
+                  type="monotone"
+                  dataKey="forecast"
+                  stroke="hsl(220,85%,55%)"
+                  strokeWidth={2.5}
+                  strokeDasharray="5 4"
+                  dot={{ r: 3.5, fill: "hsl(220,85%,55%)", strokeWidth: 0 }}
+                  connectNulls
+                />
+
+                <ReferenceDot
+                  x={currentMonthLabel}
+                  y={currentMonthProjection}
+                  r={5}
+                  fill="hsl(215,20%,55%)"
+                  stroke="white"
+                  strokeWidth={2}
+                />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Insights */}
+        {/* ============ INSIGHTS ============ */}
         <div className="card-elevated-static p-6 space-y-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-slate-700" />
-            <h5 className="text-sm font-semibold text-slate-900">Insights da IA</h5>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-slate-700" />
+              <h5 className="text-sm font-semibold text-slate-900">Insights da IA</h5>
+            </div>
+            <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-400">
+              {insights.length} sinais
+            </span>
           </div>
 
           {insights.length === 0 && (
@@ -291,7 +548,7 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
               return (
                 <div
                   key={idx}
-                  className={`flex items-start gap-2.5 p-3 rounded-lg text-[12px] border ${
+                  className={`flex items-start gap-2.5 p-3 rounded-lg text-[12px] border transition-all hover:shadow-sm ${
                     isPos
                       ? "bg-emerald-50/50 border-emerald-100 text-emerald-900"
                       : isNeg
@@ -330,9 +587,14 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
               <div className="space-y-1">
                 {anomalies.map((a, idx) => (
                   <div key={idx} className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500">{a.month}</span>
-                    <span className={`font-semibold num-tabular ${a.deviation > 0 ? "text-red-600" : "text-emerald-600"}`}>
-                      {a.deviation > 0 ? "+" : ""}{a.deviation.toFixed(0)}%
+                    <span className="text-slate-500 capitalize">{a.month}</span>
+                    <span
+                      className={`font-semibold num-tabular ${
+                        a.deviation > 0 ? "text-red-600" : "text-emerald-600"
+                      }`}
+                    >
+                      {a.deviation > 0 ? "+" : ""}
+                      {a.deviation.toFixed(0)}%
                     </span>
                   </div>
                 ))}
@@ -340,6 +602,98 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- KPI Chip ----------
+function PredictiveKPI({
+  icon: Icon,
+  label,
+  value,
+  hint,
+  accent,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  hint: string;
+  accent: "slate" | "blue" | "emerald" | "red" | "amber";
+}) {
+  const cfg = {
+    slate: { iconBg: "bg-slate-100", iconText: "text-slate-700", valueText: "text-slate-900" },
+    blue: { iconBg: "bg-blue-50", iconText: "text-blue-600", valueText: "text-blue-700" },
+    emerald: { iconBg: "bg-emerald-50", iconText: "text-emerald-600", valueText: "text-emerald-700" },
+    red: { iconBg: "bg-red-50", iconText: "text-red-600", valueText: "text-red-600" },
+    amber: { iconBg: "bg-amber-50", iconText: "text-amber-600", valueText: "text-amber-700" },
+  }[accent];
+
+  return (
+    <div className="card-elevated-static p-4 flex items-start gap-3 transition-all hover:shadow-md">
+      <div className={`w-9 h-9 rounded-lg ${cfg.iconBg} flex items-center justify-center shrink-0`}>
+        <Icon className={`w-4 h-4 ${cfg.iconText}`} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-500 truncate">
+          {label}
+        </div>
+        <div className={`text-lg font-semibold num-tabular mt-0.5 ${cfg.valueText} truncate`}>
+          {value}
+        </div>
+        <div className="text-[10.5px] text-slate-500 mt-0.5 truncate">{hint}</div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Tooltip ----------
+function CustomTooltip({ active, payload }: any) {
+  if (!active || !payload || !payload.length) return null;
+  const data = payload[0].payload as ForecastPoint;
+
+  const rows = [
+    data.actual != null && { label: "Realizado", value: data.actual, color: "hsl(156,100%,26%)" },
+    data.projected != null &&
+      data.isCurrent && { label: "Projeção do mês", value: data.projected, color: "hsl(215,20%,55%)" },
+    data.forecast != null &&
+      data.isFuture && { label: "Previsão IA", value: data.forecast, color: "hsl(220,85%,55%)" },
+  ].filter(Boolean) as { label: string; value: number; color: string }[];
+
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 shadow-lg p-3 min-w-[180px]">
+      <div className="text-[11px] font-semibold text-slate-500 capitalize mb-2">
+        {data.fullLabel}
+        {data.isCurrent && (
+          <span className="ml-2 inline-flex items-center gap-1 text-[9px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+            <span className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
+            EM CURSO
+          </span>
+        )}
+        {data.isFuture && (
+          <span className="ml-2 inline-flex items-center gap-1 text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+            PREVISÃO
+          </span>
+        )}
+      </div>
+      <div className="space-y-1.5">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-center justify-between gap-4 text-xs">
+            <span className="flex items-center gap-1.5 text-slate-600">
+              <span className="w-2 h-2 rounded-sm" style={{ background: r.color }} />
+              {r.label}
+            </span>
+            <span className="font-semibold text-slate-900 num-tabular">{formatCurrency(r.value)}</span>
+          </div>
+        ))}
+        {data.isFuture && data.bandLow != null && data.bandHigh != null && (
+          <div className="pt-1.5 mt-1.5 border-t border-slate-100 flex items-center justify-between text-[10.5px]">
+            <span className="text-slate-500">Intervalo ±σ</span>
+            <span className="font-medium text-slate-600 num-tabular">
+              {formatCurrency(data.bandLow)} – {formatCurrency(data.bandHigh)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
