@@ -44,7 +44,26 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
     const slope = n > 1 ? (n * xySum - xSum * ySum) / (n * x2Sum - xSum * xSum) : 0;
     const intercept = n > 0 ? (ySum - slope * xSum) / n : 0;
 
-    const forecastData = [...monthlySpend.map((d) => ({ ...d, forecast: undefined as number | undefined }))];
+    // Proporção do mês vigente já decorrida (para projetar o mês inteiro)
+    const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const monthProgress = Math.min(1, Math.max(0.05, dayOfMonth / daysInCurrentMonth));
+
+    // Realizado + previsão sobrepostos no mês vigente
+    const forecastData = monthlySpend.map((d, i) => {
+      const isCurrent = i === n - 1;
+      const predicted = Math.max(0, intercept + slope * i);
+      // Projeção do mês vigente = realizado até agora extrapolado para o mês completo,
+      // combinado com a tendência da regressão (média ponderada)
+      const projectedCurrent = isCurrent
+        ? Math.round(d.spend / monthProgress * 0.6 + predicted * 0.4)
+        : undefined;
+      return {
+        ...d,
+        forecast: projectedCurrent,
+      } as { month: string; spend: number; count: number; forecast: number | undefined };
+    });
+
     for (let i = 1; i <= 3; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const predicted = Math.max(0, intercept + slope * (n - 1 + i));
