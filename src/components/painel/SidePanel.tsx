@@ -197,7 +197,24 @@ export function SidePanel({
 
   const updateStatus = async (newStatus: RequisicaoStatus, motivo?: string) => {
     if (!localRequisicao) return;
-    
+
+    // Regra obrigatória: Valor Orçado + Valor Pago para status "comprado".
+    if (newStatus === 'comprado') {
+      const orcado = localRequisicao.valor_orcado;
+      const pago = localRequisicao.valor;
+      const missing: string[] = [];
+      if (!orcado || orcado <= 0) missing.push('Valor Orçado');
+      if (!pago || pago <= 0) missing.push('Valor Pago');
+      if (missing.length > 0) {
+        toast({
+          title: 'Dados financeiros obrigatórios',
+          description: `Preencha ${missing.join(' e ')} antes de finalizar a compra.`,
+          variant: 'destructive',
+        });
+        return;
+      }
+    }
+
     try {
       setIsUpdating(true);
 
