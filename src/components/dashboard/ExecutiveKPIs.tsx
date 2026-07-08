@@ -53,33 +53,33 @@ const STATUS_COLORS: Record<TrafficLight, { dot: string; bg: string; text: strin
 
 export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProps) {
   const kpis = useMemo<KPIData[]>(() => {
+    // ============================================================
+    // Métricas centralizadas em src/lib/procurementMetrics.ts
+    // - Gasto  = Σ valor pago em compras efetivadas (terminal statuses)
+    // - Economia = Σ(orçado − pago) em registros COMPLETOS
+    // ============================================================
     const total = requisicoes.length;
-    const withValue = requisicoes.filter((r) => r.valor && r.valor > 0);
-    const totalSpend = withValue.reduce((sum, r) => sum + (r.valor || 0), 0);
-
-    const prevWithValue = previousPeriod.filter((r) => r.valor && r.valor > 0);
-    const prevTotalSpend = prevWithValue.reduce((sum, r) => sum + (r.valor || 0), 0);
+    const totalSpend = aggregateGasto(requisicoes);
+    const prevTotalSpend = aggregateGasto(previousPeriod);
     const spendTrend = prevTotalSpend > 0 ? ((totalSpend - prevTotalSpend) / prevTotalSpend) * 100 : 0;
 
-    const withBoth = requisicoes.filter((r) => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0);
-    const totalBudgeted = withBoth.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
-    const totalNegotiated = withBoth.reduce((sum, r) => sum + (r.valor || 0), 0);
-    const savingsRealized = totalBudgeted - totalNegotiated;
-    const savingsPct = totalBudgeted > 0 ? (savingsRealized / totalBudgeted) * 100 : 0;
+    const economiaAgg = aggregateEconomia(requisicoes);
+    const totalBudgeted = economiaAgg.totalOrcado;
+    const totalNegotiated = economiaAgg.totalPago;
+    const savingsRealized = economiaAgg.economiaTotal;
+    const savingsPct = economiaAgg.percentualEconomia;
 
-    const avoided = requisicoes.filter((r) =>
-      ['rejeitado', 'cancelado'].includes(r.status) && r.valor_orcado && r.valor_orcado > 0
+    const avoided = requisicoes.filter(
+      (r) => AVOIDED_STATUSES.includes(r.status) && r.valor_orcado && r.valor_orcado > 0,
     );
     const costAvoidance = avoided.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
 
-    const managed = withValue.filter((r) => r.fornecedor_nome && r.fornecedor_nome.trim() !== '');
-    const spendUnderMgmt = withValue.length > 0 ? (managed.length / withValue.length) * 100 : 0;
+    const withPaidValue = requisicoes.filter((r) => getValorPago(r) !== null);
+    const managed = withPaidValue.filter((r) => r.fornecedor_nome && r.fornecedor_nome.trim() !== '');
+    const spendUnderMgmt = withPaidValue.length > 0 ? (managed.length / withPaidValue.length) * 100 : 0;
 
-    const maverickStatuses = ['comprado', 'em_entrega', 'recebido'];
-    const maverickReqs = requisicoes.filter(
-      (r) => maverickStatuses.includes(r.status) && !r.aprovado_em
-    );
-    const maverickSpend = maverickReqs.reduce((sum, r) => sum + (r.valor || 0), 0);
+    const maverickReqs = withPaidValue.filter((r) => !r.aprovado_em);
+    const maverickSpend = maverickReqs.reduce((sum, r) => sum + (getValorPago(r) ?? 0), 0);
     const maverickPct = totalSpend > 0 ? (maverickSpend / totalSpend) * 100 : 0;
 
     const procROI = savingsRealized > 0 ? savingsRealized / Math.max(totalSpend * 0.03, 1) : 0;
