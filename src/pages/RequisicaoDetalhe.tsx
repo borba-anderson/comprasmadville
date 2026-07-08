@@ -255,7 +255,28 @@ export default function RequisicaoDetalhe() {
 
   const updateStatus = async (newStatus: RequisicaoStatus, motivo?: string) => {
     if (!requisicao) return;
-    
+
+    // ────────────────────────────────────────────────────────────
+    // Regra obrigatória: para marcar como COMPRADO, ambos os
+    // valores devem estar preenchidos. Sem eles os indicadores
+    // ficam distorcidos, então bloqueamos a transição.
+    // ────────────────────────────────────────────────────────────
+    if (newStatus === 'comprado') {
+      const orcado = requisicao.valor_orcado;
+      const pago = requisicao.valor;
+      const missing: string[] = [];
+      if (!orcado || orcado <= 0) missing.push('Valor Orçado');
+      if (!pago || pago <= 0) missing.push('Valor Pago');
+      if (missing.length > 0) {
+        toast({
+          title: 'Dados financeiros obrigatórios',
+          description: `Preencha ${missing.join(' e ')} antes de finalizar a compra. Os indicadores dependem desses valores.`,
+          variant: 'destructive',
+        });
+        return;
+      }
+    }
+
     try {
       setIsUpdating(true);
 
