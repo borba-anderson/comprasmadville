@@ -43,6 +43,7 @@ interface KPIData {
   status: TrafficLight;
   icon: React.ElementType;
   description: string;
+  tooltipKey?: keyof typeof METRIC_TOOLTIPS;
 }
 
 const STATUS_COLORS: Record<TrafficLight, { dot: string; bg: string; text: string; ring: string }> = {
