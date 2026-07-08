@@ -265,8 +265,9 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h4 className="font-semibold text-slate-900 text-[15px]">Inteligência Preditiva</h4>
+                <MetricTooltip {...METRIC_TOOLTIPS.previsao} periodo={`Últimos ${horizon} meses`} />
                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-[0.1em] uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   IA · Modelo ativo
@@ -275,9 +276,19 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
                   <Gauge className="w-3 h-3" />
                   Confiança {confidence}%
                 </span>
+                <Select value={String(horizon)} onValueChange={(v) => setHorizon(Number(v) as ForecastHorizon)}>
+                  <SelectTrigger className="h-6 w-[130px] text-[11px] px-2 py-0 border-slate-200 bg-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3" className="text-xs">Horizonte: 3 meses</SelectItem>
+                    <SelectItem value="6" className="text-xs">Horizonte: 6 meses</SelectItem>
+                    <SelectItem value="12" className="text-xs">Horizonte: 12 meses</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Regressão linear · Banda de confiança · Detecção de anomalias · 6M histórico
+                {methodologyLabel} · Tendência {trendPerMonth >= 0 ? '+' : ''}{formatCurrency(Math.round(trendPerMonth))}/mês
               </p>
             </div>
           </div>
