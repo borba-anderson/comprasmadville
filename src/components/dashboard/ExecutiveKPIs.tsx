@@ -16,6 +16,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  aggregateEconomia,
+  aggregateGasto,
+  getValorPago,
+  AVOIDED_STATUSES,
+  METRIC_TOOLTIPS,
+} from '@/lib/procurementMetrics';
+import { MetricTooltip } from './MetricTooltip';
 
 interface ExecutiveKPIsProps {
   requisicoes: Requisicao[];
