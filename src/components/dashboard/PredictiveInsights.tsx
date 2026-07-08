@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Requisicao } from "@/types";
 import {
   Brain,
@@ -24,6 +24,20 @@ import {
   ReferenceLine,
   ReferenceDot,
 } from "recharts";
+import {
+  runForecast,
+  aggregateEconomia,
+  ForecastHorizon,
+  METRIC_TOOLTIPS,
+} from "@/lib/procurementMetrics";
+import { MetricTooltip } from "./MetricTooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PredictiveInsightsProps {
   requisicoes: Requisicao[];
@@ -40,6 +54,174 @@ type ForecastPoint = {
   isCurrent: boolean;
   isFuture: boolean;
 };
+
+export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
+  const [horizon, setHorizon] = useState<ForecastHorizon>(12);
+
+  const {
+    forecast,
+    anomalies,
+    insights,
+    riskScore,
+    riskBreakdown,
+    supplierTrend,
+    nextMonthValue,
+    monthOverMonth,
+    confidence,
+    currentMonthProjection,
+    currentMonthActual,
+    monthProgressPct,
+    methodologyLabel,
+    trendPerMonth,
+  } = useMemo(() => {
+    const now = new Date();
+
+    // ============================================================
+    // MODELO PREDITIVO — ver src/lib/procurementMetrics.ts
+    // Combina: Média Móvel Ponderada + Regressão Linear (OLS) +
+    // Sazonalidade (quando horizonte ≥ 12m).
+    // ============================================================
+    const model = runForecast(requisicoes, horizon, 3);
+
+    const forecastData: ForecastPoint[] = model.series.map((p) => ({
+      month: p.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+      fullLabel: p.date.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
+      actual: p.realized,
+      projected: p.currentProjection,
+      forecast: p.forecast,
+      bandLow: p.lowerBand,
+      bandHigh: p.upperBand,
+      isCurrent: p.isCurrent,
+      isFuture: p.isFuture,
+    }));
+
+    // Conecta a linha realizada→projeção→previsão (evita "quebra" visual)
+    const currentIdx = forecastData.findIndex((f) => f.isCurrent);
+    if (currentIdx > 0) {
+      forecastData[currentIdx - 1].projected = forecastData[currentIdx - 1].actual;
+    }
+    if (currentIdx >= 0) {
+      forecastData[currentIdx].forecast = forecastData[currentIdx].projected;
+    }
+
+    // ---------- Anomalias (Z-score > 1.5 no histórico fechado) ----------
+    const closed = model.history.slice(0, -1);
+    const mean = closed.reduce((s, p) => s + p.spend, 0) / Math.max(1, closed.length);
+    const variance =
+      closed.reduce((s, p) => s + (p.spend - mean) ** 2, 0) / Math.max(1, closed.length);
+    const stdDev = Math.sqrt(variance);
+    const anomalyList = closed
+      .filter((p) => stdDev > 0 && Math.abs(p.spend - mean) > stdDev * 1.5 && p.spend > 0)
+      .map((p) => ({
+        month: p.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+        spend: p.spend,
+        deviation: mean > 0 ? ((p.spend - mean) / mean) * 100 : 0,
+      }));
+
+    // ---------- Insights ----------
+    const insightList: { text: string; type: "positive" | "negative" | "neutral" }[] = [];
+    if (model.trendPerMonth > 0) {
+      insightList.push({
+        text: `Tendência de alta: +${formatCurrency(Math.abs(model.trendPerMonth))}/mês`,
+        type: "negative",
+      });
+    } else if (model.trendPerMonth < 0) {
+      insightList.push({
+        text: `Tendência de queda: ${formatCurrency(Math.abs(model.trendPerMonth))}/mês economizados`,
+        type: "positive",
+      });
+    }
+
+    // Supplier risk
+    const overdueBySupplier = new Map<string, number>();
+    requisicoes.forEach((r) => {
+      if (
+        r.fornecedor_nome &&
+        r.previsao_entrega &&
+        !["recebido", "rejeitado", "cancelado"].includes(r.status)
+      ) {
+        if (new Date(r.previsao_entrega) < now) {
+          overdueBySupplier.set(
+            r.fornecedor_nome,
+            (overdueBySupplier.get(r.fornecedor_nome) || 0) + 1,
+          );
+        }
+      }
+    });
+    const supplierTrendList = Array.from(overdueBySupplier.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({ name, count }));
+
+    if (supplierTrendList.length > 0) {
+      insightList.push({
+        text: `${supplierTrendList.length} fornecedor(es) com atrasos recorrentes`,
+        type: "negative",
+      });
+    }
+
+    const pendingCount = requisicoes.filter((r) => r.status === "pendente").length;
+    if (pendingCount > 10) {
+      insightList.push({
+        text: `${pendingCount} pendências podem virar gargalo de aprovação`,
+        type: "negative",
+      });
+    }
+
+    // Economia via lib central (mesma base do card "Economia")
+    const econ = aggregateEconomia(requisicoes);
+    if (econ.percentualEconomia > 5) {
+      insightList.push({
+        text: `Economia consistente: ${econ.percentualEconomia.toFixed(1)}% abaixo do orçado`,
+        type: "positive",
+      });
+    }
+
+    // ---------- Risk score ----------
+    const overdueRatio =
+      requisicoes.length > 0
+        ? requisicoes.filter((r) => {
+            if (!r.previsao_entrega || ["recebido", "rejeitado", "cancelado"].includes(r.status))
+              return false;
+            return new Date(r.previsao_entrega) < now;
+          }).length / requisicoes.length
+        : 0;
+    const pendingRatio = requisicoes.length > 0 ? pendingCount / requisicoes.length : 0;
+    const supplierRisk = Math.min(supplierTrendList.length / 3, 1);
+    const spendRisk = model.trendPerMonth > 0 ? Math.min(model.trendPerMonth / (mean || 1), 1) : 0;
+
+    const score = Math.round(
+      overdueRatio * 40 + pendingRatio * 20 + supplierRisk * 25 + spendRisk * 15,
+    );
+
+    const breakdown = [
+      { label: "Atrasos", value: Math.round(overdueRatio * 100), weight: 40 },
+      { label: "Pendências", value: Math.round(pendingRatio * 100), weight: 20 },
+      { label: "Fornecedores", value: Math.round(supplierRisk * 100), weight: 25 },
+      { label: "Gastos", value: Math.round(spendRisk * 100), weight: 15 },
+    ];
+
+    const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const monthProgress = now.getDate() / daysInCurrentMonth;
+
+    return {
+      forecast: forecastData,
+      anomalies: anomalyList,
+      insights: insightList,
+      riskScore: score,
+      riskBreakdown: breakdown,
+      supplierTrend: supplierTrendList,
+      nextMonthValue: Math.round(model.nextMonthForecast),
+      monthOverMonth: model.momVariation,
+      confidence: model.confidence,
+      currentMonthProjection: Math.round(model.currentMonthProjection),
+      currentMonthActual: Math.round(model.currentMonthRealized),
+      monthProgressPct: Math.round(monthProgress * 100),
+      methodologyLabel: model.methodologyLabel,
+      trendPerMonth: model.trendPerMonth,
+    };
+  }, [requisicoes, horizon]);
+
 
 export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
   const {
