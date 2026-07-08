@@ -101,10 +101,18 @@ export function EconomiaSummary({ requisicoes }: EconomiaSummaryProps) {
         <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
           <PiggyBank className="w-5 h-5 text-emerald-600" />
         </div>
-        <div>
-          <h3 className="font-semibold">Economia Gerada pelo Setor de Compras</h3>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold">Economia Gerada pelo Setor de Compras</h3>
+            <MetricTooltip {...METRIC_TOOLTIPS.economia} />
+          </div>
           <p className="text-sm text-muted-foreground">
             {reqComEconomia.length} {reqComEconomia.length === 1 ? 'compra analisada' : 'compras analisadas'}
+            {registrosIncompletos > 0 && (
+              <span className="ml-2 text-amber-600">
+                • {registrosIncompletos} sem dados financeiros completos
+              </span>
+            )}
           </p>
         </div>
       </div>
