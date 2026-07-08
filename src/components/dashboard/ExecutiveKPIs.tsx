@@ -212,7 +212,10 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
                     <p className="text-[32px] font-semibold tracking-[-0.02em] num-tabular leading-none text-slate-900 pl-1" title={kpi.fullValue}>
                       {kpi.value}
                     </p>
-                    <p className="text-[12px] font-medium text-slate-600 mt-2 pl-1">{kpi.title}</p>
+                    <div className="flex items-center gap-1.5 mt-2 pl-1">
+                      <p className="text-[12px] font-medium text-slate-600">{kpi.title}</p>
+                      {kpi.tooltipKey && <MetricTooltip {...METRIC_TOOLTIPS[kpi.tooltipKey]} />}
+                    </div>
 
                     {kpi.target && (
                       <div className="flex items-center gap-1.5 mt-3 pl-1">
