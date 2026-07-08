@@ -7,16 +7,21 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import {
+  aggregateEconomia,
+  hasCompleteFinancialData,
+  METRIC_TOOLTIPS,
+} from '@/lib/procurementMetrics';
+import { MetricTooltip } from './MetricTooltip';
 
 interface EconomiaSummaryProps {
   requisicoes: Requisicao[];
 }
 
 export function EconomiaSummary({ requisicoes }: EconomiaSummaryProps) {
-  // Filter requisitions that have both valores
-  const reqComEconomia = requisicoes.filter(
-    r => r.valor_orcado && r.valor_orcado > 0 && r.valor && r.valor > 0
-  );
+  // Fonte única: filtragem por dados financeiros completos (orçado + pago em compras efetivadas)
+  const reqComEconomia = requisicoes.filter(hasCompleteFinancialData);
+  const registrosIncompletos = requisicoes.length - reqComEconomia.length;
 
   if (reqComEconomia.length === 0) {
     return (
@@ -27,27 +32,30 @@ export function EconomiaSummary({ requisicoes }: EconomiaSummaryProps) {
           </div>
           <div>
             <h3 className="font-semibold">Economia Gerada</h3>
-            <p className="text-sm text-muted-foreground">Comparativo orçado vs negociado</p>
+            <p className="text-sm text-muted-foreground">Comparativo orçado vs pago</p>
           </div>
         </div>
         <div className="text-center py-8 text-muted-foreground">
           <PiggyBank className="w-12 h-12 mx-auto mb-3 opacity-20" />
-          <p className="text-sm">Nenhuma requisição com valor orçado e negociado registrado</p>
-          <p className="text-xs mt-1">Registre os valores para visualizar a economia</p>
+          <p className="text-sm">Nenhuma compra com Valor Orçado e Valor Pago registrados</p>
+          <p className="text-xs mt-1">
+            {registrosIncompletos > 0
+              ? `${registrosIncompletos} requisição(ões) sem dados financeiros completos`
+              : 'Registre os valores para visualizar a economia'}
+          </p>
         </div>
       </Card>
     );
   }
 
-  // Calculate totals
-  const totalOrcado = reqComEconomia.reduce((sum, r) => sum + (r.valor_orcado || 0), 0);
-  const totalNegociado = reqComEconomia.reduce((sum, r) => sum + (r.valor || 0), 0);
-  const economiaTotal = totalOrcado - totalNegociado;
-  const economiaPercentual = totalOrcado > 0 ? (economiaTotal / totalOrcado) * 100 : 0;
-
-  // Count positive vs negative savings
-  const comEconomia = reqComEconomia.filter(r => (r.valor_orcado || 0) > (r.valor || 0)).length;
-  const comAcrescimo = reqComEconomia.filter(r => (r.valor_orcado || 0) < (r.valor || 0)).length;
+  // Cálculos oficiais (fonte: procurementMetrics.aggregateEconomia)
+  const agg = aggregateEconomia(reqComEconomia);
+  const totalOrcado = agg.totalOrcado;
+  const totalNegociado = agg.totalPago;
+  const economiaTotal = agg.economiaTotal;
+  const economiaPercentual = agg.percentualEconomia;
+  const comEconomia = agg.comEconomia;
+  const comAcrescimo = agg.comAcrescimo;
 
   // Prepare data for chart by sector
   const economiaBySetor = reqComEconomia.reduce((acc, r) => {
@@ -93,10 +101,18 @@ export function EconomiaSummary({ requisicoes }: EconomiaSummaryProps) {
         <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
           <PiggyBank className="w-5 h-5 text-emerald-600" />
         </div>
-        <div>
-          <h3 className="font-semibold">Economia Gerada pelo Setor de Compras</h3>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold">Economia Gerada pelo Setor de Compras</h3>
+            <MetricTooltip {...METRIC_TOOLTIPS.economia} />
+          </div>
           <p className="text-sm text-muted-foreground">
             {reqComEconomia.length} {reqComEconomia.length === 1 ? 'compra analisada' : 'compras analisadas'}
+            {registrosIncompletos > 0 && (
+              <span className="ml-2 text-amber-600">
+                • {registrosIncompletos} sem dados financeiros completos
+              </span>
+            )}
           </p>
         </div>
       </div>

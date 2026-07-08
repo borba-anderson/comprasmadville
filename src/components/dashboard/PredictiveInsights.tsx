@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Requisicao } from "@/types";
 import {
   Brain,
@@ -24,6 +24,20 @@ import {
   ReferenceLine,
   ReferenceDot,
 } from "recharts";
+import {
+  runForecast,
+  aggregateEconomia,
+  ForecastHorizon,
+  METRIC_TOOLTIPS,
+} from "@/lib/procurementMetrics";
+import { MetricTooltip } from "./MetricTooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PredictiveInsightsProps {
   requisicoes: Requisicao[];
@@ -42,6 +56,8 @@ type ForecastPoint = {
 };
 
 export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
+  const [horizon, setHorizon] = useState<ForecastHorizon>(12);
+
   const {
     forecast,
     anomalies,
@@ -55,125 +71,63 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
     currentMonthProjection,
     currentMonthActual,
     monthProgressPct,
+    methodologyLabel,
+    trendPerMonth,
   } = useMemo(() => {
     const now = new Date();
 
-    // ---------- Monthly spend (últimos 6 meses, incluindo o vigente) ----------
-    const monthlySpend: { month: string; fullLabel: string; spend: number; count: number }[] = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-      const monthReqs = requisicoes.filter((r) => {
-        const created = new Date(r.created_at);
-        return created >= d && created < nextMonth;
-      });
-      monthlySpend.push({
-        month: d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
-        fullLabel: d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
-        spend: monthReqs.reduce((s, r) => s + (r.valor || 0), 0),
-        count: monthReqs.length,
-      });
+    // ============================================================
+    // MODELO PREDITIVO — ver src/lib/procurementMetrics.ts
+    // Combina: Média Móvel Ponderada + Regressão Linear (OLS) +
+    // Sazonalidade (quando horizonte ≥ 12m).
+    // ============================================================
+    const model = runForecast(requisicoes, horizon, 3);
+
+    const forecastData: ForecastPoint[] = model.series.map((p) => ({
+      month: p.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+      fullLabel: p.date.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
+      actual: p.realized,
+      projected: p.currentProjection,
+      forecast: p.forecast,
+      bandLow: p.lowerBand,
+      bandHigh: p.upperBand,
+      isCurrent: p.isCurrent,
+      isFuture: p.isFuture,
+    }));
+
+    // Conecta a linha realizada→projeção→previsão (evita "quebra" visual)
+    const currentIdx = forecastData.findIndex((f) => f.isCurrent);
+    if (currentIdx > 0) {
+      forecastData[currentIdx - 1].projected = forecastData[currentIdx - 1].actual;
+    }
+    if (currentIdx >= 0) {
+      forecastData[currentIdx].forecast = forecastData[currentIdx].projected;
     }
 
-    // ---------- Regressão linear (para tendência) ----------
-    const n = monthlySpend.length;
-    const xSum = monthlySpend.reduce((s, _, i) => s + i, 0);
-    const ySum = monthlySpend.reduce((s, d) => s + d.spend, 0);
-    const xySum = monthlySpend.reduce((s, d, i) => s + i * d.spend, 0);
-    const x2Sum = monthlySpend.reduce((s, _, i) => s + i * i, 0);
-    const slope = n > 1 ? (n * xySum - xSum * ySum) / (n * x2Sum - xSum * xSum) : 0;
-    const intercept = n > 0 ? (ySum - slope * xSum) / n : 0;
-
-    // Coeficiente de determinação (R²) — confiança do modelo
-    const meanY = n > 0 ? ySum / n : 0;
-    const ssTot = monthlySpend.reduce((s, d) => s + Math.pow(d.spend - meanY, 2), 0);
-    const ssRes = monthlySpend.reduce(
-      (s, d, i) => s + Math.pow(d.spend - (intercept + slope * i), 2),
-      0,
-    );
-    const r2 = ssTot > 0 ? Math.max(0, 1 - ssRes / ssTot) : 0;
-    const confidencePct = Math.round(r2 * 100);
-
-    // ---------- Progresso do mês vigente ----------
-    const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const dayOfMonth = now.getDate();
-    const monthProgress = Math.min(1, Math.max(0.05, dayOfMonth / daysInCurrentMonth));
-    const currentActual = monthlySpend[n - 1]?.spend ?? 0;
-    const trendPredicted = Math.max(0, intercept + slope * (n - 1));
-    // Projeção do mês vigente = 60% extrapolação linear × 40% tendência
-    const currentProjected = Math.round(
-      (currentActual / monthProgress) * 0.6 + trendPredicted * 0.4,
-    );
-
-    // ---------- Desvio padrão para banda de confiança ----------
-    const residualStd = Math.sqrt(ssRes / Math.max(1, n - 1));
-
-    // ---------- Série do gráfico (realizado + projeção + previsão + banda) ----------
-    const forecastData: ForecastPoint[] = monthlySpend.map((d, i) => {
-      const isCurrent = i === n - 1;
-      return {
-        month: d.month,
-        fullLabel: d.fullLabel,
-        actual: isCurrent ? null : d.spend,
-        projected: isCurrent ? currentProjected : null,
-        forecast: null,
-        bandLow: null,
-        bandHigh: null,
-        isCurrent,
-        isFuture: false,
-      };
-    });
-    // conecta a linha realizada até o mês vigente
-    if (n >= 2) forecastData[n - 2].projected = monthlySpend[n - 2].spend;
-
-    // Próximos 3 meses (previsão pura + banda)
-    for (let i = 1; i <= 3; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-      const predicted = Math.max(0, intercept + slope * (n - 1 + i));
-      const spread = residualStd * (1 + i * 0.25);
-      forecastData.push({
-        month: d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
-        fullLabel: d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }),
-        actual: null,
-        projected: null,
-        forecast: Math.round(predicted),
-        bandLow: Math.max(0, Math.round(predicted - spread)),
-        bandHigh: Math.round(predicted + spread),
-        isCurrent: false,
-        isFuture: true,
-      });
-    }
-    // conecta linha de previsão ao ponto projetado do mês vigente
-    forecastData[n - 1].forecast = currentProjected;
-
-    const nextMonth = Math.max(0, intercept + slope * n);
-    const prevMonthSpend = monthlySpend[n - 2]?.spend ?? 0;
-    const momPct =
-      prevMonthSpend > 0
-        ? ((currentProjected - prevMonthSpend) / prevMonthSpend) * 100
-        : 0;
-
-    // ---------- Anomalias ----------
-    const stdDev = Math.sqrt(ssTot / Math.max(1, n));
-    const anomalyList = monthlySpend
-      .slice(0, n - 1) // ignora mês vigente incompleto
-      .filter((d) => Math.abs(d.spend - meanY) > stdDev * 1.5 && d.spend > 0)
-      .map((d) => ({
-        month: d.month,
-        spend: d.spend,
-        deviation: ((d.spend - meanY) / meanY) * 100,
+    // ---------- Anomalias (Z-score > 1.5 no histórico fechado) ----------
+    const closed = model.history.slice(0, -1);
+    const mean = closed.reduce((s, p) => s + p.spend, 0) / Math.max(1, closed.length);
+    const variance =
+      closed.reduce((s, p) => s + (p.spend - mean) ** 2, 0) / Math.max(1, closed.length);
+    const stdDev = Math.sqrt(variance);
+    const anomalyList = closed
+      .filter((p) => stdDev > 0 && Math.abs(p.spend - mean) > stdDev * 1.5 && p.spend > 0)
+      .map((p) => ({
+        month: p.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+        spend: p.spend,
+        deviation: mean > 0 ? ((p.spend - mean) / mean) * 100 : 0,
       }));
 
     // ---------- Insights ----------
     const insightList: { text: string; type: "positive" | "negative" | "neutral" }[] = [];
-    if (slope > 0) {
+    if (model.trendPerMonth > 0) {
       insightList.push({
-        text: `Tendência de alta: +${formatCurrency(Math.abs(slope))}/mês`,
+        text: `Tendência de alta: +${formatCurrency(Math.abs(model.trendPerMonth))}/mês`,
         type: "negative",
       });
-    } else if (slope < 0) {
+    } else if (model.trendPerMonth < 0) {
       insightList.push({
-        text: `Tendência de queda: ${formatCurrency(Math.abs(slope))}/mês economizados`,
+        text: `Tendência de queda: ${formatCurrency(Math.abs(model.trendPerMonth))}/mês economizados`,
         type: "positive",
       });
     }
@@ -214,15 +168,11 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       });
     }
 
-    const withBoth = requisicoes.filter(
-      (r) => r.valor_orcado && r.valor && r.valor > 0 && r.valor_orcado > 0,
-    );
-    const totalBudget = withBoth.reduce((s, r) => s + (r.valor_orcado || 0), 0);
-    const totalActual = withBoth.reduce((s, r) => s + (r.valor || 0), 0);
-    const savingsPct = totalBudget > 0 ? ((totalBudget - totalActual) / totalBudget) * 100 : 0;
-    if (savingsPct > 5) {
+    // Economia via lib central (mesma base do card "Economia")
+    const econ = aggregateEconomia(requisicoes);
+    if (econ.percentualEconomia > 5) {
       insightList.push({
-        text: `Economia consistente: ${savingsPct.toFixed(1)}% abaixo do orçado`,
+        text: `Economia consistente: ${econ.percentualEconomia.toFixed(1)}% abaixo do orçado`,
         type: "positive",
       });
     }
@@ -238,7 +188,7 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         : 0;
     const pendingRatio = requisicoes.length > 0 ? pendingCount / requisicoes.length : 0;
     const supplierRisk = Math.min(supplierTrendList.length / 3, 1);
-    const spendRisk = slope > 0 ? Math.min(slope / (meanY || 1), 1) : 0;
+    const spendRisk = model.trendPerMonth > 0 ? Math.min(model.trendPerMonth / (mean || 1), 1) : 0;
 
     const score = Math.round(
       overdueRatio * 40 + pendingRatio * 20 + supplierRisk * 25 + spendRisk * 15,
@@ -251,6 +201,9 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       { label: "Gastos", value: Math.round(spendRisk * 100), weight: 15 },
     ];
 
+    const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const monthProgress = now.getDate() / daysInCurrentMonth;
+
     return {
       forecast: forecastData,
       anomalies: anomalyList,
@@ -258,14 +211,17 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
       riskScore: score,
       riskBreakdown: breakdown,
       supplierTrend: supplierTrendList,
-      nextMonthValue: Math.round(nextMonth),
-      monthOverMonth: momPct,
-      confidence: confidencePct,
-      currentMonthProjection: currentProjected,
-      currentMonthActual: currentActual,
+      nextMonthValue: Math.round(model.nextMonthForecast),
+      monthOverMonth: model.momVariation,
+      confidence: model.confidence,
+      currentMonthProjection: Math.round(model.currentMonthProjection),
+      currentMonthActual: Math.round(model.currentMonthRealized),
       monthProgressPct: Math.round(monthProgress * 100),
+      methodologyLabel: model.methodologyLabel,
+      trendPerMonth: model.trendPerMonth,
     };
-  }, [requisicoes]);
+  }, [requisicoes, horizon]);
+
 
   const riskLevel = riskScore >= 60 ? "high" : riskScore >= 30 ? "medium" : "low";
   const riskCfg = {
@@ -309,8 +265,9 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h4 className="font-semibold text-slate-900 text-[15px]">Inteligência Preditiva</h4>
+                <MetricTooltip {...METRIC_TOOLTIPS.previsao} periodo={`Últimos ${horizon} meses`} />
                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-[0.1em] uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   IA · Modelo ativo
@@ -319,9 +276,19 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
                   <Gauge className="w-3 h-3" />
                   Confiança {confidence}%
                 </span>
+                <Select value={String(horizon)} onValueChange={(v) => setHorizon(Number(v) as ForecastHorizon)}>
+                  <SelectTrigger className="h-6 w-[130px] text-[11px] px-2 py-0 border-slate-200 bg-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3" className="text-xs">Horizonte: 3 meses</SelectItem>
+                    <SelectItem value="6" className="text-xs">Horizonte: 6 meses</SelectItem>
+                    <SelectItem value="12" className="text-xs">Horizonte: 12 meses</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Regressão linear · Banda de confiança · Detecção de anomalias · 6M histórico
+                {methodologyLabel} · Tendência {trendPerMonth >= 0 ? '+' : ''}{formatCurrency(Math.round(trendPerMonth))}/mês
               </p>
             </div>
           </div>
