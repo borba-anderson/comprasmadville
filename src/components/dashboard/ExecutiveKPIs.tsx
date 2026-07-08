@@ -105,6 +105,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         status: (spendTrend > 10 ? 'red' : spendTrend > 0 ? 'yellow' : 'green') as TrafficLight,
         icon: DollarSign,
         description: 'Gasto total no período analisado',
+        tooltipKey: 'gastoTotal',
       },
       {
         title: 'Economia Realizada',
@@ -115,6 +116,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         status: (savingsPct >= 10 ? 'green' : savingsPct >= 5 ? 'yellow' : 'red') as TrafficLight,
         icon: PiggyBank,
         description: 'Economia negociada vs orçado',
+        tooltipKey: 'economia',
       },
       {
         title: 'Custo Evitado',
@@ -125,6 +127,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
         status: (costAvoidance > 0 ? 'green' : 'yellow') as TrafficLight,
         icon: ShieldCheck,
         description: 'Custo evitado (rejeitados/cancelados)',
+        tooltipKey: 'custoEvitado',
       },
       {
         title: 'Compras Gerenciadas',
