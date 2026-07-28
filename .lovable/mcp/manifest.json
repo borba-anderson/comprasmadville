@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://hfpcpdzpcmsgjvjxbkls.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "requisicoes-compras-mcp",
+      "version": "0.1.0",
+      "title": "Requisições de Compras"
+    },
+    "tools": [
+      {
+        "name": "listar_requisicoes",
+        "title": "Listar requisições",
+        "description": "Lista as requisições de compra visíveis para o usuário conectado, com filtros opcionais por status, prioridade, setor, empresa e texto livre.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "pendente",
+                "em_analise",
+                "aprovado",
+                "cotando",
+                "comprado",
+                "em_entrega",
+                "recebido",
+                "rejeitado",
+                "cancelado"
+              ],
+              "description": "Filtrar por status da requisição."
+            },
+            "prioridade": {
+              "type": "string",
+              "enum": [
+                "ALTA",
+                "MEDIA",
+                "BAIXA"
+              ],
+              "description": "Filtrar por prioridade."
+            },
+            "setor": {
+              "type": "string",
+              "description": "Filtrar pelo setor/departamento do solicitante."
+            },
+            "empresa": {
+              "type": "string",
+              "description": "Filtrar pela empresa do solicitante."
+            },
+            "busca": {
+              "type": "string",
+              "description": "Texto livre buscado no nome do item ou protocolo."
+            },
+            "limite": {
+              "type": "integer",
+              "description": "Quantidade máxima de registros (padrão 20, máximo 100)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "detalhe_requisicao",
+        "title": "Detalhe da requisição",
+        "description": "Retorna todos os dados de uma requisição específica, buscada pelo protocolo (ex.: REQ-000123) ou pelo ID.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "protocolo": {
+              "type": "string",
+              "description": "Protocolo da requisição, ex.: REQ-000123."
+            },
+            "id": {
+              "type": "string",
+              "description": "ID (UUID) da requisição."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "criar_requisicao",
+        "title": "Criar requisição de compra",
+        "description": "Cria uma nova requisição de compra em nome do usuário conectado. O protocolo é gerado automaticamente pelo sistema.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "item_nome": {
+              "type": "string",
+              "description": "Nome do item ou serviço solicitado."
+            },
+            "quantidade": {
+              "type": "number",
+              "description": "Quantidade solicitada."
+            },
+            "unidade": {
+              "type": "string",
+              "description": "Unidade de medida, ex.: Unidade, Caixa, Metro."
+            },
+            "justificativa": {
+              "type": "string",
+              "description": "Justificativa da compra (mínimo 50 caracteres)."
+            },
+            "solicitante_nome": {
+              "type": "string",
+              "description": "Nome completo do solicitante."
+            },
+            "solicitante_email": {
+              "type": "string",
+              "description": "E-mail do solicitante."
+            },
+            "solicitante_setor": {
+              "type": "string",
+              "description": "Setor/departamento do solicitante, ex.: Compras, Endomarketing, TI."
+            },
+            "solicitante_empresa": {
+              "type": "string",
+              "description": "Empresa do solicitante."
+            },
+            "solicitante_telefone": {
+              "type": "string",
+              "description": "Telefone do solicitante."
+            },
+            "prioridade": {
+              "type": "string",
+              "enum": [
+                "ALTA",
+                "MEDIA",
+                "BAIXA"
+              ],
+              "description": "Prioridade (padrão MEDIA)."
+            },
+            "especificacoes": {
+              "type": "string",
+              "description": "Especificações técnicas adicionais."
+            },
+            "centro_custo": {
+              "type": "string",
+              "description": "Centro de custo."
+            }
+          },
+          "required": [
+            "item_nome",
+            "quantidade",
+            "unidade",
+            "justificativa",
+            "solicitante_nome",
+            "solicitante_email",
+            "solicitante_setor"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "adicionar_comentario",
+        "title": "Comentar em uma requisição",
+        "description": "Adiciona um comentário a uma requisição existente, identificada por protocolo ou ID.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "protocolo": {
+              "type": "string",
+              "description": "Protocolo da requisição, ex.: REQ-000123."
+            },
+            "id": {
+              "type": "string",
+              "description": "ID (UUID) da requisição."
+            },
+            "mensagem": {
+              "type": "string",
+              "description": "Texto do comentário."
+            },
+            "autor_nome": {
+              "type": "string",
+              "description": "Nome de quem está comentando."
+            }
+          },
+          "required": [
+            "mensagem",
+            "autor_nome"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "resumo_compras",
+        "title": "Resumo de compras",
+        "description": "Retorna indicadores agregados das requisições visíveis: contagem por status, valor total comprado, valor orçado e economia estimada em um período.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "dias": {
+              "type": "integer",
+              "description": "Janela em dias a considerar a partir de hoje (padrão 30)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
