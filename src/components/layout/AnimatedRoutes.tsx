@@ -25,6 +25,8 @@ export function AnimatedRoutes() {
         <Route path="/painel/:id" element={<RequisicaoDetalhe />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/alterar-senha" element={<AlterarSenha />} />
+        <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
