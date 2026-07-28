@@ -7,7 +7,9 @@ import RequisicaoDetalhe from '@/pages/RequisicaoDetalhe';
 import Usuarios from '@/pages/Usuarios';
 import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
+import OAuthConsent from '@/pages/OAuthConsent';
 import NotFound from '@/pages/NotFound';
+
 
 export function AnimatedRoutes() {
   const location = useLocation();
