@@ -50,7 +50,13 @@ export default function Auth() {
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
-  const redirectUrl = searchParams.get("redirect") || "/painel";
+  const rawRedirect = searchParams.get("redirect");
+  // Aceita apenas caminhos relativos da própria aplicação
+  const redirectUrl =
+    rawRedirect && rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
+      ? rawRedirect
+      : "/painel";
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
