@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import type { ToolContext } from "@lovable.dev/mcp-js";
 
+declare const process: { env: Record<string, string | undefined> };
+
+
 /**
  * Cliente Supabase autenticado como o usuário do token OAuth.
  * O token é encaminhado para que as políticas de RLS sejam aplicadas
