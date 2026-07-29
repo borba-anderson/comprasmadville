@@ -57,31 +57,33 @@ const Index = () => {
           <LogoMarquee />
 
           {/* GREETING + STATS */}
-          <section className="px-6 md:px-12 pt-14 pb-6">
+          <section className="page-shell pt-16 pb-8">
             <UserGreeting />
             <QuickStats />
           </section>
 
           {/* ACTION CARDS */}
-          <section className="px-6 md:px-12 pb-16">
+          <section className="page-shell pb-20">
             <ActionCards />
           </section>
 
-          <footer className="py-10 text-center border-t border-slate-100 px-4">
-            <p className="text-slate-500 text-xs font-medium">
-              © 2026 GMAD Madville | Curitiba — Central de Compras
-            </p>
-            <p className="text-slate-400 text-[11px] mt-2">
-              Versão Beta 2.1 · Suporte:{" "}
-              <a
-                href="https://wa.me/5547992189824"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-success hover:underline font-semibold"
-              >
-                WhatsApp
-              </a>
-            </p>
+          <footer className="mt-4 border-t border-subtle">
+            <div className="page-shell py-10 text-center">
+              <p className="text-tertiary-fg text-xs font-medium">
+                © 2026 GMAD Madville | Curitiba — Central de Compras
+              </p>
+              <p className="text-quaternary-fg text-[11px] mt-2">
+                Versão Beta 2.1 · Suporte:{" "}
+                <a
+                  href="https://wa.me/5547992189824"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-medium"
+                >
+                  WhatsApp
+                </a>
+              </p>
+            </div>
           </footer>
         </main>
       </div>
