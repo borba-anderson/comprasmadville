@@ -270,7 +270,7 @@ export default function Painel() {
 
           {!isReadOnly && (
             <TabsContent value="dashboard">
-              <div className="bg-white text-slate-900 rounded-xl p-4 shadow-lg">
+              <div className="surface-card p-5 sm:p-6">
                 <GastosDashboard requisicoes={requisicoes} />
               </div>
             </TabsContent>
