@@ -1063,7 +1063,7 @@ Qualquer dúvida, estamos à disposição!`;
   const economia = calculateEconomia(requisicao.valor_orcado, requisicao.valor);
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-[hsl(var(--surface-2))]">
       {/* Loading Overlay */}
       {isAnyLoading && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
@@ -1076,12 +1076,10 @@ Qualquer dúvida, estamos à disposição!`;
 
       <Header />
 
-      {/* Green accent bar */}
-      <div className="h-1 bg-success" />
-
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      <main className="page-shell-narrow py-8">
         {/* Breadcrumb */}
-        <Breadcrumb className="mb-4">
+        <Breadcrumb className="mb-5">
+
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
