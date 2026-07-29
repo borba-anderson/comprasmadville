@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { LogoMarquee, UserGreeting, QuickStats, ActionCards } from "@/components/home";
 import { HeroComposition } from "@/components/home/HeroComposition";
 
