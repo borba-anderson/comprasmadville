@@ -2,6 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { LogoMarquee, UserGreeting, QuickStats, ActionCards } from "@/components/home";
 import { HeroComposition } from "@/components/home/HeroComposition";
 
@@ -9,51 +10,43 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white relative overflow-x-hidden font-sans selection:bg-emerald-100 selection:text-emerald-900">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-      `}</style>
-
+    <div className="min-h-screen bg-background relative overflow-x-hidden font-sans selection:bg-primary/10 selection:text-primary">
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-20%] right-[-10%] w-[700px] h-[700px] bg-success/[0.04] rounded-full blur-3xl" />
-        <div className="absolute bottom-[-30%] left-[-10%] w-[600px] h-[600px] bg-slate-100/60 rounded-full blur-3xl" />
+        <div className="absolute top-[-25%] right-[-12%] w-[720px] h-[720px] bg-primary/[0.035] rounded-full blur-3xl" />
+        <div className="absolute bottom-[-30%] left-[-12%] w-[620px] h-[620px] bg-[hsl(var(--surface-3))]/70 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10">
         <Header />
 
-        <main className="max-w-[1280px] mx-auto">
+        <main>
           {/* HERO */}
-          <section className="px-6 md:px-12 pt-12 sm:pt-20 pb-10 grid lg:grid-cols-2 gap-10 items-center">
+          <section className="page-shell pt-16 sm:pt-24 pb-14 grid lg:grid-cols-[1fr_1.05fr] gap-14 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-success/[0.08] border border-success/15 text-[11px] font-semibold tracking-[0.12em] text-success uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+              <div className="inline-flex items-center gap-2 mb-7 px-2.5 py-1 rounded-full border border-[hsl(var(--border-subtle))] bg-[hsl(var(--surface-2))] text-[11px] font-medium tracking-[0.06em] text-tertiary-fg uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 Procurement Intelligence
               </div>
 
-              <h1 className="font-jakarta text-[2.25rem] sm:text-[3rem] lg:text-[3.5rem] font-bold text-slate-900 mb-6 tracking-[-0.025em] leading-[1.05]">
+              <h1 className="text-[2.5rem] sm:text-[3.25rem] font-semibold text-[hsl(var(--text-primary))] mb-6 tracking-[-0.035em] leading-[1.04]">
                 Central inteligente<br />de compras.
               </h1>
 
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
+              <p className="text-secondary-fg text-[16px] sm:text-[17px] leading-relaxed max-w-[30rem] mb-9">
                 Mais controle, previsibilidade e inteligência operacional para sua cadeia de compras —
                 decisões orientadas por dados em tempo real.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link to={user ? "/operacoes" : "/auth"}>
-                  <button className="group bg-success hover:bg-success/90 text-white text-sm font-semibold px-6 py-3.5 rounded-full shadow-sm transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
+                <Button asChild size="lg" className="group">
+                  <Link to={user ? "/operacoes" : "/auth"}>
                     Abrir Command Center
                     <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-                  </button>
-                </Link>
-                <Link to="/painel">
-                  <button className="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 text-sm font-semibold px-6 py-3.5 rounded-full transition-all hover:bg-slate-50 w-full sm:w-auto">
-                    Ver requisições
-                  </button>
-                </Link>
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/painel">Ver requisições</Link>
+                </Button>
               </div>
             </div>
 
@@ -64,31 +57,33 @@ const Index = () => {
           <LogoMarquee />
 
           {/* GREETING + STATS */}
-          <section className="px-6 md:px-12 pt-14 pb-6">
+          <section className="page-shell pt-16 pb-8">
             <UserGreeting />
             <QuickStats />
           </section>
 
           {/* ACTION CARDS */}
-          <section className="px-6 md:px-12 pb-16">
+          <section className="page-shell pb-20">
             <ActionCards />
           </section>
 
-          <footer className="py-10 text-center border-t border-slate-100 px-4">
-            <p className="text-slate-500 text-xs font-medium">
-              © 2026 GMAD Madville | Curitiba — Central de Compras
-            </p>
-            <p className="text-slate-400 text-[11px] mt-2">
-              Versão Beta 2.1 · Suporte:{" "}
-              <a
-                href="https://wa.me/5547992189824"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-success hover:underline font-semibold"
-              >
-                WhatsApp
-              </a>
-            </p>
+          <footer className="mt-4 border-t border-subtle">
+            <div className="page-shell py-10 text-center">
+              <p className="text-tertiary-fg text-xs font-medium">
+                © 2026 GMAD Madville | Curitiba — Central de Compras
+              </p>
+              <p className="text-quaternary-fg text-[11px] mt-2">
+                Versão Beta 2.1 · Suporte:{" "}
+                <a
+                  href="https://wa.me/5547992189824"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-medium"
+                >
+                  WhatsApp
+                </a>
+              </p>
+            </div>
           </footer>
         </main>
       </div>

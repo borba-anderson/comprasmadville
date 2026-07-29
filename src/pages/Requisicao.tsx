@@ -543,14 +543,12 @@ export default function Requisicao() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/30 via-background to-background">
-      <div className="h-1 bg-success w-full" />
-      <div className="border-b border-border/60 bg-background/80 backdrop-blur-sm">
-        <Header />
-      </div>
-      <main className="page-container">
+    <div className="min-h-screen bg-[hsl(var(--surface-2))]">
+      <Header />
+      <main className="page-shell py-8">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-7">
+
             <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground text-sm transition-colors">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Voltar ao início

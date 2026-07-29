@@ -43,17 +43,17 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-subtle bg-background/85 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
-        <div className="flex h-14 items-center px-4 md:px-6 gap-2">
-          {showSidebarTrigger && <SidebarTrigger className="mr-2" />}
+      <header className="sticky top-0 z-50 w-full border-b border-subtle bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65">
+        <div className="flex h-16 items-center px-5 sm:px-8 lg:px-10 gap-3">
+          {showSidebarTrigger && <SidebarTrigger className="mr-1" />}
 
-          <Link to="/" className="flex items-center gap-2 mr-4 shrink-0">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <Logo size="sm" showText={true} />
           </Link>
 
           {/* Primary nav — desktop */}
           {user && (
-            <nav className="hidden md:flex items-center gap-0.5">
+            <nav className="hidden md:flex items-center gap-1 ml-8">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.to);
@@ -62,13 +62,13 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
                     key={item.to}
                     to={item.to}
                     className={cn(
-                      "inline-flex items-center gap-1.5 px-3 h-8 rounded-md text-[13px] font-medium transition-colors",
+                      "relative inline-flex items-center gap-2 px-3 h-9 rounded-lg text-[13px] font-medium tracking-[-0.006em] transition-colors duration-150",
                       active
                         ? "text-primary-fg bg-[hsl(var(--surface-3))]"
-                        : "text-secondary-fg hover:text-primary-fg hover:bg-[hsl(var(--surface-2))]"
+                        : "text-tertiary-fg hover:text-primary-fg hover:bg-[hsl(var(--surface-2))]"
                     )}
                   >
-                    <Icon className="w-3.5 h-3.5" />
+                    <Icon className={cn("w-4 h-4", active ? "opacity-90" : "opacity-60")} strokeWidth={1.75} />
                     {item.label}
                   </Link>
                 );

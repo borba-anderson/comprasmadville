@@ -336,25 +336,19 @@ export default function Usuarios() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Green accent bar at top */}
-      <div className="h-1 bg-success w-full" />
-      <div className="border-b border-success/20">
-        <Header />
-      </div>
+    <div className="min-h-screen bg-[hsl(var(--surface-2))]">
+      <Header />
 
-      <main className="max-w-[1400px] mx-auto px-4 py-6">
+      <main className="page-shell py-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Users className="w-6 h-6 text-primary" />
-              Gestão de Usuários
-            </h1>
-            <p className="text-muted-foreground text-sm mt-1">
+            <h1 className="page-title">Gestão de usuários</h1>
+            <p className="page-subtitle mt-1.5">
               Gerencie permissões, gestores e configurações dos usuários
             </p>
           </div>
+
 
           <div className="flex items-center gap-2">
             <Button
