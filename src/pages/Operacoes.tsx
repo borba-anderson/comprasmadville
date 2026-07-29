@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Requisicao } from "@/types";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { DecisionKPI } from "@/components/intelligence/DecisionKPI";
 import { AIInsightInline, InsightVariant } from "@/components/intelligence/AIInsightInline";
 import { PriorityDecisions } from "@/components/operacoes/PriorityDecisions";
