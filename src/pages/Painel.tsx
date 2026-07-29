@@ -205,28 +205,29 @@ export default function Painel() {
           <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
         </div>
 
-        <Tabs defaultValue="requisicoes" className="space-y-4">
-          <TabsList className="bg-white border shadow-sm text-slate-600">
+        <Tabs defaultValue="requisicoes" className="space-y-5">
+          <TabsList className="bg-[hsl(var(--surface-3))]/60 border border-[hsl(var(--border-subtle))] p-1 h-10 text-tertiary-fg">
             <TabsTrigger
               value="requisicoes"
-              className="gap-2 data-[state=active]:bg-slate-100 data-[state=active]:text-[#107c50]"
+              className="gap-2 text-[13px] rounded-md data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-[var(--shadow-elegant-sm)]"
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-4 h-4" strokeWidth={1.75} />
               {isReadOnly ? "Minhas Requisições" : "Requisições"}
             </TabsTrigger>
             {!isReadOnly && (
               <TabsTrigger
                 value="dashboard"
-                className="gap-2 data-[state=active]:bg-slate-100 data-[state=active]:text-[#107c50]"
+                className="gap-2 text-[13px] rounded-md data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-[var(--shadow-elegant-sm)]"
               >
-                <DollarSign className="w-4 h-4" />
+                <DollarSign className="w-4 h-4" strokeWidth={1.75} />
                 Dashboard
               </TabsTrigger>
             )}
           </TabsList>
 
           <TabsContent value="requisicoes" className="space-y-0">
-            <div className="bg-white text-slate-900 rounded-xl border border-success/20 overflow-hidden shadow-lg">
+            <div className="surface-card overflow-hidden">
+
               <FiltersBar
                 filters={filters}
                 onFilterChange={updateFilter}
