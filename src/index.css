@@ -1066,4 +1066,65 @@
       radial-gradient(at 100% 0%, hsl(220 80% 50% / 0.03) 0px, transparent 50%),
       hsl(var(--surface-1));
   }
+
+  /* ==================== LAYOUT SYSTEM — grid e espaçamento padronizados ==================== */
+  /* Container único para todas as páginas internas */
+  .page-shell {
+    @apply w-full mx-auto px-5 sm:px-8 lg:px-10;
+    max-width: 1400px;
+  }
+  .page-shell-narrow {
+    @apply w-full mx-auto px-5 sm:px-8;
+    max-width: 1080px;
+  }
+
+  /* Cabeçalho de página consistente */
+  .page-header {
+    @apply flex flex-col gap-1.5 pt-8 pb-6 sm:pt-10 sm:pb-8;
+  }
+  .page-title {
+    @apply text-[26px] sm:text-[30px] font-semibold leading-[1.15];
+    letter-spacing: -0.025em;
+    color: hsl(var(--text-primary));
+  }
+  .page-subtitle {
+    @apply text-[14px] leading-relaxed;
+    color: hsl(var(--text-tertiary));
+  }
+
+  /* Ritmo vertical padronizado entre seções */
+  .stack-section > * + * { margin-top: 2rem; }
+  .stack-lg > * + * { margin-top: 1.5rem; }
+  .stack-md > * + * { margin-top: 1rem; }
+
+  /* Grade de métricas padrão */
+  .metric-grid {
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4;
+  }
+
+  /* Superfície de conteúdo — sombra discreta + hairline */
+  .surface-card {
+    @apply rounded-xl bg-card border;
+    border-color: hsl(var(--border-subtle));
+    box-shadow: var(--shadow-elegant-sm);
+  }
+
+  /* Rótulos de dados */
+  .data-label {
+    @apply text-[11px] font-medium uppercase;
+    letter-spacing: 0.06em;
+    color: hsl(var(--text-quaternary));
+  }
+  .data-value {
+    @apply text-[26px] font-semibold leading-none;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: hsl(var(--text-primary));
+  }
+
+  /* Divisor hairline horizontal */
+  .divider-hairline {
+    height: 1px;
+    background: hsl(var(--border-subtle));
+  }
 }
