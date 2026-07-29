@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail, Eye, EyeOff, Lock } from 'lucide-react';
+import { Users, Search, RefreshCw, Shield, Building, UserCog, Check, Loader2, KeyRound, Mail, Eye, EyeOff, Lock } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
