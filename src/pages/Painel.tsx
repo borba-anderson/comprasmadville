@@ -173,129 +173,36 @@ export default function Painel() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Green accent bar at top */}
-      <div className="h-1 bg-success w-full" />
-      <style>
-        {`
-          /* Substituir TODAS as cores laranja por verde - Abordagem agressiva */
-          
-          /* Todos os backgrounds laranja */
-          *[class*="bg-orange"],
-          *[style*="background-color: rgb(249, 115, 22)"],
-          *[style*="background-color: rgb(251, 146, 60)"],
-          *[style*="background: rgb(249, 115, 22)"],
-          *[style*="background: rgb(251, 146, 60)"] {
-            background-color: #10b981 !important;
-            background: #10b981 !important;
-          }
-          
-          /* Todos os textos laranja */
-          *[class*="text-orange"] {
-            color: #10b981 !important;
-          }
-          
-          /* Todas as bordas laranja */
-          *[class*="border-orange"] {
-            border-color: #10b981 !important;
-          }
-          
-          /* Todos os hovers laranja */
-          *[class*="hover:bg-orange"]:hover {
-            background-color: #059669 !important;
-            background: #059669 !important;
-          }
-          
-          *[class*="hover:text-orange"]:hover {
-            color: #059669 !important;
-          }
-          
-          *[class*="hover:border-orange"]:hover {
-            border-color: #059669 !important;
-          }
-          
-          /* Ring/outline laranja */
-          *[class*="ring-orange"] {
-            --tw-ring-color: #10b981 !important;
-          }
-          
-          /* Focus laranja */
-          *[class*="focus:bg-orange"]:focus {
-            background-color: #10b981 !important;
-          }
-          
-          *[class*="focus:border-orange"]:focus {
-            border-color: #10b981 !important;
-          }
-          
-          *[class*="focus:ring-orange"]:focus {
-            --tw-ring-color: #10b981 !important;
-          }
-        `}
-      </style>
-      <div className="bg-white sticky top-0 z-50 shadow-sm border-b border-success/20">
-        <Header />
-      </div>
+    <div className="min-h-screen bg-[hsl(var(--surface-2))]">
+      <Header />
 
-      <main className="max-w-[1600px] mx-auto px-4 py-4">
+      <main className="page-shell py-8">
+        <div className="page-header !pt-0 !pb-6">
+          <h1 className="page-title">{isReadOnly ? "Minhas requisições" : "Painel de requisições"}</h1>
+          <p className="page-subtitle">
+            {isReadOnly
+              ? "Acompanhe o andamento das suas solicitações de compra."
+              : "Visão consolidada do fluxo de compras e indicadores operacionais."}
+          </p>
+        </div>
+
         {isReadOnly && (
-          <div className="mb-4 p-3 bg-white rounded-lg flex items-center gap-2 shadow-sm border-l-4 border-blue-600 text-slate-700">
-            <FileText className="w-5 h-5 text-blue-600" />
-            <span className="text-sm">
-              <strong>Modo visualização:</strong> Você está vendo apenas as suas requisições.
+          <div className="mb-6 px-4 py-3 surface-card flex items-center gap-2.5 text-secondary-fg">
+            <FileText className="w-4 h-4 text-blue-600 shrink-0" strokeWidth={1.75} />
+            <span className="text-[13px]">
+              <strong className="font-medium">Modo visualização:</strong> Você está vendo apenas as suas requisições.
             </span>
           </div>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
-          <StatsCard
-            title="Total"
-            value={stats.total}
-            icon={FileText}
-            className="col-span-1 bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Pendentes"
-            value={stats.pendente}
-            variant="warning"
-            icon={Clock}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Em Análise"
-            value={stats.em_analise}
-            variant="info"
-            icon={TrendingUp}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Aprovados"
-            value={stats.aprovado}
-            variant="success"
-            icon={CheckCircle}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Cotando"
-            value={stats.cotando}
-            variant="primary"
-            icon={Package}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Comprados"
-            value={stats.comprado}
-            variant="success"
-            icon={ShoppingCart}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
-          <StatsCard
-            title="Rejeitados"
-            value={stats.rejeitado}
-            variant="danger"
-            icon={XCircle}
-            className="bg-white text-slate-900 shadow-sm border-none"
-          />
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
+          <StatsCard title="Total" value={stats.total} icon={FileText} />
+          <StatsCard title="Pendentes" value={stats.pendente} variant="warning" icon={Clock} />
+          <StatsCard title="Em Análise" value={stats.em_analise} variant="info" icon={TrendingUp} />
+          <StatsCard title="Aprovados" value={stats.aprovado} variant="success" icon={CheckCircle} />
+          <StatsCard title="Cotando" value={stats.cotando} variant="primary" icon={Package} />
+          <StatsCard title="Comprados" value={stats.comprado} variant="success" icon={ShoppingCart} />
+          <StatsCard title="Rejeitados" value={stats.rejeitado} variant="danger" icon={XCircle} />
         </div>
 
         <Tabs defaultValue="requisicoes" className="space-y-4">
