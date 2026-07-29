@@ -5,33 +5,35 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[13px] font-medium tracking-[-0.006em] transition-[background-color,box-shadow,border-color,color] duration-150 outline-none focus-visible:ring-[3px] focus-visible:ring-primary/20 focus-visible:border-primary/40 disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0",
+          "bg-primary text-primary-foreground shadow-[inset_0_1px_0_0_hsl(0_0%_100%/0.12),var(--shadow-elegant-sm)] hover:bg-primary/92 active:bg-primary/85",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:shadow-lg",
+          "bg-destructive text-destructive-foreground shadow-[var(--shadow-elegant-sm)] hover:bg-destructive/90",
         outline:
-          "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground hover:border-primary/50",
+          "border border-[hsl(var(--border-strong))] bg-card text-[hsl(var(--text-secondary))] shadow-[var(--shadow-elegant-sm)] hover:bg-[hsl(var(--surface-2))] hover:text-[hsl(var(--text-primary))]",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-[hsl(var(--surface-3))] text-[hsl(var(--text-primary))] hover:bg-[hsl(var(--surface-3))]/70",
+        ghost:
+          "text-[hsl(var(--text-secondary))] hover:bg-[hsl(var(--surface-2))] hover:text-[hsl(var(--text-primary))]",
         link: "text-primary underline-offset-4 hover:underline",
         // Custom variants for Madville
-        hero: "bg-primary text-primary-foreground shadow-primary hover:shadow-xl hover:-translate-y-1 hover:bg-primary/95 active:translate-y-0",
-        success: "bg-success text-success-foreground shadow-md hover:bg-success/90",
-        warning: "bg-warning text-warning-foreground shadow-md hover:bg-warning/90",
-        info: "bg-info text-info-foreground shadow-md hover:bg-info/90",
-        "outline-primary": "border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground",
+        hero: "bg-primary text-primary-foreground shadow-[inset_0_1px_0_0_hsl(0_0%_100%/0.14),var(--shadow-tint-primary)] hover:bg-primary/92",
+        success: "bg-success text-success-foreground shadow-[var(--shadow-elegant-sm)] hover:bg-success/90",
+        warning: "bg-warning text-warning-foreground shadow-[var(--shadow-elegant-sm)] hover:bg-warning/90",
+        info: "bg-info text-info-foreground shadow-[var(--shadow-elegant-sm)] hover:bg-info/90",
+        "outline-primary":
+          "border border-primary/30 text-primary bg-primary/[0.04] hover:bg-primary/10",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-12 rounded-lg px-8 text-base",
-        xl: "h-14 rounded-xl px-10 text-lg",
-        icon: "h-10 w-10",
+        default: "h-9 px-3.5",
+        sm: "h-8 rounded-md px-3 text-[12.5px]",
+        lg: "h-11 rounded-lg px-6 text-sm",
+        xl: "h-12 rounded-xl px-8 text-[15px]",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: {
