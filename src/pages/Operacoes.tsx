@@ -326,47 +326,40 @@ export default function Operacoes() {
     <div className="min-h-screen bg-[hsl(var(--surface-2))]">
       <Header />
 
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-6 sm:py-10">
+      <main className="page-shell py-8 sm:py-10">
         {/* Hero strip */}
-        <header className="mb-7 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <header className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 mb-3 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/70 text-[11px] font-semibold tracking-wide text-emerald-700 uppercase">
+            <div className="inline-flex items-center gap-2 mb-3.5 px-2.5 py-1 rounded-full bg-primary/[0.06] border border-primary/15 text-[11px] font-medium tracking-[0.06em] text-primary uppercase">
               <span className="relative flex w-1.5 h-1.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75 animate-ping" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
               </span>
-              Live · Procurement Command Center
-              <span className="text-emerald-600/70 normal-case font-normal tracking-normal ml-1">
+              Live · Command Center
+              <span className="text-primary/60 normal-case font-normal tracking-normal ml-1">
                 atualizado {timeAgo(lastUpdate)}
               </span>
             </div>
-            <h1 className="text-[28px] sm:text-[34px] font-semibold tracking-tight text-slate-900 leading-tight">
-              Inteligência operacional <span className="text-slate-400">de compras</span>
+            <h1 className="page-title">
+              Inteligência operacional <span className="text-quaternary-fg">de compras</span>
             </h1>
-            <p className="text-[13px] text-slate-500 mt-1.5 max-w-xl">
+            <p className="page-subtitle mt-2 max-w-xl">
               Decisões prioritárias, eventos vivos e contexto inteligente — uma única central executiva.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate("/painel")}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-slate-200 bg-white text-[12.5px] font-medium text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-colors"
-            >
+          <div className="flex items-center gap-2.5">
+            <Button variant="outline" onClick={() => navigate("/painel")}>
               Ver todas requisições
               <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => navigate("/requisicao")}
-              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[12.5px] font-semibold shadow-sm transition-colors"
-            >
-              Nova requisição
-            </button>
+            </Button>
+            <Button onClick={() => navigate("/requisicao")}>Nova requisição</Button>
           </div>
         </header>
 
         {/* Decision KPIs - decisórios, não meramente informativos */}
-        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-7">
+        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+
           <DecisionKPI
             label="Em aberto"
             value={metrics.abertas.toString()}
