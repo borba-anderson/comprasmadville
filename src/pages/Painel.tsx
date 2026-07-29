@@ -166,8 +166,8 @@ export default function Painel() {
 
   if (authLoading || !rolesLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="spinner w-8 h-8 border-[#107c50]" />
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--surface-2))]">
+        <div className="spinner w-8 h-8 border-primary" />
       </div>
     );
   }
