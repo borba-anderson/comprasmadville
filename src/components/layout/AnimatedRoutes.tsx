@@ -25,6 +25,8 @@ export function AnimatedRoutes() {
 
         <Route path="/requisicao" element={<AppShell><Requisicao /></AppShell>} />
         <Route path="/operacoes" element={<AppShell><Operacoes /></AppShell>} />
+        <Route path="/workspace" element={<AppShell><Workspace /></AppShell>} />
+        <Route path="/orcamento-inteligente" element={<AppShell><OrcamentoInteligente /></AppShell>} />
         <Route path="/painel" element={<AppShell><Painel /></AppShell>} />
         <Route path="/painel/:id" element={<AppShell><RequisicaoDetalhe /></AppShell>} />
         <Route path="/usuarios" element={<AppShell><Usuarios /></AppShell>} />
