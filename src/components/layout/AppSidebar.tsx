@@ -26,6 +26,8 @@ export function AppSidebar() {
     { title: "Início", url: "/", icon: Home, show: true },
     { title: "Operações", url: "/operacoes", icon: Activity, show: true },
     { title: "Painel", url: "/painel", icon: LayoutGrid, show: isStaff },
+    { title: "Workspace", url: "/workspace", icon: Columns3, show: isStaff },
+    { title: "Orçamento Inteligente", url: "/orcamento-inteligente", icon: Sparkles, show: isStaff },
     { title: "Nova requisição", url: "/requisicao", icon: Plus, show: true },
   ].filter((i) => i.show);
 
