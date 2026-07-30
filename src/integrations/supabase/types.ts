@@ -104,6 +104,47 @@ export type Database = {
           },
         ]
       }
+      orcamento_analises: {
+        Row: {
+          created_at: string
+          criado_por: string | null
+          fornecedores: Json
+          id: string
+          requisicao_id: string | null
+          resumo: Json | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por?: string | null
+          fornecedores?: Json
+          id?: string
+          requisicao_id?: string | null
+          resumo?: Json | null
+          titulo?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: string | null
+          fornecedores?: Json
+          id?: string
+          requisicao_id?: string | null
+          resumo?: Json | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orcamento_analises_requisicao_id_fkey"
+            columns: ["requisicao_id"]
+            isOneToOne: false
+            referencedRelation: "requisicoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           ativo: boolean | null
@@ -161,6 +202,7 @@ export type Database = {
           arquivo_nome: string | null
           arquivo_url: string | null
           centro_custo: string | null
+          checklist: Json
           comprado_em: string | null
           comprador_id: string | null
           comprador_nome: string | null
@@ -172,6 +214,7 @@ export type Database = {
           id: string
           item_nome: string
           justificativa: string
+          kanban_stage: string | null
           motivo_compra: string | null
           motivo_rejeicao: string | null
           observacao_comprador: string | null
@@ -199,6 +242,7 @@ export type Database = {
           arquivo_nome?: string | null
           arquivo_url?: string | null
           centro_custo?: string | null
+          checklist?: Json
           comprado_em?: string | null
           comprador_id?: string | null
           comprador_nome?: string | null
@@ -210,6 +254,7 @@ export type Database = {
           id?: string
           item_nome: string
           justificativa: string
+          kanban_stage?: string | null
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
           observacao_comprador?: string | null
@@ -237,6 +282,7 @@ export type Database = {
           arquivo_nome?: string | null
           arquivo_url?: string | null
           centro_custo?: string | null
+          checklist?: Json
           comprado_em?: string | null
           comprador_id?: string | null
           comprador_nome?: string | null
@@ -248,6 +294,7 @@ export type Database = {
           id?: string
           item_nome?: string
           justificativa?: string
+          kanban_stage?: string | null
           motivo_compra?: string | null
           motivo_rejeicao?: string | null
           observacao_comprador?: string | null
