@@ -9,7 +9,7 @@ import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
 import OAuthConsent from '@/pages/OAuthConsent';
 import NotFound from '@/pages/NotFound';
-
+import { AppShell } from '@/components/layout/AppShell';
 
 export function AnimatedRoutes() {
   const location = useLocation();
@@ -19,13 +19,14 @@ export function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/requisicao" element={<Requisicao />} />
-        <Route path="/operacoes" element={<Operacoes />} />
-        <Route path="/painel" element={<Painel />} />
-        <Route path="/painel/:id" element={<RequisicaoDetalhe />} />
-        <Route path="/usuarios" element={<Usuarios />} />
-        <Route path="/alterar-senha" element={<AlterarSenha />} />
         <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+
+        <Route path="/requisicao" element={<AppShell><Requisicao /></AppShell>} />
+        <Route path="/operacoes" element={<AppShell><Operacoes /></AppShell>} />
+        <Route path="/painel" element={<AppShell><Painel /></AppShell>} />
+        <Route path="/painel/:id" element={<AppShell><RequisicaoDetalhe /></AppShell>} />
+        <Route path="/usuarios" element={<AppShell><Usuarios /></AppShell>} />
+        <Route path="/alterar-senha" element={<AppShell><AlterarSenha /></AppShell>} />
 
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
@@ -33,3 +34,4 @@ export function AnimatedRoutes() {
     </div>
   );
 }
+

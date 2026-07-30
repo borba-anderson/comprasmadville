@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Send, FileText, Loader2, CheckCircle2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/layout/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { RequisicaoPrioridade } from "@/types";
@@ -389,7 +388,6 @@ export default function Requisicao() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-success/5 via-background to-background">
         <div className="h-1 bg-success w-full" />
-        <Header />
         <main className="page-container">
           <div className="max-w-2xl mx-auto animate-fade-in">
             {/* Hero confirmation */}
@@ -544,7 +542,6 @@ export default function Requisicao() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface-2))]">
-      <Header />
       <main className="page-shell py-8">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-7">

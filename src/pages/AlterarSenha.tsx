@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, KeyRound, Loader2, ArrowLeft, Check, Lock } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -101,7 +100,6 @@ export default function AlterarSenha() {
   if (!user) {
     return (
       <div className="min-h-screen bg-muted/30">
-        <Header />
         <main className="max-w-md mx-auto px-4 py-12">
           <Card>
             <CardContent className="py-8 text-center">
@@ -121,7 +119,6 @@ export default function AlterarSenha() {
       {/* Green accent bar at top */}
       <div className="h-1 bg-success w-full" />
       <div className="border-b border-success/20">
-        <Header />
       </div>
 
       <main className="max-w-md mx-auto px-4 py-12">

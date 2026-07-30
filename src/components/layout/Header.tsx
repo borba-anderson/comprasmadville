@@ -18,9 +18,11 @@ import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   showSidebarTrigger?: boolean;
+  /** Em telas com sidebar, esconde a navegação duplicada do topo */
+  compact?: boolean;
 }
 
-export function Header({ showSidebarTrigger = false }: HeaderProps) {
+export function Header({ showSidebarTrigger = false, compact = false }: HeaderProps) {
   const { user, profile, roles, signOut, isStaff, isAdmin } = useAuth();
   const { pathname } = useLocation();
   const { open, setOpen } = useCommandPalette();
@@ -43,16 +45,18 @@ export function Header({ showSidebarTrigger = false }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-subtle bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65">
+      <header className="sticky top-0 z-50 w-full border-b border-[hsl(var(--border-subtle))] bg-background/75 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-16 items-center px-5 sm:px-8 lg:px-10 gap-3">
           {showSidebarTrigger && <SidebarTrigger className="mr-1" />}
 
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <Logo size="sm" showText={true} />
-          </Link>
+          {!compact && (
+            <Link to="/" className="flex items-center gap-2 shrink-0">
+              <Logo size="sm" showText={true} />
+            </Link>
+          )}
 
-          {/* Primary nav — desktop */}
-          {user && (
+          {/* Primary nav — desktop (oculta quando há sidebar) */}
+          {user && !compact && (
             <nav className="hidden md:flex items-center gap-1 ml-8">
               {navItems.map((item) => {
                 const Icon = item.icon;
