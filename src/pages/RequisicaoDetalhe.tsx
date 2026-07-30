@@ -14,7 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PriorityBadge } from '@/components/PriorityBadge';
-import { Header } from '@/components/layout/Header';
 import { RequisicaoTimeline, BuyerSelector, FornecedorSelector, DeliveryDatePicker, ValueHistoryList } from '@/components/requisicao';
 import { Requisicao, RequisicaoStatus, RequisicaoPrioridade, STATUS_CONFIG, PRIORIDADE_CONFIG, ValorHistorico, FORMAS_PAGAMENTO, AuditLog } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -1037,7 +1036,6 @@ Qualquer dúvida, estamos à disposição!`;
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
           <Loader2 className="w-8 h-8 animate-spin text-success" />
         </div>
@@ -1048,7 +1046,6 @@ Qualquer dúvida, estamos à disposição!`;
   if (!requisicao) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] text-muted-foreground">
           <FileText className="w-16 h-16 mb-4 opacity-50" />
           <p className="text-lg">Requisição não encontrada</p>
@@ -1074,7 +1071,6 @@ Qualquer dúvida, estamos à disposição!`;
         </div>
       )}
 
-      <Header />
 
       <main className="page-shell-narrow py-8">
         {/* Breadcrumb */}

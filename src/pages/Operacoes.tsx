@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Requisicao } from "@/types";
@@ -325,7 +324,6 @@ export default function Operacoes() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface-2))]">
-      <Header />
 
       <main className="page-shell py-8 sm:py-10">
         {/* Hero strip */}

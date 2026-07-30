@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, DollarSign } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Header } from "@/components/layout/Header";
 import { StatsCard } from "@/components/StatsCard";
 import { GastosDashboard } from "@/components/dashboard";
 import {
@@ -174,7 +173,6 @@ export default function Painel() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface-2))]">
-      <Header />
 
       <main className="page-shell py-8">
         <div className="page-header !pt-0 !pb-6">
