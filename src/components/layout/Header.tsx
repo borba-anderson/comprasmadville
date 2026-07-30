@@ -18,9 +18,11 @@ import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   showSidebarTrigger?: boolean;
+  /** Em telas com sidebar, esconde a navegação duplicada do topo */
+  compact?: boolean;
 }
 
-export function Header({ showSidebarTrigger = false }: HeaderProps) {
+export function Header({ showSidebarTrigger = false, compact = false }: HeaderProps) {
   const { user, profile, roles, signOut, isStaff, isAdmin } = useAuth();
   const { pathname } = useLocation();
   const { open, setOpen } = useCommandPalette();
