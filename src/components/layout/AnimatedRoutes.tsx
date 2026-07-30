@@ -7,6 +7,8 @@ import RequisicaoDetalhe from '@/pages/RequisicaoDetalhe';
 import Usuarios from '@/pages/Usuarios';
 import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
+import Workspace from '@/pages/Workspace';
+import OrcamentoInteligente from '@/pages/OrcamentoInteligente';
 import OAuthConsent from '@/pages/OAuthConsent';
 import NotFound from '@/pages/NotFound';
 import { AppShell } from '@/components/layout/AppShell';
