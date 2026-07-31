@@ -9,6 +9,8 @@ import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
 import Workspace from '@/pages/Workspace';
 import OrcamentoInteligente from '@/pages/OrcamentoInteligente';
+import CotacaoInteligente from '@/pages/CotacaoInteligente';
+import Tasks from '@/pages/Tasks';
 import OAuthConsent from '@/pages/OAuthConsent';
 import NotFound from '@/pages/NotFound';
 import { AppShell } from '@/components/layout/AppShell';
