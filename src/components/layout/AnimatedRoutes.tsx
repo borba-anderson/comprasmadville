@@ -9,6 +9,8 @@ import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
 import Workspace from '@/pages/Workspace';
 import OrcamentoInteligente from '@/pages/OrcamentoInteligente';
+import CotacaoInteligente from '@/pages/CotacaoInteligente';
+import Tasks from '@/pages/Tasks';
 import OAuthConsent from '@/pages/OAuthConsent';
 import NotFound from '@/pages/NotFound';
 import { AppShell } from '@/components/layout/AppShell';
@@ -27,6 +29,8 @@ export function AnimatedRoutes() {
         <Route path="/operacoes" element={<AppShell><Operacoes /></AppShell>} />
         <Route path="/workspace" element={<AppShell><Workspace /></AppShell>} />
         <Route path="/orcamento-inteligente" element={<AppShell><OrcamentoInteligente /></AppShell>} />
+        <Route path="/cotacao-inteligente" element={<AppShell><CotacaoInteligente /></AppShell>} />
+        <Route path="/tasks" element={<AppShell><Tasks /></AppShell>} />
         <Route path="/painel" element={<AppShell><Painel /></AppShell>} />
         <Route path="/painel/:id" element={<AppShell><RequisicaoDetalhe /></AppShell>} />
         <Route path="/usuarios" element={<AppShell><Usuarios /></AppShell>} />

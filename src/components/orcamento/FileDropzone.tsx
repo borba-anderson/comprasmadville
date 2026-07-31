@@ -13,6 +13,9 @@ interface FileDropzoneProps {
   onAdd: (files: File[]) => void;
   onRemove: (id: string) => void;
   disabled?: boolean;
+  multiple?: boolean;
+  title?: string;
+  subtitle?: string;
 }
 
 const ACCEPT = '.pdf,.xlsx,.xls,.csv,.png,.jpg,.jpeg,.webp';
@@ -24,16 +27,25 @@ const iconFor = (name: string) => {
   return ImageIcon;
 };
 
-export function FileDropzone({ files, onAdd, onRemove, disabled }: FileDropzoneProps) {
+export function FileDropzone({
+  files,
+  onAdd,
+  onRemove,
+  disabled,
+  multiple = true,
+  title = 'Arraste os orçamentos dos fornecedores',
+  subtitle = 'PDF, Excel (xlsx/xls/csv) ou imagens · múltiplos arquivos',
+}: FileDropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
 
   const handleFiles = useCallback(
     (list: FileList | null) => {
       if (!list) return;
-      onAdd(Array.from(list));
+      const arr = Array.from(list);
+      onAdd(multiple ? arr : arr.slice(0, 1));
     },
-    [onAdd]
+    [onAdd, multiple]
   );
 
   return (
@@ -58,15 +70,15 @@ export function FileDropzone({ files, onAdd, onRemove, disabled }: FileDropzoneP
       >
         <FileUp className="h-6 w-6 text-primary" strokeWidth={1.75} />
         <p className="mt-3 text-[14px] font-medium text-[hsl(var(--text-primary))]">
-          Arraste os orçamentos dos fornecedores
+          {title}
         </p>
         <p className="mt-1 text-[12px] text-[hsl(var(--text-tertiary))]">
-          PDF, Excel (xlsx/xls/csv) ou imagens · múltiplos arquivos
+          {subtitle}
         </p>
         <input
           ref={inputRef}
           type="file"
-          multiple
+          multiple={multiple}
           accept={ACCEPT}
           className="hidden"
           onChange={(e) => {
