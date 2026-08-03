@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, Sparkles, FileSearch, ListTodo } from "lucide-react";
+import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, ScanSearch, FileSearch, ListTodo } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
