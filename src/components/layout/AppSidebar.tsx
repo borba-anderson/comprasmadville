@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, Sparkles, FileSearch, ListTodo } from "lucide-react";
+import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, ScanSearch, FileSearch, ListTodo } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -27,8 +27,8 @@ export function AppSidebar() {
     { title: "Operações", url: "/operacoes", icon: Activity, show: true },
     { title: "Painel", url: "/painel", icon: LayoutGrid, show: isStaff },
     { title: "Workspace", url: "/workspace", icon: Columns3, show: isStaff },
-    { title: "Orçamento Inteligente", url: "/orcamento-inteligente", icon: Sparkles, show: isStaff },
     { title: "Cotação Inteligente", url: "/cotacao-inteligente", icon: FileSearch, show: isStaff },
+    { title: "Auditoria", url: "/auditoria", icon: ScanSearch, show: isStaff },
     { title: "Tasks", url: "/tasks", icon: ListTodo, show: true },
     { title: "Nova requisição", url: "/requisicao", icon: Plus, show: true },
   ].filter((i) => i.show);

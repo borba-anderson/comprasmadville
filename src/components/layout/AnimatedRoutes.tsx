@@ -8,7 +8,7 @@ import Usuarios from '@/pages/Usuarios';
 import AlterarSenha from '@/pages/AlterarSenha';
 import Operacoes from '@/pages/Operacoes';
 import Workspace from '@/pages/Workspace';
-import OrcamentoInteligente from '@/pages/OrcamentoInteligente';
+import Auditoria from '@/pages/Auditoria';
 import CotacaoInteligente from '@/pages/CotacaoInteligente';
 import Tasks from '@/pages/Tasks';
 import OAuthConsent from '@/pages/OAuthConsent';
@@ -28,7 +28,8 @@ export function AnimatedRoutes() {
         <Route path="/requisicao" element={<AppShell><Requisicao /></AppShell>} />
         <Route path="/operacoes" element={<AppShell><Operacoes /></AppShell>} />
         <Route path="/workspace" element={<AppShell><Workspace /></AppShell>} />
-        <Route path="/orcamento-inteligente" element={<AppShell><OrcamentoInteligente /></AppShell>} />
+        <Route path="/auditoria" element={<AppShell><Auditoria /></AppShell>} />
+        <Route path="/orcamento-inteligente" element={<AppShell><Auditoria /></AppShell>} />
         <Route path="/cotacao-inteligente" element={<AppShell><CotacaoInteligente /></AppShell>} />
         <Route path="/tasks" element={<AppShell><Tasks /></AppShell>} />
         <Route path="/painel" element={<AppShell><Painel /></AppShell>} />
