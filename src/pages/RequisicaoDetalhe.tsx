@@ -1854,6 +1854,31 @@ Qualquer dúvida, estamos à disposição!`;
                   <CardTitle className="text-lg">Ações Rápidas</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Alterar status manualmente (avançar ou retornar) */}
+                  <div className="space-y-1.5 pb-3 border-b">
+                    <Label className="text-xs text-muted-foreground">Alterar status manualmente</Label>
+                    <Select
+                      value={requisicao.status}
+                      onValueChange={(v) => updateStatus(v as RequisicaoStatus)}
+                      disabled={isUpdating}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(Object.keys(STATUS_CONFIG) as RequisicaoStatus[]).map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {STATUS_CONFIG[s].label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[11px] text-muted-foreground">
+                      Permite retornar a requisição para qualquer etapa anterior.
+                    </p>
+                  </div>
+
+
                   {requisicao.status === 'pendente' && (
                     <>
                       <div className="space-y-2">
