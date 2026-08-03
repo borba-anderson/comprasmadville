@@ -1214,9 +1214,28 @@ Qualquer dúvida, estamos à disposição!`;
         {/* Actions Footer - only for staff */}
         {!readOnly && (
           <div className="p-4 border-t bg-muted/30 space-y-3">
-            {/* Ações rápidas por status */}
+            {/* Alterar status manualmente (avançar ou retornar) */}
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Alterar status manualmente</Label>
+              <Select
+                value={localRequisicao.status}
+                onValueChange={(v) => updateStatus(v as RequisicaoStatus)}
+                disabled={isUpdating}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(STATUS_CONFIG) as RequisicaoStatus[]).map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {STATUS_CONFIG[s].label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-            {/* Ações rápidas por status */}
+
             {localRequisicao.status === 'pendente' && (
               <div className="flex gap-2">
                 <Button
