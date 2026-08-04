@@ -1,4 +1,5 @@
-import { FornecedorOrcamento, OrcamentoItem, normalizar } from '@/components/orcamento/types';
+import { FornecedorOrcamento, OrcamentoItem } from '@/components/orcamento/types';
+import { acharChaveEquivalente, chaveItem } from '@/lib/matching';
 
 export interface LinhaCotacaoReal {
   chave: string;
@@ -20,17 +21,14 @@ const unitario = (i: OrcamentoItem) =>
   i.preco_unitario ??
   (i.preco_total && i.quantidade ? i.preco_total / i.quantidade : null);
 
-const chaveDe = (i: { codigo?: string | null; descricao: string }) =>
-  i.codigo ? `cod:${normalizar(i.codigo)}` : `desc:${normalizar(i.descricao)}`;
-
 export function compararCotacoes(
   pedido: OrcamentoItem[],
   fornecedores: FornecedorOrcamento[]
 ): LinhaCotacaoReal[] {
   const base = new Map<string, LinhaCotacaoReal>();
 
-  const criar = (item: OrcamentoItem): LinhaCotacaoReal => ({
-    chave: chaveDe(item),
+  const criar = (item: OrcamentoItem, chave: string): LinhaCotacaoReal => ({
+    chave,
     codigo: item.codigo ?? null,
     descricao: item.descricao,
     quantidade: item.quantidade ?? null,
@@ -44,18 +42,26 @@ export function compararCotacoes(
     cotacoesFaltantes: 0,
   });
 
-  for (const item of pedido) base.set(chaveDe(item), criar(item));
+  for (const item of pedido) {
+    const chave = acharChaveEquivalente(item, base) ?? chaveItem(item);
+    const linha = base.get(chave) ?? criar(item, chave);
+    if (!linha.codigo && item.codigo) linha.codigo = item.codigo;
+    if (linha.quantidade == null && item.quantidade != null) linha.quantidade = item.quantidade;
+    base.set(chave, linha);
+  }
 
   for (const f of fornecedores) {
     for (const item of f.itens) {
-      const chave = chaveDe(item);
-      if (!base.has(chave)) base.set(chave, criar(item));
-      const linha = base.get(chave)!;
+      const chave = acharChaveEquivalente(item, base) ?? chaveItem(item);
+      const linha = base.get(chave) ?? criar(item, chave);
+      base.set(chave, linha);
       if (!linha.codigo && item.codigo) linha.codigo = item.codigo;
       if (linha.quantidade == null && item.quantidade != null) linha.quantidade = item.quantidade;
-      linha.precos[f.id] = unitario(item);
+      const preco = unitario(item);
+      if (preco != null && linha.precos[f.id] == null) linha.precos[f.id] = preco;
     }
   }
+
 
   return Array.from(base.values()).map((l) => {
     for (const f of fornecedores) if (l.precos[f.id] == null) l.precos[f.id] = null;
