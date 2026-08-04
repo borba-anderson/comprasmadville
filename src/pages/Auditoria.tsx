@@ -23,7 +23,8 @@ export default function Auditoria() {
     () => ({
       itens: linhas.length,
       conformes: linhas.filter((l) => l.status === 'ok').length,
-      divergentes: linhas.filter((l) => l.status !== 'ok').length,
+      divergentes: linhas.filter((l) => !['ok', 'revisao'].includes(l.status)).length,
+      revisar: linhas.filter((l) => l.status === 'revisao').length,
       impacto: linhas.reduce((s, l) => s + l.impacto, 0),
     }),
     [linhas]
@@ -33,11 +34,14 @@ export default function Auditoria() {
     setLoading(true);
     try {
       const [ped, nf] = await Promise.all([
-        extrairDocumentos(pedidoFile.map((f) => f.file)),
-        extrairDocumentos(notaFile.map((f) => f.file)),
+        extrairDocumentos(pedidoFile.map((f) => f.file), 'pedido'),
+        extrairDocumentos(notaFile.map((f) => f.file), 'nota_fiscal'),
       ]);
       setPedido(ped[0] ?? null);
       setNota(nf[0] ?? null);
+      if (!ped[0]?.itens.length || !nf[0]?.itens.length) {
+        throw new Error('Não foi possível identificar os itens em um dos documentos. Verifique a nitidez e o tipo dos arquivos.');
+      }
       toast({
         title: 'Auditoria concluída',
         description: `${ped[0]?.itens.length ?? 0} itens no pedido · ${nf[0]?.itens.length ?? 0} itens na nota fiscal`,
@@ -118,7 +122,11 @@ export default function Auditoria() {
             {[
               { label: 'Itens auditados', value: String(resumo.itens), icon: ScanSearch },
               { label: 'Conformes', value: String(resumo.conformes), icon: CheckCircle2 },
-              { label: 'Divergências', value: String(resumo.divergentes), icon: AlertTriangle },
+              {
+                label: resumo.revisar ? 'Divergências / revisar' : 'Divergências',
+                value: resumo.revisar ? `${resumo.divergentes} / ${resumo.revisar}` : String(resumo.divergentes),
+                icon: AlertTriangle,
+              },
               {
                 label: 'Impacto financeiro',
                 value: `${resumo.impacto > 0 ? '+' : ''}${brl(resumo.impacto)}`,

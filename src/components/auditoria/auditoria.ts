@@ -1,7 +1,7 @@
 import { FornecedorOrcamento, OrcamentoItem } from '@/components/orcamento/types';
 import { acharChaveEquivalente, chaveItem } from '@/lib/matching';
 
-export type AuditoriaStatus = 'ok' | 'quantidade' | 'preco' | 'ambos' | 'nao_faturado' | 'extra';
+export type AuditoriaStatus = 'ok' | 'quantidade' | 'preco' | 'ambos' | 'nao_faturado' | 'extra' | 'revisao';
 
 export interface LinhaAuditoria {
   chave: string;
@@ -73,13 +73,19 @@ export function auditar(
     const totalNota = (l.precoNota ?? 0) * (l.qtdNota ?? 0);
     l.impacto = totalNota - totalPedido;
 
-    const qtdDiverge = !semPedido && !semNota && l.qtdPedido != null && l.qtdNota != null && l.difQtd !== 0;
+    const leituraIncompleta =
+      !semPedido &&
+      !semNota &&
+      (l.qtdPedido == null || l.qtdNota == null || l.precoPedido == null || l.precoNota == null);
+    const qtdDiverge = !semPedido && !semNota && l.qtdPedido != null && l.qtdNota != null && Math.abs(l.difQtd) > 0.0001;
     const precoDiverge = Math.abs(l.difPrecoPct) > 0.5;
 
     l.status = semNota
       ? 'nao_faturado'
       : semPedido
         ? 'extra'
+        : leituraIncompleta
+          ? 'revisao'
         : qtdDiverge && precoDiverge
           ? 'ambos'
           : qtdDiverge
@@ -99,4 +105,5 @@ export const AUDITORIA_STATUS: Record<AuditoriaStatus, { label: string; cls: str
   ambos: { label: 'Qtd. e preço alterados', cls: 'bg-red-100 text-red-800 border-red-300' },
   nao_faturado: { label: 'Não faturado', cls: 'bg-red-100 text-red-800 border-red-300' },
   extra: { label: 'Item extra na NF', cls: 'bg-red-100 text-red-800 border-red-300' },
+  revisao: { label: 'Revisar leitura', cls: 'bg-slate-100 text-slate-700 border-slate-300' },
 };

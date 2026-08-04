@@ -34,6 +34,38 @@ export const chaveItem = (i: ItemBase) => {
 /** Tokens significativos da descrição (ignora ruído curto). */
 const tokens = (s: string) => normalizarDescricao(s).split(' ').filter((t) => t.length > 1);
 
+const tokensSignificativos = (s: string) =>
+  tokens(s).filter((t) => !['de', 'da', 'do', 'das', 'dos', 'un', 'und', 'unid', 'peca', 'produto', 'item'].includes(t));
+
+const distanciaEdicao = (a: string, b: string) => {
+  const anterior = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let diagonal = anterior[0];
+    anterior[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const acima = anterior[j];
+      anterior[j] = Math.min(
+        anterior[j] + 1,
+        anterior[j - 1] + 1,
+        diagonal + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+      diagonal = acima;
+    }
+  }
+  return anterior[b.length];
+};
+
+const descricoesCompativeis = (a: string, b: string) => {
+  const A = new Set(tokensSignificativos(a));
+  const B = new Set(tokensSignificativos(b));
+  if (!A.size || !B.size) return false;
+  let intersecao = 0;
+  A.forEach((token) => {
+    if (B.has(token)) intersecao++;
+  });
+  return intersecao / Math.min(A.size, B.size) >= 0.6;
+};
+
 /** Similaridade Jaccard entre descrições (0 a 1). */
 export function similaridade(a: string, b: string): number {
   const A = new Set(tokens(a));
@@ -59,13 +91,18 @@ export function acharChaveEquivalente(
 
   const cod = normalizarCodigo(item.codigo);
 
-  // 1) código contido/contendo (ex.: "DEA4014LT" × "DE4014LT" com prefixo diferente)
+  // 1) código: tolera um único caractere OCR incorreto somente se a descrição também confirmar.
   if (cod) {
     for (const [chave, outro] of existentes) {
       const c2 = normalizarCodigo(outro.codigo);
       if (!c2) continue;
       if (c2 === cod) return chave;
-      if (cod.length >= 5 && c2.length >= 5 && (cod.endsWith(c2) || c2.endsWith(cod))) return chave;
+      const codigoQuaseIgual =
+        cod.length >= 6 &&
+        c2.length >= 6 &&
+        Math.abs(cod.length - c2.length) <= 1 &&
+        distanciaEdicao(cod, c2) <= 1;
+      if (codigoQuaseIgual && descricoesCompativeis(item.descricao, outro.descricao)) return chave;
     }
   }
 
@@ -73,7 +110,12 @@ export function acharChaveEquivalente(
   let melhor: { chave: string; score: number } | null = null;
   for (const [chave, outro] of existentes) {
     const score = similaridade(item.descricao, outro.descricao);
-    if (score >= 0.75 && (!melhor || score > melhor.score)) melhor = { chave, score };
+    const codigoOutro = normalizarCodigo(outro.codigo);
+    const semConflitoDeCodigo = !cod || !codigoOutro;
+    const compativel = descricoesCompativeis(item.descricao, outro.descricao);
+    if (semConflitoDeCodigo && compativel && score >= 0.55 && (!melhor || score > melhor.score)) {
+      melhor = { chave, score };
+    }
   }
   return melhor?.chave ?? null;
 }

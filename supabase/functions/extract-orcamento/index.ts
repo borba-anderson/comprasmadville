@@ -7,11 +7,60 @@ interface IncomingFile {
   text?: string;
 }
 
-const SYSTEM_PROMPT = `Você é um analista de compras. Extraia, de orçamentos de fornecedores, os dados estruturados.
+type TipoDocumento = 'pedido' | 'nota_fiscal' | 'orcamento';
+
+const SYSTEM_PROMPT = `Você é um auditor documental brasileiro extremamente rigoroso. Sua única tarefa é transcrever dados visíveis, sem inferir, completar ou corrigir silenciosamente.
 Responda SOMENTE com JSON válido no formato:
 {"fornecedor":"nome","prazo_entrega":"texto ou null","condicao_pagamento":"texto ou null","validade":"texto ou null","total":number|null,
 "itens":[{"codigo":"string|null","descricao":"string","quantidade":number|null,"embalagem":"string|null","preco_unitario":number|null,"preco_total":number|null}]}
-Valores numéricos em reais como número (use ponto decimal). Nunca invente itens que não existam no documento.`;
+REGRAS OBRIGATÓRIAS:
+- Transcreva cada linha de produto exatamente uma vez e preserve o código como impresso.
+- Não confunda número da linha, NCM, CFOP, CST, EAN, pedido ou lote com código do produto.
+- Quantidade é a quantidade comercial da linha; nunca use quantidade tributável quando houver quantidade comercial.
+- Preço unitário e total devem pertencer à mesma linha. Desconto, imposto, frete e total geral não são preço de item.
+- Leia todas as páginas. Ignore cabeçalhos repetidos, subtotais, transportadora, parcelas e textos legais.
+- Números brasileiros: 1.234,56 significa 1234.56. Não remova casas decimais.
+- Se um campo não estiver inequivocamente legível, retorne null. Nunca adivinhe.
+- Antes de responder, confira internamente item por item se quantidade × preço unitário corresponde ao total da linha, tolerando apenas arredondamento de centavos.`;
+
+const instrucoesPorTipo: Record<TipoDocumento, string> = {
+  pedido: 'Este arquivo é um PEDIDO DE COMPRA ou orçamento aprovado. Extraia somente os produtos efetivamente pedidos e seus valores acordados.',
+  nota_fiscal: 'Este arquivo é uma NOTA FISCAL. Extraia somente as linhas da seção DADOS DOS PRODUTOS/SERVIÇOS. Use o código do produto (CÓD. PROD.), QTD., V. UNIT. e V. TOTAL da mesma linha. Não use NCM/SH como código.',
+  orcamento: 'Este arquivo é um ORÇAMENTO DE FORNECEDOR. Extraia somente itens cotados e seus respectivos preços comerciais.',
+};
+
+const numero = (valor: unknown): number | null => {
+  if (typeof valor === 'number' && Number.isFinite(valor) && valor >= 0) return valor;
+  return null;
+};
+
+const texto = (valor: unknown): string | null =>
+  typeof valor === 'string' && valor.trim() ? valor.trim() : null;
+
+const normalizarItens = (valor: unknown) => {
+  if (!Array.isArray(valor)) return [];
+  return valor.flatMap((bruto) => {
+    if (!bruto || typeof bruto !== 'object') return [];
+    const item = bruto as Record<string, unknown>;
+    const descricao = texto(item.descricao);
+    if (!descricao) return [];
+    const quantidade = numero(item.quantidade);
+    let precoUnitario = numero(item.preco_unitario);
+    let precoTotal = numero(item.preco_total);
+    if (quantidade && quantidade > 0) {
+      if (precoUnitario == null && precoTotal != null) precoUnitario = precoTotal / quantidade;
+      if (precoTotal == null && precoUnitario != null) precoTotal = precoUnitario * quantidade;
+    }
+    return [{
+      codigo: texto(item.codigo),
+      descricao,
+      quantidade,
+      embalagem: texto(item.embalagem),
+      preco_unitario: precoUnitario,
+      preco_total: precoTotal,
+    }];
+  });
+};
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -27,6 +76,9 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const files: IncomingFile[] = Array.isArray(body?.files) ? body.files : [];
+    const tipoDocumento: TipoDocumento = ['pedido', 'nota_fiscal', 'orcamento'].includes(body?.tipoDocumento)
+      ? body.tipoDocumento
+      : 'orcamento';
     if (!files.length) {
       return new Response(JSON.stringify({ error: 'Nenhum arquivo enviado' }), {
         status: 400,
@@ -39,7 +91,7 @@ Deno.serve(async (req) => {
       const content: unknown[] = [
         {
           type: 'text',
-          text: `Extraia os itens deste orçamento (arquivo: ${f.name}).${f.text ? `\n\nConteúdo tabular:\n${f.text.slice(0, 20000)}` : ''}`,
+          text: `${instrucoesPorTipo[tipoDocumento]}\nArquivo: ${f.name}.${f.text ? `\n\nConteúdo tabular integral disponível:\n${f.text.slice(0, 50000)}` : ''}`,
         },
       ];
 
@@ -84,12 +136,12 @@ Deno.serve(async (req) => {
 
       results.push({
         arquivo: f.name,
-        fornecedor: (parsed.fornecedor as string) || f.name.replace(/\.[^.]+$/, ''),
-        prazo_entrega: parsed.prazo_entrega ?? null,
-        condicao_pagamento: parsed.condicao_pagamento ?? null,
-        validade: parsed.validade ?? null,
-        total: parsed.total ?? null,
-        itens: Array.isArray(parsed.itens) ? parsed.itens : [],
+        fornecedor: texto(parsed.fornecedor) || f.name.replace(/\.[^.]+$/, ''),
+        prazo_entrega: texto(parsed.prazo_entrega),
+        condicao_pagamento: texto(parsed.condicao_pagamento),
+        validade: texto(parsed.validade),
+        total: numero(parsed.total),
+        itens: normalizarItens(parsed.itens),
       });
     }
 
