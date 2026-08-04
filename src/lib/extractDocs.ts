@@ -11,6 +11,8 @@ const fileToDataUrl = (file: File) =>
 
 const isSheet = (name: string) => /\.(xlsx|xls|csv)$/i.test(name);
 
+export type TipoDocumento = 'pedido' | 'nota_fiscal' | 'orcamento';
+
 export async function buildPayload(files: File[]) {
   return Promise.all(
     files.map(async (file) => {
@@ -32,14 +34,20 @@ export async function buildPayload(files: File[]) {
   );
 }
 
-/** Extrai documentos (pedido, orçamentos ou NF) usando a mesma função de IA. */
-export async function extrairDocumentos(files: File[]): Promise<FornecedorOrcamento[]> {
+/** Extrai documentos com instruções específicas para cada natureza fiscal/comercial. */
+export async function extrairDocumentos(
+  files: File[],
+  tipoDocumento: TipoDocumento = 'orcamento'
+): Promise<FornecedorOrcamento[]> {
   if (!files.length) return [];
   const payload = await buildPayload(files);
   const { data, error } = await supabase.functions.invoke('extract-orcamento', {
-    body: { files: payload },
+    body: { files: payload, tipoDocumento },
   });
   if (error) throw error;
+  if (!Array.isArray(data?.fornecedores)) {
+    throw new Error('A leitura não retornou dados estruturados. Tente novamente com um arquivo mais nítido.');
+  }
   return (data?.fornecedores ?? []).map(
     (f: Omit<FornecedorOrcamento, 'id'>, i: number) => ({ ...f, id: `d${i}-${Date.now()}` })
   );
