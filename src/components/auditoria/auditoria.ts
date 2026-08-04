@@ -53,7 +53,7 @@ export function auditar(
     const chave = acharChaveEquivalente(item, linhas) ?? chaveItem(item);
     const l = linhas.get(chave) ?? criar(item, chave);
     if (!l.codigo && item.codigo) l.codigo = item.codigo;
-    l.qtdNota = (l.qtdNota ?? 0) + (item.quantidade ?? 0) || item.quantidade ?? null;
+    if (item.quantidade != null) l.qtdNota = (l.qtdNota ?? 0) + item.quantidade;
     l.precoNota = l.precoNota ?? unitario(item);
     linhas.set(chave, l);
   }
