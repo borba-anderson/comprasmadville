@@ -1,4 +1,5 @@
-import { FornecedorOrcamento, OrcamentoItem, normalizar } from '@/components/orcamento/types';
+import { FornecedorOrcamento, OrcamentoItem } from '@/components/orcamento/types';
+import { acharChaveEquivalente, chaveItem } from '@/lib/matching';
 
 export type AuditoriaStatus = 'ok' | 'quantidade' | 'preco' | 'ambos' | 'nao_faturado' | 'extra';
 
@@ -19,17 +20,14 @@ export interface LinhaAuditoria {
 const unitario = (i: OrcamentoItem) =>
   i.preco_unitario ?? (i.preco_total && i.quantidade ? i.preco_total / i.quantidade : null);
 
-const chaveDe = (i: { codigo?: string | null; descricao: string }) =>
-  i.codigo ? `cod:${normalizar(i.codigo)}` : `desc:${normalizar(i.descricao)}`;
-
 export function auditar(
   pedido: FornecedorOrcamento | null,
   nota: FornecedorOrcamento | null
 ): LinhaAuditoria[] {
   const linhas = new Map<string, LinhaAuditoria>();
 
-  const criar = (item: OrcamentoItem): LinhaAuditoria => ({
-    chave: chaveDe(item),
+  const criar = (item: OrcamentoItem, chave: string): LinhaAuditoria => ({
+    chave,
     codigo: item.codigo ?? null,
     descricao: item.descricao,
     qtdPedido: null,
@@ -43,20 +41,23 @@ export function auditar(
   });
 
   for (const item of pedido?.itens ?? []) {
-    const l = linhas.get(chaveDe(item)) ?? criar(item);
-    l.qtdPedido = item.quantidade ?? null;
-    l.precoPedido = unitario(item);
-    linhas.set(l.chave, l);
+    const chave = acharChaveEquivalente(item, linhas) ?? chaveItem(item);
+    const l = linhas.get(chave) ?? criar(item, chave);
+    if (!l.codigo && item.codigo) l.codigo = item.codigo;
+    l.qtdPedido = (l.qtdPedido ?? 0) + (item.quantidade ?? 0) || item.quantidade ?? null;
+    l.precoPedido = l.precoPedido ?? unitario(item);
+    linhas.set(chave, l);
   }
 
   for (const item of nota?.itens ?? []) {
-    const chave = chaveDe(item);
-    const l = linhas.get(chave) ?? criar(item);
+    const chave = acharChaveEquivalente(item, linhas) ?? chaveItem(item);
+    const l = linhas.get(chave) ?? criar(item, chave);
     if (!l.codigo && item.codigo) l.codigo = item.codigo;
-    l.qtdNota = item.quantidade ?? null;
-    l.precoNota = unitario(item);
+    l.qtdNota = (l.qtdNota ?? 0) + (item.quantidade ?? 0) || item.quantidade ?? null;
+    l.precoNota = l.precoNota ?? unitario(item);
     linhas.set(chave, l);
   }
+
 
   return Array.from(linhas.values()).map((l) => {
     const semPedido = l.qtdPedido == null && l.precoPedido == null;
