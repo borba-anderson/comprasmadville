@@ -118,8 +118,13 @@ Deno.serve(async (req) => {
       if (!resp.ok) {
         const errorBody = await resp.text();
         console.error(`AI gateway failed [${resp.status}]: ${errorBody}`);
+        const publicMessage = resp.status === 402
+          ? 'Os créditos de IA do workspace estão esgotados. Adicione créditos para continuar a leitura dos documentos.'
+          : resp.status === 429
+            ? 'O limite temporário da leitura por IA foi atingido. Aguarde e tente novamente.'
+            : 'Não foi possível concluir a leitura do documento.';
         return new Response(
-          JSON.stringify({ error: 'Falha na extração', status: resp.status, details: errorBody }),
+          JSON.stringify({ error: publicMessage, status: resp.status }),
           { status: resp.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }

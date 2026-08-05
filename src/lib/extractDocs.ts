@@ -1,4 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
+import { FunctionsHttpError } from '@supabase/supabase-js';
 import type { FornecedorOrcamento } from '@/components/orcamento/types';
 
 const fileToDataUrl = (file: File) =>
@@ -12,6 +13,24 @@ const fileToDataUrl = (file: File) =>
 const isSheet = (name: string) => /\.(xlsx|xls|csv)$/i.test(name);
 
 export type TipoDocumento = 'pedido' | 'nota_fiscal' | 'orcamento';
+
+const mensagemErroExtracao = async (error: unknown): Promise<string> => {
+  if (error instanceof FunctionsHttpError) {
+    try {
+      const body = await error.context.json();
+      if (body?.status === 402) {
+        return 'Os créditos de IA do workspace estão esgotados. Adicione créditos nas configurações de cobrança para liberar a leitura dos documentos.';
+      }
+      if (body?.status === 429) {
+        return 'O serviço de leitura atingiu o limite temporário. Aguarde alguns instantes e tente novamente.';
+      }
+      if (typeof body?.error === 'string' && body.error.trim()) return body.error;
+    } catch {
+      // Mantém a mensagem segura abaixo quando a resposta não contém JSON válido.
+    }
+  }
+  return error instanceof Error ? error.message : 'Não foi possível ler os documentos.';
+};
 
 export async function buildPayload(files: File[]) {
   return Promise.all(
@@ -44,7 +63,7 @@ export async function extrairDocumentos(
   const { data, error } = await supabase.functions.invoke('extract-orcamento', {
     body: { files: payload, tipoDocumento },
   });
-  if (error) throw error;
+  if (error) throw new Error(await mensagemErroExtracao(error));
   if (!Array.isArray(data?.fornecedores)) {
     throw new Error('A leitura não retornou dados estruturados. Tente novamente com um arquivo mais nítido.');
   }

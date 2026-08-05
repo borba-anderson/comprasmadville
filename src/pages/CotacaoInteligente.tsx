@@ -64,8 +64,8 @@ export default function CotacaoInteligente() {
     setLoading(true);
     try {
       const [ped, orcs] = await Promise.all([
-        extrairDocumentos(pedidoFile.map((f) => f.file)),
-        extrairDocumentos(orcamentoFiles.map((f) => f.file)),
+        extrairDocumentos(pedidoFile.map((f) => f.file), 'pedido'),
+        extrairDocumentos(orcamentoFiles.map((f) => f.file), 'orcamento'),
       ]);
       setPedido(ped[0] ?? null);
       setFornecedores(orcs);
