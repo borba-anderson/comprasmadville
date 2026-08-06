@@ -20,7 +20,10 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Epilogue',
+  				'-apple-system',
+  				'BlinkMacSystemFont',
+  				'SF Pro Text',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
@@ -31,7 +34,10 @@ export default {
   				'sans-serif'
   			],
   			display: [
-  				'Urbanist',
+  				'-apple-system',
+  				'BlinkMacSystemFont',
+  				'SF Pro Display',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
