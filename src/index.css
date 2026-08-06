@@ -14,58 +14,55 @@
 
 @layer base {
   :root {
-    /* Paper & Ink — off-white quente, tinta rica, verde GMAD como único acento */
-    --background: 40 20% 98.5%;
-    --foreground: 30 6% 12%;
+    /* iOS System — superfícies claras, materiais translúcidos, verde GMAD como acento */
+    --background: 240 12% 96%;          /* systemGroupedBackground */
+    --foreground: 240 6% 8%;            /* label */
 
     --card: 0 0% 100%;
-    --card-foreground: 30 6% 12%;
+    --card-foreground: 240 6% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 6% 12%;
+    --popover-foreground: 240 6% 8%;
 
-    /* Primary - Green (#008651) */
+    /* Primary - GMAD Green (#008651) */
     --primary: 156 100% 26%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 38 16% 95.5%;
-    --secondary-foreground: 30 6% 18%;
+    --secondary: 240 10% 93%;           /* secondarySystemFill */
+    --secondary-foreground: 240 6% 12%;
 
-    --muted: 38 16% 95.5%;
-    --muted-foreground: 32 5% 46%;
+    --muted: 240 10% 94%;
+    --muted-foreground: 240 4% 47%;     /* secondaryLabel */
 
-    --accent: 38 16% 94%;
-    --accent-foreground: 30 6% 18%;
+    --accent: 240 10% 92%;
+    --accent-foreground: 240 6% 12%;
 
-    --destructive: 6 62% 48%;
+    --destructive: 3 100% 59%;          /* systemRed */
     --destructive-foreground: 0 0% 100%;
 
-    /* Success - Enterprise green (#008651) */
-    --success: 156 100% 26%;
+    --success: 145 63% 42%;             /* systemGreen */
     --success-foreground: 0 0% 100%;
 
-    /* Warning - Soft amber */
-    --warning: 38 92% 46%;
-    --warning-foreground: 30 20% 12%;
+    --warning: 35 100% 50%;             /* systemOrange */
+    --warning-foreground: 0 0% 100%;
 
-    /* Info - Green (#008651) */
-    --info: 156 100% 26%;
+    --info: 211 100% 50%;               /* systemBlue */
     --info-foreground: 0 0% 100%;
 
-    --border: 36 14% 91%;
-    --input: 36 14% 91%;
-    --ring: 156 100% 26%;
+    --border: 240 8% 89%;               /* separator */
+    --input: 240 8% 89%;
+    --ring: 211 100% 50%;
 
-    --radius: 0.875rem;
+    --radius: 1rem;
 
     /* Sidebar — papel levemente mais quente que o conteúdo */
-    --sidebar-background: 40 22% 97%;
-    --sidebar-foreground: 30 6% 20%;
+    --sidebar-background: 240 12% 97%;
+    --sidebar-foreground: 240 5% 22%;
     --sidebar-primary: 156 100% 26%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 38 18% 93.5%;
-    --sidebar-accent-foreground: 30 6% 14%;
-    --sidebar-border: 36 14% 90%;
+    --sidebar-accent: 240 10% 92%;
+    --sidebar-accent-foreground: 240 6% 12%;
+    --sidebar-border: 240 8% 90%;
     --sidebar-ring: 156 100% 26%;
 
     /* Enterprise Status Colors */
@@ -125,46 +122,50 @@
        ============================================ */
     /* Surfaces (hierarquia de elevação por cor, não por sombra) */
     --surface-1: 0 0% 100%;            /* base */
-    --surface-2: 40 20% 97.5%;         /* sutilmente elevado */
-    --surface-3: 38 18% 94.5%;         /* hover / sublinhado */
-    --surface-inset: 40 20% 97%;       /* inputs / code */
+    --surface-2: 240 12% 97%;          /* systemGray6 */
+    --surface-3: 240 10% 93%;          /* systemGray5 */
+    --surface-inset: 240 11% 95%;      /* campos preenchidos iOS */
 
     /* Bordas refinadas */
-    --border-subtle: 36 14% 92%;
-    --border-strong: 34 12% 86%;
+    --border-subtle: 240 8% 91%;
+    --border-strong: 240 8% 85%;
 
     /* Texto — escala neutra quente (tinta) */
-    --text-primary: 30 8% 10%;
-    --text-secondary: 30 5% 32%;
-    --text-tertiary: 32 5% 47%;
-    --text-quaternary: 32 5% 62%;
+    --text-primary: 240 6% 8%;
+    --text-secondary: 240 4% 32%;
+    --text-tertiary: 240 4% 47%;
+    --text-quaternary: 240 4% 62%;
 
     /* Sombras enterprise (em camadas, sutis) */
-    --shadow-elegant-sm: 0 1px 2px 0 hsl(30 20% 12% / 0.04), 0 1px 1px 0 hsl(30 20% 12% / 0.03);
-    --shadow-elegant: 0 1px 2px 0 hsl(30 20% 12% / 0.04), 0 4px 14px -3px hsl(30 20% 12% / 0.06);
-    --shadow-elegant-lg: 0 1px 2px 0 hsl(30 20% 12% / 0.04), 0 16px 40px -12px hsl(30 20% 12% / 0.10);
-    --shadow-overlay: 0 12px 32px -8px hsl(30 20% 12% / 0.12), 0 2px 6px -1px hsl(30 20% 12% / 0.05);
+    --shadow-elegant-sm: 0 1px 2px 0 hsl(240 20% 10% / 0.05);
+    --shadow-elegant: 0 2px 10px -2px hsl(240 20% 10% / 0.07), 0 1px 2px 0 hsl(240 20% 10% / 0.04);
+    --shadow-elegant-lg: 0 12px 40px -12px hsl(240 20% 10% / 0.16), 0 2px 6px -2px hsl(240 20% 10% / 0.06);
+    --shadow-overlay: 0 20px 50px -12px hsl(240 20% 10% / 0.22), 0 4px 10px -4px hsl(240 20% 10% / 0.08);
     --shadow-ring-primary: 0 0 0 3px hsl(var(--primary) / 0.12);
 
     /* Tipografia premium (display + body) */
-    --font-display: 'Urbanist', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    --font-numeric: 'Epilogue', ui-sans-serif, system-ui, sans-serif;
+    --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-numeric: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    /* Materiais iOS */
+    --material-thin: hsl(0 0% 100% / 0.62);
+    --material-regular: hsl(0 0% 100% / 0.76);
+    --material-thick: hsl(0 0% 100% / 0.9);
 
     /* ============================================
        DEPTH SYSTEM v2
        ============================================ */
-    --shadow-card: 0 1px 0 0 hsl(30 20% 12% / 0.02), 0 1px 2px 0 hsl(30 20% 12% / 0.04), 0 0 0 1px hsl(36 14% 92% / 0.7);
-    --shadow-card-hover: 0 1px 0 0 hsl(30 20% 12% / 0.03), 0 10px 28px -10px hsl(30 20% 12% / 0.10), 0 0 0 1px hsl(34 12% 87% / 0.9);
-    --shadow-card-elevated: 0 1px 0 0 hsl(30 20% 12% / 0.04), 0 16px 40px -12px hsl(30 20% 12% / 0.12), 0 0 0 1px hsl(34 12% 87% / 0.8);
+    --shadow-card: 0 1px 3px 0 hsl(240 20% 10% / 0.06);
+    --shadow-card-hover: 0 8px 24px -8px hsl(240 20% 10% / 0.14), 0 1px 3px 0 hsl(240 20% 10% / 0.05);
+    --shadow-card-elevated: 0 16px 44px -14px hsl(240 20% 10% / 0.20), 0 2px 6px -2px hsl(240 20% 10% / 0.06);
     --shadow-tint-primary: 0 8px 28px -12px hsl(var(--primary) / 0.22);
 
     /* Severity tokens (semáforo decisório) */
-    --sev-low: 156 100% 26%;
-    --sev-low-bg: 156 60% 96%;
-    --sev-medium: 38 92% 50%;
-    --sev-medium-bg: 38 92% 96%;
-    --sev-high: 0 84% 56%;
-    --sev-high-bg: 0 84% 97%;
+    --sev-low: 145 63% 42%;
+    --sev-low-bg: 145 63% 95%;
+    --sev-medium: 35 100% 50%;
+    --sev-medium-bg: 35 100% 95%;
+    --sev-high: 3 100% 59%;
+    --sev-high-bg: 3 100% 96%;
   }
 
   .dark {
@@ -265,7 +266,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Epilogue', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
@@ -274,8 +275,9 @@
 
   /* Escala tipográfica premium — hierarquia por peso e tracking, não por excesso de tamanho */
   h1, h2, h3, h4, h5 {
-    font-family: 'Urbanist', ui-sans-serif, system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.022em;
+    font-family: var(--font-display);
+    letter-spacing: -0.024em;
+    font-weight: 600;
     text-wrap: balance;
     color: hsl(var(--text-primary));
   }
@@ -1113,4 +1115,66 @@
     height: 1px;
     background: hsl(var(--border-subtle));
   }
+}
+
+
+/* ============================================
+   iOS SYSTEM LAYER — materiais, listas agrupadas e controles
+   ============================================ */
+@layer components {
+  /* Material translúcido (nav bars, sheets, popovers) */
+  .ios-material {
+    background-color: var(--material-regular);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+  }
+  .ios-material-thick {
+    background-color: var(--material-thick);
+    backdrop-filter: saturate(180%) blur(30px);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
+  }
+
+  /* Lista agrupada (Inset Grouped List do iOS) */
+  .ios-list {
+    @apply rounded-2xl bg-card overflow-hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .ios-list > * + * {
+    border-top: 1px solid hsl(var(--border-subtle));
+  }
+  .ios-row {
+    @apply flex items-center gap-3 px-4 py-3 text-[15px] transition-colors;
+  }
+  .ios-row:active { background-color: hsl(var(--surface-3)); }
+
+  /* Segmented control */
+  .ios-segmented {
+    @apply inline-flex items-center gap-1 rounded-[10px] p-[3px];
+    background-color: hsl(var(--surface-3));
+  }
+  .ios-segment {
+    @apply rounded-[8px] px-3 py-1.5 text-[13px] font-medium text-[hsl(var(--text-secondary))] transition-all;
+  }
+  .ios-segment[data-state="active"], .ios-segment.active {
+    @apply bg-card text-[hsl(var(--text-primary))];
+    box-shadow: 0 1px 3px hsl(240 20% 10% / 0.12);
+  }
+
+  /* Título grande iOS */
+  .ios-large-title {
+    font-family: var(--font-display);
+    @apply text-[34px] font-bold leading-[1.1];
+    letter-spacing: -0.03em;
+  }
+  .ios-section-header {
+    @apply text-[13px] font-semibold uppercase tracking-[0.04em] text-[hsl(var(--text-tertiary))];
+  }
+}
+
+@layer utilities {
+  /* Feedback tátil de toque iOS */
+  .ios-press {
+    transition: transform 180ms cubic-bezier(0.32, 0.72, 0, 1), opacity 180ms ease;
+  }
+  .ios-press:active { transform: scale(0.96); opacity: 0.85; }
 }
