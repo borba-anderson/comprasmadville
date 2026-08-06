@@ -45,7 +45,7 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-[hsl(var(--border-subtle))] bg-background/75 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-[hsl(var(--border-subtle))] ios-material">
         <div className="flex h-16 items-center px-5 sm:px-8 lg:px-10 gap-3">
           {showSidebarTrigger && <SidebarTrigger className="mr-1" />}
 
@@ -66,9 +66,9 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
                     key={item.to}
                     to={item.to}
                     className={cn(
-                      "relative inline-flex items-center gap-2 px-3 h-9 rounded-lg text-[13px] font-medium tracking-[-0.006em] transition-colors duration-150",
+                      "relative inline-flex items-center gap-2 px-3.5 h-9 rounded-full text-[14px] font-semibold tracking-[-0.01em] transition-all duration-200 ios-press",
                       active
-                        ? "text-primary-fg bg-[hsl(var(--surface-3))]"
+                        ? "text-primary bg-primary/10"
                         : "text-tertiary-fg hover:text-primary-fg hover:bg-[hsl(var(--surface-2))]"
                     )}
                   >
@@ -88,7 +88,7 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
                 {/* Command palette trigger */}
                 <button
                   onClick={() => setOpen(true)}
-                  className="hidden sm:inline-flex items-center gap-2 h-8 px-2.5 rounded-md border border-subtle bg-[hsl(var(--surface-2))] text-tertiary-fg hover:text-primary-fg hover:border-strong transition-colors text-[12px] focus-ring-premium"
+                  className="hidden sm:inline-flex items-center gap-2 h-9 px-3.5 rounded-full border border-transparent bg-[hsl(var(--surface-3))] text-[hsl(var(--text-tertiary))] hover:bg-[hsl(var(--surface-3))]/70 transition-all text-[13px] ios-press"
                   aria-label="Buscar"
                 >
                   <Search className="w-3.5 h-3.5" />

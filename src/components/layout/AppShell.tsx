@@ -14,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <Header showSidebarTrigger compact />
-          <main className="flex-1 animate-fade-in">{children}</main>
+          <main className="flex-1 animate-fade-in bg-background">{children}</main>
         </div>
       </div>
     </SidebarProvider>
