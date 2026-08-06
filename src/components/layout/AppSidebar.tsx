@@ -51,9 +51,9 @@ export function AppSidebar() {
               <NavLink
                 to={item.url}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg text-[13px] font-medium tracking-[-0.006em] transition-colors duration-150",
+                  "flex items-center gap-3 rounded-[10px] text-[15px] font-medium tracking-[-0.01em] transition-all duration-200 ios-press",
                   active
-                    ? "text-[hsl(var(--text-primary))]"
+                    ? "text-primary font-semibold"
                     : "text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--text-primary))]"
                 )}
               >
@@ -71,7 +71,7 @@ export function AppSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-[hsl(var(--sidebar-border))]">
+    <Sidebar collapsible="icon" className="border-r border-[hsl(var(--sidebar-border))] ios-material">
       <SidebarHeader className="h-16 justify-center px-3">
         <NavLink to="/" className="flex items-center gap-2.5">
           <img
