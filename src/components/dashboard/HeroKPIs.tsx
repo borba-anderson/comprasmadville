@@ -109,8 +109,8 @@ export function HeroKPIs({
       value: economiaReal !== 0 ? formatCurrency(Math.abs(economiaReal)) : '—',
       fullValue: economiaReal !== 0 ? formatFullCurrency(Math.abs(economiaReal)) : undefined,
       icon: PiggyBank,
-      iconBg: economiaReal > 0 ? 'bg-emerald-50' : economiaReal < 0 ? 'bg-red-50' : 'bg-gray-50',
-      iconColor: economiaReal > 0 ? 'text-emerald-600' : economiaReal < 0 ? 'text-red-600' : 'text-gray-400',
+      iconBg: economiaReal > 0 ? 'bg-emerald-50' : economiaReal < 0 ? 'bg-red-50' : 'bg-muted',
+      iconColor: economiaReal > 0 ? 'text-emerald-600' : economiaReal < 0 ? 'text-red-600' : 'text-muted-foreground',
       description: economiaReal > 0 
         ? `${economiaPercentual.toFixed(1)}% de economia vs orçado`
         : economiaReal < 0 

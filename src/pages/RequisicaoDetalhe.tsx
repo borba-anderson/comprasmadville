@@ -1463,7 +1463,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Anexos do Solicitante */}
             {requisicao.arquivo_url && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Paperclip className="w-5 h-5" />
@@ -1498,7 +1498,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Orçamentos do Comprador */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Receipt className="w-5 h-5" />
@@ -1618,7 +1618,7 @@ Qualquer dúvida, estamos à disposição!`;
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Solicitante */}
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Solicitante</CardTitle>
               </CardHeader>
@@ -1656,7 +1656,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Centro de Custo */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Wallet className="w-5 h-5" />
@@ -1685,7 +1685,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Comprador & Fornecedor */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg">Atribuição</CardTitle>
                 </CardHeader>
@@ -1708,7 +1708,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Valores */}
             {!readOnly && canEditValor(requisicao.status) && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <DollarSign className="w-5 h-5" />
@@ -1767,7 +1767,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Observações */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <StickyNote className="w-5 h-5" />
@@ -1795,7 +1795,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Forma de Pagamento */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <CreditCard className="w-5 h-5" />
@@ -1834,7 +1834,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Read-only display for solicitante */}
             {readOnly && requisicao.forma_pagamento && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <CreditCard className="w-5 h-5" />
@@ -1849,7 +1849,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Ações Rápidas */}
             {!readOnly && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg">Ações Rápidas</CardTitle>
                 </CardHeader>
@@ -1990,7 +1990,7 @@ Qualquer dúvida, estamos à disposição!`;
 
             {/* Read-only view info */}
             {readOnly && requisicao.centro_custo && (
-              <Card className="bg-white">
+              <Card className="bg-card">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg">Informações Adicionais</CardTitle>
                 </CardHeader>

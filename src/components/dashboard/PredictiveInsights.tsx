@@ -259,25 +259,25 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         <div className="relative flex items-start justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-11 h-11 bg-gradient-to-br from-slate-900 to-slate-700 rounded-xl flex items-center justify-center shadow-lg shadow-slate-900/20">
+              <div className="w-11 h-11 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h4 className="font-semibold text-slate-900 text-[15px]">Inteligência Preditiva</h4>
+                <h4 className="font-semibold text-foreground text-[15px]">Inteligência Preditiva</h4>
                 <MetricTooltip {...METRIC_TOOLTIPS.previsao} periodo={`Últimos ${horizon} meses`} />
                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-[0.1em] uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   IA · Modelo ativo
                 </span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                   <Gauge className="w-3 h-3" />
                   Confiança {confidence}%
                 </span>
                 <Select value={String(horizon)} onValueChange={(v) => setHorizon(Number(v) as ForecastHorizon)}>
-                  <SelectTrigger className="h-6 w-[130px] text-[11px] px-2 py-0 border-slate-200 bg-white">
+                  <SelectTrigger className="h-6 w-[130px] text-[11px] px-2 py-0 border-border bg-card">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -287,7 +287,7 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 {methodologyLabel} · Tendência {trendPerMonth >= 0 ? '+' : ''}{formatCurrency(Math.round(trendPerMonth))}/mês
               </p>
             </div>
@@ -296,24 +296,24 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
           {/* Risk score */}
           <div className={`flex items-center gap-4 ${riskCfg.bg} rounded-xl px-5 py-3 ring-1 ${riskCfg.ring}`}>
             <div>
-              <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-500">
+              <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground">
                 Score de Risco
               </div>
               <div className={`text-3xl font-semibold num-tabular leading-none mt-1 ${riskCfg.color}`}>
                 {riskScore}
-                <span className="text-sm text-slate-400 ml-1">/100</span>
+                <span className="text-sm text-muted-foreground ml-1">/100</span>
               </div>
               <div className={`text-xs font-medium mt-1 ${riskCfg.color}`}>{riskCfg.text}</div>
             </div>
-            <div className="h-14 w-px bg-slate-200" />
+            <div className="h-14 w-px bg-border" />
             <div className="space-y-1.5 min-w-[140px]">
               {riskBreakdown.map((b) => (
                 <div key={b.label} className="flex items-center gap-2 text-[11px]">
-                  <span className="w-16 text-slate-500">{b.label}</span>
-                  <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
+                  <span className="w-16 text-muted-foreground">{b.label}</span>
+                  <div className="flex-1 h-1 bg-border rounded-full overflow-hidden">
                     <div className={`h-full ${riskCfg.bar}`} style={{ width: `${Math.min(b.value, 100)}%` }} />
                   </div>
-                  <span className="w-8 text-right font-semibold text-slate-700 num-tabular">{b.value}</span>
+                  <span className="w-8 text-right font-semibold text-foreground num-tabular">{b.value}</span>
                 </div>
               ))}
             </div>
@@ -358,17 +358,17 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         <div className="lg:col-span-2 card-elevated-static p-6">
           <div className="flex items-start justify-between mb-5 gap-4 flex-wrap">
             <div>
-              <h5 className="text-sm font-semibold text-slate-900">Previsão de Gastos</h5>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <h5 className="text-sm font-semibold text-foreground">Previsão de Gastos</h5>
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Realizado · Projeção do mês vigente · Previsão IA com banda de confiança
               </p>
             </div>
-            <div className="flex items-center gap-4 text-[11px] text-slate-500">
+            <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-sm bg-[hsl(156,100%,26%)]" /> Realizado
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-slate-400" /> Projeção mês
+                <span className="w-2.5 h-2.5 rounded-sm bg-muted-foreground" /> Projeção mês
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-sm bg-blue-500 opacity-60" /> Previsão IA
@@ -495,16 +495,16 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
         <div className="card-elevated-static p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-slate-700" />
-              <h5 className="text-sm font-semibold text-slate-900">Insights da IA</h5>
+              <Sparkles className="w-4 h-4 text-foreground" />
+              <h5 className="text-sm font-semibold text-foreground">Insights da IA</h5>
             </div>
-            <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-400">
+            <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground">
               {insights.length} sinais
             </span>
           </div>
 
           {insights.length === 0 && (
-            <p className="text-xs text-slate-400">Sem sinais relevantes no momento.</p>
+            <p className="text-xs text-muted-foreground">Sem sinais relevantes no momento.</p>
           )}
 
           <div className="space-y-2">
@@ -531,14 +531,14 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
           </div>
 
           {supplierTrend.length > 0 && (
-            <div className="pt-3 border-t border-slate-100">
-              <div className="text-[10px] uppercase font-semibold tracking-[0.1em] text-slate-400 mb-2">
+            <div className="pt-3 border-t border-border">
+              <div className="text-[10px] uppercase font-semibold tracking-[0.1em] text-muted-foreground mb-2">
                 Fornecedores em risco
               </div>
               <div className="space-y-1.5">
                 {supplierTrend.map((s) => (
                   <div key={s.name} className="flex items-center justify-between text-xs">
-                    <span className="text-slate-700 truncate pr-2">{s.name}</span>
+                    <span className="text-foreground truncate pr-2">{s.name}</span>
                     <span className="font-semibold text-red-600 num-tabular">{s.count} atrasos</span>
                   </div>
                 ))}
@@ -547,14 +547,14 @@ export function PredictiveInsights({ requisicoes }: PredictiveInsightsProps) {
           )}
 
           {anomalies.length > 0 && (
-            <div className="pt-3 border-t border-slate-100">
-              <div className="text-[10px] uppercase font-semibold tracking-[0.1em] text-slate-400 mb-2 flex items-center gap-1">
+            <div className="pt-3 border-t border-border">
+              <div className="text-[10px] uppercase font-semibold tracking-[0.1em] text-muted-foreground mb-2 flex items-center gap-1">
                 <ArrowUpRight className="w-3 h-3" /> Anomalias detectadas
               </div>
               <div className="space-y-1">
                 {anomalies.map((a, idx) => (
                   <div key={idx} className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500 capitalize">{a.month}</span>
+                    <span className="text-muted-foreground capitalize">{a.month}</span>
                     <span
                       className={`font-semibold num-tabular ${
                         a.deviation > 0 ? "text-red-600" : "text-emerald-600"
@@ -589,7 +589,7 @@ function PredictiveKPI({
   accent: "slate" | "blue" | "emerald" | "red" | "amber";
 }) {
   const cfg = {
-    slate: { iconBg: "bg-slate-100", iconText: "text-slate-700", valueText: "text-slate-900" },
+    slate: { iconBg: "bg-muted", iconText: "text-foreground", valueText: "text-foreground" },
     blue: { iconBg: "bg-blue-50", iconText: "text-blue-600", valueText: "text-blue-700" },
     emerald: { iconBg: "bg-emerald-50", iconText: "text-emerald-600", valueText: "text-emerald-700" },
     red: { iconBg: "bg-red-50", iconText: "text-red-600", valueText: "text-red-600" },
@@ -602,13 +602,13 @@ function PredictiveKPI({
         <Icon className={`w-4 h-4 ${cfg.iconText}`} />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-500 truncate">
+        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground truncate">
           {label}
         </div>
         <div className={`text-lg font-semibold num-tabular mt-0.5 ${cfg.valueText} truncate`}>
           {value}
         </div>
-        <div className="text-[10.5px] text-slate-500 mt-0.5 truncate">{hint}</div>
+        <div className="text-[10.5px] text-muted-foreground mt-0.5 truncate">{hint}</div>
       </div>
     </div>
   );
@@ -628,8 +628,8 @@ function CustomTooltip({ active, payload }: any) {
   ].filter(Boolean) as { label: string; value: number; color: string }[];
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-lg p-3 min-w-[180px]">
-      <div className="text-[11px] font-semibold text-slate-500 capitalize mb-2">
+    <div className="bg-card rounded-xl border border-border shadow-lg p-3 min-w-[180px]">
+      <div className="text-[11px] font-semibold text-muted-foreground capitalize mb-2">
         {data.fullLabel}
         {data.isCurrent && (
           <span className="ml-2 inline-flex items-center gap-1 text-[9px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
@@ -638,7 +638,7 @@ function CustomTooltip({ active, payload }: any) {
           </span>
         )}
         {data.isFuture && (
-          <span className="ml-2 inline-flex items-center gap-1 text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+          <span className="ml-2 inline-flex items-center gap-1 text-[9px] font-semibold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
             PREVISÃO
           </span>
         )}
@@ -646,17 +646,17 @@ function CustomTooltip({ active, payload }: any) {
       <div className="space-y-1.5">
         {rows.map((r) => (
           <div key={r.label} className="flex items-center justify-between gap-4 text-xs">
-            <span className="flex items-center gap-1.5 text-slate-600">
+            <span className="flex items-center gap-1.5 text-muted-foreground">
               <span className="w-2 h-2 rounded-sm" style={{ background: r.color }} />
               {r.label}
             </span>
-            <span className="font-semibold text-slate-900 num-tabular">{formatCurrency(r.value)}</span>
+            <span className="font-semibold text-foreground num-tabular">{formatCurrency(r.value)}</span>
           </div>
         ))}
         {data.isFuture && data.bandLow != null && data.bandHigh != null && (
-          <div className="pt-1.5 mt-1.5 border-t border-slate-100 flex items-center justify-between text-[10.5px]">
-            <span className="text-slate-500">Intervalo ±σ</span>
-            <span className="font-medium text-slate-600 num-tabular">
+          <div className="pt-1.5 mt-1.5 border-t border-border flex items-center justify-between text-[10.5px]">
+            <span className="text-muted-foreground">Intervalo ±σ</span>
+            <span className="font-medium text-muted-foreground num-tabular">
               {formatCurrency(data.bandLow)} – {formatCurrency(data.bandHigh)}
             </span>
           </div>

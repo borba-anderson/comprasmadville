@@ -158,7 +158,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-card flex flex-col items-center justify-center p-4">
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -175,16 +175,16 @@ export default function Auth() {
         </h1>
       </div>
 
-      <div className="w-full max-w-[440px] bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden animate-scale-in">
+      <div className="w-full max-w-[440px] bg-card rounded-[2rem] shadow-xl border border-border overflow-hidden animate-scale-in">
         <div className="p-8 md:p-10">
-          <div className="flex mb-8 bg-slate-100/80 p-1.5 rounded-xl">
+          <div className="flex mb-8 bg-muted/80 p-1.5 rounded-xl">
             <button
               type="button"
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 font-jakarta ${
                 isLogin
-                  ? "bg-white text-[#107c50] shadow-sm ring-1 ring-black/5"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-card text-primary shadow-sm ring-1 ring-black/5"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Entrar
@@ -194,8 +194,8 @@ export default function Auth() {
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 font-jakarta ${
                 !isLogin
-                  ? "bg-white text-[#107c50] shadow-sm ring-1 ring-black/5"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-card text-primary shadow-sm ring-1 ring-black/5"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Cadastrar
@@ -207,7 +207,7 @@ export default function Auth() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="nome"
-                  className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
                 >
                   Nome Completo
                 </Label>
@@ -218,7 +218,7 @@ export default function Auth() {
                   value={formData.nome}
                   onChange={handleChange}
                   placeholder="Ex: João Silva"
-                  className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
                 {errors.nome && <p className="text-xs text-red-500 font-medium ml-1">{errors.nome}</p>}
               </div>
@@ -228,7 +228,7 @@ export default function Auth() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="telefone"
-                  className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
                 >
                   Telefone
                 </Label>
@@ -240,7 +240,7 @@ export default function Auth() {
                   onChange={handleChange}
                   placeholder="(00) 00000-0000"
                   maxLength={15}
-                  className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
                 {errors.telefone && <p className="text-xs text-red-500 font-medium ml-1">{errors.telefone}</p>}
               </div>
@@ -249,7 +249,7 @@ export default function Auth() {
             <div className="space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
               >
                 Email Corporativo
               </Label>
@@ -260,7 +260,7 @@ export default function Auth() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="seu.email@empresa.com"
-                className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
               />
               {errors.email && <p className="text-xs text-red-500 font-medium ml-1">{errors.email}</p>}
             </div>
@@ -268,7 +268,7 @@ export default function Auth() {
             <div className="space-y-1.5">
               <Label
                 htmlFor="password"
-                className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
               >
                 Senha
               </Label>
@@ -280,12 +280,12 @@ export default function Auth() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl pr-10"
+                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#107c50] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-[#107c50] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -297,7 +297,7 @@ export default function Auth() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-xs font-bold text-slate-500 uppercase tracking-wider font-jakarta ml-1"
+                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
                 >
                   Confirmar Senha
                 </Label>
@@ -308,7 +308,7 @@ export default function Auth() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="h-12 bg-slate-50 border-slate-200 focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
                 />
                 {errors.confirmPassword && (
                   <p className="text-xs text-red-500 font-medium ml-1">{errors.confirmPassword}</p>
@@ -336,8 +336,8 @@ export default function Auth() {
             </Button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-sm text-slate-500 font-medium">
+          <div className="mt-8 pt-6 border-t border-border text-center">
+            <p className="text-sm text-muted-foreground font-medium">
               Problemas com acesso?{" "}
               <a
                 href="https://wa.me/5547992189824"
@@ -355,7 +355,7 @@ export default function Auth() {
       <div className="mt-8 text-center animate-fade-in delay-100">
         <Link
           to="/"
-          className="inline-flex items-center text-slate-600 hover:text-[#107c50] text-sm font-medium transition-colors px-4 py-2 rounded-full hover:bg-slate-100"
+          className="inline-flex items-center text-muted-foreground hover:text-[#107c50] text-sm font-medium transition-colors px-4 py-2 rounded-full hover:bg-muted"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Voltar ao início

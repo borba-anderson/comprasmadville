@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
+import { ThemeToggle } from "./ThemeToggle";
 import { cn } from "@/lib/utils";
+
 
 interface HeaderProps {
   showSidebarTrigger?: boolean;
@@ -46,13 +48,15 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-[hsl(var(--border-subtle))] ios-material">
-        <div className="flex h-16 items-center px-5 sm:px-8 lg:px-10 gap-3">
-          {showSidebarTrigger && <SidebarTrigger className="mr-1" />}
+        <div className="flex h-16 items-center px-3 sm:px-6 lg:px-10 gap-2 sm:gap-3 safe-x">
+          {showSidebarTrigger && <SidebarTrigger className="mr-0 sm:mr-1" />}
+
 
           {!compact && (
-            <Link to="/" className="flex items-center gap-2 shrink-0">
+            <Link to="/" className="flex items-center gap-2 min-w-0 max-w-[52%] sm:max-w-none overflow-hidden">
               <Logo size="sm" showText={true} />
             </Link>
+
           )}
 
           {/* Primary nav — desktop (oculta quando há sidebar) */}
@@ -82,7 +86,9 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
 
           <div className="flex-1" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <ThemeToggle />
+
             {user && (
               <>
                 {/* Command palette trigger */}

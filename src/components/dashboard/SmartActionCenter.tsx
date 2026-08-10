@@ -204,7 +204,7 @@ export function SmartActionCenter({ requisicoes, onFilterStatus }: SmartActionCe
               className={`relative rounded-xl border p-4 ${styles.bg} ${styles.border} transition-all hover:shadow-sm`}
             >
               <div className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-lg bg-white/80 flex items-center justify-center shrink-0`}>
+                <div className={`w-8 h-8 rounded-lg bg-card/80 flex items-center justify-center shrink-0`}>
                   <Icon className={`w-4 h-4 ${styles.icon}`} />
                 </div>
                 <div className="flex-1 min-w-0">

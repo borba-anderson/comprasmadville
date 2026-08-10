@@ -113,8 +113,8 @@ export function PriorityDecisions({ reqs, limit = 5 }: Props) {
           <CheckCircle2 className="w-4 h-4 text-emerald-700" />
         </div>
         <div>
-          <div className="text-[13px] font-semibold text-slate-900">Sem decisões pendentes</div>
-          <div className="text-[12px] text-slate-500">Cadeia em equilíbrio operacional.</div>
+          <div className="text-[13px] font-semibold text-foreground">Sem decisões pendentes</div>
+          <div className="text-[12px] text-muted-foreground">Cadeia em equilíbrio operacional.</div>
         </div>
       </div>
     );
@@ -122,21 +122,21 @@ export function PriorityDecisions({ reqs, limit = 5 }: Props) {
 
   return (
     <div className="card-elevated-static overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center">
             <Clock className="w-3.5 h-3.5 text-white" />
           </div>
           <div>
-            <div className="text-[13px] font-semibold text-slate-900">Decisões prioritárias</div>
-            <div className="text-[11px] text-slate-500">
+            <div className="text-[13px] font-semibold text-foreground">Decisões prioritárias</div>
+            <div className="text-[11px] text-muted-foreground">
               {decisions.length} ação(ões) que destravam a operação agora
             </div>
           </div>
         </div>
       </div>
 
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-border">
         {decisions.map((d, idx) => {
           const Icon = d.icon;
           return (
@@ -158,28 +158,28 @@ export function PriorityDecisions({ reqs, limit = 5 }: Props) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-[13px] font-semibold text-slate-900 truncate">{d.title}</span>
+                  <span className="text-[13px] font-semibold text-foreground truncate">{d.title}</span>
                   {d.badge && (
-                    <span className="text-[10px] font-mono text-slate-400 flex-shrink-0">
+                    <span className="text-[10px] font-mono text-muted-foreground flex-shrink-0">
                       {d.badge}
                     </span>
                   )}
                 </div>
-                <div className="text-[11.5px] text-slate-500 truncate">
+                <div className="text-[11.5px] text-muted-foreground truncate">
                   {d.detail}
-                  {d.meta && <span className="text-slate-400"> · {d.meta}</span>}
+                  {d.meta && <span className="text-muted-foreground"> · {d.meta}</span>}
                 </div>
               </div>
               <div className="flex-shrink-0 flex items-center gap-1">
                 <button
                   onClick={() => navigate(`/painel/${d.reqId}`)}
-                  className="hidden sm:inline-flex items-center text-[11.5px] font-medium text-slate-500 hover:text-slate-900 px-2 py-1.5 rounded-md hover:bg-slate-100 transition-colors"
+                  className="hidden sm:inline-flex items-center text-[11.5px] font-medium text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-md hover:bg-muted transition-colors"
                 >
                   Ver
                 </button>
                 <button
                   onClick={() => navigate(`/painel/${d.reqId}`)}
-                  className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-white bg-slate-900 hover:bg-slate-800 px-3 py-1.5 rounded-md transition-colors"
+                  className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-white bg-foreground hover:bg-foreground/90 px-3 py-1.5 rounded-md transition-colors"
                 >
                   {d.actionLabel}
                   <ArrowRight className="w-3 h-3" />
