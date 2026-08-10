@@ -143,7 +143,7 @@ const KIND_CFG: Record<
   received: { icon: PackageCheck, color: "text-emerald-700", bg: "bg-emerald-50", label: "Recebido" },
   approved: { icon: CheckCircle2, color: "text-emerald-700", bg: "bg-emerald-50", label: "Aprovado" },
   purchased: { icon: Truck, color: "text-blue-600", bg: "bg-blue-50", label: "Comprado", action: "Acompanhar" },
-  created: { icon: Sparkles, color: "text-slate-600", bg: "bg-slate-50", label: "Nova", action: "Aprovar" },
+  created: { icon: Sparkles, color: "text-muted-foreground", bg: "bg-muted", label: "Nova", action: "Aprovar" },
   risk: { icon: Flame, color: "text-orange-600", bg: "bg-orange-50", label: "Risco" },
   saving: { icon: DollarSign, color: "text-emerald-700", bg: "bg-emerald-50", label: "Economia" },
   ai: { icon: Bot, color: "text-violet-700", bg: "bg-violet-50", label: "IA" },
@@ -407,14 +407,14 @@ export default function Operacoes() {
 
             {/* Live feed - grouped temporally */}
             <div className="card-elevated-static overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center">
                     <Zap className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div>
-                    <div className="text-[13px] font-semibold text-slate-900">Feed operacional</div>
-                    <div className="text-[11px] text-slate-500">
+                    <div className="text-[13px] font-semibold text-foreground">Feed operacional</div>
+                    <div className="text-[11px] text-muted-foreground">
                       Eventos, riscos e movimentações da operação
                     </div>
                   </div>
@@ -427,8 +427,8 @@ export default function Operacoes() {
                       className={cn(
                         "px-2 py-1 rounded-md font-medium transition-colors",
                         filter === k
-                          ? "bg-slate-900 text-white"
-                          : "text-slate-500 hover:text-slate-900 hover:bg-slate-100",
+                          ? "bg-foreground text-background"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted",
                       )}
                     >
                       {k === "todos" ? "Todos" : KIND_CFG[k].label}
@@ -439,12 +439,12 @@ export default function Operacoes() {
 
               <div className="max-h-[640px] overflow-auto custom-scrollbar">
                 {loading && (
-                  <div className="p-10 text-center text-[13px] text-slate-400">
+                  <div className="p-10 text-center text-[13px] text-muted-foreground">
                     Carregando eventos...
                   </div>
                 )}
                 {!loading && visibleFeed.length === 0 && (
-                  <div className="p-10 text-center text-[13px] text-slate-400">
+                  <div className="p-10 text-center text-[13px] text-muted-foreground">
                     Sem eventos para este filtro.
                   </div>
                 )}
@@ -454,13 +454,13 @@ export default function Operacoes() {
                     if (items.length === 0) return null;
                     return (
                       <div key={groupName}>
-                        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm px-5 py-2 border-b border-slate-100 flex items-center justify-between">
+                        <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm px-5 py-2 border-b border-border flex items-center justify-between">
                           <span className="eyebrow">{groupName}</span>
-                          <span className="text-[10px] text-slate-400 tabular-nums">
+                          <span className="text-[10px] text-muted-foreground tabular-nums">
                             {items.length}
                           </span>
                         </div>
-                        <ul className="divide-y divide-slate-100">
+                        <ul className="divide-y divide-border">
                           {items.map((e, idx) => {
                             const cfg = KIND_CFG[e.kind];
                             const Icon = cfg.icon;
@@ -506,19 +506,19 @@ export default function Operacoes() {
                                       {cfg.label}
                                     </span>
                                     {e.badge && (
-                                      <span className="text-[10px] font-mono text-slate-400">
+                                      <span className="text-[10px] font-mono text-muted-foreground">
                                         {e.badge}
                                       </span>
                                     )}
-                                    <span className="text-[10px] text-slate-400 ml-auto">
+                                    <span className="text-[10px] text-muted-foreground ml-auto">
                                       {timeAgo(e.ts)}
                                     </span>
                                   </div>
-                                  <div className="text-[13px] font-medium text-slate-900 leading-snug mt-0.5">
+                                  <div className="text-[13px] font-medium text-foreground leading-snug mt-0.5">
                                     {e.title}
                                   </div>
                                   {e.detail && (
-                                    <div className="text-[12px] text-slate-500 mt-0.5">
+                                    <div className="text-[12px] text-muted-foreground mt-0.5">
                                       {e.detail}
                                     </div>
                                   )}
@@ -526,12 +526,12 @@ export default function Operacoes() {
                                 {cfg.action && e.reqId ? (
                                   <button
                                     onClick={() => navigate(`/painel/${e.reqId}`)}
-                                    className="flex-shrink-0 self-center inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 hover:text-white bg-white hover:bg-slate-900 border border-slate-200 hover:border-slate-900 px-2 py-1 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                    className="flex-shrink-0 self-center inline-flex items-center gap-1 text-[11px] font-semibold text-foreground hover:text-background bg-card hover:bg-foreground border border-border hover:border-foreground px-2 py-1 rounded-md transition-colors opacity-0 group-hover:opacity-100"
                                   >
                                     {cfg.action}
                                   </button>
                                 ) : (
-                                  <ArrowUpRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-700 transition-colors mt-1" />
+                                  <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors mt-1" />
                                 )}
                               </li>
                             );
@@ -554,8 +554,8 @@ export default function Operacoes() {
                   <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-[13px] font-semibold text-slate-900">AI Pulse</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-[13px] font-semibold text-foreground">AI Pulse</div>
+                  <div className="text-[11px] text-muted-foreground">
                     Análise contextual em tempo real
                   </div>
                 </div>
@@ -574,7 +574,7 @@ export default function Operacoes() {
                   <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center">
                     <Flame className="w-3.5 h-3.5 text-orange-600" />
                   </div>
-                  <div className="text-[13px] font-semibold text-slate-900">
+                  <div className="text-[13px] font-semibold text-foreground">
                     Fornecedores críticos
                   </div>
                 </div>
@@ -584,12 +584,12 @@ export default function Operacoes() {
                     return (
                       <li key={nome} className="space-y-1">
                         <div className="flex items-center justify-between text-[12.5px]">
-                          <span className="text-slate-700 truncate pr-2 font-medium">{nome}</span>
+                          <span className="text-foreground truncate pr-2 font-medium">{nome}</span>
                           <span className="text-[11px] font-semibold text-orange-700 bg-orange-50 px-1.5 py-0.5 rounded tabular-nums">
                             {v.late}/{v.total}
                           </span>
                         </div>
-                        <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1 bg-muted rounded-full overflow-hidden">
                           <div
                             className="h-full bg-orange-500 rounded-full"
                             style={{ width: `${Math.min(100, ratio)}%` }}
@@ -609,13 +609,13 @@ export default function Operacoes() {
                   <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
                     <Users className="w-3.5 h-3.5 text-violet-700" />
                   </div>
-                  <div className="text-[13px] font-semibold text-slate-900">Concentração de gasto</div>
+                  <div className="text-[13px] font-semibold text-foreground">Concentração de gasto</div>
                 </div>
-                <div className="text-[24px] font-semibold tracking-tight text-slate-900 num-tabular">
+                <div className="text-[24px] font-semibold tracking-tight text-foreground num-tabular">
                   {((metrics.topSetor[1] / metrics.totalGasto) * 100).toFixed(0)}%
                 </div>
-                <div className="text-[12px] text-slate-500">
-                  do gasto total vem de <span className="font-medium text-slate-700">{metrics.topSetor[0]}</span>
+                <div className="text-[12px] text-muted-foreground">
+                  do gasto total vem de <span className="font-medium text-foreground">{metrics.topSetor[0]}</span>
                 </div>
               </div>
             )}
@@ -626,7 +626,7 @@ export default function Operacoes() {
                 <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
                   <Zap className="w-3.5 h-3.5 text-emerald-700" />
                 </div>
-                <div className="text-[13px] font-semibold text-slate-900">Ações rápidas</div>
+                <div className="text-[13px] font-semibold text-foreground">Ações rápidas</div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {[
@@ -638,7 +638,7 @@ export default function Operacoes() {
                   <button
                     key={a.label}
                     onClick={() => navigate(a.to)}
-                    className="text-left text-[12px] font-medium px-2.5 py-2 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 transition-colors"
+                    className="text-left text-[12px] font-medium px-2.5 py-2 rounded-lg border border-border hover:border-border hover:bg-muted text-foreground transition-colors"
                   >
                     {a.label}
                   </button>
@@ -656,10 +656,10 @@ export default function Operacoes() {
                 <Gauge className="w-4 h-4 text-blue-600" />
               </div>
               <div className="flex-1">
-                <div className="text-[11px] text-slate-500">Lead time médio operacional</div>
-                <div className="text-[18px] font-semibold text-slate-900 num-tabular">
+                <div className="text-[11px] text-muted-foreground">Lead time médio operacional</div>
+                <div className="text-[18px] font-semibold text-foreground num-tabular">
                   {metrics.leadAvg.toFixed(1)} dias
-                  <span className="text-[12px] font-normal text-slate-500 ml-2">
+                  <span className="text-[12px] font-normal text-muted-foreground ml-2">
                     entre requisição e recebimento
                   </span>
                 </div>

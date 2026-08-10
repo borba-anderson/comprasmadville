@@ -43,7 +43,7 @@ export function EconomiaPorComprador({ requisicoes }: EconomiaPorCompradorProps)
 
   const getMedalColor = (idx: number) => {
     if (idx === 0) return 'text-amber-500';
-    if (idx === 1) return 'text-gray-400';
+    if (idx === 1) return 'text-muted-foreground';
     if (idx === 2) return 'text-orange-600';
     return 'text-muted-foreground';
   };

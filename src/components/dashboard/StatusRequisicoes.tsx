@@ -65,8 +65,8 @@ const STATUS_MAP: Record<RequisicaoStatus, StatusConfig> = {
   cancelado: { 
     label: 'Canceladas', 
     icon: XCircle, 
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-500/10',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted0/10',
   },
 };
 

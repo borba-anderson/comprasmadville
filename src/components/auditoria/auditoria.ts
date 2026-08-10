@@ -105,5 +105,5 @@ export const AUDITORIA_STATUS: Record<AuditoriaStatus, { label: string; cls: str
   ambos: { label: 'Qtd. e preço alterados', cls: 'bg-red-100 text-red-800 border-red-300' },
   nao_faturado: { label: 'Não faturado', cls: 'bg-red-100 text-red-800 border-red-300' },
   extra: { label: 'Item extra na NF', cls: 'bg-red-100 text-red-800 border-red-300' },
-  revisao: { label: 'Revisar leitura', cls: 'bg-slate-100 text-slate-700 border-slate-300' },
+  revisao: { label: 'Revisar leitura', cls: 'bg-muted text-foreground border-border' },
 };

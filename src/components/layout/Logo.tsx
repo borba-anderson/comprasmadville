@@ -24,10 +24,11 @@ export function Logo({
   size = 'md',
   showText = true
 }: LogoProps) {
-  return <div className={cn('flex items-center gap-3', className)}>
-      <img alt="GMAD Logo" className={cn('object-contain', sizes[size])} src="/lovable-uploads/90e07f8d-0f0d-44f4-b552-1973a3a1c498.png" />
-      {showText && <div>
-          <h1 className={cn("text-foreground text-sm font-medium", textSizes[size])}>Sistema de Requisições de Compras</h1>
+  return <div className={cn('flex items-center gap-2 sm:gap-3 min-w-0', className)}>
+      <img alt="GMAD Logo" className={cn('object-contain shrink-0', sizes[size])} src="/lovable-uploads/90e07f8d-0f0d-44f4-b552-1973a3a1c498.png" />
+      {showText && <div className="min-w-0">
+          <h1 className={cn("text-foreground text-sm font-medium truncate hidden sm:block", textSizes[size])}>Sistema de Requisições de Compras</h1>
         </div>}
     </div>;
+
 }

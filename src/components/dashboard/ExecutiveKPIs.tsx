@@ -200,7 +200,7 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
             return (
               <Tooltip key={kpi.title}>
                 <TooltipTrigger asChild>
-                  <div className="relative bg-card rounded-2xl border border-slate-100 p-5 hover:border-slate-200 transition-all duration-200 cursor-default overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                  <div className="relative bg-card rounded-2xl border border-border p-5 hover:border-border transition-all duration-200 cursor-default overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
                     <div className={`absolute top-0 left-0 bottom-0 w-[3px] ${colors.dot}`} />
 
                     <div className="flex items-start justify-between mb-4 pl-1">
@@ -210,18 +210,18 @@ export function ExecutiveKPIs({ requisicoes, previousPeriod }: ExecutiveKPIsProp
                       <div className={`w-2 h-2 rounded-full ${colors.dot}`} />
                     </div>
 
-                    <p className="text-[32px] font-semibold tracking-[-0.02em] num-tabular leading-none text-slate-900 pl-1" title={kpi.fullValue}>
+                    <p className="text-[32px] font-semibold tracking-[-0.02em] num-tabular leading-none text-foreground pl-1" title={kpi.fullValue}>
                       {kpi.value}
                     </p>
                     <div className="flex items-center gap-1.5 mt-2 pl-1">
-                      <p className="text-[12px] font-medium text-slate-600">{kpi.title}</p>
+                      <p className="text-[12px] font-medium text-muted-foreground">{kpi.title}</p>
                       {kpi.tooltipKey && <MetricTooltip {...METRIC_TOOLTIPS[kpi.tooltipKey]} />}
                     </div>
 
                     {kpi.target && (
                       <div className="flex items-center gap-1.5 mt-3 pl-1">
-                        <span className="text-[10px] text-slate-400">{kpi.targetLabel}:</span>
-                        <span className="text-[10px] font-semibold text-slate-500">{kpi.target}</span>
+                        <span className="text-[10px] text-muted-foreground">{kpi.targetLabel}:</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground">{kpi.target}</span>
                       </div>
                     )}
 

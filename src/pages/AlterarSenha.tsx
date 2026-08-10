@@ -115,7 +115,7 @@ export default function AlterarSenha() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Green accent bar at top */}
       <div className="h-1 bg-success w-full" />
       <div className="border-b border-success/20">

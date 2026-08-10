@@ -33,14 +33,14 @@ const benefits = [
 
 export const WorkflowTimeline = () => {
   return (
-    <section className="py-16 md:py-24 bg-slate-50/50 border-t border-slate-100">
+    <section className="py-16 md:py-24 bg-muted/50 border-t border-border">
       <div className="page-container">
         {/* Título da Seção */}
         <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold font-jakarta tracking-tight text-slate-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold font-jakarta tracking-tight text-foreground mb-4">
             Por que centralizar suas compras?
           </h2>
-          <p className="text-lg text-slate-600 font-medium font-jakarta">
+          <p className="text-lg text-muted-foreground font-medium font-jakarta">
             Mais eficiência e controle para sua operação.
           </p>
         </div>
@@ -53,7 +53,7 @@ export const WorkflowTimeline = () => {
             return (
               <div
                 key={index}
-                className="bg-white rounded-[2rem] p-8 flex flex-col items-center text-center shadow-xl shadow-slate-200/40 border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/60 animate-fade-in group"
+                className="bg-card rounded-[2rem] p-8 flex flex-col items-center text-center shadow-xl shadow-foreground/5 border border-border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-foreground/10 animate-fade-in group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Ícone Colorido com Gradiente e Sombra */}
@@ -68,8 +68,8 @@ export const WorkflowTimeline = () => {
                   <Icon size={36} strokeWidth={2} />
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 font-jakarta mb-3">{item.title}</h3>
-                <p className="text-slate-600 leading-relaxed font-medium">{item.description}</p>
+                <h3 className="text-xl font-bold text-foreground font-jakarta mb-3">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed font-medium">{item.description}</p>
               </div>
             );
           })}

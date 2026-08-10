@@ -43,7 +43,7 @@ const ROLE_LABELS: Record<AppRole, { label: string; color: string }> = {
   admin: { label: 'Admin', color: 'bg-red-100 text-red-800 border-red-300' },
   gerente: { label: 'Gestor', color: 'bg-purple-100 text-purple-800 border-purple-300' },
   comprador: { label: 'Comprador', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-  solicitante: { label: 'Solicitante', color: 'bg-gray-100 text-gray-800 border-gray-300' },
+  solicitante: { label: 'Solicitante', color: 'bg-muted text-foreground border-border' },
 };
 
 const ALL_ROLES: AppRole[] = ['admin', 'gerente', 'comprador', 'solicitante'];
@@ -362,7 +362,7 @@ export default function Usuarios() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl border border-success/20 p-4 mb-4">
+        <div className="bg-card rounded-xl border border-success/20 p-4 mb-4">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -380,7 +380,7 @@ export default function Usuarios() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl border border-success/20 overflow-hidden shadow-sm">
+        <div className="bg-card rounded-xl border border-success/20 overflow-hidden shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">

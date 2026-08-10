@@ -169,94 +169,146 @@
   }
 
   .dark {
-    --background: 0 0% 15%;
-    --foreground: 248 0.3% 98.4%;
+    /* iOS Dark — systemBackground grouped dark, elevated surfaces, verde GMAD */
+    --background: 240 6% 6%;            /* systemGroupedBackground (dark) */
+    --foreground: 240 10% 97%;
 
-    --card: 266 4% 20.8%;
-    --card-foreground: 248 0.3% 98.4%;
+    --card: 240 6% 11%;                 /* secondarySystemGroupedBackground */
+    --card-foreground: 240 10% 97%;
 
-    --popover: 266 4% 20.8%;
-    --popover-foreground: 248 0.3% 98.4%;
+    --popover: 240 6% 13%;
+    --popover-foreground: 240 10% 97%;
 
-    /* Primary - Orange (lighter for dark mode) */
-    --primary: 256 1.3% 92.9%;
-    --primary-foreground: 266 4% 20.8%;
+    /* Primary - GMAD Green, mais luminoso no escuro */
+    --primary: 156 62% 44%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 4.1% 27.9%;
-    --secondary-foreground: 248 0.3% 98.4%;
+    --secondary: 240 5% 17%;
+    --secondary-foreground: 240 10% 97%;
 
-    --muted: 260 4.1% 27.9%;
-    --muted-foreground: 257 4% 70.4%;
+    --muted: 240 5% 16%;
+    --muted-foreground: 240 5% 65%;
 
-    /* Accent - Dark Green */
-    --accent: 260 4.1% 27.9%;
-    --accent-foreground: 248 0.3% 98.4%;
+    --accent: 240 5% 19%;
+    --accent-foreground: 240 10% 97%;
 
-    --destructive: 22 19.1% 70.4%;
-    --destructive-foreground: 248 0.3% 98.4%;
+    --destructive: 3 100% 64%;
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 156 100% 26%;
+    --success: 145 55% 48%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 152 69% 40%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 35 100% 56%;
+    --warning-foreground: 240 6% 8%;
 
-    --info: 156 100% 30%;
+    --info: 211 100% 58%;
     --info-foreground: 0 0% 100%;
 
-    --border: 0 0% 100% / 10%;
-    --input: 0 0% 100% / 15%;
-    --ring: 264 2.7% 55.1%;
+    --border: 240 5% 22%;
+    --input: 240 5% 22%;
+    --ring: 211 100% 58%;
 
-    --sidebar-background: 24 15% 10%;
-    --sidebar-foreground: 248 0.3% 98.4%;
-    --sidebar-primary: 264 24.3% 48.8%;
-    --sidebar-primary-foreground: 248 0.3% 98.4%;
-    --sidebar-accent: 260 4.1% 27.9%;
-    --sidebar-accent-foreground: 248 0.3% 98.4%;
-    --sidebar-border: 0 0% 100% / 10%;
-    --sidebar-ring: 264 2.7% 55.1%;
+    --sidebar-background: 240 6% 8%;
+    --sidebar-foreground: 240 8% 88%;
+    --sidebar-primary: 156 62% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 17%;
+    --sidebar-accent-foreground: 240 10% 97%;
+    --sidebar-border: 240 5% 18%;
+    --sidebar-ring: 156 62% 44%;
 
-    /* Status Colors - Dark Mode */
-    --status-pendente: 152 60% 45%;
-    --status-pendente-bg: 152 60% 15%;
-    --status-em-analise: 24 95% 55%;
-    --status-em-analise-bg: 24 95% 15%;
-    --status-aprovado: 156 100% 35%;
-    --status-aprovado-bg: 156 100% 15%;
-    --status-cotando: 262 83% 60%;
-    --status-cotando-bg: 262 83% 15%;
-    --status-comprado: 199 89% 55%;
-    --status-comprado-bg: 199 89% 15%;
-    --status-rejeitado: 0 84% 55%;
-    --status-rejeitado-bg: 0 84% 15%;
+    /* Status Colors - iOS Dark */
+    --status-pendente: 152 55% 52%;
+    --status-pendente-bg: 152 45% 14%;
+    --status-em-analise: 30 100% 60%;
+    --status-em-analise-bg: 30 60% 14%;
+    --status-aprovado: 156 62% 48%;
+    --status-aprovado-bg: 156 50% 13%;
+    --status-cotando: 262 75% 68%;
+    --status-cotando-bg: 262 45% 16%;
+    --status-comprado: 205 90% 60%;
+    --status-comprado-bg: 205 60% 14%;
+    --status-rejeitado: 3 100% 66%;
+    --status-rejeitado-bg: 3 50% 15%;
 
-    /* Priority Colors - Dark Mode */
-    --priority-alta: 0 84% 55%;
-    --priority-alta-bg: 0 84% 15%;
-    --priority-media: 38 92% 50%;
-    --priority-media-bg: 38 92% 15%;
-    --priority-baixa: 156 100% 35%;
-    --priority-baixa-bg: 156 100% 15%;
+    /* Priority Colors - iOS Dark */
+    --priority-alta: 3 100% 66%;
+    --priority-alta-bg: 3 50% 15%;
+    --priority-media: 35 100% 58%;
+    --priority-media-bg: 35 55% 14%;
+    --priority-baixa: 156 62% 48%;
+    --priority-baixa-bg: 156 50% 13%;
 
-    /* Shadows - Dark Mode */
-    --shadow-primary: 0 4px 14px -3px hsl(156 100% 26% / 0.3);
-    --shadow-glow: 0 0 20px hsl(156 100% 26% / 0.15);
-    --chart-1: 264 24.3% 48.8%;
-    --chart-2: 162 17% 69.6%;
-    --chart-3: 70 18.8% 76.9%;
-    --chart-4: 304 26.5% 62.7%;
-    --chart-5: 16 24.6% 64.5%;
-    --sidebar: 266 4% 20.8%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(156 62% 44%) 0%, hsl(156 70% 30%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(240 6% 9%) 0%, hsl(240 6% 6%) 100%);
+    --gradient-card-hover: linear-gradient(180deg, hsl(240 6% 13%) 0%, hsl(240 6% 11%) 100%);
+
+    /* Shadows - Dark Mode (mais profundas, menos difusas) */
+    --shadow-primary: 0 4px 14px -3px hsl(156 62% 44% / 0.35);
+    --shadow-glow: 0 0 24px hsl(156 62% 44% / 0.22);
+    --shadow-2xs: 0 1px 2px 0px hsl(0 0% 0% / 0.4);
+    --shadow-xs: 0 1px 2px 0px hsl(0 0% 0% / 0.45);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.5);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 2px 6px -1px hsl(0 0% 0% / 0.55);
+    --shadow-lg: 0 8px 20px -6px hsl(0 0% 0% / 0.6);
+    --shadow-xl: 0 16px 34px -10px hsl(0 0% 0% / 0.65);
+    --shadow-2xl: 0 24px 48px -12px hsl(0 0% 0% / 0.7);
+
+    --chart-1: 156 62% 48%;
+    --chart-2: 211 100% 62%;
+    --chart-3: 262 70% 68%;
+    --chart-4: 35 100% 58%;
+    --chart-5: 3 90% 64%;
+    --sidebar: 240 6% 8%;
+
+    /* Premium tokens — dark */
+    --surface-1: 240 6% 11%;
+    --surface-2: 240 6% 14%;
+    --surface-3: 240 5% 18%;
+    --surface-inset: 240 5% 16%;
+
+    --border-subtle: 240 5% 18%;
+    --border-strong: 240 5% 26%;
+
+    --text-primary: 240 10% 97%;
+    --text-secondary: 240 6% 78%;
+    --text-tertiary: 240 5% 64%;
+    --text-quaternary: 240 4% 50%;
+
+    --shadow-elegant-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.4);
+    --shadow-elegant: 0 2px 12px -2px hsl(0 0% 0% / 0.5), 0 1px 2px 0 hsl(0 0% 0% / 0.35);
+    --shadow-elegant-lg: 0 14px 44px -14px hsl(0 0% 0% / 0.7), 0 2px 6px -2px hsl(0 0% 0% / 0.4);
+    --shadow-overlay: 0 24px 56px -14px hsl(0 0% 0% / 0.75), 0 4px 10px -4px hsl(0 0% 0% / 0.45);
+    --shadow-ring-primary: 0 0 0 3px hsl(var(--primary) / 0.22);
+
+    --shadow-card: 0 1px 3px 0 hsl(0 0% 0% / 0.45);
+    --shadow-card-hover: 0 10px 26px -10px hsl(0 0% 0% / 0.65), 0 1px 3px 0 hsl(0 0% 0% / 0.4);
+    --shadow-card-elevated: 0 18px 48px -16px hsl(0 0% 0% / 0.75), 0 2px 6px -2px hsl(0 0% 0% / 0.4);
+    --shadow-tint-primary: 0 8px 28px -12px hsl(var(--primary) / 0.35);
+
+    /* Materiais iOS — dark */
+    --material-thin: hsl(240 6% 10% / 0.62);
+    --material-regular: hsl(240 6% 10% / 0.76);
+    --material-thick: hsl(240 6% 10% / 0.9);
+
+    /* Severity tokens — dark */
+    --sev-low: 145 55% 50%;
+    --sev-low-bg: 145 45% 14%;
+    --sev-medium: 35 100% 58%;
+    --sev-medium-bg: 35 55% 14%;
+    --sev-high: 3 100% 66%;
+    --sev-high-bg: 3 50% 15%;
   }
+
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
 }
 
 @layer base {
@@ -421,7 +473,7 @@
   }
 
   .eyebrow {
-    @apply text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500;
+    @apply text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
   }
 
   .num-tabular {
@@ -440,7 +492,7 @@
 
   /* Skeleton premium shimmer */
   .skeleton-premium {
-    @apply relative overflow-hidden rounded-md bg-slate-100;
+    @apply relative overflow-hidden rounded-md bg-muted;
   }
   .skeleton-premium::after {
     content: "";
@@ -684,21 +736,21 @@
   @layer components {
     /* Container da tabela */
     .modern-table-container {
-      @apply bg-white rounded-xl border border-slate-200 overflow-hidden;
+      @apply bg-card rounded-xl border border-border overflow-hidden;
     }
 
     /* Cabeçalho da tabela */
     .modern-table thead {
-      @apply bg-slate-50 border-b border-slate-200;
+      @apply bg-muted border-b border-border;
     }
 
     .modern-table thead th {
-      @apply px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider;
+      @apply px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider;
     }
 
     /* Corpo da tabela */
     .modern-table tbody tr {
-      @apply border-b border-slate-100 hover:bg-slate-50 transition-colors duration-150;
+      @apply border-b border-border hover:bg-muted transition-colors duration-150;
     }
 
     .modern-table tbody tr:last-child {
@@ -706,7 +758,7 @@
     }
 
     .modern-table tbody td {
-      @apply px-6 py-4 text-sm text-slate-700;
+      @apply px-6 py-4 text-sm text-foreground;
     }
 
     /* Linha selecionada */
@@ -731,7 +783,7 @@
 
     /* Badge cinza (CFOP) */
     .badge-gray {
-      @apply bg-slate-100 text-slate-600 border-slate-200;
+      @apply bg-muted text-muted-foreground border-border;
     }
 
     /* ==================== BOTÕES MODERNOS ==================== */
@@ -747,24 +799,24 @@
     }
 
     .modern-button-secondary {
-      @apply modern-button bg-white text-slate-700 border border-slate-300 hover:bg-slate-50;
-      @apply focus:ring-slate-500;
+      @apply modern-button bg-card text-foreground border border-border hover:bg-muted;
+      @apply focus:ring-ring;
     }
 
     .modern-button-ghost {
-      @apply modern-button bg-transparent text-slate-600 hover:bg-slate-100;
+      @apply modern-button bg-transparent text-muted-foreground hover:bg-muted;
     }
 
     /* ==================== INPUTS MODERNOS ==================== */
     .modern-input {
-      @apply w-full px-4 py-2.5 text-sm border border-slate-300 rounded-lg;
+      @apply w-full px-4 py-2.5 text-sm border border-border rounded-lg;
       @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent;
       @apply transition-all duration-200;
-      @apply placeholder:text-slate-400;
+      @apply placeholder:text-muted-foreground;
     }
 
     .modern-select {
-      @apply modern-input appearance-none bg-white;
+      @apply modern-input appearance-none bg-card;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
       background-position: right 0.5rem center;
       background-repeat: no-repeat;
@@ -774,21 +826,21 @@
 
     /* ==================== CARDS MODERNOS ==================== */
     .modern-card {
-      @apply bg-white rounded-xl border border-slate-200 p-6;
+      @apply bg-card rounded-xl border border-border p-6;
       @apply shadow-sm hover:shadow-md transition-shadow duration-200;
     }
 
     .modern-card-header {
-      @apply flex items-center justify-between mb-4 pb-4 border-b border-slate-200;
+      @apply flex items-center justify-between mb-4 pb-4 border-b border-border;
     }
 
     .modern-card-title {
-      @apply text-lg font-semibold text-slate-900;
+      @apply text-lg font-semibold text-foreground;
     }
 
     /* ==================== FILTROS MODERNOS ==================== */
     .modern-filters {
-      @apply bg-white rounded-xl border border-slate-200 p-6 mb-6;
+      @apply bg-card rounded-xl border border-border p-6 mb-6;
     }
 
     .modern-filters-grid {
@@ -797,16 +849,16 @@
 
     /* ==================== STATS CARDS MODERNOS ==================== */
     .modern-stat-card {
-      @apply bg-white rounded-xl border border-slate-200 p-6;
+      @apply bg-card rounded-xl border border-border p-6;
       @apply hover:border-emerald-300 transition-all duration-200;
     }
 
     .modern-stat-value {
-      @apply text-3xl font-bold text-slate-900 mb-1;
+      @apply text-3xl font-bold text-foreground mb-1;
     }
 
     .modern-stat-label {
-      @apply text-sm font-medium text-slate-600;
+      @apply text-sm font-medium text-muted-foreground;
     }
 
     .modern-stat-icon {
@@ -815,7 +867,7 @@
 
     /* ==================== HEADER MODERNO ==================== */
     .modern-header {
-      @apply bg-white border-b border-slate-200 sticky top-0 z-50;
+      @apply bg-card border-b border-border sticky top-0 z-50;
     }
 
     .modern-header-content {
@@ -831,7 +883,7 @@
     }
 
     .modern-nav-item {
-      @apply text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors;
+      @apply text-sm font-medium text-muted-foreground hover:text-emerald-600 transition-colors;
     }
 
     .modern-nav-item.active {
@@ -840,27 +892,27 @@
 
     /* ==================== TABS MODERNOS ==================== */
     .modern-tabs {
-      @apply flex gap-1 bg-slate-100 p-1 rounded-lg;
+      @apply flex gap-1 bg-muted p-1 rounded-lg;
     }
 
     .modern-tab {
       @apply px-4 py-2 text-sm font-medium rounded-md transition-all;
-      @apply text-slate-600 hover:text-slate-900;
+      @apply text-muted-foreground hover:text-foreground;
     }
 
     .modern-tab.active {
-      @apply bg-white text-slate-900 shadow-sm;
+      @apply bg-card text-foreground shadow-sm;
     }
 
     /* ==================== PAGINAÇÃO MODERNA ==================== */
     .modern-pagination {
-      @apply flex items-center justify-between px-6 py-4 bg-white border-t border-slate-200;
+      @apply flex items-center justify-between px-6 py-4 bg-card border-t border-border;
     }
 
     .modern-pagination-button {
       @apply px-3 py-2 text-sm font-medium rounded-lg;
-      @apply border border-slate-300 bg-white text-slate-700;
-      @apply hover:bg-slate-50 transition-colors;
+      @apply border border-border bg-card text-foreground;
+      @apply hover:bg-muted transition-colors;
       @apply disabled:opacity-50 disabled:cursor-not-allowed;
     }
 
@@ -871,18 +923,18 @@
     /* ==================== DROPDOWN MODERNO ==================== */
     .modern-dropdown {
       @apply absolute right-0 mt-2 w-56 origin-top-right;
-      @apply bg-white rounded-lg shadow-lg border border-slate-200;
-      @apply divide-y divide-slate-100;
+      @apply bg-card rounded-lg shadow-lg border border-border;
+      @apply divide-y divide-border;
     }
 
     .modern-dropdown-item {
-      @apply flex items-center gap-3 px-4 py-3 text-sm text-slate-700;
-      @apply hover:bg-slate-50 transition-colors cursor-pointer;
+      @apply flex items-center gap-3 px-4 py-3 text-sm text-foreground;
+      @apply hover:bg-muted transition-colors cursor-pointer;
     }
 
     /* ==================== LOADING STATES ==================== */
     .modern-skeleton {
-      @apply animate-pulse bg-slate-200 rounded;
+      @apply animate-pulse bg-border rounded;
     }
 
     /* ==================== RESPONSIVIDADE ==================== */
@@ -892,12 +944,12 @@
       }
 
       .modern-table tbody tr {
-        @apply block mb-4 border border-slate-200 rounded-lg;
+        @apply block mb-4 border border-border rounded-lg;
       }
 
       .modern-table tbody td {
         @apply block text-right px-4 py-3;
-        @apply before:content-[attr(data-label)] before:float-left before:font-semibold before:text-slate-600;
+        @apply before:content-[attr(data-label)] before:float-left before:font-semibold before:text-muted-foreground;
       }
     }
   }
@@ -939,7 +991,7 @@
 
     /* Divisor sutil */
     .divider-subtle {
-      @apply border-t border-slate-100 my-4;
+      @apply border-t border-border my-4;
     }
   }
 
@@ -1177,4 +1229,49 @@
     transition: transform 180ms cubic-bezier(0.32, 0.72, 0, 1), opacity 180ms ease;
   }
   .ios-press:active { transform: scale(0.96); opacity: 0.85; }
+
+  /* Safe areas iOS (notch / home indicator) */
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .safe-x {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Rolagem horizontal responsiva com inércia iOS */
+  .scroll-x-ios {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+}
+
+/* ============================================
+   RESPONSIVIDADE GLOBAL
+   ============================================ */
+@layer base {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Tabelas nunca estouram o layout no mobile */
+  @media (max-width: 767px) {
+    table { font-size: 13px; }
+    .ios-large-title { font-size: 28px; }
+    h1 { font-size: clamp(1.5rem, 6vw, 2rem); }
+    h2 { font-size: clamp(1.25rem, 5vw, 1.5rem); }
+    /* Evita zoom automático do iOS ao focar campos */
+    input, select, textarea { font-size: 16px; }
+  }
+
+  img, video, svg { max-width: 100%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

@@ -324,7 +324,7 @@ export function GastosDashboard({ requisicoes, onDrillDown }: GastosDashboardPro
 
       {/* Tabbed dashboard layers */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 h-11 bg-slate-50/80 border border-slate-100">
+        <TabsList className="grid w-full grid-cols-5 h-11 bg-muted/80 border border-border">
           <TabsTrigger value="executive" className="gap-1.5 text-xs">
             <Gauge className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Visão Geral</span>

@@ -16,7 +16,7 @@ const STATUS_STYLES: Record<RequisicaoStatus, string> = {
   em_entrega: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 border-indigo-300 dark:border-indigo-700',
   recebido: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-300 dark:border-green-700',
   rejeitado: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-300 dark:border-red-700',
-  cancelado: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border-gray-300 dark:border-gray-700',
+  cancelado: 'bg-muted text-foreground dark:bg-muted/40 dark:text-muted-foreground border-border',
 };
 
 export function StatusBadge({ status, className, showIcon = true }: StatusBadgeProps) {

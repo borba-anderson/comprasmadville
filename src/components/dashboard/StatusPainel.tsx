@@ -86,9 +86,9 @@ const STATUS_MAP: Record<RequisicaoStatus, StatusConfig> = {
   cancelado: { 
     label: 'Canceladas', 
     icon: XCircle, 
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-50',
-    borderColor: 'border-gray-200',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
+    borderColor: 'border-border',
   },
 };
 
@@ -176,13 +176,13 @@ export function StatusPainel({ requisicoes }: StatusPainelProps) {
           className={`relative p-4 rounded-xl border ${
             atrasadas > 0 
               ? 'border-red-300 bg-red-50' 
-              : 'border-gray-200 bg-gray-50'
+              : 'border-border bg-muted'
           } hover:shadow-sm transition-all duration-200`}
         >
           <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className={`w-5 h-5 ${atrasadas > 0 ? 'text-red-600' : 'text-gray-400'}`} />
+            <AlertTriangle className={`w-5 h-5 ${atrasadas > 0 ? 'text-red-600' : 'text-muted-foreground'}`} />
           </div>
-          <p className={`text-3xl font-bold tracking-tight ${atrasadas > 0 ? 'text-red-600' : 'text-gray-400'}`}>
+          <p className={`text-3xl font-bold tracking-tight ${atrasadas > 0 ? 'text-red-600' : 'text-muted-foreground'}`}>
             {atrasadas}
           </p>
           <p className="text-xs font-medium text-muted-foreground mt-1">Atrasadas</p>

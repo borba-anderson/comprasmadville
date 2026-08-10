@@ -32,15 +32,15 @@ const VARIANT_CFG: Record<InsightVariant, { icon: any; ring: string; iconBg: str
   },
   anomaly: {
     icon: Sparkles,
-    ring: "border-slate-200/70 bg-gradient-to-r from-slate-50/70 to-transparent",
-    iconBg: "bg-slate-900 text-white",
-    dot: "bg-slate-700",
+    ring: "border-border/70 bg-gradient-to-r from-muted/70 to-transparent",
+    iconBg: "bg-foreground text-background",
+    dot: "bg-foreground/80",
   },
   neutral: {
     icon: Sparkles,
-    ring: "border-slate-200/70 bg-gradient-to-r from-slate-50/60 to-transparent",
-    iconBg: "bg-slate-100 text-slate-600",
-    dot: "bg-slate-400",
+    ring: "border-border/70 bg-gradient-to-r from-muted/60 to-transparent",
+    iconBg: "bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground",
   },
 };
 
@@ -73,13 +73,13 @@ export function AIInsightInline({
         <div className="flex items-center gap-1.5">
           <span className="eyebrow text-[9px] tracking-[0.1em]">IA · Insight</span>
         </div>
-        <p className="text-[12.5px] text-slate-700 leading-snug">{text}</p>
+        <p className="text-[12.5px] text-foreground leading-snug">{text}</p>
       </div>
 
       {actionLabel && onAction && (
         <button
           onClick={onAction}
-          className="flex-shrink-0 inline-flex items-center gap-1 text-[11.5px] font-semibold text-slate-700 hover:text-slate-900 px-2 py-1 rounded-md hover:bg-white/80 transition-colors"
+          className="flex-shrink-0 inline-flex items-center gap-1 text-[11.5px] font-semibold text-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-card/80 transition-colors"
         >
           {actionLabel}
           <ArrowRight className="w-3 h-3" />

@@ -27,7 +27,7 @@ const COLORS: Record<RequisicaoStatus, string> = {
   em_entrega: 'bg-blue-400',
   recebido: 'bg-emerald-600',
   rejeitado: 'bg-red-500',
-  cancelado: 'bg-gray-500',
+  cancelado: 'bg-muted0',
 };
 
 export function ProcessFunnel({ requisicoes, onDrillDown }: ProcessFunnelProps) {
@@ -166,7 +166,7 @@ export function ProcessFunnel({ requisicoes, onDrillDown }: ProcessFunnelProps) 
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-gray-500" />
+          <div className="w-3 h-3 rounded-full bg-muted0" />
           <span className="text-xs text-muted-foreground">
             {requisicoes.filter((r) => r.status === 'cancelado').length} canceladas
           </span>

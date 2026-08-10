@@ -29,11 +29,11 @@ const spring = { type: "spring" as const, stiffness: 80, damping: 18, mass: 0.6 
 const Dot = ({ c }: { c: string }) => <span className={`w-2 h-2 rounded-full ${c}`} />;
 
 const WindowChrome = ({ title }: { title: string }) => (
-  <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-slate-200/70 bg-white/70">
+  <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-border/70 bg-card/70">
     <Dot c="bg-rose-300" />
     <Dot c="bg-amber-300" />
     <Dot c="bg-emerald-300" />
-    <div className="ml-2 text-[10.5px] font-medium text-slate-500 tracking-tight">{title}</div>
+    <div className="ml-2 text-[10.5px] font-medium text-muted-foreground tracking-tight">{title}</div>
   </div>
 );
 
@@ -42,13 +42,13 @@ const WindowChrome = ({ title }: { title: string }) => (
 /* BACK — Analytics dashboard */
 function DashboardPanel() {
   return (
-    <div className="w-[480px] rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] overflow-hidden">
+    <div className="w-[480px] rounded-2xl bg-card/95 backdrop-blur-xl border border-border/80 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.35)] overflow-hidden">
       <WindowChrome title="gmad.app / dashboard" />
       <div className="p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-[10px] font-semibold tracking-[0.14em] text-slate-400 uppercase">Spend overview</div>
-            <div className="text-[18px] font-bold text-slate-900 tracking-tight tabular-nums mt-0.5">R$ 1.284.520</div>
+            <div className="text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">Spend overview</div>
+            <div className="text-[18px] font-bold text-foreground tracking-tight tabular-nums mt-0.5">R$ 1.284.520</div>
           </div>
           <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md">
             <TrendingUp size={10} /> +12,4%
@@ -58,7 +58,7 @@ function DashboardPanel() {
         {/* Bars */}
         <div className="grid grid-cols-12 gap-1.5 h-[88px] items-end pt-2">
           {[40, 65, 50, 78, 60, 92, 70, 85, 55, 95, 72, 88].map((h, i) => (
-            <div key={i} className="relative flex-1 rounded-sm bg-slate-100 overflow-hidden">
+            <div key={i} className="relative flex-1 rounded-sm bg-muted overflow-hidden">
               <div
                 className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-emerald-500 to-emerald-400"
                 style={{ height: `${h}%` }}
@@ -73,9 +73,9 @@ function DashboardPanel() {
             { l: "Em revisão", v: "37" },
             { l: "Concluídas", v: "92" },
           ].map((s) => (
-            <div key={s.l} className="rounded-lg border border-slate-100 bg-slate-50/60 px-2 py-1.5">
-              <div className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">{s.l}</div>
-              <div className="text-[13px] font-bold text-slate-900 tabular-nums">{s.v}</div>
+            <div key={s.l} className="rounded-lg border border-border bg-muted/60 px-2 py-1.5">
+              <div className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">{s.l}</div>
+              <div className="text-[13px] font-bold text-foreground tabular-nums">{s.v}</div>
             </div>
           ))}
         </div>
@@ -99,31 +99,31 @@ function RequisicoesPanel() {
   };
 
   return (
-    <div className="w-[400px] rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.4)] overflow-hidden">
+    <div className="w-[400px] rounded-2xl bg-card/95 backdrop-blur-xl border border-border/80 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.4)] overflow-hidden">
       <WindowChrome title="gmad.app / requisições" />
       <div className="p-3">
         <div className="flex items-center gap-1.5 mb-2.5">
-          <div className="flex-1 flex items-center gap-1.5 h-7 px-2 rounded-md bg-slate-50 border border-slate-100">
-            <Search size={11} className="text-slate-400" />
-            <span className="text-[10.5px] text-slate-400">Buscar requisição…</span>
+          <div className="flex-1 flex items-center gap-1.5 h-7 px-2 rounded-md bg-muted border border-border">
+            <Search size={11} className="text-muted-foreground" />
+            <span className="text-[10.5px] text-muted-foreground">Buscar requisição…</span>
           </div>
-          <button className="h-7 w-7 rounded-md border border-slate-100 bg-white flex items-center justify-center">
-            <Filter size={11} className="text-slate-500" />
+          <button className="h-7 w-7 rounded-md border border-border bg-card flex items-center justify-center">
+            <Filter size={11} className="text-muted-foreground" />
           </button>
         </div>
 
         <div className="space-y-1">
           {rows.map((r) => (
-            <div key={r.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50">
+            <div key={r.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-muted">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-6 rounded-full bg-emerald-500/70" />
                 <div>
-                  <div className="text-[11px] font-semibold text-slate-800 tabular-nums">{r.id}</div>
-                  <div className="text-[9.5px] text-slate-500">{r.who}</div>
+                  <div className="text-[11px] font-semibold text-foreground tabular-nums">{r.id}</div>
+                  <div className="text-[9.5px] text-muted-foreground">{r.who}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="text-[11px] font-bold text-slate-900 tabular-nums">{r.val}</div>
+                <div className="text-[11px] font-bold text-foreground tabular-nums">{r.val}</div>
                 <span className={`text-[8.5px] font-semibold px-1.5 py-0.5 rounded ${cmap[r.c]}`}>{r.st}</span>
               </div>
             </div>
@@ -137,24 +137,24 @@ function RequisicoesPanel() {
 /* FRONT — KPI / AI Insight */
 function AIPanel() {
   return (
-    <div className="w-[280px] rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_35px_90px_-25px_rgba(0,134,81,0.35)] overflow-hidden">
-      <div className="px-3.5 py-2.5 border-b border-slate-100 bg-gradient-to-r from-emerald-50/80 to-white flex items-center gap-2">
+    <div className="w-[280px] rounded-2xl bg-card/95 backdrop-blur-xl border border-border/80 shadow-[0_35px_90px_-25px_rgba(0,134,81,0.35)] overflow-hidden">
+      <div className="px-3.5 py-2.5 border-b border-border bg-gradient-to-r from-emerald-50/80 to-white flex items-center gap-2">
         <div className="w-5 h-5 rounded-md bg-emerald-500 flex items-center justify-center">
           <Sparkles size={11} className="text-white" />
         </div>
-        <span className="text-[10.5px] font-bold text-slate-800 tracking-tight">AI Insight</span>
+        <span className="text-[10.5px] font-bold text-foreground tracking-tight">AI Insight</span>
         <span className="ml-auto text-[8.5px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">LIVE</span>
       </div>
       <div className="p-3.5 space-y-2.5">
-        <div className="text-[11px] leading-snug text-slate-700">
+        <div className="text-[11px] leading-snug text-foreground">
           Detectada oportunidade de <span className="font-semibold text-emerald-700">economia de 8,2%</span> no
           fornecedor #142 com base no histórico de cotações.
         </div>
         <div className="flex items-baseline gap-1.5">
-          <span className="text-[22px] font-bold text-slate-900 tracking-tight tabular-nums">R$ 18.420</span>
-          <span className="text-[10px] font-medium text-slate-500">economia projetada</span>
+          <span className="text-[22px] font-bold text-foreground tracking-tight tabular-nums">R$ 18.420</span>
+          <span className="text-[10px] font-medium text-muted-foreground">economia projetada</span>
         </div>
-        <button className="w-full text-[10.5px] font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-colors rounded-md h-7 flex items-center justify-center gap-1.5">
+        <button className="w-full text-[10.5px] font-semibold text-white bg-foreground hover:bg-foreground/90 transition-colors rounded-md h-7 flex items-center justify-center gap-1.5">
           Aplicar sugestão <ArrowUpRight size={11} />
         </button>
       </div>
@@ -183,16 +183,16 @@ function FloatingKPI({
       style={style}
       whileHover={{ y: -4, scale: 1.04 }}
       transition={spring}
-      className={`absolute z-30 px-3 py-2.5 rounded-xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_15px_45px_-15px_rgba(15,23,42,0.35)] ${className}`}
+      className={`absolute z-30 px-3 py-2.5 rounded-xl bg-card/95 backdrop-blur-xl border border-border/80 shadow-[0_15px_45px_-15px_rgba(15,23,42,0.35)] ${className}`}
     >
       <div className="flex items-center gap-2">
         <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
           <Icon size={13} className="text-emerald-600" />
         </div>
         <div>
-          <div className="text-[9px] font-semibold text-slate-500 uppercase tracking-wider">{label}</div>
+          <div className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</div>
           <div className="flex items-baseline gap-1">
-            <span className="text-[13px] font-bold text-slate-900 tabular-nums tracking-tight">{value}</span>
+            <span className="text-[13px] font-bold text-foreground tabular-nums tracking-tight">{value}</span>
             {trend && <span className="text-[9px] font-semibold text-emerald-600">{trend}</span>}
           </div>
         </div>
@@ -256,7 +256,7 @@ export function HeroComposition() {
       >
         {/* soft glows */}
         <div className="absolute top-10 right-10 w-[380px] h-[380px] bg-emerald-400/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-20 w-[300px] h-[300px] bg-slate-300/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-20 w-[300px] h-[300px] bg-muted-foreground/20 rounded-full blur-3xl" />
 
         {/* BACK panel — dashboard */}
         <motion.div

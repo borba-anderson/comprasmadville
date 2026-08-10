@@ -104,20 +104,20 @@ export function DecisionKPI({
       </div>
 
       <div className="pl-1">
-        <div className="num-tabular text-[26px] font-semibold leading-none text-slate-900">
+        <div className="num-tabular text-[26px] font-semibold leading-none text-foreground">
           {value}
         </div>
-        <div className="mt-1.5 text-[12px] font-medium text-slate-700">{label}</div>
+        <div className="mt-1.5 text-[12px] font-medium text-foreground">{label}</div>
 
         <div className="mt-2 flex items-end justify-between gap-2 min-h-[22px]">
           <div className="flex-1 min-w-0">
             {impact && (
-              <div className="text-[11px] font-medium text-slate-500 truncate">
+              <div className="text-[11px] font-medium text-muted-foreground truncate">
                 {impact}
               </div>
             )}
             {!impact && hint && (
-              <div className="text-[11px] text-slate-400 truncate">{hint}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{hint}</div>
             )}
           </div>
           {spark && spark.length > 1 && <Sparkline data={spark} severity={severity} />}
