@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, ScanSearch, FileSearch, ListTodo } from "lucide-react";
+import { Home, Activity, LayoutGrid, Plus, Users, KeyRound, Columns3, ScanSearch, FileSearch, ListTodo, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -42,23 +42,25 @@ export function AppSidebar() {
     url === "/" ? pathname === "/" : pathname.startsWith(url);
 
   const renderItems = (items: typeof main) => (
-    <SidebarMenu>
+    <SidebarMenu className="gap-1.5">
       {items.map((item) => {
         const active = isActive(item.url);
         return (
           <SidebarMenuItem key={item.url}>
-            <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+            <SidebarMenuButton asChild isActive={active} tooltip={item.title} className="h-10 rounded-[10px]">
               <NavLink
                 to={item.url}
+                end={item.url === "/"}
                 className={cn(
-                  "flex items-center gap-3 rounded-[10px] text-[15px] font-medium tracking-[-0.01em] transition-all duration-200 ios-press",
+                  "relative flex items-center gap-3 rounded-[10px] text-[14px] font-medium transition-colors duration-150 ios-press",
                   active
-                    ? "text-primary font-semibold"
-                    : "text-[hsl(var(--text-tertiary))] hover:text-[hsl(var(--text-primary))]"
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-[hsl(var(--text-secondary))] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--text-primary))]"
                 )}
               >
+                {active && !collapsed && <span className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-primary" />}
                 <item.icon
-                  className={cn("h-4 w-4 shrink-0", active ? "text-primary" : "opacity-70")}
+                  className={cn("h-[18px] w-[18px] shrink-0", active ? "text-primary" : "opacity-70")}
                   strokeWidth={1.75}
                 />
                 {!collapsed && <span className="truncate">{item.title}</span>}
@@ -72,8 +74,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-[hsl(var(--sidebar-border))] ios-material">
-      <SidebarHeader className="h-16 justify-center px-3">
-        <NavLink to="/" className="flex items-center gap-2.5">
+      <SidebarHeader className="h-16 justify-center border-b border-[hsl(var(--sidebar-border))] px-3">
+        <NavLink to="/" className="flex items-center gap-2.5 rounded-[10px] px-1 py-1">
           <img
             src="/lovable-uploads/90e07f8d-0f0d-44f4-b552-1973a3a1c498.png"
             alt="GMAD"
@@ -90,27 +92,35 @@ export function AppSidebar() {
         </NavLink>
       </SidebarHeader>
 
-      <SidebarContent className="px-2">
-        <SidebarGroup>
+      <SidebarContent className="px-2 py-3">
+        <SidebarGroup className="py-1">
           {!collapsed && <SidebarGroupLabel className="data-label">Navegação</SidebarGroupLabel>}
           <SidebarGroupContent>{renderItems(main)}</SidebarGroupContent>
         </SidebarGroup>
 
         {account.length > 0 && (
-          <SidebarGroup>
+          <SidebarGroup className="mt-3 border-t border-[hsl(var(--sidebar-border))] pt-4">
             {!collapsed && <SidebarGroupLabel className="data-label">Conta</SidebarGroupLabel>}
             <SidebarGroupContent>{renderItems(account)}</SidebarGroupContent>
           </SidebarGroup>
         )}
       </SidebarContent>
 
-      {!collapsed && (
-        <SidebarFooter className="px-4 py-4">
-          <p className="text-[11px] text-[hsl(var(--text-quaternary))] leading-relaxed">
-            {profile?.nome?.split(" ")[0] ? `Olá, ${profile.nome.split(" ")[0]}` : "GMAD Madville"}
-          </p>
-        </SidebarFooter>
-      )}
+      <SidebarFooter className="border-t border-[hsl(var(--sidebar-border))] p-2.5">
+        <div className={cn("flex h-10 items-center rounded-[10px] bg-[hsl(var(--surface-inset))]", collapsed ? "justify-center" : "gap-2.5 px-2.5")}>
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <User className="h-3.5 w-3.5" />
+          </span>
+          {!collapsed && (
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold text-[hsl(var(--text-primary))]">
+                {profile?.nome?.split(" ")[0] || "Usuário"}
+              </p>
+              <p className="text-[10px] text-[hsl(var(--text-quaternary))]">GMAD Procurement</p>
+            </div>
+          )}
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
