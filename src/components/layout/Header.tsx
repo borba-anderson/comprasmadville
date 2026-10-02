@@ -48,8 +48,8 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-[hsl(var(--border-subtle))] ios-material">
-        <div className="flex h-16 items-center px-3 sm:px-6 lg:px-10 gap-2 sm:gap-3 safe-x">
-          {showSidebarTrigger && <SidebarTrigger className="mr-0 sm:mr-1" />}
+        <div className="flex h-16 items-center gap-2 px-3 sm:gap-3 sm:px-5 lg:px-7 safe-x">
+          {showSidebarTrigger && <SidebarTrigger className="mr-0 h-9 w-9 sm:mr-1" aria-label="Abrir ou recolher menu" />}
 
 
           {!compact && (
@@ -87,24 +87,24 @@ export function Header({ showSidebarTrigger = false, compact = false }: HeaderPr
           <div className="flex-1" />
 
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <ThemeToggle />
-
             {user && (
               <>
-                {/* Command palette trigger */}
-                <button
+                <Button
+                  type="button"
+                  variant="ghost"
                   onClick={() => setOpen(true)}
-                  className="hidden sm:inline-flex items-center gap-2 h-9 px-3.5 rounded-full border border-transparent bg-[hsl(var(--surface-3))] text-[hsl(var(--text-tertiary))] hover:bg-[hsl(var(--surface-3))]/70 transition-all text-[13px] ios-press"
+                  className="h-9 w-9 shrink-0 rounded-full bg-[hsl(var(--surface-inset))] px-0 text-[hsl(var(--text-tertiary))] hover:bg-[hsl(var(--surface-3))] sm:w-[clamp(180px,24vw,320px)] sm:justify-start sm:rounded-[11px] sm:px-3.5"
                   aria-label="Buscar"
                 >
-                  <Search className="w-3.5 h-3.5" />
-                  <span className="hidden lg:inline">Buscar</span>
-                  <span className="hidden lg:inline-flex items-center gap-0.5 ml-2">
+                  <Search className="h-4 w-4 shrink-0" />
+                  <span className="hidden truncate text-[13px] font-normal sm:inline">Buscar no sistema</span>
+                  <span className="ml-auto hidden items-center gap-0.5 lg:inline-flex">
                     <kbd className="kbd-premium">⌘</kbd>
                     <kbd className="kbd-premium">K</kbd>
                   </span>
-                </button>
+                </Button>
 
+                <ThemeToggle />
                 <NotificationBell />
 
                 <DropdownMenu>

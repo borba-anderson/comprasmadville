@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
-import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, LogIn, UserPlus, ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -158,56 +158,51 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-card flex flex-col items-center justify-center p-4">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-          .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-        `}
-      </style>
-
-      <div className="mb-8 text-center animate-fade-in">
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <img src={gmadLogo} alt="GMAD Logo" className="h-16 w-auto" />
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-[#107c50] font-jakarta tracking-tight">
-          Central de Compras
-        </h1>
-      </div>
-
-      <div className="w-full max-w-[440px] bg-card rounded-[2rem] shadow-xl border border-border overflow-hidden animate-scale-in">
-        <div className="p-8 md:p-10">
-          <div className="flex mb-8 bg-muted/80 p-1.5 rounded-xl">
-            <button
-              type="button"
-              onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 font-jakarta ${
-                isLogin
-                  ? "bg-card text-primary shadow-sm ring-1 ring-black/5"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Entrar
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-200 font-jakarta ${
-                !isLogin
-                  ? "bg-card text-primary shadow-sm ring-1 ring-black/5"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Cadastrar
-            </button>
+    <div className="min-h-svh bg-background flex flex-col items-center justify-center px-4 py-8 sm:px-6">
+      <main className="w-full max-w-[420px] animate-fade-in">
+        <div className="mb-7 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[18px] border border-[hsl(var(--border-subtle))] bg-card shadow-[var(--shadow-elegant)]">
+            <img src={gmadLogo} alt="GMAD" className="h-11 w-11 object-contain" />
           </div>
+          <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            Procurement Intelligence
+          </p>
+          <h1 className="text-[28px] leading-tight sm:text-[32px]">Central de Compras</h1>
+          <p className="mt-2 text-[15px] text-[hsl(var(--text-tertiary))]">
+            Acesse sua conta corporativa para continuar.
+          </p>
+        </div>
+
+        <section className="overflow-hidden rounded-[22px] border border-[hsl(var(--border-subtle))] bg-card shadow-[var(--shadow-elegant-lg)] animate-scale-in">
+          <div className="p-5 sm:p-8">
+            <div className="mb-7 grid grid-cols-2 rounded-[12px] bg-[hsl(var(--surface-inset))] p-1">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsLogin(true)}
+                aria-pressed={isLogin}
+                className={isLogin ? "h-9 bg-card text-primary shadow-[var(--shadow-elegant-sm)] hover:bg-card" : "h-9 text-muted-foreground hover:text-foreground"}
+              >
+                Entrar
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsLogin(false)}
+                aria-pressed={!isLogin}
+                className={!isLogin ? "h-9 bg-card text-primary shadow-[var(--shadow-elegant-sm)] hover:bg-card" : "h-9 text-muted-foreground hover:text-foreground"}
+              >
+                Cadastrar
+              </Button>
+            </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
               <div className="space-y-1.5">
                 <Label
                   htmlFor="nome"
-                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
+                  className="ml-1 text-xs font-semibold text-[hsl(var(--text-secondary))]"
                 >
                   Nome Completo
                 </Label>
@@ -218,7 +213,8 @@ export default function Auth() {
                   value={formData.nome}
                   onChange={handleChange}
                   placeholder="Ex: João Silva"
-                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  autoComplete="name"
+                  className="h-12"
                 />
                 {errors.nome && <p className="text-xs text-red-500 font-medium ml-1">{errors.nome}</p>}
               </div>
@@ -228,7 +224,7 @@ export default function Auth() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="telefone"
-                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
+                  className="ml-1 text-xs font-semibold text-[hsl(var(--text-secondary))]"
                 >
                   Telefone
                 </Label>
@@ -240,7 +236,8 @@ export default function Auth() {
                   onChange={handleChange}
                   placeholder="(00) 00000-0000"
                   maxLength={15}
-                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  autoComplete="tel"
+                  className="h-12"
                 />
                 {errors.telefone && <p className="text-xs text-red-500 font-medium ml-1">{errors.telefone}</p>}
               </div>
@@ -249,7 +246,7 @@ export default function Auth() {
             <div className="space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
+                className="ml-1 text-xs font-semibold text-[hsl(var(--text-secondary))]"
               >
                 Email Corporativo
               </Label>
@@ -260,7 +257,8 @@ export default function Auth() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="seu.email@empresa.com"
-                className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                autoComplete="email"
+                className="h-12"
               />
               {errors.email && <p className="text-xs text-red-500 font-medium ml-1">{errors.email}</p>}
             </div>
@@ -268,7 +266,7 @@ export default function Auth() {
             <div className="space-y-1.5">
               <Label
                 htmlFor="password"
-                className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
+                className="ml-1 text-xs font-semibold text-[hsl(var(--text-secondary))]"
               >
                 Senha
               </Label>
@@ -280,15 +278,19 @@ export default function Auth() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl pr-10"
+                  autoComplete={isLogin ? "current-password" : "new-password"}
+                  className="h-12 pr-12"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-[#107c50] transition-colors"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  className="absolute right-1 top-1/2 h-10 w-10 -translate-y-1/2 text-muted-foreground"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+                </Button>
               </div>
               {errors.password && <p className="text-xs text-red-500 font-medium ml-1">{errors.password}</p>}
             </div>
@@ -297,7 +299,7 @@ export default function Auth() {
               <div className="space-y-1.5">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-xs font-bold text-muted-foreground uppercase tracking-wider font-jakarta ml-1"
+                  className="ml-1 text-xs font-semibold text-[hsl(var(--text-secondary))]"
                 >
                   Confirmar Senha
                 </Label>
@@ -308,7 +310,8 @@ export default function Auth() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="h-12 bg-muted border-border focus:border-[#107c50] focus:ring-[#107c50]/20 rounded-xl"
+                  autoComplete="new-password"
+                  className="h-12"
                 />
                 {errors.confirmPassword && (
                   <p className="text-xs text-red-500 font-medium ml-1">{errors.confirmPassword}</p>
@@ -318,7 +321,7 @@ export default function Auth() {
 
             <Button
               type="submit"
-              className="w-full h-12 bg-[#107c50] hover:bg-[#0d6942] text-white font-bold rounded-xl text-base shadow-lg shadow-emerald-900/10 transition-all active:scale-[0.98] mt-2"
+              className="mt-2 h-12 w-full shadow-[var(--shadow-tint-primary)]"
               size="lg"
               isLoading={isLoading}
             >
@@ -336,31 +339,36 @@ export default function Auth() {
             </Button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-border text-center">
+          <div className="mt-7 border-t border-[hsl(var(--border-subtle))] pt-5 text-center">
             <p className="text-sm text-muted-foreground font-medium">
               Problemas com acesso?{" "}
               <a
                 href="https://wa.me/5547992189824"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#107c50] hover:text-[#0d6942] font-bold hover:underline transition-colors"
+                className="font-semibold text-primary hover:underline"
               >
                 Contate o suporte
               </a>
             </p>
           </div>
-        </div>
-      </div>
+            <div className="mt-4 flex items-center justify-center gap-1.5 text-xs text-[hsl(var(--text-quaternary))]">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Ambiente corporativo seguro
+            </div>
+          </div>
+        </section>
 
-      <div className="mt-8 text-center animate-fade-in delay-100">
+        <div className="mt-6 text-center animate-fade-in delay-100">
         <Link
           to="/"
-          className="inline-flex items-center text-muted-foreground hover:text-[#107c50] text-sm font-medium transition-colors px-4 py-2 rounded-full hover:bg-muted"
+          className="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Voltar ao início
         </Link>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
